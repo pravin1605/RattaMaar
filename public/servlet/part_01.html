@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servlet Notes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 18mm 18mm 20mm;
+    margin: 0 auto;
+    background: #fff;
+    page-break-after: always;
+    border-bottom: 2px dashed #ccc;
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    border-top: 3px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 6px 0;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-header .subject {
+    font-size: 11px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .page-header .topic-label {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  /* MAIN TOPIC TITLE */
+  .main-title {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid #000;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    background: #000;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* SECTION HEADING */
+  .section-title {
+    font-size: 15px;
+    font-weight: bold;
+    border-left: 5px solid #000;
+    padding-left: 10px;
+    margin: 18px 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* DEFINITION BOX */
+  .def-box {
+    border: 2px solid #000;
+    padding: 10px 14px;
+    margin: 10px 0;
+  }
+  .def-box .box-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #000;
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+  }
+
+  /* INTERVIEW BOX */
+  .interview-box {
+    border: 2px solid #000;
+    padding: 10px 14px;
+    margin: 10px 0;
+    background: #f5f5f5;
+  }
+  .interview-box .box-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #000;
+    margin-bottom: 8px;
+    padding-bottom: 3px;
+  }
+  .interview-box .q { font-weight: bold; margin-top: 8px; }
+  .interview-box .a { margin-left: 14px; margin-top: 3px; }
+
+  /* TIP BOX */
+  .tip-box {
+    border: 2px solid #000;
+    border-left: 6px solid #000;
+    padding: 8px 14px;
+    margin: 10px 0;
+  }
+  .tip-box .box-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  /* MEMORY TRICK */
+  .memory-box {
+    border: 2px dashed #000;
+    padding: 8px 14px;
+    margin: 10px 0;
+  }
+  .memory-box .box-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 12px 0;
+    gap: 0;
+  }
+  .flow-box {
+    border: 2px solid #000;
+    padding: 6px 28px;
+    font-weight: bold;
+    font-size: 12px;
+    min-width: 160px;
+    text-align: center;
+    background: #fff;
+  }
+  .flow-box.dark {
+    background: #000;
+    color: #fff;
+  }
+  .flow-arrow {
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight: bold;
+    color: #000;
+    text-align: center;
+  }
+  .flow-label {
+    font-size: 10px;
+    color: #555;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* HORIZONTAL FLOW */
+  .h-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin: 12px 0;
+    justify-content: center;
+  }
+  .h-flow-box {
+    border: 2px solid #000;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .h-flow-arrow {
+    font-size: 16px;
+    padding: 0 6px;
+    font-weight: bold;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+  }
+  th {
+    background: #000;
+    color: #fff;
+    padding: 7px 10px;
+    font-size: 12px;
+    text-align: left;
+    border: 1px solid #000;
+  }
+  td {
+    padding: 6px 10px;
+    border: 1px solid #000;
+    font-size: 12px;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f9f9f9; }
+
+  /* BULLET LIST */
+  ul.notes-list {
+    list-style: none;
+    margin: 8px 0 8px 10px;
+    padding: 0;
+  }
+  ul.notes-list li {
+    padding: 2px 0 2px 16px;
+    position: relative;
+  }
+  ul.notes-list li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    font-size: 11px;
+  }
+
+  /* NUMBERED LIST */
+  ol.notes-ol {
+    margin: 8px 0 8px 22px;
+  }
+  ol.notes-ol li { padding: 2px 0; }
+
+  /* INLINE CODE */
+  code {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    background: #efefef;
+    padding: 1px 5px;
+    border: 1px solid #ccc;
+  }
+
+  /* EXAMPLE BOX */
+  .example-box {
+    border: 1px solid #000;
+    padding: 8px 14px;
+    margin: 10px 0;
+    background: #fafafa;
+  }
+  .example-box .box-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 3px;
+  }
+
+  /* TWO COLUMN LAYOUT */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 10px 0;
+  }
+
+  p { margin: 6px 0; }
+
+  .highlight { font-weight: bold; }
+
+  @media print {
+    body { background: #fff; }
+    .page {
+      border-bottom: none;
+      margin: 0;
+      page-break-after: always;
+    }
+    @page {
+      size: A4;
+      margin: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: SERVLET ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 1 : SERVLET</span>
+  </div>
+
+  <div class="main-title">1. Servlet</div>
+
+  <!-- What is Servlet -->
+  <div class="section-title">What is Servlet?</div>
+  <p>A <span class="highlight">Servlet</span> is a Java technology used to create <span class="highlight">dynamic web applications</span>.</p>
+  <p>A Servlet is simply a Java class that runs inside a <span class="highlight">Web Server (Tomcat)</span> and processes client requests and generates responses.</p>
+
+  <div class="def-box">
+    <div class="box-label">📌 Definition</div>
+    <p>Servlet is a <strong>server-side Java component</strong> used to receive requests from clients, process them, and send responses back to the client.</p>
+  </div>
+
+  <!-- Why Needed -->
+  <div class="section-title">Why Servlet is Needed?</div>
+  <p>Before Servlets, web pages were mostly <strong>static HTML pages</strong>.</p>
+  <p>Static pages <strong>cannot</strong>:</p>
+  <ul class="notes-list">
+    <li>Process user input</li>
+    <li>Validate login credentials</li>
+    <li>Store data in database</li>
+    <li>Generate dynamic content</li>
+  </ul>
+
+  <div class="example-box">
+    <div class="box-label">📘 Example</div>
+    <p>Suppose a user enters: <code>Username: Pravin</code> &nbsp; <code>Password: 1234</code></p>
+    <p>HTML alone <strong>cannot verify</strong> this information.</p>
+    <p><strong>Servlet</strong> receives the data → processes it → checks the database → sends response.</p>
+    <p>∴ Servlets are required for <strong>dynamic web applications</strong>.</p>
+  </div>
+
+  <!-- Real Life Example -->
+  <div class="section-title">Real-Life Example</div>
+  <p>When you login to Gmail, Facebook, Instagram, or Amazon — your request is sent to a server.</p>
+  <p>A Servlet (or similar server-side technology) processes <strong>Username + Password</strong> and returns:</p>
+
+  <div class="two-col">
+    <div class="def-box" style="text-align:center;">✅ Login Successful</div>
+    <div class="def-box" style="text-align:center;">❌ Invalid Credentials</div>
+  </div>
+
+  <!-- How Servlet Works -->
+  <div class="section-title">How Servlet Works?</div>
+
+  <div class="flow">
+    <div class="flow-box dark">Browser (Client)</div>
+    <div class="flow-arrow">↓ Request</div>
+    <div class="flow-box">Web Server (Tomcat)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Servlet</div>
+    <div class="flow-arrow">↓ Process Logic</div>
+    <div class="flow-box">Database</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Servlet</div>
+    <div class="flow-arrow">↓ Response</div>
+    <div class="flow-box">Browser</div>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 2: SERVLET CONTINUED ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 1 : SERVLET (continued)</span>
+  </div>
+
+  <!-- Responsibilities -->
+  <div class="section-title">Responsibilities of Servlet</div>
+
+  <table>
+    <thead>
+      <tr><th>#</th><th>Responsibility</th><th>How it's Done</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>Receive Request</strong></td>
+        <td><code>request.getParameter("name")</code></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>Process Data</strong></td>
+        <td>Java logic e.g. <code>int sum = a + b;</code></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>Communicate with Database</strong></td>
+        <td>JDBC / Hibernate / JPA</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>Generate Response</strong></td>
+        <td><code>response.getWriter().print("Welcome")</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Advantages -->
+  <div class="section-title">Advantages of Servlet</div>
+
+  <table>
+    <thead>
+      <tr><th>Advantage</th><th>Why?</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Fast</strong></td><td>Servlets execute on server side</td></tr>
+      <tr><td><strong>Platform Independent</strong></td><td>Java runs on any operating system</td></tr>
+      <tr><td><strong>Secure</strong></td><td>Business logic remains on server</td></tr>
+      <tr><td><strong>Reusable</strong></td><td>One servlet can handle multiple requests</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Servlet Architecture -->
+  <div class="section-title">Servlet Architecture</div>
+
+  <div class="flow">
+    <div class="flow-box">Client</div>
+    <div class="flow-arrow">↓ Request</div>
+    <div class="flow-box dark">Web Container (Tomcat)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Servlet</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Database</div>
+    <div class="flow-arrow">↓ Response</div>
+    <div class="flow-box">Client</div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick</div>
+    <p><strong>S.A.R.S.</strong> — <strong>S</strong>erver-side, <strong>A</strong>cts on request, <strong>R</strong>eturns response, <strong>S</strong>its inside Tomcat</p>
+  </div>
+
+  <!-- Interview Q&A -->
+  <div class="interview-box">
+    <div class="box-label">🎯 Interview Q&amp;A</div>
+
+    <div class="q">Q1. What is Servlet?</div>
+    <div class="a">Servlet is a server-side Java technology used to develop dynamic web applications. It runs inside a web container, receives requests from clients, processes them, and sends responses back to the client.</div>
+
+    <div class="q">Q2. Where does Servlet run?</div>
+    <div class="a">Servlet runs inside a Web Container (e.g. Apache Tomcat), not directly in JVM like a standalone Java program.</div>
+
+    <div class="q">Q3. What is the difference between Static and Dynamic web page?</div>
+    <div class="a">Static: Fixed HTML, cannot process data. Dynamic: Generated at runtime by Servlet based on user input or database data.</div>
+
+    <div class="q">Q4. Why are Servlets preferred over CGI?</div>
+    <div class="a">Servlets are faster (run inside JVM), platform independent, secure, and can handle multiple requests efficiently using threads instead of separate processes.</div>
+
+    <div class="q">Q5. What is a Web Container?</div>
+    <div class="a">Web Container (like Tomcat) is the runtime environment that manages the lifecycle of Servlets — creating, initializing, calling service methods, and destroying them.</div>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 3: SERVLET API ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 2 : SERVLET API</span>
+  </div>
+
+  <div class="main-title">2. Servlet API</div>
+
+  <div class="section-title">What is Servlet API?</div>
+  <p>Servlet API is a <strong>collection of interfaces and classes</strong> provided by Java to create Servlets.</p>
+  <p>Without Servlet API, we <strong>cannot</strong> create a Servlet.</p>
+
+  <div class="def-box">
+    <div class="box-label">📌 Servlet API Provides</div>
+    <ul class="notes-list">
+      <li><strong>Interfaces</strong> — contracts that Servlets must follow</li>
+      <li><strong>Classes</strong> — ready-made implementations</li>
+      <li><strong>Methods</strong> — tools for handling requests and generating responses</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Why Servlet API is Needed?</div>
+
+  <div class="example-box">
+    <div class="box-label">📘 Example</div>
+    <p>Suppose a browser sends: <code>Name = Pravin</code> &nbsp; <code>Age = 23</code></p>
+    <p>How will Java read this data? Using → <code>request.getParameter("name")</code></p>
+    <p>This method comes from <strong>Servlet API</strong>.</p>
+    <p>Similarly → <code>response.getWriter()</code> also comes from Servlet API.</p>
+    <p>∴ Servlet API provides all the tools required to build web applications.</p>
+  </div>
+
+  <!-- Packages -->
+  <div class="section-title">Packages in Servlet API</div>
+
+  <table>
+    <thead>
+      <tr><th>Package</th><th>Purpose</th><th>Important Classes / Interfaces</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>javax.servlet</code></td>
+        <td>Generic, protocol-independent servlet functionalities</td>
+        <td>Servlet, GenericServlet, ServletRequest, ServletResponse, RequestDispatcher</td>
+      </tr>
+      <tr>
+        <td><code>javax.servlet.http</code></td>
+        <td>HTTP-specific functionality (most web apps use HTTP)</td>
+        <td>HttpServlet, HttpServletRequest, HttpServletResponse, HttpSession, Cookie</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Hierarchy -->
+  <div class="section-title">Servlet API Hierarchy</div>
+
+  <div class="flow">
+    <div class="flow-box dark">«interface» Servlet</div>
+    <div class="flow-arrow">↓ implements</div>
+    <div class="flow-box">GenericServlet (abstract class)</div>
+    <div class="flow-label">Protocol Independent — can handle any request type</div>
+    <div class="flow-arrow">↓ extends</div>
+    <div class="flow-box dark">HttpServlet (abstract class)</div>
+    <div class="flow-label">HTTP Specific — supports doGet(), doPost(), doPut(), doDelete()</div>
+    <div class="flow-arrow">↓ extends</div>
+    <div class="flow-box">Your Servlet (DemoServlet)</div>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 4: SERVLET API CONTINUED ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 2 : SERVLET API (continued)</span>
+  </div>
+
+  <!-- Most Important Interfaces -->
+  <div class="section-title">Most Important Interfaces</div>
+
+  <table>
+    <thead>
+      <tr><th>Interface</th><th>Why Needed?</th><th>Key Method</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>ServletRequest</strong></td>
+        <td>To <strong>read data</strong> sent by client</td>
+        <td><code>request.getParameter("name")</code></td>
+      </tr>
+      <tr>
+        <td><strong>ServletResponse</strong></td>
+        <td>To <strong>send data back</strong> to client</td>
+        <td><code>response.getWriter().print("Welcome")</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Most Important Classes -->
+  <div class="section-title">Most Important Classes</div>
+
+  <div class="two-col">
+    <div class="def-box">
+      <div class="box-label">GenericServlet</div>
+      <ul class="notes-list">
+        <li>Protocol Independent</li>
+        <li>Can handle <strong>any type</strong> of request</li>
+        <li>Abstract class — must override <code>service()</code></li>
+      </ul>
+    </div>
+    <div class="def-box">
+      <div class="box-label">HttpServlet</div>
+      <ul class="notes-list">
+        <li>HTTP Specific</li>
+        <li>Extends GenericServlet</li>
+        <li>Override: <code>doGet()</code>, <code>doPost()</code>, <code>doPut()</code>, <code>doDelete()</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Request-Response Flow -->
+  <div class="section-title">Complete Request-Response Flow</div>
+
+  <div class="h-flow">
+    <div class="h-flow-box">Browser</div>
+    <div class="h-flow-arrow">→</div>
+    <div class="h-flow-box dark" style="background:#000;color:#fff;">HttpServletRequest</div>
+    <div class="h-flow-arrow">→</div>
+    <div class="h-flow-box">Servlet</div>
+    <div class="h-flow-arrow">→</div>
+    <div class="h-flow-box">Business Logic</div>
+    <div class="h-flow-arrow">→</div>
+    <div class="h-flow-box dark" style="background:#000;color:#fff;">HttpServletResponse</div>
+    <div class="h-flow-arrow">→</div>
+    <div class="h-flow-box">Browser</div>
+  </div>
+
+  <!-- Summary Table -->
+  <div class="section-title">Summary Table</div>
+  <table>
+    <thead>
+      <tr><th>Topic</th><th>Purpose</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Servlet</strong></td><td>Creates dynamic web applications</td></tr>
+      <tr><td><strong>Servlet API</strong></td><td>Provides interfaces/classes for servlets</td></tr>
+      <tr><td><strong>ServletRequest</strong></td><td>Reads request data from client</td></tr>
+      <tr><td><strong>ServletResponse</strong></td><td>Sends response back to client</td></tr>
+      <tr><td><strong>GenericServlet</strong></td><td>Protocol-independent servlet base class</td></tr>
+      <tr><td><strong>HttpServlet</strong></td><td>HTTP-specific servlet base class</td></tr>
+      <tr><td><code>javax.servlet</code></td><td>Core servlet package (generic)</td></tr>
+      <tr><td><code>javax.servlet.http</code></td><td>HTTP-specific servlet package</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Interview -->
+  <div class="interview-box">
+    <div class="box-label">🎯 Interview Q&amp;A — Servlet API</div>
+
+    <div class="q">Q1. What is Servlet API?</div>
+    <div class="a">Servlet API is a set of interfaces and classes provided by Java (in javax.servlet and javax.servlet.http packages) used to build server-side web applications.</div>
+
+    <div class="q">Q2. What are the two main packages in Servlet API?</div>
+    <div class="a"><strong>javax.servlet</strong> — generic/protocol-independent classes. <strong>javax.servlet.http</strong> — HTTP-specific classes like HttpServlet, HttpSession.</div>
+
+    <div class="q">Q3. What is the difference between GenericServlet and HttpServlet?</div>
+    <div class="a">GenericServlet is protocol-independent and overrides <code>service()</code>. HttpServlet extends GenericServlet and is HTTP-specific, providing <code>doGet()</code>, <code>doPost()</code>, etc.</div>
+
+    <div class="q">Q4. What is HttpServletRequest?</div>
+    <div class="a">An interface that extends ServletRequest. It provides HTTP-specific methods to read client request data such as parameters, headers, session, cookies.</div>
+
+    <div class="q">Q5. What is HttpServletResponse?</div>
+    <div class="a">An interface that extends ServletResponse. It provides methods to send HTTP responses back to the client, set content type, and get a writer/stream for output.</div>
+
+    <div class="q">Q6. What is RequestDispatcher?</div>
+    <div class="a">RequestDispatcher is an interface in javax.servlet that allows forwarding a request to another resource (Servlet/JSP) or including another resource's content in the response.</div>
+
+    <div class="q">Q7. What is HttpSession?</div>
+    <div class="a">HttpSession is an interface used to maintain session between multiple requests from the same client. It stores user-specific data across requests (e.g., login info).</div>
+
+    <div class="q">Q8. Why must we use HttpServlet instead of GenericServlet for web apps?</div>
+    <div class="a">Web applications use HTTP protocol. HttpServlet provides HTTP-specific features like GET/POST handling, session management, and cookies — which GenericServlet lacks.</div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — Servlet API Packages</div>
+    <p><strong>javax.servlet</strong> → Generic (G for Generic, no protocol lock)</p>
+    <p><strong>javax.servlet.http</strong> → HTTP Specific (H for HTTP — hypertext)</p>
+    <p>Think: <em>"First learn to walk (generic), then run on HTTP (specific)"</em></p>
+  </div>
+
+</div>
+
+</body>
+</html>

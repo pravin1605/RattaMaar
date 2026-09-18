@@ -1,0 +1,826 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center; font-size: 20px; font-weight: 700;
+    border: 2.5px solid #111; padding: 9px 18px;
+    margin-bottom: 5px; letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 13px; font-style: italic;
+  }
+  .page-title {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: #555; margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title {
+    font-weight: 700; font-size: 11.5px;
+    margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 10.8px; padding: 9px 12px;
+    margin: 7px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw  { color: #569cd6; }
+  .cm  { color: #6a9955; }
+  .st  { color: #ce9178; }
+  .cl  { color: #4ec9b0; }
+  .mt  { color: #dcdcaa; }
+  .nm  { color: #9cdcfe; }
+  .an  { color: #c586c0; }
+
+  .code-block {
+    background: #f5f5f5; border: 1px solid #ccc;
+    border-left: 3px solid #333;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px; padding: 7px 10px;
+    margin: 5px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.6;
+  }
+
+  .explain-box {
+    background: #fffdf0; border: 1px solid #ddd;
+    border-left: 3px solid #888;
+    padding: 7px 11px; margin: 6px 0; font-size: 12.5px;
+  }
+  .explain-box-title { font-weight: 700; font-size: 12px; margin-bottom: 4px; color: #333; }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  .line-explain { display: flex; gap: 0; margin: 3px 0; border: 1px solid #ddd; }
+  .line-code {
+    background: #f0f0f0; font-family: 'Courier New', monospace;
+    font-size: 11px; padding: 4px 8px;
+    border-right: 1px solid #ccc; min-width: 46%;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .line-meaning { padding: 4px 8px; font-size: 11.5px; color: #333; flex: 1; }
+
+  .step-row { display: flex; align-items: flex-start; gap: 9px; margin: 5px 0; }
+  .step-num {
+    min-width: 22px; height: 22px;
+    background: #111; color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .method-row { display: flex; gap: 6px; align-items: baseline; margin: 3px 0; }
+  .method-name {
+    font-family: 'Courier New', monospace; font-weight: 700;
+    font-size: 11.5px; background: #eee;
+    padding: 1px 5px; border-radius: 2px; white-space: nowrap;
+  }
+  .method-desc { font-size: 12px; color: #333; }
+
+  .tag {
+    display: inline-block; background: #111; color: #fff;
+    font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px;
+    margin-right: 4px; vertical-align: middle;
+  }
+
+  .output-box {
+    background: #111; color: #00dd00;
+    font-family: 'Courier New', monospace;
+    font-size: 12px; padding: 7px 12px; margin: 6px 0;
+  }
+  .output-box::before { content: '▶ Output: '; color: #aaa; font-size: 10px; display:block; margin-bottom:2px; }
+
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  /* Pool visual */
+  .pool-visual {
+    display: flex; gap: 4px; margin: 8px 0; align-items: center; flex-wrap: wrap;
+  }
+  .pool-slot {
+    border: 2px solid #333; padding: 5px 8px; font-size: 11px;
+    font-family: 'Courier New', monospace; font-weight: 700;
+    text-align: center; min-width: 55px; background: #e8f5e9;
+  }
+  .pool-slot.empty {
+    background: #fafafa; color: #aaa; border-style: dashed;
+  }
+  .pool-label { font-size: 11px; font-weight: 700; margin-right: 6px; }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  ol { padding-left: 17px; margin: 3px 0; }
+  ol li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — THEORY ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">JDBC — Connection Pool (Complete Notes)</div>
+  <div class="main-subtitle">Package: jdbc6thday | Custom Connection Pool + INSERT (Batch) + UPDATE + DELETE + FETCH</div>
+
+  <!-- What is Connection Pool -->
+  <div class="section">
+    <div class="section-header">📘 1. What is a Connection Pool?</div>
+    <div class="section-body">
+      <p>✅ <strong>Definition:</strong> A <strong>Connection Pool</strong> is a cache of pre-created database connections that are <strong>reused</strong> by applications instead of creating a new connection every time a DB operation is needed.</p>
+      <p style="margin-top:5px;">👉 Instead of opening and closing a connection on every request (expensive!), a pool of connections is created at startup and handed out to requests — then <strong>returned back</strong> to the pool after use.</p>
+
+      <div class="two-col" style="margin-top:8px;">
+        <div class="inline-box">
+          <div class="inline-box-title">Without Connection Pool ❌</div>
+          <ol style="font-size:12px;">
+            <li>Request comes in</li>
+            <li>New Connection created (slow!)</li>
+            <li>DB operation done</li>
+            <li>Connection closed (wasted!)</li>
+            <li>Next request → repeat from step 1</li>
+          </ol>
+          <p style="margin-top:5px; font-size:12px;">👉 1000 requests = 1000 new connections opened and closed = <strong>very slow</strong></p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">With Connection Pool ✅</div>
+          <ol style="font-size:12px;">
+            <li>App starts → 5 connections created at once</li>
+            <li>Request 1 → gets conn from pool</li>
+            <li>DB operation done</li>
+            <li>Connection <strong>returned</strong> to pool (not closed)</li>
+            <li>Next request → reuses same connection</li>
+          </ol>
+          <p style="margin-top:5px; font-size:12px;">👉 1000 requests = only 5 connections → <strong>much faster</strong></p>
+        </div>
+      </div>
+
+      <div class="subsection-title" style="margin-top:8px;">🔹 Real-Life Analogy</div>
+      <div class="two-col">
+        <div>
+          <p>Think of a <strong>taxi stand</strong> 🚕:</p>
+          <ul>
+            <li>Pool = Taxi stand with 5 taxis ready</li>
+            <li>getConnection() = Taking a taxi from stand</li>
+            <li>recieveConnection() = Returning taxi back to stand</li>
+            <li>If all taxis busy → create new taxi (extra connection)</li>
+            <li>If stand full → close extra taxi (close extra connection)</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title">Pool Visual (pool_size = 5):</div>
+          <div class="pool-label">POOL:</div>
+          <div class="pool-visual">
+            <div class="pool-slot">Conn 1</div>
+            <div class="pool-slot">Conn 2</div>
+            <div class="pool-slot">Conn 3</div>
+            <div class="pool-slot">Conn 4</div>
+            <div class="pool-slot">Conn 5</div>
+          </div>
+          <p style="font-size:12px; margin-top:4px;">After getConnection() by one request:</p>
+          <div class="pool-visual">
+            <div class="pool-slot empty">—</div>
+            <div class="pool-slot">Conn 2</div>
+            <div class="pool-slot">Conn 3</div>
+            <div class="pool-slot">Conn 4</div>
+            <div class="pool-slot">Conn 5</div>
+          </div>
+        </div>
+      </div>
+      <div class="interview-line">A Connection Pool is a cache of pre-created, reusable database connections. Instead of creating a new connection per request (costly), the pool hands out existing connections and takes them back after use. This improves performance significantly in multi-request / multi-threaded applications.</div>
+    </div>
+  </div>
+
+  <!-- Why Connection Pool -->
+  <div class="section">
+    <div class="section-header">📘 2. Why Connection Pool?</div>
+    <div class="section-body">
+      <div class="three-col">
+        <div class="inline-box">
+          <div class="inline-box-title">⚡ Performance</div>
+          <p>Creating a DB connection is expensive — involves network handshake, authentication, memory allocation. Pooling avoids this overhead on every request.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">♻️ Reusability</div>
+          <p>Connections are reused instead of destroyed. Same 5 connections serve thousands of requests over time.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔒 Resource Control</div>
+          <p>Pool limits max connections to DB. Prevents DB server from being overwhelmed. Extra connections closed when pool is full.</p>
+        </div>
+      </div>
+      <div class="interview-line">Connection Pooling improves performance by reusing pre-created connections, avoids repeated creation overhead, controls resource usage by capping max connections, and is essential in real-world applications where many users query the DB simultaneously.</div>
+    </div>
+  </div>
+
+  <!-- Key Concepts -->
+  <div class="section">
+    <div class="section-header">📘 3. Key Concepts Used in this Program</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">🔹 Static Variables</div>
+          <p>All fields (driverPath, url, user, password, connect, pool_size) are <code>static</code> — they belong to the <strong>class</strong>, not any object. Shared across all usages.</p>
+
+          <div class="subsection-title">🔹 Static Block</div>
+          <p>A <code>static { }</code> block runs <strong>once automatically</strong> when the class is first loaded by JVM — before main() or any constructor. Used here to:</p>
+          <ul>
+            <li>Load the JDBC driver</li>
+            <li>Create 5 connections and fill the pool</li>
+          </ul>
+          <p style="font-size:12px; margin-top:4px;">👉 Pool is ready before anyone calls getConnection().</p>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 ArrayList&lt;Connection&gt;</div>
+          <p><code>ArrayList&lt;Connection&gt;</code> stores the pool of connections.</p>
+          <ul>
+            <li><code>add(conn)</code> → add connection to pool</li>
+            <li><code>remove(0)</code> → remove first connection from pool (give to requester)</li>
+            <li><code>isEmpty()</code> → check if pool has any connections</li>
+            <li><code>size()</code> → how many connections currently in pool</li>
+          </ul>
+
+          <div class="subsection-title" style="margin-top:8px;">🔹 pool_size = 5</div>
+          <p>Maximum connections maintained in pool. If pool has &lt; 5 → return connection to pool. If pool has = 5 already → close the extra connection.</p>
+        </div>
+      </div>
+      <div class="interview-line">The pool uses ArrayList&lt;Connection&gt; as the container. static variables ensure one shared pool. static block initializes the pool once at class load. pool_size controls max connections in pool — excess connections are physically closed to prevent resource waste.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — CONNECTIONPOOL CLASS ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Connection Pool Notes | Page 2 — ConnectionPool.java (Core Pool Class)</div>
+
+  <div class="section">
+    <div class="section-header">📄 ConnectionPool.java — Complete Pool Implementation</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this class does</div>
+      <p>This is the <strong>core pool class</strong>. It creates 5 connections at startup (via static block), provides <code>getConnection()</code> to lend a connection, and <code>recieveConnection()</code> to take it back. All methods and fields are <code>static</code> — no object creation needed.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbc6thday</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+<span class="kw">import</span> <span class="nm">java.util.ArrayList</span>;
+
+<span class="kw">public class</span> <span class="cl">ConnectionPool</span> {
+
+<span class="cm">// Static fields — class-level, shared across all callers</span>
+<span class="kw">private static</span> <span class="cl">String</span> <span class="nm">driverPath</span> = <span class="st">"org.postgresql.Driver"</span>;
+<span class="kw">private static</span> <span class="cl">String</span> <span class="nm">url</span> = <span class="st">"jdbc:postgresql://localhost:5433/jdbc6thday"</span>;
+<span class="kw">private static</span> <span class="cl">String</span> <span class="nm">user</span> = <span class="st">"postgres"</span>;
+<span class="kw">private static</span> <span class="cl">String</span> <span class="nm">password</span> = <span class="st">"root"</span>;
+<span class="kw">private static</span> <span class="cl">ArrayList</span>&lt;<span class="cl">Connection</span>&gt; <span class="nm">connect</span> = <span class="kw">new</span> <span class="cl">ArrayList</span>&lt;<span class="cl">Connection</span>&gt;();
+<span class="kw">private static int</span> <span class="nm">pool_size</span> = 5;
+
+<span class="cm">// Static block — runs ONCE when class is first loaded by JVM</span>
+<span class="kw">static</span> {
+    <span class="kw">try</span> {
+        <span class="cl">Class</span>.<span class="mt">forName</span>(<span class="nm">driverPath</span>);
+
+        <span class="kw">for</span> (<span class="kw">int</span> <span class="nm">i</span> = 0; <span class="nm">i</span> &lt; <span class="nm">pool_size</span>; <span class="nm">i</span>++) {
+            <span class="nm">connect</span>.<span class="mt">add</span>(<span class="mt">createConnection</span>());
+        }
+    } <span class="kw">catch</span> (<span class="cl">ClassNotFoundException</span> e) {
+        e.<span class="mt">printStackTrace</span>();
+    } <span class="kw">catch</span> (<span class="cl">SQLException</span> e) {
+        e.<span class="mt">printStackTrace</span>();
+    }
+}
+
+<span class="cm">// Private helper — creates one fresh DB connection</span>
+<span class="kw">private static</span> <span class="cl">Connection</span> <span class="mt">createConnection</span>() <span class="kw">throws</span> <span class="cl">SQLException</span> {
+    <span class="cl">Connection</span> <span class="nm">connection</span> = <span class="kw">null</span>;
+    <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(<span class="nm">url</span>, <span class="nm">user</span>, <span class="nm">password</span>);
+    <span class="kw">return</span> <span class="nm">connection</span>;
+}
+
+<span class="cm">// Public — give a connection from pool (or create new if pool empty)</span>
+<span class="kw">public static</span> <span class="cl">Connection</span> <span class="mt">getConnection</span>() <span class="kw">throws</span> <span class="cl">SQLException</span> {
+    <span class="kw">if</span> (!<span class="nm">connect</span>.<span class="mt">isEmpty</span>()) {
+        <span class="kw">return</span> <span class="nm">connect</span>.<span class="mt">remove</span>(0);
+    } <span class="kw">else</span> {
+        <span class="kw">return</span> <span class="mt">createConnection</span>();
+    }
+}
+
+<span class="cm">// Public — return connection back to pool (or close if pool is full)</span>
+<span class="kw">public static void</span> <span class="mt">recieveConnection</span>(<span class="cl">Connection</span> c) <span class="kw">throws</span> <span class="cl">SQLException</span> {
+    <span class="kw">if</span> (<span class="nm">connect</span>.<span class="mt">size</span>() &lt; <span class="nm">pool_size</span>) {
+        <span class="nm">connect</span>.<span class="mt">add</span>(c);
+    } <span class="kw">else</span> {
+        c.<span class="mt">close</span>();
+    }
+}
+}</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Field-by-Field Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">private static String driverPath</div>
+          <div class="line-meaning">FQCN of PostgreSQL driver. private = only used inside this class. static = shared at class level, no object needed.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">private static String url</div>
+          <div class="line-meaning">JDBC connection URL for jdbc6thday database on port 5433.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">private static ArrayList&lt;Connection&gt; connect</div>
+          <div class="line-meaning">The actual pool — ArrayList storing live Connection objects. Private — only this class manages it directly.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">private static int pool_size = 5</div>
+          <div class="line-meaning">Maximum number of connections in pool. Controls both initial creation (loop) and return logic (size check).</div>
+        </div>
+      </div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Method-by-Method Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">static { Class.forName(); for loop → add(createConnection()) }</div>
+          <div class="line-meaning">Static initializer block. Runs once at class load. Loads driver. Creates 5 connections using createConnection() and adds to pool ArrayList.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">private static Connection createConnection()</div>
+          <div class="line-meaning">Helper method — creates one fresh DB connection using DriverManager.getConnection(). Private — not called by outside classes directly.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">public static Connection getConnection()</div>
+          <div class="line-meaning">If pool not empty → remove(0) returns first connection from list and removes it from pool. If pool empty → create new connection on-demand (emergency).</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">public static void recieveConnection(Connection c)</div>
+          <div class="line-meaning">Return connection back. If pool has less than pool_size → add it back (reuse). If pool already full (size == 5) → close the connection permanently (discard extra).</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>📝 getConnection() Logic:</strong><br>
+        <code>connect.remove(0)</code> → removes and returns the connection at index 0 (first connection). ArrayList shifts remaining connections. This removes it from the pool so another caller can't get the same connection simultaneously.<br><br>
+        <strong>📝 recieveConnection() Logic:</strong><br>
+        <code>connect.size() &lt; pool_size</code> → if pool has space → add back for reuse<br>
+        <code>else c.close()</code> → pool is full → physically close this connection to free DB resources
+      </div>
+      <div class="interview-line">getConnection() uses remove(0) to atomically take the first connection out of the pool — removing it so no other caller gets it. recieveConnection() returns it back if pool has space, or closes it if pool is full. The static block pre-fills the pool at class load time.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — INSERT + DELETE ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Connection Pool Notes | Page 3 — InsertData.java (Batch) &amp; deletedata.java</div>
+
+  <!-- INSERT -->
+  <div class="section">
+    <div class="section-header">📄 InsertData.java — INSERT using Batch + PreparedStatement + Connection Pool</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Gets a connection from the pool, uses <strong>PreparedStatement with Batch</strong> to insert 3 student records in a single DB trip, then returns the connection back to pool using <code>recieveConnection()</code>.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbc6thday</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.PreparedStatement</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+
+<span class="kw">public class</span> <span class="cl">InsertData</span> {
+<span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">SQLException</span> {
+<span class="cl">Connection</span> <span class="nm">c</span> = <span class="cl">ConnectionPool</span>.<span class="mt">getConnection</span>();
+
+<span class="cm">// Statement s = c.createStatement();      ← commented out</span>
+<span class="cm">// s.execute("Insert into student values(101,'abc',35)");  ← old way</span>
+
+<span class="cl">PreparedStatement</span> <span class="nm">p</span> = <span class="nm">c</span>.<span class="mt">prepareStatement</span>(<span class="st">"insert into student values (?,?,?)"</span>);
+
+<span class="nm">p</span>.<span class="mt">setInt</span>(1, 102);  <span class="nm">p</span>.<span class="mt">setString</span>(2, <span class="st">"Ram"</span>);  <span class="nm">p</span>.<span class="mt">setInt</span>(3, 20);
+<span class="nm">p</span>.<span class="mt">addBatch</span>();
+
+<span class="nm">p</span>.<span class="mt">setInt</span>(1, 103);  <span class="nm">p</span>.<span class="mt">setString</span>(2, <span class="st">"Ram"</span>);  <span class="nm">p</span>.<span class="mt">setInt</span>(3, 20);
+<span class="nm">p</span>.<span class="mt">addBatch</span>();
+
+<span class="nm">p</span>.<span class="mt">setInt</span>(1, 105);  <span class="nm">p</span>.<span class="mt">setString</span>(2, <span class="st">"Ram"</span>);  <span class="nm">p</span>.<span class="mt">setInt</span>(3, 20);
+<span class="nm">p</span>.<span class="mt">addBatch</span>();
+
+<span class="nm">p</span>.<span class="mt">executeBatch</span>();
+
+<span class="cl">ConnectionPool</span>.<span class="mt">recieveConnection</span>(<span class="nm">c</span>);
+
+<span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Data inserted....."</span>);
+}
+}</div>
+
+      <div class="output-box">Data inserted.....</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">Connection c = ConnectionPool.getConnection()</div>
+          <div class="line-meaning">Gets a pre-existing connection from the pool. No new connection created — reused from pool. Static call — no object of ConnectionPool needed.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">// Statement commented out</div>
+          <div class="line-meaning">Old approach shown (commented) — Statement with execute(). New approach uses PreparedStatement with Batch for efficiency.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">c.prepareStatement("insert into student values (?,?,?)")</div>
+          <div class="line-meaning">PreparedStatement created from pool connection c. SQL pre-compiled once. 3 ? for sid, sname, sage.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">p.setInt / p.setString — then p.addBatch()</div>
+          <div class="line-meaning">Set values for each row, then addBatch() queues the INSERT. Repeated 3 times for 3 different rows. Not sent to DB yet.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">p.executeBatch()</div>
+          <div class="line-meaning">Sends ALL 3 queued INSERT statements to DB in ONE network trip. Much faster than 3 separate execute() calls.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ConnectionPool.recieveConnection(c)</div>
+          <div class="line-meaning">Returns connection c back to pool for reuse. MUST be called after every DB operation — otherwise connection is lost from pool permanently.</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>📝 Batch Insert — 3 rows, 1 DB trip:</strong><br>
+        Row 1: sid=102, sname="Ram", sage=20 → addBatch()<br>
+        Row 2: sid=103, sname="Ram", sage=20 → addBatch()<br>
+        Row 3: sid=105, sname="Ram", sage=20 → addBatch()<br>
+        executeBatch() → sends all 3 at once → returns int[] = {1, 1, 1}
+      </div>
+      <div class="interview-line">Batch insert with PreparedStatement: set values → addBatch() → repeat for each row → executeBatch() sends all in one DB trip. ConnectionPool.getConnection() gets a pooled connection; recieveConnection() must be called after use to return it — otherwise pool shrinks permanently.</div>
+    </div>
+  </div>
+
+  <!-- DELETE -->
+  <div class="section">
+    <div class="section-header">📄 deletedata.java — DELETE using Statement + Connection Pool</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Gets a connection from pool, deletes student where sname='Ram' using Statement, returns connection back to pool.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbc6thday</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Statement</span>;
+
+<span class="kw">public class</span> <span class="cl">deletedata</span> {
+<span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">SQLException</span> {
+<span class="cl">Connection</span> <span class="nm">c</span> = <span class="cl">ConnectionPool</span>.<span class="mt">getConnection</span>();
+
+<span class="cl">Statement</span> <span class="nm">s</span> = <span class="nm">c</span>.<span class="mt">createStatement</span>();
+
+<span class="nm">s</span>.<span class="mt">execute</span>(<span class="st">"delete from student where sname='Ram'"</span>);
+
+<span class="cl">ConnectionPool</span>.<span class="mt">recieveConnection</span>(<span class="nm">c</span>);
+
+<span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"delete....."</span>);
+}
+}</div>
+
+      <div class="output-box">delete.....</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">ConnectionPool.getConnection()</div>
+          <div class="line-meaning">Borrows a connection from pool. Pool now has 4 connections (one taken out).</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">c.createStatement()</div>
+          <div class="line-meaning">Creates Statement on the pooled connection. Statement used for simple DELETE — no parameters needed.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">s.execute("delete from student where sname='Ram'")</div>
+          <div class="line-meaning">Deletes ALL rows where sname='Ram'. Returns false (DML — no ResultSet). Multiple rows may be deleted if multiple students named Ram exist.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ConnectionPool.recieveConnection(c)</div>
+          <div class="line-meaning">Returns connection back to pool. Pool goes back to 5. Critical — if forgotten, pool shrinks by 1 each run.</div>
+        </div>
+      </div>
+      <div class="interview-line">In Connection Pool pattern, every getConnection() must be paired with a recieveConnection() call — similar to a lock-unlock pattern. Forgetting recieveConnection() causes pool depletion over time — connections leak out and pool eventually runs dry.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 4 — FETCH + UPDATE ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Connection Pool Notes | Page 4 — fetchdata.java &amp; updateData.java</div>
+
+  <!-- FETCH -->
+  <div class="section">
+    <div class="section-header">📄 fetchdata.java — SELECT using executeQuery() + ResultSet + Connection Pool</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Gets a connection from pool, executes SELECT query for student with sid=101, iterates ResultSet using index-based getters, then returns connection to pool.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbc6thday</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.ResultSet</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Statement</span>;
+
+<span class="kw">public class</span> <span class="cl">fetchdata</span> {
+<span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">SQLException</span> {
+<span class="cl">Connection</span> <span class="nm">c</span> = <span class="cl">ConnectionPool</span>.<span class="mt">getConnection</span>();
+
+<span class="cl">Statement</span> <span class="nm">s</span> = <span class="nm">c</span>.<span class="mt">createStatement</span>();
+
+<span class="cl">ResultSet</span> <span class="nm">r</span> = <span class="nm">s</span>.<span class="mt">executeQuery</span>(<span class="st">"select * from student where sid=101"</span>);
+
+<span class="kw">while</span> (<span class="nm">r</span>.<span class="mt">next</span>()) {
+    <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="nm">r</span>.<span class="mt">getInt</span>(1) + <span class="st">"=Id"</span>);
+    <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="nm">r</span>.<span class="mt">getString</span>(2) + <span class="st">"=Name"</span>);
+}
+
+<span class="cl">ConnectionPool</span>.<span class="mt">recieveConnection</span>(<span class="nm">c</span>);
+}
+}</div>
+
+      <div class="output-box">101=Id
+abc=Name</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">import java.sql.ResultSet</div>
+          <div class="line-meaning">Extra import needed for SELECT — ResultSet holds the query result. Not needed in INSERT/UPDATE/DELETE programs.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ResultSet r = s.executeQuery("select * from student where sid=101")</div>
+          <div class="line-meaning">executeQuery() — for SELECT only. Returns ResultSet r containing matching rows. Cursor starts before first row.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">while (r.next())</div>
+          <div class="line-meaning">Moves cursor to next row. Returns true if row exists. For sid=101 — only one row exists, so loop runs once.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">r.getInt(1) / r.getString(2)</div>
+          <div class="line-meaning">Index-based column access. Column 1 = sid (int), Column 2 = sname (String). Index starts at 1.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ConnectionPool.recieveConnection(c)</div>
+          <div class="line-meaning">Returns connection to pool after all operations done. Note: ResultSet and Statement not explicitly closed here — good practice to close them before returning connection.</div>
+        </div>
+      </div>
+      <div class="interview-line">In Connection Pool pattern, for SELECT: get connection from pool → create statement → executeQuery() → process ResultSet → return connection to pool. Closing ResultSet and Statement before recieveConnection() is best practice to avoid resource leaks on the DB server side.</div>
+    </div>
+  </div>
+
+  <!-- UPDATE -->
+  <div class="section">
+    <div class="section-header">📄 updateData.java — UPDATE using Statement + Connection Pool</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Gets a connection from pool, updates sage=20 for student where sid=101 using Statement, returns connection to pool.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbc6thday</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.PreparedStatement</span>;  <span class="cm">// imported but not used</span>
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Statement</span>;
+
+<span class="kw">public class</span> <span class="cl">updateData</span> {
+<span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">SQLException</span> {
+<span class="cl">Connection</span> <span class="nm">c</span> = <span class="cl">ConnectionPool</span>.<span class="mt">getConnection</span>();
+
+<span class="cl">Statement</span> <span class="nm">s</span> = <span class="nm">c</span>.<span class="mt">createStatement</span>();
+
+<span class="nm">s</span>.<span class="mt">execute</span>(<span class="st">"update student set sage=20 where sid=101"</span>);
+
+<span class="cl">ConnectionPool</span>.<span class="mt">recieveConnection</span>(<span class="nm">c</span>);
+}
+}</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">import java.sql.PreparedStatement</div>
+          <div class="line-meaning">Imported but not used in this program. Likely left from copy-paste or future refactoring. No error — unused import doesn't break compilation.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ConnectionPool.getConnection()</div>
+          <div class="line-meaning">Borrows connection from pool. Pool_size decreases by 1 temporarily.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">s.execute("update student set sage=20 where sid=101")</div>
+          <div class="line-meaning">UPDATE SQL — sets age to 20 for student with sid=101. execute() returns false (no ResultSet). Return value not captured.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ConnectionPool.recieveConnection(c)</div>
+          <div class="line-meaning">Returns connection to pool. No System.out.println — program silently completes after update.</div>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>📝 Observation — No output printed:</strong> updateData.java has no System.out.println() after recieveConnection(). Program completes silently. In real projects, always print a confirmation or log the operation result.
+      </div>
+      <div class="interview-line">updateData.java demonstrates the Connection Pool pattern for UPDATE: getConnection() → createStatement() → execute(sql) → recieveConnection(). The unused PreparedStatement import is harmless — Java allows unused imports without compilation errors, but they should be cleaned up.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 5 — SUMMARY ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Connection Pool Notes | Page 5 — Summary, Comparison &amp; Quick Revision</div>
+
+  <!-- How pool works lifecycle -->
+  <div class="section">
+    <div class="section-header">🗂️ Connection Pool Lifecycle — Step by Step</div>
+    <div class="section-body">
+      <div class="step-row"><div class="step-num">1</div><div><strong>Class Loaded by JVM</strong> → static block runs → Class.forName() loads driver → loop creates 5 connections → pool ArrayList has 5 connections</div></div>
+      <div class="step-row" style="margin-top:5px;"><div class="step-num">2</div><div><strong>Client calls getConnection()</strong> → pool not empty → remove(0) returns Conn1 → pool now has 4 connections</div></div>
+      <div class="step-row" style="margin-top:5px;"><div class="step-num">3</div><div><strong>Client uses Connection</strong> → creates Statement/PreparedStatement → executes SQL → gets result</div></div>
+      <div class="step-row" style="margin-top:5px;"><div class="step-num">4</div><div><strong>Client calls recieveConnection(c)</strong> → pool size &lt; 5 → Conn1 added back → pool now has 5 again</div></div>
+      <div class="step-row" style="margin-top:5px;"><div class="step-num">5</div><div><strong>If pool empty &amp; new request</strong> → getConnection() → creates new connection on-demand → not from pool</div></div>
+      <div class="step-row" style="margin-top:5px;"><div class="step-num">6</div><div><strong>If pool full &amp; connection returned</strong> → recieveConnection() → pool size = 5 already → c.close() discards extra</div></div>
+    </div>
+  </div>
+
+  <!-- All programs comparison -->
+  <div class="section">
+    <div class="section-header">🗂️ All 4 Operational Programs — Comparison</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Program</th>
+          <th>Operation</th>
+          <th>Statement Type</th>
+          <th>Execute Method</th>
+          <th>Extra Feature</th>
+          <th>Output</th>
+        </tr>
+        <tr>
+          <td><strong>InsertData</strong></td>
+          <td>INSERT 3 rows</td>
+          <td>PreparedStatement</td>
+          <td>executeBatch()</td>
+          <td>Batch insert (3 rows in 1 trip)</td>
+          <td>Data inserted.....</td>
+        </tr>
+        <tr>
+          <td><strong>deletedata</strong></td>
+          <td>DELETE by name</td>
+          <td>Statement</td>
+          <td>execute()</td>
+          <td>—</td>
+          <td>delete.....</td>
+        </tr>
+        <tr>
+          <td><strong>fetchdata</strong></td>
+          <td>SELECT by id</td>
+          <td>Statement</td>
+          <td>executeQuery()</td>
+          <td>ResultSet + while + getInt/getString</td>
+          <td>101=Id / abc=Name</td>
+        </tr>
+        <tr>
+          <td><strong>updateData</strong></td>
+          <td>UPDATE salary</td>
+          <td>Statement</td>
+          <td>execute()</td>
+          <td>—</td>
+          <td>— (no println)</td>
+        </tr>
+      </table>
+      <p style="margin-top:6px; font-size:12px;">👉 <strong>All 4 programs use the same pattern:</strong> <code>getConnection() → SQL operation → recieveConnection()</code></p>
+    </div>
+  </div>
+
+  <!-- Normal JDBC vs Pool comparison -->
+  <div class="section">
+    <div class="section-header">📘 Normal JDBC vs Connection Pool — Comparison</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Feature</th>
+          <th>Normal JDBC</th>
+          <th>Connection Pool</th>
+        </tr>
+        <tr><td><strong>Connection created</strong></td><td>New one per request</td><td>Pre-created at startup (pool_size=5)</td></tr>
+        <tr><td><strong>Connection closed</strong></td><td>After each use</td><td>Returned to pool (not closed)</td></tr>
+        <tr><td><strong>Performance</strong></td><td>Slow (create overhead each time)</td><td>Fast (reuse existing connections)</td></tr>
+        <tr><td><strong>Class used</strong></td><td>DriverManager directly</td><td>Custom ConnectionPool class</td></tr>
+        <tr><td><strong>Driver loading</strong></td><td>In main() or before connection</td><td>In static block (once at class load)</td></tr>
+        <tr><td><strong>Connection management</strong></td><td>Each program manages own</td><td>Centralized in ConnectionPool class</td></tr>
+        <tr><td><strong>Reusability</strong></td><td>❌ Not reused</td><td>✅ Reused across multiple programs</td></tr>
+        <tr><td><strong>Production use</strong></td><td>Not suitable for multi-user</td><td>Suitable — with libraries like HikariCP</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quick revision -->
+  <div class="section">
+    <div class="section-header">🗂️ Quick Revision — Key Rules</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">ConnectionPool Class Rules:</div>
+          <ul>
+            <li>All fields and methods are <code>static</code></li>
+            <li>Pool container: <code>ArrayList&lt;Connection&gt;</code></li>
+            <li>Pool size: <code>pool_size = 5</code></li>
+            <li>Static block runs ONCE at class load</li>
+            <li>getConnection() → <code>remove(0)</code> if not empty</li>
+            <li>getConnection() → <code>createConnection()</code> if empty</li>
+            <li>recieveConnection() → <code>add(c)</code> if size &lt; pool_size</li>
+            <li>recieveConnection() → <code>c.close()</code> if pool full</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title">Pattern Used in All Programs:</div>
+          <div class="code-block" style="font-size:11px;">// 1. Get from pool
+Connection c = ConnectionPool.getConnection();
+
+// 2. Do DB operation
+Statement s = c.createStatement();
+s.execute(sql);
+
+// 3. ALWAYS return to pool
+ConnectionPool.recieveConnection(c);</div>
+          <div class="subsection-title" style="margin-top:8px;">Important Notes:</div>
+          <ul>
+            <li>Always call recieveConnection() after use</li>
+            <li>Forgetting → pool depletes over time</li>
+            <li>This is a <strong>custom pool</strong> — real projects use <strong>HikariCP, C3P0, DBCP</strong></li>
+            <li>Real pools handle threading, timeouts, validation</li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">Connection Pool pattern: getConnection() borrows a connection; recieveConnection() returns it. static block initializes pool at class load. This custom pool uses ArrayList. In production, HikariCP or Apache DBCP are used — they add thread-safety, connection validation, timeout handling, and monitoring.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

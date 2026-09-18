@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center; font-size: 20px; font-weight: 700;
+    border: 2.5px solid #111; padding: 9px 18px;
+    margin-bottom: 5px; letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 13px; font-style: italic;
+  }
+  .page-title {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: #555; margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .four-col  { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title {
+    font-weight: 700; font-size: 11.5px;
+    margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 10.8px; padding: 8px 12px;
+    margin: 6px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw { color: #569cd6; }
+  .cm { color: #6a9955; }
+  .st { color: #ce9178; }
+  .cl { color: #4ec9b0; }
+  .mt { color: #dcdcaa; }
+  .nm { color: #9cdcfe; }
+  .an { color: #c586c0; }
+
+  .code-block {
+    background: #f5f5f5; border: 1px solid #ccc;
+    border-left: 3px solid #333;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px; padding: 7px 10px;
+    margin: 5px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.6;
+  }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  .interview-answer {
+    background: #fff; border: 2px solid #111;
+    padding: 8px 12px; margin: 7px 0; font-size: 12.5px;
+  }
+  .interview-answer-title {
+    font-weight: 700; font-size: 12px;
+    margin-bottom: 5px; color: #111;
+    border-bottom: 1px solid #ccc; padding-bottom: 3px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  /* State badge */
+  .state-badge {
+    display: inline-block; font-weight: 700;
+    font-size: 12px; padding: 3px 10px;
+    border: 2px solid #111; margin: 0 4px;
+    vertical-align: middle;
+  }
+  .state-transient  { background: #fff3e0; }
+  .state-persistent { background: #e8f5e9; border-color: #2e7d32; }
+  .state-detached   { background: #e3f2fd; }
+  .state-removed    { background: #fce4ec; border-color: #b71c1c; }
+
+  /* life cycle diagram */
+  .lc-flow {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+  }
+  .lc-box {
+    padding: 6px 20px; font-weight: 700; font-size: 12.5px;
+    text-align: center; min-width: 160px; border: 2px solid #333;
+  }
+  .lc-arrow {
+    font-size: 13px; color: #333; text-align: center;
+    line-height: 1.3;
+  }
+  .lc-method {
+    font-family: 'Courier New', monospace; font-size: 11px;
+    color: #555; text-align: center; display: block;
+  }
+
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  .def-row { display: flex; gap: 0; margin: 3px 0; border: 1px solid #ddd; }
+  .def-term {
+    background: #f0f0f0; font-weight: 700;
+    font-size: 12px; padding: 4px 9px;
+    border-right: 1px solid #ccc; min-width: 36%;
+  }
+  .def-meaning { padding: 4px 9px; font-size: 12px; color: #333; flex: 1; }
+
+  .step-row { display: flex; align-items: flex-start; gap: 9px; margin: 5px 0; }
+  .step-num {
+    min-width: 22px; height: 22px;
+    background: #111; color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .char-list { list-style: none; padding: 0; margin: 4px 0; }
+  .char-list li {
+    padding: 3px 0; border-bottom: 1px dashed #ddd;
+    font-size: 12.5px;
+  }
+  .char-list li:last-child { border-bottom: none; }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — INTRO + ENTITY + LIFECYCLE OVERVIEW ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">Hibernate Object Life Cycle — Complete Notes</div>
+  <div class="main-subtitle">4 States | Transient | Persistent | Detached | Removed | Dirty Checking | Interview Answers</div>
+
+  <!-- What is Entity Object -->
+  <div class="section">
+    <div class="section-header">📘 1. What is an Entity Object?</div>
+    <div class="section-body">
+      <p>An <strong>Entity Object</strong> is a Java object whose data is stored in a database table.</p>
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">Example Entity Class:</div>
+          <div class="code-block-dark"><span class="an">@Entity</span>
+<span class="an">@Table</span>(name=<span class="st">"student"</span>)
+<span class="kw">public class</span> <span class="cl">Student</span> {
+    <span class="an">@Id</span>
+    <span class="kw">private int</span> <span class="nm">id</span>;
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">city</span>;
+    <span class="kw">public</span> <span class="cl">Student</span>() { }
+    <span class="cm">// Getters and Setters</span>
+}</div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">Database Table:</div>
+          <div style="border:1px solid #999; font-family:monospace; font-size:12px;">
+            <div style="background:#111;color:#fff;padding:3px 10px;display:grid;grid-template-columns:1fr 1fr 1fr;font-weight:700;">
+              <span>id</span><span>name</span><span>city</span>
+            </div>
+            <div style="padding:3px 10px;display:grid;grid-template-columns:1fr 1fr 1fr;">
+              <span>101</span><span>Pravin</span><span>Mumbai</span>
+            </div>
+          </div>
+          <p style="font-size:12px; margin-top:6px;">👉 Student Java class ↔ student DB table<br>👉 Student object ↔ one row in table</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What is Lifecycle -->
+  <div class="section">
+    <div class="section-header">📘 2. What is Hibernate Life Cycle?</div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>Hibernate Life Cycle represents the <strong>different states</strong> through which an Entity Object passes during its interaction with Hibernate and the database.</p>
+
+      <div class="subsection-title">🔹 Interview Definition</div>
+      <p>Hibernate Life Cycle is the <strong>journey of an Entity Object</strong> from its creation in Java memory until it is stored, managed, detached, and finally removed from the database.</p>
+
+      <div class="subsection-title">🔹 Real-Life Example — Company Employee</div>
+      <div class="four-col" style="margin-top:6px;">
+        <div class="inline-box" style="border-left:3px solid #aaa;">
+          <div class="inline-box-title">Stage 1 — Not Employee Yet</div>
+          <p style="font-size:11.5px;">You exist but are <strong>outside the company</strong>. Company doesn't know you.</p>
+          <p style="font-size:11px; margin-top:4px; font-weight:700;">→ Transient State</p>
+        </div>
+        <div class="inline-box" style="border-left:3px solid #2e7d32;">
+          <div class="inline-box-title">Stage 2 — Active Employee</div>
+          <p style="font-size:11.5px;">Company hires you. <strong>Tracks</strong> attendance, salary, projects.</p>
+          <p style="font-size:11px; margin-top:4px; font-weight:700;">→ Persistent State</p>
+        </div>
+        <div class="inline-box" style="border-left:3px solid #1565c0;">
+          <div class="inline-box-title">Stage 3 — Ex-Employee</div>
+          <p style="font-size:11.5px;">You resign. Company no longer <strong>tracks</strong> you. Record still exists.</p>
+          <p style="font-size:11px; margin-top:4px; font-weight:700;">→ Detached State</p>
+        </div>
+        <div class="inline-box" style="border-left:3px solid #b71c1c;">
+          <div class="inline-box-title">Stage 4 — Record Deleted</div>
+          <p style="font-size:11.5px;">Employee record <strong>permanently deleted</strong> from system.</p>
+          <p style="font-size:11px; margin-top:4px; font-weight:700;">→ Removed State</p>
+        </div>
+      </div>
+      <div class="interview-line">Hibernate Life Cycle is the journey of an Entity Object through 4 states: Transient (exists only in JVM), Persistent (managed by Hibernate, synced to DB), Detached (exists but not managed), and Removed (marked for deletion).</div>
+    </div>
+  </div>
+
+  <!-- 4 States Overview + Diagram -->
+  <div class="section">
+    <div class="section-header">📘 3. Four States + Complete Life Cycle Diagram</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="lc-flow">
+            <div class="lc-box" style="background:#fff3e0; border-color:#e65100;">
+              TRANSIENT STATE
+              <div style="font-size:10px;font-weight:400;color:#777;">new Student() — exists in JVM only</div>
+            </div>
+            <div class="lc-arrow">↓<span class="lc-method">em.persist(s)</span></div>
+            <div class="lc-box" style="background:#e8f5e9; border-color:#2e7d32;">
+              PERSISTENT STATE
+              <div style="font-size:10px;font-weight:400;color:#777;">managed by Hibernate — synced to DB</div>
+            </div>
+            <div class="lc-arrow">↓<span class="lc-method">em.close() / evict()</span></div>
+            <div class="lc-box" style="background:#e3f2fd; border-color:#1565c0;">
+              DETACHED STATE
+              <div style="font-size:10px;font-weight:400;color:#777;">exists but not managed</div>
+            </div>
+            <div class="lc-arrow">↓<span class="lc-method">em.merge(s)</span></div>
+            <div class="lc-box" style="background:#e8f5e9; border-color:#2e7d32;">
+              PERSISTENT (AGAIN)
+              <div style="font-size:10px;font-weight:400;color:#777;">re-attached to EntityManager</div>
+            </div>
+            <div class="lc-arrow">↓<span class="lc-method">em.remove(s)</span></div>
+            <div class="lc-box" style="background:#fce4ec; border-color:#b71c1c;">
+              REMOVED STATE
+              <div style="font-size:10px;font-weight:400;color:#777;">scheduled for deletion</div>
+            </div>
+            <div class="lc-arrow">↓<span class="lc-method">et.commit()</span></div>
+            <div class="lc-box" style="background:#f5f5f5;">
+              RECORD DELETED FROM DB ✅
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Why Learn Life Cycle? (Interview Questions)</div>
+          <ul>
+            <li>What is Transient State?</li>
+            <li>What is Persistent State?</li>
+            <li>What is Detached State?</li>
+            <li>What is Removed State?</li>
+            <li><strong>What is Dirty Checking?</strong></li>
+            <li>Difference between Persistent and Detached Object?</li>
+          </ul>
+          <p style="margin-top:6px; font-size:12px;">👉 All these questions come from Hibernate Life Cycle.</p>
+
+          <div class="subsection-title" style="margin-top:8px;">🔹 State → Method Mapping:</div>
+          <div class="def-row"><div class="def-term">Transient → Persistent</div><div class="def-meaning"><code>em.persist(obj)</code></div></div>
+          <div class="def-row"><div class="def-term">Persistent → Detached</div><div class="def-meaning"><code>em.close()</code> / <code>em.detach(obj)</code></div></div>
+          <div class="def-row"><div class="def-term">Detached → Persistent</div><div class="def-meaning"><code>em.merge(obj)</code></div></div>
+          <div class="def-row"><div class="def-term">Persistent → Removed</div><div class="def-meaning"><code>em.remove(obj)</code></div></div>
+          <div class="def-row"><div class="def-term">Removed → DB deleted</div><div class="def-meaning"><code>et.commit()</code></div></div>
+
+          <div class="note-box" style="margin-top:8px;">
+            <strong>📝 Project Setup:</strong><br>
+            Database: <code>student</code><br>
+            Table columns: <code>id</code>, <code>name</code>, <code>city</code><br>
+            Entity: <code>@Entity @Table(name="student") class Student</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — STATE 1 TRANSIENT + STATE 2 PERSISTENT ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Hibernate Life Cycle | Page 2 — State 1: Transient &amp; State 2: Persistent + Dirty Checking</div>
+
+  <!-- State 1 Transient -->
+  <div class="section">
+    <div class="section-header">📘 State 1 — TRANSIENT STATE <span style="font-size:10px; font-style:italic; font-weight:400; margin-left:8px;">Object in JVM only | Hibernate unaware</span></div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>An object that exists <strong>only in Java memory</strong> and is <strong>NOT associated with Hibernate Session / EntityManager</strong> is called a <strong>Transient Object</strong>.</p>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Example:</div>
+          <div class="code-block-dark"><span class="cl">Student</span> <span class="nm">s</span> = <span class="kw">new</span> <span class="cl">Student</span>();
+<span class="nm">s</span>.<span class="mt">setId</span>(101);
+<span class="nm">s</span>.<span class="mt">setName</span>(<span class="st">"Pravin"</span>);
+<span class="nm">s</span>.<span class="mt">setCity</span>(<span class="st">"Mumbai"</span>);
+<span class="cm">// Object created — no em.persist() yet</span>
+<span class="cm">// Object is in TRANSIENT state</span></div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Internal Situation:</div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:3px; margin:6px 0;">
+            <div style="border:1.5px solid #e65100; background:#fff3e0; padding:5px 20px; font-size:12px; font-weight:700;">Student Object (JVM Memory)</div>
+            <div style="font-size:13px; color:#555;">↕</div>
+            <div style="border:1.5px dashed #aaa; padding:5px 20px; font-size:12px; color:#aaa;">Database ❌ Empty — No Record</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Important Characteristics:</div>
+          <ul class="char-list">
+            <li>✅ Object exists only in JVM memory</li>
+            <li>❌ Hibernate does NOT know about it</li>
+            <li>❌ Database row does NOT exist</li>
+            <li>❌ No SQL query executed</li>
+            <li>❌ Not inside Persistence Context</li>
+            <li>❌ No Dirty Checking</li>
+          </ul>
+
+          <div class="note-box" style="margin-top:8px;">
+            <strong>💬 Interview Point:</strong><br>
+            Q: Is Hibernate tracking this object?<br>
+            A: <strong>NO</strong> — because object is not associated with EntityManager. It is just a regular Java object.
+          </div>
+        </div>
+      </div>
+      <div class="interview-line">Transient State: Object created with new keyword, exists only in JVM heap, not associated with any Hibernate Session or EntityManager, no corresponding row in DB, no SQL generated. Hibernate has zero knowledge of this object.</div>
+    </div>
+  </div>
+
+  <!-- State 2 Persistent -->
+  <div class="section">
+    <div class="section-header">📘 State 2 — PERSISTENT STATE <span style="font-size:10px; font-style:italic; font-weight:400; margin-left:8px;">Managed by Hibernate | Synced to DB | Dirty Checking</span></div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>When an object becomes <strong>associated with EntityManager / Session</strong>, Hibernate starts managing it. Such object is called a <strong>Persistent Object</strong>.</p>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Example:</div>
+          <div class="code-block-dark"><span class="cl">EntityManagerFactory</span> <span class="nm">emf</span> =
+  <span class="cl">Persistence</span>.<span class="mt">createEntityManagerFactory</span>(<span class="st">"pravin"</span>);
+<span class="cl">EntityManager</span> <span class="nm">em</span> = <span class="nm">emf</span>.<span class="mt">createEntityManager</span>();
+<span class="nm">em</span>.<span class="mt">getTransaction</span>().<span class="mt">begin</span>();
+
+<span class="cl">Student</span> <span class="nm">s</span> = <span class="kw">new</span> <span class="cl">Student</span>();
+<span class="nm">s</span>.<span class="mt">setId</span>(101);
+<span class="nm">s</span>.<span class="mt">setName</span>(<span class="st">"Pravin"</span>);
+<span class="nm">s</span>.<span class="mt">setCity</span>(<span class="st">"Mumbai"</span>);
+
+<span class="nm">em</span>.<span class="mt">persist</span>(<span class="nm">s</span>); <span class="cm">// NOW → PERSISTENT STATE</span></div>
+
+          <div class="subsection-title" style="margin-top:6px;">🔹 SQL Generated:</div>
+          <div class="code-block-dark"><span class="kw">insert into</span> student(id, name, city)
+<span class="kw">values</span>(101, <span class="st">'Pravin'</span>, <span class="st">'Mumbai'</span>);</div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Important Characteristics:</div>
+          <ul class="char-list">
+            <li>✅ Object is managed by Hibernate</li>
+            <li>✅ Hibernate tracks ALL changes</li>
+            <li>✅ Object exists in database</li>
+            <li>✅ Object exists in First Level Cache</li>
+            <li>✅ Inside Persistence Context</li>
+            <li>✅ Dirty Checking is ACTIVE</li>
+          </ul>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Persistence Context:</div>
+          <p>Persistence Context is a <strong>memory area</strong> managed by EntityManager. It contains all Persistent Objects.</p>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px; margin:5px 0;">
+            <div style="border:1.5px solid #2e7d32; background:#e8f5e9; padding:4px 14px; font-size:11.5px; font-weight:700;">EntityManager</div>
+            <div style="font-size:12px; color:#555;">↓ manages</div>
+            <div style="border:1.5px solid #2e7d32; background:#e8f5e9; padding:4px 14px; font-size:11.5px; font-weight:700;">Persistence Context</div>
+            <div style="font-size:12px; color:#555;">↓ contains</div>
+            <div style="border:1.5px solid #2e7d32; background:#e8f5e9; padding:4px 14px; font-size:11.5px; font-weight:700;">Persistent Objects</div>
+          </div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="subsection-title">🔥 Very Important Concept — DIRTY CHECKING <span style="font-size:10px; color:#b71c1c; font-weight:700;">(Interviewers LOVE this question)</span></div>
+      <div class="two-col" style="margin-top:6px;">
+        <div>
+          <p>Suppose:</p>
+          <div class="code-block-dark"><span class="cl">Student</span> <span class="nm">s</span> = <span class="nm">em</span>.<span class="mt">find</span>(<span class="cl">Student</span>.<span class="kw">class</span>, 101);
+<span class="nm">s</span>.<span class="mt">setCity</span>(<span class="st">"Pune"</span>);
+<span class="cm">// You NEVER wrote any UPDATE query!</span>
+<span class="cm">// But still DB gets updated!</span></div>
+          <p style="margin-top:5px; font-size:12px;"><strong>Why?</strong> Because object is <strong>Persistent</strong>. Hibernate continuously monitors it. This feature is called: <strong>Dirty Checking</strong></p>
+        </div>
+        <div>
+          <div style="font-size:12px; font-weight:700; margin-bottom:4px;">🔹 Dirty Checking Flow:</div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px; margin:4px 0;">
+            <div style="border:1.5px solid #333; padding:3px 14px; font-size:11.5px; font-weight:600; background:#e8f5e9;">Persistent Object</div>
+            <div style="font-size:12px; color:#555;">↓</div>
+            <div style="border:1.5px solid #333; padding:3px 14px; font-size:11.5px; font-weight:600;">Value Changed (setCity("Pune"))</div>
+            <div style="font-size:12px; color:#555;">↓</div>
+            <div style="border:1.5px solid #333; padding:3px 14px; font-size:11.5px; font-weight:600;">Hibernate Detects Change</div>
+            <div style="font-size:12px; color:#555;">↓</div>
+            <div style="border:1.5px solid #333; padding:3px 14px; font-size:11.5px; font-weight:600; background:#e8f5e9;">Auto UPDATE Query Executed</div>
+          </div>
+          <div class="code-block-dark" style="margin-top:6px;"><span class="kw">update</span> student
+<span class="kw">set</span> city=<span class="st">'Pune'</span>
+<span class="kw">where</span> id=101;</div>
+        </div>
+      </div>
+      <div class="interview-line">Persistent State: Object is associated with EntityManager, tracked by Hibernate, exists in DB and Persistence Context. DIRTY CHECKING — if you change any field of a Persistent object, Hibernate automatically generates UPDATE SQL at transaction commit — without you writing any update code!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — STATE 3 DETACHED + STATE 4 REMOVED ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Hibernate Life Cycle | Page 3 — State 3: Detached &amp; State 4: Removed</div>
+
+  <!-- State 3 Detached -->
+  <div class="section">
+    <div class="section-header">📘 State 3 — DETACHED STATE <span style="font-size:10px; font-style:italic; font-weight:400; margin-left:8px;">Object exists | EntityManager closed | Hibernate stops tracking</span></div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>When a Persistent Object <strong>loses its connection with EntityManager</strong>, it becomes <strong>Detached</strong>.</p>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Example:</div>
+          <div class="code-block-dark"><span class="cl">Student</span> <span class="nm">s</span> = <span class="nm">em</span>.<span class="mt">find</span>(<span class="cl">Student</span>.<span class="kw">class</span>, 101);
+<span class="cm">// s is PERSISTENT</span>
+
+<span class="nm">em</span>.<span class="mt">close</span>(); <span class="cm">// EntityManager closed</span>
+<span class="cm">// Now: Student Object STILL EXISTS</span>
+<span class="cm">// But EntityManager is CLOSED</span>
+<span class="cm">// s is now DETACHED</span></div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Internal View:</div>
+          <div class="two-col" style="gap:6px;">
+            <div style="border:1px solid #ccc; padding:6px; font-size:11.5px; background:#e8f5e9;">
+              <div style="font-weight:700; margin-bottom:3px;">Before em.close():</div>
+              Student ↔ EntityManager ✅ Connected
+            </div>
+            <div style="border:1px solid #ccc; padding:6px; font-size:11.5px; background:#e3f2fd;">
+              <div style="font-weight:700; margin-bottom:3px;">After em.close():</div>
+              Student (exists) / EntityManager ❌ Closed
+            </div>
+          </div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Example of Dirty Checking stopped:</div>
+          <div class="code-block-dark"><span class="nm">s</span>.<span class="mt">setCity</span>(<span class="st">"Delhi"</span>);
+<span class="cm">// Nothing happens!</span>
+<span class="cm">// No SQL query generated.</span>
+<span class="cm">// Why? Object is DETACHED.</span>
+<span class="cm">// Hibernate is no longer managing it.</span></div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Important Characteristics:</div>
+          <ul class="char-list">
+            <li>✅ Object exists in JVM memory</li>
+            <li>✅ Database row still exists</li>
+            <li>❌ Hibernate does NOT track changes</li>
+            <li>❌ Dirty Checking is STOPPED</li>
+            <li>❌ Not in Persistence Context</li>
+            <li>❌ No auto SQL generation</li>
+          </ul>
+
+          <div class="note-box" style="margin-top:8px;">
+            <strong>💬 Interview Point:</strong><br>
+            Detached Objects are very common in <strong>Web Applications</strong>.<br>
+            Reason: Every web request creates and closes EntityManager. Objects passed between layers become Detached.
+          </div>
+
+          <div class="subsection-title" style="margin-top:8px;">🔹 Reattaching Detached Object — merge():</div>
+          <p>Hibernate provides <code>merge()</code> to reattach a Detached object:</p>
+          <div class="code-block-dark"><span class="cl">EntityManager</span> <span class="nm">em2</span> =
+  <span class="nm">emf</span>.<span class="mt">createEntityManager</span>();
+<span class="nm">em2</span>.<span class="mt">getTransaction</span>().<span class="mt">begin</span>();
+
+<span class="cl">Student</span> <span class="nm">managedObj</span> = <span class="nm">em2</span>.<span class="mt">merge</span>(<span class="nm">s</span>);
+<span class="cm">// s (detached) → managedObj (PERSISTENT)</span></div>
+          <p style="font-size:12px; margin-top:4px;">👉 Now object becomes <strong>Persistent again</strong> and Hibernate resumes tracking.</p>
+        </div>
+      </div>
+      <div class="interview-line">Detached State: Object exists in JVM and DB row exists, but EntityManager is closed — Hibernate stops tracking. setCity("Delhi") on detached object generates NO SQL. Use em.merge(obj) to reattach it to a new EntityManager and make it Persistent again.</div>
+    </div>
+  </div>
+
+  <!-- State 4 Removed -->
+  <div class="section">
+    <div class="section-header">📘 State 4 — REMOVED STATE <span style="font-size:10px; font-style:italic; font-weight:400; margin-left:8px;">Scheduled for deletion | DELETE SQL on commit</span></div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>When Hibernate marks an object <strong>for deletion</strong>, it enters <strong>Removed State</strong>.</p>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Example:</div>
+          <div class="code-block-dark"><span class="cl">Student</span> <span class="nm">s</span> = <span class="nm">em</span>.<span class="mt">find</span>(<span class="cl">Student</span>.<span class="kw">class</span>, 101);
+<span class="cm">// s is PERSISTENT</span>
+
+<span class="nm">em</span>.<span class="mt">remove</span>(<span class="nm">s</span>);
+<span class="cm">// s is now in REMOVED STATE</span>
+<span class="cm">// Scheduled for deletion</span>
+
+<span class="nm">em</span>.<span class="mt">getTransaction</span>().<span class="mt">commit</span>();
+<span class="cm">// NOW: DELETE SQL is sent to DB</span></div>
+
+          <div class="subsection-title" style="margin-top:6px;">🔹 SQL Generated:</div>
+          <div class="code-block-dark"><span class="kw">delete from</span> student
+<span class="kw">where</span> id=101;</div>
+
+          <div class="subsection-title" style="margin-top:6px;">🔹 Internal Working:</div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px; margin:5px 0;">
+            <div style="border:1.5px solid #2e7d32; background:#e8f5e9; padding:3px 14px; font-size:11.5px; font-weight:700;">Persistent Object</div>
+            <div style="font-size:12px; color:#555;">↓ em.remove(s)</div>
+            <div style="border:1.5px solid #b71c1c; background:#fce4ec; padding:3px 14px; font-size:11.5px; font-weight:700;">Removed State (scheduled)</div>
+            <div style="font-size:12px; color:#555;">↓ et.commit()</div>
+            <div style="border:1.5px solid #333; padding:3px 14px; font-size:11.5px; font-weight:700;">DELETE Query sent to DB</div>
+            <div style="font-size:12px; color:#555;">↓</div>
+            <div style="border:1.5px solid #333; background:#f5f5f5; padding:3px 14px; font-size:11.5px; font-weight:700;">DB Row Permanently Deleted ✅</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Important Characteristics:</div>
+          <ul class="char-list">
+            <li>✅ Object is scheduled for deletion</li>
+            <li>✅ Hibernate tracks the deletion</li>
+            <li>✅ Record removed after commit</li>
+            <li>✅ DELETE SQL generated on commit</li>
+            <li>❌ DB row deleted permanently</li>
+          </ul>
+
+          <div class="note-box" style="margin-top:8px;">
+            <strong>📝 Important:</strong><br>
+            <code>em.remove(s)</code> does NOT immediately delete from DB.<br>
+            It <strong>marks the object</strong> for deletion — schedules it.<br>
+            Actual DELETE SQL is sent to DB only when <strong>et.commit()</code> is called</strong>.<br>
+            This is consistent with transaction behavior.
+          </div>
+
+          <div class="note-box" style="margin-top:6px;">
+            <strong>📝 remove() requires Persistent object:</strong><br>
+            You cannot remove a Detached object directly. First use merge() to make it Persistent, then remove().
+          </div>
+        </div>
+      </div>
+      <div class="interview-line">Removed State: em.remove(obj) schedules a Persistent object for deletion. Actual DELETE SQL is executed only on et.commit(). After commit, DB row is permanently deleted. You cannot directly remove a Detached object — must merge() it first.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 4 — COMPLETE FLOW + DIFF TABLE + INTERVIEW ANSWERS ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Hibernate Life Cycle | Page 4 — Complete Execution Flow + State Diff Table + Interview Answers</div>
+
+  <!-- Complete Execution Flow -->
+  <div class="section">
+    <div class="section-header">📘 Complete Execution Flow — All States in One Program</div>
+    <div class="section-body">
+      <div class="code-block-dark"><span class="cl">EntityManagerFactory</span> <span class="nm">emf</span> = <span class="cl">Persistence</span>.<span class="mt">createEntityManagerFactory</span>(<span class="st">"pravin"</span>);
+<span class="cl">EntityManager</span> <span class="nm">em</span> = <span class="nm">emf</span>.<span class="mt">createEntityManager</span>();
+<span class="nm">em</span>.<span class="mt">getTransaction</span>().<span class="mt">begin</span>();
+
+<span class="cl">Student</span> <span class="nm">s</span> = <span class="kw">new</span> <span class="cl">Student</span>();
+<span class="nm">s</span>.<span class="mt">setId</span>(101); <span class="nm">s</span>.<span class="mt">setName</span>(<span class="st">"Pravin"</span>); <span class="nm">s</span>.<span class="mt">setCity</span>(<span class="st">"Mumbai"</span>);
+<span class="cm">// ✅ Current State → TRANSIENT (only in JVM, Hibernate unaware)</span>
+
+<span class="nm">em</span>.<span class="mt">persist</span>(<span class="nm">s</span>);
+<span class="cm">// ✅ Current State → PERSISTENT (Hibernate managing, DB row created)</span>
+
+<span class="nm">em</span>.<span class="mt">close</span>();
+<span class="cm">// ✅ Current State → DETACHED (object exists, Hibernate stopped tracking)</span>
+
+<span class="cl">EntityManager</span> <span class="nm">em2</span> = <span class="nm">emf</span>.<span class="mt">createEntityManager</span>();
+<span class="nm">em2</span>.<span class="mt">getTransaction</span>().<span class="mt">begin</span>();
+<span class="nm">s</span> = <span class="nm">em2</span>.<span class="mt">merge</span>(<span class="nm">s</span>);
+<span class="cm">// ✅ Current State → PERSISTENT AGAIN (re-attached, Hibernate tracking resumed)</span>
+
+<span class="nm">em2</span>.<span class="mt">remove</span>(<span class="nm">s</span>);
+<span class="cm">// ✅ Current State → REMOVED (scheduled for deletion)</span>
+
+<span class="nm">em2</span>.<span class="mt">getTransaction</span>().<span class="mt">commit</span>();
+<span class="cm">// ✅ DELETE SQL sent to DB → row permanently deleted</span></div>
+    </div>
+  </div>
+
+  <!-- Difference Table -->
+  <div class="section">
+    <div class="section-header">📘 Difference Between All States (Important for Interview)</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Feature</th>
+          <th>Transient</th>
+          <th>Persistent</th>
+          <th>Detached</th>
+          <th>Removed</th>
+        </tr>
+        <tr>
+          <td><strong>Exists in JVM</strong></td>
+          <td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td>
+        </tr>
+        <tr>
+          <td><strong>Exists in DB</strong></td>
+          <td>❌ No</td><td>✅ Yes</td><td>✅ Yes</td><td>Deleting 🔄</td>
+        </tr>
+        <tr>
+          <td><strong>Hibernate Tracks</strong></td>
+          <td>❌ No</td><td>✅ Yes</td><td>❌ No</td><td>✅ Yes</td>
+        </tr>
+        <tr>
+          <td><strong>In Persistence Context</strong></td>
+          <td>❌ No</td><td>✅ Yes</td><td>❌ No</td><td>✅ Yes</td>
+        </tr>
+        <tr>
+          <td><strong>Dirty Checking Active</strong></td>
+          <td>❌ No</td><td>✅ Yes</td><td>❌ No</td><td>❌ No</td>
+        </tr>
+        <tr>
+          <td><strong>DB Operations</strong></td>
+          <td>❌ None</td><td>✅ All CRUD</td><td>❌ None</td><td>Delete Only</td>
+        </tr>
+        <tr>
+          <td><strong>Method to enter state</strong></td>
+          <td>new Object()</td><td>em.persist()</td><td>em.close()</td><td>em.remove()</td>
+        </tr>
+        <tr>
+          <td><strong>Exit to Persistent</strong></td>
+          <td>em.persist()</td><td>—</td><td>em.merge()</td><td>—</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Interview Answers -->
+  <div class="section">
+    <div class="section-header">🎯 Interview Answers — Most Important</div>
+    <div class="section-body">
+      <div class="interview-answer">
+        <div class="interview-answer-title">✅ Q: What are the states of Hibernate Object Life Cycle?</div>
+        <p>Hibernate Entity Objects pass through <strong>four major states</strong>:</p>
+        <p style="margin-top:5px;"><strong>1. Transient State:</strong> Object exists only in Java memory and is not associated with Hibernate. No DB row exists. No SQL generated.</p>
+        <p style="margin-top:4px;"><strong>2. Persistent State:</strong> Object is associated with EntityManager/Session and Hibernate manages it. Any modifications are automatically synchronized using <strong>Dirty Checking</strong>.</p>
+        <p style="margin-top:4px;"><strong>3. Detached State:</strong> Object exists but is no longer associated with EntityManager. Hibernate does not track changes. Use <code>merge()</code> to reattach.</p>
+        <p style="margin-top:4px;"><strong>4. Removed State:</strong> Object is marked for deletion. Hibernate removes it from the database during transaction commit.</p>
+      </div>
+
+      <div class="interview-answer" style="margin-top:7px;">
+        <div class="interview-answer-title">✅ Q: What is Dirty Checking in Hibernate?</div>
+        <p>Dirty Checking is a feature in Hibernate where it <strong>automatically detects changes</strong> made to a Persistent object and generates an UPDATE SQL query — without the developer writing any update code.</p>
+        <p style="margin-top:5px;">When a Persistent object's field is modified (e.g., <code>s.setCity("Pune")</code>), Hibernate compares the current state with the snapshot taken at load time. If different (dirty), it generates <code>UPDATE student SET city='Pune' WHERE id=101</code> automatically on transaction commit.</p>
+        <p style="margin-top:5px;">Dirty Checking works ONLY for Persistent objects — it stops for Detached objects.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Revision -->
+  <div class="section">
+    <div class="section-header">🗂️ Quick Revision — Key Rules</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <ul>
+            <li><strong>Transient</strong> = new Object() → JVM only → no DB → no tracking</li>
+            <li><strong>Persistent</strong> = em.persist() → managed → DB → Dirty Checking ON</li>
+            <li><strong>Detached</strong> = em.close() → exists → no tracking → Dirty Checking OFF</li>
+            <li><strong>Removed</strong> = em.remove() → DELETE on commit → row gone</li>
+            <li>Transient → Persistent: <code>em.persist()</code></li>
+            <li>Persistent → Detached: <code>em.close()</code> / <code>em.detach()</code></li>
+            <li>Detached → Persistent: <code>em.merge()</code></li>
+            <li>Persistent → Removed: <code>em.remove()</code></li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>Dirty Checking: field change → auto UPDATE — only for Persistent</li>
+            <li>Persistence Context = memory area inside EntityManager holding Persistent objects</li>
+            <li>em.remove() schedules deletion — NOT immediate — actual DELETE on commit</li>
+            <li>Cannot remove Detached object — must merge() first</li>
+            <li>Detached state common in web apps — EM created per request</li>
+            <li>First Level Cache = Persistence Context (Session-level cache)</li>
+            <li>Only Persistent objects exist in First Level Cache</li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">4 states: Transient (JVM only) → Persistent (em.persist, managed, Dirty Checking ON) → Detached (em.close, not tracked) → Removed (em.remove, DELETE on commit). Dirty Checking = auto UPDATE when Persistent object field changes. merge() reattaches Detached to Persistent.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

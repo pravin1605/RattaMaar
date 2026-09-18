@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spring Framework – IoC</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #e8eaf0;
+    color: #1a1a2e;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .page {
+    width: 794px;
+    min-height: 1123px;
+    background: #ffffff;
+    margin: 32px auto;
+    padding: 36px 40px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+    page-break-after: always;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #1565c0;
+    padding-bottom: 10px;
+    margin-bottom: 22px;
+  }
+  .page-header .subject { font-size: 11px; font-weight: 600; color: #1565c0; letter-spacing: 1.5px; text-transform: uppercase; }
+  .page-header .topic { font-size: 20px; font-weight: 800; color: #0d1b4b; }
+  .page-header .badge { background: #1565c0; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 1px; }
+
+  .section-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: #1565c0;
+    margin: 20px 0 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: #dde3f0; }
+
+  .card { border: 1.5px solid #e2e8f5; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; background: #f8faff; }
+  .card-title { font-size: 12px; font-weight: 700; color: #0d1b4b; margin-bottom: 6px; }
+  .card p { font-size: 12.5px; color: #2d3748; margin-bottom: 5px; }
+
+  .def-box { background: #e3edf9; border-left: 4px solid #1565c0; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; }
+  .def-box .def-label { font-size: 10px; font-weight: 700; color: #1565c0; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .def-box p { font-size: 12.5px; color: #1a2a4a; line-height: 1.65; }
+
+  .interview-box { background: #fff8e1; border-left: 4px solid #f9a825; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; }
+  .interview-box .int-label { font-size: 10px; font-weight: 700; color: #e65100; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .interview-box p { font-size: 12.5px; color: #3e2700; line-height: 1.65; }
+
+  .trick-box { background: #fffde7; border: 1.5px dashed #fbc02d; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+  .trick-box .trick-label { font-size: 10px; font-weight: 700; color: #f57f17; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .trick-box p { font-size: 12px; color: #4a3900; }
+
+  .tip-box { background: #e8f5e9; border-left: 4px solid #388e3c; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 12px; }
+  .tip-box .tip-label { font-size: 10px; font-weight: 700; color: #1b5e20; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .tip-box p { font-size: 12px; color: #1b3a1e; }
+
+  .warn-box { background: #fce4ec; border-left: 4px solid #c62828; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 12px; }
+  .warn-box .warn-label { font-size: 10px; font-weight: 700; color: #b71c1c; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .warn-box p { font-size: 12px; color: #4a0000; }
+
+  .example-card { background: #f3f0ff; border: 1.5px solid #c5b3f5; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+  .example-card .ex-label { font-size: 10px; font-weight: 700; color: #6200ea; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+
+  .code-block { background: #0d1b2e; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+  .code-block pre { font-family: 'Fira Code', monospace; font-size: 11.5px; color: #e2e8f0; white-space: pre-wrap; word-break: break-word; }
+  .kw  { color: #82aaff; }
+  .an  { color: #c3e88d; }
+  .cm  { color: #546e7a; font-style: italic; }
+  .str { color: #f07178; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 12px; }
+  .cmp-table thead th { background: #1565c0; color: #fff; padding: 8px 10px; text-align: left; font-weight: 700; }
+  .cmp-table tbody tr:nth-child(even) { background: #f0f5ff; }
+  .cmp-table tbody td { padding: 7px 10px; border-bottom: 1px solid #dde3f0; color: #1a2a4a; vertical-align: top; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+  .pros-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .pro-chip { background: #e8f5e9; border: 1px solid #a5d6a7; color: #1b5e20; border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 600; }
+  .con-chip { background: #fce4ec; border: 1px solid #ef9a9a; color: #b71c1c; border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 600; }
+
+  .pill { display: inline-block; background: #1565c0; color: #fff; border-radius: 4px; padding: 1px 8px; font-size: 11px; font-weight: 700; margin: 2px; }
+  .pill-green { background: #388e3c; }
+  .pill-orange { background: #e65100; }
+  .pill-purple { background: #6200ea; }
+
+  /* Flow diagram */
+  .flow { display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 12px; }
+  .flow-step { background: #1565c0; color: #fff; font-size: 11.5px; font-weight: 700; padding: 8px 24px; border-radius: 8px; text-align: center; min-width: 260px; }
+  .flow-arrow { font-size: 16px; color: #1565c0; line-height: 1.2; }
+  .flow-step.alt { background: #0d1b4b; }
+  .flow-step.green { background: #388e3c; }
+
+  /* Term grid */
+  .term-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .term-card { background: #f0f5ff; border: 1.5px solid #c5d8f5; border-radius: 8px; padding: 10px 12px; }
+  .term-card .term-name { font-size: 11px; font-weight: 800; color: #1565c0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .term-card p { font-size: 12px; color: #1a2a4a; }
+
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     PAGE 1 — What is IoC + Why + Real Life Example
+════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Inversion of Control (IoC)</div>
+    </div>
+    <div class="badge">IoC — Part 1</div>
+  </div>
+
+  <!-- What is IoC -->
+  <div class="section-label">What is IoC?</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 Definition</div>
+    <p><strong>IoC (Inversion of Control)</strong> is a design principle used by Spring Framework in which the control of <strong>creating, managing, configuring, and maintaining objects</strong> is transferred from the programmer to the Spring Framework.</p>
+  </div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Simple Interview Definition</div>
+    <p>Inversion of Control means the <strong>responsibility of managing Java objects</strong> is given to <strong>Spring</strong> instead of being handled directly by the developer.</p>
+  </div>
+
+  <!-- Before vs After IoC -->
+  <div class="section-label">Before IoC vs After IoC</div>
+
+  <div class="two-col">
+    <div>
+      <div class="warn-box">
+        <div class="warn-label">❌ Before IoC — Developer Controls</div>
+        <div class="code-block">
+          <pre><span class="kw">Student</span> s = <span class="kw">new</span> Student();
+<span class="cm">// Developer decides:
+// - When to create
+// - How to create
+// - How long to keep
+// - When to destroy</span></pre>
+        </div>
+        <p>Control is in <strong>Developer's hands</strong>.</p>
+      </div>
+    </div>
+    <div>
+      <div class="tip-box">
+        <div class="tip-label">✅ After IoC — Spring Controls</div>
+        <div class="code-block">
+          <pre><span class="an">@Component</span>
+<span class="kw">public class</span> Student {}
+
+<span class="cm">// Developer just tells Spring.
+// Spring creates &amp; manages
+// the object automatically!</span></pre>
+        </div>
+        <p>Control transferred to <strong>Spring Framework</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 What "Inversion" Means</div>
+    <p>Normally: <strong>Developer → creates objects</strong> (Developer has control)<br/>
+    With IoC: <strong>Spring → creates objects</strong> (Control is <em>inverted</em> = transferred to Spring)<br/>
+    That "transfer of control" is called <strong>Inversion of Control</strong>.</p>
+  </div>
+
+  <!-- Why IoC -->
+  <div class="section-label">Why Was IoC Introduced?</div>
+
+  <div class="card">
+    <div class="card-title">📈 As Applications Grew...</div>
+    <div class="pros-grid" style="margin-bottom:8px;">
+      <span class="pill pill-orange">10 Classes</span>
+      <span style="font-size:16px;">→</span>
+      <span class="pill pill-orange">100 Classes</span>
+      <span style="font-size:16px;">→</span>
+      <span class="pill pill-orange">1000 Classes</span>
+    </div>
+    <p style="font-size:12.5px;color:#2d3748;">Managing objects manually became extremely difficult.</p>
+  </div>
+
+  <div class="warn-box">
+    <div class="warn-label">❌ Problems Before IoC</div>
+    <p>Object creation complexity &nbsp;|&nbsp; Object lifecycle management &nbsp;|&nbsp; Configuration management &nbsp;|&nbsp; Resource management &nbsp;|&nbsp; Scalability issues</p>
+  </div>
+
+  <!-- Real Life Example -->
+  <div class="section-label">Real-Life Example</div>
+
+  <div class="example-card">
+    <div class="ex-label">🏢 Company IT Department Analogy</div>
+    <div class="two-col">
+      <div>
+        <p style="font-size:12px;font-weight:700;color:#b71c1c;margin-bottom:6px;">❌ Without IoC — Chaos!</p>
+        <p style="font-size:12px;color:#2d3748;">Every employee buys their own laptop, installs software, configures network, maintains everything. <strong>→ Chaos!</strong></p>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:700;color:#1b5e20;margin-bottom:6px;">✅ With IoC — IT Dept handles it</p>
+        <p style="font-size:12px;color:#2d3748;">IT Department handles: Laptop allocation, Software installation, Configuration, Maintenance. Employees <strong>simply use</strong> the resources.</p>
+      </div>
+    </div>
+    <div class="tip-box" style="margin-top:10px;margin-bottom:0;">
+      <div class="tip-label">💡 Conclusion</div>
+      <p><strong>Spring behaves like the IT Department.</strong> It manages all objects (laptops) so developers (employees) can focus on their actual work (business logic).</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE 2 — Where IoC Exists + What IoC Controls + Spring Container
+════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">IoC — Container &amp; Internals</div>
+    </div>
+    <div class="badge">IoC — Part 2</div>
+  </div>
+
+  <!-- Where IoC exists -->
+  <div class="section-label">Where Does IoC Exist in Spring?</div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Important Interview Question</div>
+    <p>IoC is part of the <strong>Spring Core Module</strong> — the foundation of the entire Spring Framework.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-title">🗂️ Spring Framework Modules</div>
+    <div class="pros-grid">
+      <span class="pill" style="background:#0d1b4b;">Spring Core ⬅ IoC lives here</span>
+      <span class="pill">Spring MVC</span>
+      <span class="pill">Spring Data JPA</span>
+      <span class="pill">Spring Security</span>
+      <span class="pill">Spring AOP</span>
+      <span class="pill">Spring Boot</span>
+    </div>
+    <p style="font-size:12px;color:#2d3748;margin-top:8px;">Inside Spring Core: <strong>IoC Container</strong> &nbsp;|&nbsp; Bean Management &nbsp;|&nbsp; Core Utilities &nbsp;|&nbsp; Resource Management</p>
+  </div>
+
+  <!-- What IoC Controls -->
+  <div class="section-label">What Exactly Does IoC Control?</div>
+
+  <div class="tip-box">
+    <div class="tip-label">💡 Common Misconception</div>
+    <p>Many students think IoC only <strong>creates objects</strong>. Actually, IoC does <strong>much more!</strong></p>
+  </div>
+
+  <table class="cmp-table">
+    <thead><tr><th>IoC Responsibility</th><th>What Happens</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>🏗️ Object Creation</td><td>Creates Bean instances</td><td><code>new Student()</code> done by Spring</td></tr>
+      <tr><td>⚙️ Object Configuration</td><td>Sets properties &amp; values</td><td>Injects name, age, etc.</td></tr>
+      <tr><td>🚀 Object Initialization</td><td>Prepares object for use</td><td>Calls <code>@PostConstruct</code></td></tr>
+      <tr><td>♻️ Object Lifecycle</td><td>Start → Use → Destroy Bean</td><td>Manages full bean life</td></tr>
+      <tr><td>🗄️ Resource Management</td><td>DB Connections, Files, Network</td><td>Connection pooling</td></tr>
+      <tr><td>📋 Configuration Mgmt</td><td>XML / Annotations / Java Config</td><td><code>@Component</code>, <code>application.yml</code></td></tr>
+    </tbody>
+  </table>
+
+  <!-- IoC vs Spring Container -->
+  <div class="section-label">Connection Between IoC and Spring Container</div>
+
+  <div class="two-col">
+    <div class="def-box" style="margin-bottom:0;">
+      <div class="def-label">💡 IoC = Principle</div>
+      <p><strong>IoC</strong> is a <strong>Concept / Design Principle</strong>.<br/>It says "let someone else manage objects."</p>
+    </div>
+    <div class="tip-box" style="margin-bottom:0;">
+      <div class="tip-label">🔧 Spring Container = Implementation</div>
+      <p><strong>Spring Container</strong> is the <strong>Tool that implements IoC</strong>. It is the actual engine that does the work.</p>
+    </div>
+  </div>
+
+  <div class="example-card" style="margin-top:10px;">
+    <div class="ex-label">🏫 Analogy</div>
+    <p style="font-size:12.5px;color:#2d3748;">
+      <strong>Education</strong> = Concept &nbsp;&nbsp;→&nbsp;&nbsp; <strong>School</strong> = Implementation<br/>
+      <strong>IoC</strong> = Concept &nbsp;&nbsp;→&nbsp;&nbsp; <strong>Spring Container</strong> = Implementation
+    </p>
+  </div>
+
+  <!-- How Spring Container uses IoC -->
+  <div class="section-label">How Spring Container Uses IoC — Step by Step</div>
+
+  <div class="flow">
+    <div class="flow-step">Step 1 — Application Starts &nbsp; <code style="font-size:10px;background:rgba(255,255,255,0.15);padding:2px 6px;border-radius:4px;">@SpringBootApplication</code></div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step alt">Step 2 — Spring Container Starts</div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step">Step 3 — Container Scans Classes &nbsp; <code style="font-size:10px;background:rgba(255,255,255,0.15);padding:2px 6px;border-radius:4px;">@Component @Service @Repository @Controller</code></div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step alt">Step 4 — Container Creates Objects (Beans)</div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step">Step 5 — Container Stores Objects</div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step alt">Step 6 — Container Manages Lifecycle</div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step green">Step 7 — Application Uses Managed Objects ✅</div>
+  </div>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 Memory Trick — Steps</div>
+    <p><strong>S</strong>tart App → <strong>S</strong>pring Container Starts → <strong>S</strong>can Classes → <strong>C</strong>reate Objects → <strong>S</strong>tore → <strong>M</strong>anage → <strong>U</strong>se</p>
+    <p style="margin-top:4px;">👉 <strong>"SSS CS MU"</strong> — <em>Spring's Super System Creates, Stores, Manages &amp; Uses!</em></p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE 3 — Terminologies + Benefits + Advantages Table
+════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">IoC — Terminologies &amp; Advantages</div>
+    </div>
+    <div class="badge">IoC — Part 3</div>
+  </div>
+
+  <!-- Terminologies -->
+  <div class="section-label">Important Terminologies Related to IoC</div>
+
+  <div class="term-grid">
+    <div class="term-card">
+      <div class="term-name">🫘 Bean</div>
+      <p>An object managed by Spring Container.</p>
+      <div class="code-block" style="margin-top:6px;margin-bottom:0;">
+        <pre><span class="an">@Component</span>
+<span class="kw">class</span> Student {}
+<span class="cm">// Student = Bean</span></pre>
+      </div>
+    </div>
+    <div class="term-card">
+      <div class="term-name">📋 Metadata</div>
+      <p>Information provided to Spring about how to manage classes.</p>
+      <div class="pros-grid" style="margin-top:6px;margin-bottom:0;">
+        <span class="pill pill-green">@Component</span>
+        <span class="pill pill-green">@Service</span>
+        <span class="pill pill-green">@Repository</span>
+      </div>
+    </div>
+    <div class="term-card">
+      <div class="term-name">⚙️ Configuration</div>
+      <p>Instructions given to Spring on how to set up the application.</p>
+      <div class="pros-grid" style="margin-top:6px;margin-bottom:0;">
+        <span class="pill">XML Config</span>
+        <span class="pill">Annotations</span>
+        <span class="pill">Java Config</span>
+      </div>
+    </div>
+    <div class="term-card">
+      <div class="term-name">📦 Container</div>
+      <p>The engine that reads configurations and manages beans. The <strong>"heart" of Spring</strong>.</p>
+    </div>
+    <div class="term-card" style="grid-column: span 2;">
+      <div class="term-name">♻️ Lifecycle</div>
+      <p>Stages of a Bean's existence managed by Spring Container.</p>
+      <div class="pros-grid" style="margin-top:6px;margin-bottom:0;">
+        <span class="pill pill-orange">1. Creation</span>
+        <span class="pill" style="background:#6200ea;">2. Initialization</span>
+        <span class="pill pill-green">3. Usage</span>
+        <span class="pill" style="background:#c62828;">4. Destruction</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Benefits -->
+  <div class="section-label">Benefits of IoC — Why It Is Used</div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-title">🎯 Core Purpose</div>
+    <p style="font-size:12.5px;color:#2d3748;">IoC is used to <strong>centralize object management</strong>. Instead of every class managing its own objects, Spring manages everything from <strong>one place</strong>.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="tip-box" style="margin-bottom:0;">
+      <div class="tip-label">✅ Benefit 1 — Centralized Management</div>
+      <p>All objects managed in <strong>one container</strong>. No scattered object creation.</p>
+    </div>
+    <div class="tip-box" style="margin-bottom:0;">
+      <div class="tip-label">✅ Benefit 2 — Reduced Complexity</div>
+      <p>Developers focus on <strong>business logic</strong>. Spring handles infrastructure work.</p>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:10px;">
+    <div class="tip-box" style="margin-bottom:0;">
+      <div class="tip-label">✅ Benefit 3 — Better Maintainability</div>
+      <p>Large applications become <strong>easier to maintain</strong> and update.</p>
+    </div>
+    <div class="tip-box" style="margin-bottom:0;">
+      <div class="tip-label">✅ Benefit 4 — Better Scalability</div>
+      <p>Applications can <strong>grow without chaos</strong>. IoC handles increasing complexity.</p>
+    </div>
+  </div>
+
+  <div class="tip-box" style="margin-top:10px;">
+    <div class="tip-label">✅ Benefit 5 — Consistent Configuration</div>
+    <p>All configurations maintained <strong>centrally</strong>. One place to update, all reflected everywhere.</p>
+  </div>
+
+  <!-- Advantages Table -->
+  <div class="section-label">Advantages of IoC — Quick Reference</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Advantage</th><th>Explanation</th></tr></thead>
+    <tbody>
+      <tr><td>🗂️ Centralized Management</td><td>All objects managed in one container</td></tr>
+      <tr><td>🔧 Better Maintainability</td><td>Easier to update applications</td></tr>
+      <tr><td>📈 Better Scalability</td><td>Supports large projects easily</td></tr>
+      <tr><td>♻️ Reusability</td><td>Objects can be reused efficiently</td></tr>
+      <tr><td>💡 Simplified Development</td><td>Less infrastructure code to write</td></tr>
+      <tr><td>♾️ Lifecycle Management</td><td>Automatic bean lifecycle handling</td></tr>
+      <tr><td>💾 Resource Optimization</td><td>Better memory and resource usage</td></tr>
+      <tr><td>🔄 Flexibility</td><td>Easy configuration changes without touching code</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Final Interview Box -->
+  <div class="section-label">Final Interview Answer</div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Complete Interview Answer</div>
+    <p>IoC stands for <strong>Inversion of Control</strong> — a design principle in Spring where the <strong>control of object creation, configuration, and lifecycle management</strong> is transferred from the developer to the Spring Container. Before IoC, developers manually managed all objects, which caused complexity in large applications. Spring's IoC Container (part of <strong>Spring Core Module</strong>) reads configuration (annotations/XML/Java config), scans classes, creates beans, stores them, and manages their complete lifecycle. The key benefits are: <em>centralized management, reduced complexity, better maintainability, scalability, and resource optimization</em>. IoC is the <strong>foundation principle</strong> behind the entire Spring Framework.</p>
+  </div>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 One-Line Summary</div>
+    <p>IoC = <strong>"Don't call us, we'll call you!"</strong> — Instead of you creating objects, Spring creates and provides them to you. 😄</p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,691 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center; font-size: 20px; font-weight: 700;
+    border: 2.5px solid #111; padding: 9px 18px;
+    margin-bottom: 5px; letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 13px; font-style: italic;
+  }
+  .page-title {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: #555; margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title {
+    font-weight: 700; font-size: 11.5px;
+    margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 10.8px; padding: 7px 11px;
+    margin: 5px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw { color: #569cd6; }
+  .cm { color: #6a9955; }
+  .st { color: #ce9178; }
+  .cl { color: #4ec9b0; }
+  .mt { color: #dcdcaa; }
+  .nm { color: #9cdcfe; }
+  .an { color: #c586c0; }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  .interview-answer {
+    background: #fff; border: 2px solid #111;
+    padding: 8px 12px; margin: 7px 0; font-size: 12.5px;
+  }
+  .interview-answer-title {
+    font-weight: 700; font-size: 12px;
+    margin-bottom: 5px; color: #111;
+    border-bottom: 1px solid #ccc; padding-bottom: 3px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  .def-row { display: flex; gap: 0; margin: 3px 0; border: 1px solid #ddd; }
+  .def-term {
+    background: #f0f0f0; font-weight: 700;
+    font-size: 12px; padding: 4px 9px;
+    border-right: 1px solid #ccc; min-width: 36%;
+  }
+  .def-meaning { padding: 4px 9px; font-size: 12px; color: #333; flex: 1; }
+
+  /* annotation card */
+  .ann-card {
+    border: 1.5px solid #333; margin-bottom: 9px; background: #fff;
+  }
+  .ann-header {
+    background: #222; color: #fff;
+    padding: 5px 10px; font-size: 12.5px; font-weight: 700;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ann-num {
+    background: #fff; color: #111;
+    font-size: 11px; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px; min-width: 20px; text-align: center;
+  }
+  .ann-level {
+    font-size: 10px; font-weight: 400; color: #ccc;
+    margin-left: auto;
+  }
+  .ann-body { padding: 7px 10px; }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — WHY ANNOTATIONS + @ENTITY + @TABLE + @ID ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">Hibernate / JPA Annotations — Complete Notes</div>
+  <div class="main-subtitle">21 Annotations | Core + Additional | @Entity @Table @Id @GeneratedValue @Column + Relationships + More</div>
+
+  <!-- Why Annotations -->
+  <div class="section">
+    <div class="section-header">📘 What are Annotations &amp; Why Are They Important?</div>
+    <div class="section-body">
+      <p>Annotations are <strong>special metadata</strong> used to provide instructions to Hibernate/JPA. They help Hibernate understand:</p>
+      <div class="two-col" style="margin-top:6px;">
+        <div>
+          <ul>
+            <li>Which class is a table</li>
+            <li>Which field is a column</li>
+            <li>Which field is a primary key</li>
+            <li>How values should be generated</li>
+            <li>How mapping should happen</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Before annotations — XML (old way):</div>
+          <div class="code-block-dark"><span class="cm">&lt;class name="Student"&gt;</span>
+<span class="cm">    &lt;id name="id"/&gt;</span>
+<span class="cm">&lt;/class&gt;</span>
+<span class="cm">// Lengthy + difficult to maintain</span></div>
+          <div class="subsection-title" style="margin-top:5px;">🔹 Now with annotations (new way):</div>
+          <div class="code-block-dark"><span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="cl">Student</span> { }
+<span class="cm">// Short ✅ Readable ✅ Easy to maintain ✅</span></div>
+        </div>
+      </div>
+      <div class="interview-line">Annotations replaced verbose XML mapping files in Hibernate. They provide metadata directly in Java classes — making code shorter, readable, and easier to maintain. Key annotations: @Entity, @Table, @Id, @GeneratedValue, @Column.</div>
+    </div>
+  </div>
+
+  <!-- @Entity -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-num">1</span> @Entity <span class="ann-level">Class Level | Mandatory</span></div>
+    <div class="ann-body">
+      <div class="two-col">
+        <div>
+          <p><strong>Definition:</strong> Used to declare a POJO class as an Entity Class. Tells Hibernate: This Java class should be mapped to a database table.</p>
+          <div class="code-block-dark"><span class="kw">import</span> <span class="nm">jakarta.persistence.Entity</span>;
+
+<span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="cl">Student</span> {
+}</div>
+          <p style="font-size:12px; margin-top:4px;">Internal Working: <code>@Entity</code> → Student Class → Student Table</p>
+        </div>
+        <div>
+          <p><strong>Why Important?</strong></p>
+          <ul>
+            <li>Without @Entity → Hibernate will NOT recognize class</li>
+            <li>No table mapping will happen</li>
+          </ul>
+          <div class="subsection-title" style="margin-top:6px;">🔹 Important Points:</div>
+          <ul>
+            <li>Mandatory for every Entity Class</li>
+            <li>Applied above class declaration</li>
+            <li>Converts POJO into Persistent Class</li>
+            <li>Maps class with table (by default: class name = table name)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- @Table -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-num">2</span> @Table <span class="ann-level">Class Level | Optional</span></div>
+    <div class="ann-body">
+      <div class="two-col">
+        <div>
+          <p><strong>Definition:</strong> Used to specify table details — change table name, define schema, define catalog.</p>
+          <div class="code-block-dark"><span class="an">@Entity</span>
+<span class="an">@Table</span>(name=<span class="st">"student_info"</span>)
+<span class="kw">public class</span> <span class="cl">Student</span> {
+}
+<span class="cm">// Student class → student_info table</span></div>
+        </div>
+        <div>
+          <p><strong>Why Important?</strong> By default Hibernate uses class name as table name. When DB naming convention differs from Java:</p>
+          <div class="def-row"><div class="def-term">Without @Table</div><div class="def-meaning">Student class → <code>Student</code> table</div></div>
+          <div class="def-row"><div class="def-term">With @Table</div><div class="def-meaning">Student class → <code>student_info</code> table</div></div>
+          <p style="font-size:12px; margin-top:5px;"><strong>Points:</strong> Optional | Class level | Used when table name differs from class name</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- @Id -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-num">3</span> @Id <span class="ann-level">Field Level | Mandatory</span></div>
+    <div class="ann-body">
+      <div class="two-col">
+        <div>
+          <p><strong>Definition:</strong> Used to declare Primary Key inside Entity Class.</p>
+          <div class="code-block-dark"><span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="cl">Student</span> {
+    <span class="an">@Id</span>
+    <span class="kw">private int</span> <span class="nm">id</span>;
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+}</div>
+        </div>
+        <div>
+          <p><strong>Why Important?</strong> Every table must have a Primary Key which uniquely identifies records and prevents duplicate identification.</p>
+          <div style="border:1px solid #999;font-family:monospace;font-size:12px;margin:5px 0;">
+            <div style="background:#111;color:#fff;padding:3px 9px;display:grid;grid-template-columns:1fr 1fr;font-weight:700;"><span>id (PK)</span><span>name</span></div>
+            <div style="padding:3px 9px;display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #ddd;"><span>101</span><span>Pravin</span></div>
+            <div style="padding:3px 9px;display:grid;grid-template-columns:1fr 1fr;"><span>102</span><span>Amit</span></div>
+          </div>
+          <p style="font-size:12px;"><strong>Points:</strong> Mandatory | One @Id per entity | Field level | Without @Id → AnnotationException</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — @GENERATEDVALUE + @COLUMN + COMPLETE EXAMPLE ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Annotations | Page 2 — @GeneratedValue + @Column (All Attributes) + Complete Example</div>
+
+  <!-- @GeneratedValue -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-num">4</span> @GeneratedValue <span class="ann-level">Field Level | Used with @Id</span></div>
+    <div class="ann-body">
+      <div class="two-col">
+        <div>
+          <p><strong>Definition:</strong> Used to automatically generate Primary Key values. Removes need for manual ID assignment.</p>
+          <div class="code-block-dark"><span class="an">@Id</span>
+<span class="an">@GeneratedValue</span>  <span class="cm">// auto strategy</span>
+<span class="kw">private int</span> <span class="nm">id</span>;
+
+<span class="cm">// OR with specific strategy:</span>
+<span class="an">@Id</span>
+<span class="an">@GeneratedValue</span>(strategy = <span class="cl">GenerationType</span>.<span class="nm">IDENTITY</span>)
+<span class="kw">private int</span> <span class="nm">id</span>;</div>
+          <p style="font-size:12px; margin-top:4px;">DB auto-generates: 1 → 2 → 3 → 4...</p>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Generation Strategies:</div>
+          <div class="def-row"><div class="def-term">AUTO</div><div class="def-meaning">Hibernate decides generation strategy automatically</div></div>
+          <div class="def-row"><div class="def-term">IDENTITY</div><div class="def-meaning">Database generates ID. <strong>Commonly used with PostgreSQL</strong> ✅</div></div>
+          <div class="def-row"><div class="def-term">SEQUENCE</div><div class="def-meaning">Uses a database sequence for ID generation</div></div>
+          <div class="def-row"><div class="def-term">TABLE</div><div class="def-meaning">Uses a separate table to track next ID value</div></div>
+          <p style="font-size:12px; margin-top:5px;"><strong>Points:</strong> Reduces manual work | Must be used with @Id | Supports multiple strategies</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- @Column -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-num">5</span> @Column <span class="ann-level">Field Level | Optional</span></div>
+    <div class="ann-body">
+      <p><strong>Definition:</strong> Used to specify column details and customize database columns.</p>
+      <p style="margin-bottom:5px;"><strong>Why?</strong> By default Hibernate uses variable names as column names. Use @Column when you need: different column name, length restrictions, unique values, not-null constraints.</p>
+
+      <div class="two-col">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 name — Column Name</div>
+          <div class="code-block-dark"><span class="an">@Column</span>(name=<span class="st">"student_name"</span>)
+<span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+<span class="cm">// name variable → student_name column</span></div>
+          <p style="font-size:12px; margin-top:3px;">Used when DB naming convention differs from Java.</p>
+
+          <div class="subsection-title">🔹 length — Max Size</div>
+          <div class="code-block-dark"><span class="an">@Column</span>(length=50)
+<span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+<span class="cm">// Generates: VARCHAR(50)</span></div>
+          <p style="font-size:12px; margin-top:3px;">Prevents unnecessary storage allocation.</p>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 nullable — NOT NULL</div>
+          <div class="code-block-dark"><span class="an">@Column</span>(nullable=<span class="kw">false</span>)
+<span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+<span class="cm">// Generates: NOT NULL constraint</span>
+<span class="cm">// NULL value → ❌ Not Allowed</span></div>
+          <p style="font-size:12px; margin-top:3px;">Ensures mandatory fields are always filled.</p>
+
+          <div class="subsection-title">🔹 unique — Unique Constraint</div>
+          <div class="code-block-dark"><span class="an">@Column</span>(unique=<span class="kw">true</span>)
+<span class="kw">private</span> <span class="cl">String</span> <span class="nm">email</span>;
+<span class="cm">// Duplicate email → ❌ Not Allowed</span></div>
+          <p style="font-size:12px; margin-top:3px;">Prevents duplicate records for this field.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complete Example -->
+  <div class="section">
+    <div class="section-header">📘 Complete Entity Class Example — All Core Annotations Together</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="code-block-dark"><span class="kw">import</span> <span class="nm">jakarta.persistence.*</span>;
+
+<span class="an">@Entity</span>
+<span class="an">@Table</span>(name=<span class="st">"student_info"</span>)
+<span class="kw">public class</span> <span class="cl">Student</span> {
+
+    <span class="an">@Id</span>
+    <span class="an">@GeneratedValue</span>(strategy = <span class="cl">GenerationType</span>.<span class="nm">IDENTITY</span>)
+    <span class="kw">private int</span> <span class="nm">id</span>;
+
+    <span class="an">@Column</span>(
+        name=<span class="st">"student_name"</span>,
+        length=50,
+        nullable=<span class="kw">false</span>
+    )
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+
+    <span class="an">@Column</span>(unique=<span class="kw">true</span>)
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">email</span>;
+
+    <span class="kw">public</span> <span class="cl">Student</span>() { }
+
+    <span class="cm">// Getters and Setters</span>
+}</div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 DB Table Generated:</div>
+          <div style="border:1px solid #999;font-family:monospace;font-size:11.5px;">
+            <div style="background:#111;color:#fff;padding:3px 9px;font-weight:700;">student_info</div>
+            <div style="padding:3px 9px;border-bottom:1px solid #ddd;display:grid;grid-template-columns:1fr 2fr;"><span style="font-weight:700;">Column</span><span style="font-weight:700;">Constraint</span></div>
+            <div style="padding:3px 9px;border-bottom:1px solid #ddd;display:grid;grid-template-columns:1fr 2fr;"><span>id</span><span>INT, PRIMARY KEY, AUTO</span></div>
+            <div style="padding:3px 9px;border-bottom:1px solid #ddd;display:grid;grid-template-columns:1fr 2fr;"><span>student_name</span><span>VARCHAR(50), NOT NULL</span></div>
+            <div style="padding:3px 9px;display:grid;grid-template-columns:1fr 2fr;"><span>email</span><span>UNIQUE</span></div>
+          </div>
+          <div class="interview-line">Core annotations: @Entity (class=table), @Table (rename table), @Id (PK), @GeneratedValue (auto PK), @Column (name/length/nullable/unique). These 5 annotations are enough for basic CRUD entity mapping in Hibernate.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — ANNOTATIONS 6–13 (ADDITIONAL) ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Annotations | Page 3 — Additional Annotations 6–13 (@Transient, @Lob, @Temporal, @Enumerated, Relationships)</div>
+
+  <div class="two-col">
+    <!-- @Transient -->
+    <div>
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">6</span> @Transient <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Tells Hibernate: "Do NOT store this field in the database."</p>
+          <div class="code-block-dark"><span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="cl">Student</span> {
+    <span class="an">@Id</span>
+    <span class="kw">private int</span> <span class="nm">id</span>;
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+    <span class="an">@Transient</span>
+    <span class="kw">private int</span> <span class="nm">age</span>; <span class="cm">// NOT stored in DB</span>
+}</div>
+          <p style="font-size:12px; margin-top:4px;"><strong>Why?</strong> Temporary data — calculated fields (age from DOB), confirm password, total marks.</p>
+          <table class="comp-table" style="margin-top:5px;">
+            <tr><th>Field</th><th>Stored in DB</th></tr>
+            <tr><td>id</td><td>✅</td></tr>
+            <tr><td>name</td><td>✅</td></tr>
+            <tr><td>age</td><td>❌</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- @Lob -->
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">7</span> @Lob <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> LOB = Large Object. Used to store large text, images, PDFs, videos.</p>
+          <div class="code-block-dark"><span class="an">@Lob</span>
+<span class="kw">private</span> <span class="cl">String</span> <span class="nm">description</span>; <span class="cm">// CLOB</span>
+
+<span class="an">@Lob</span>
+<span class="kw">private byte</span>[] <span class="nm">image</span>; <span class="cm">// BLOB</span></div>
+          <p style="font-size:12px; margin-top:4px;"><strong>Why?</strong> Normal VARCHAR has size limits. Large content needs LOB (CLOB for text, BLOB for binary).</p>
+        </div>
+      </div>
+
+      <!-- @Temporal -->
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">8</span> @Temporal <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Used to map Java Date and Time values to specific DB types.</p>
+          <div class="code-block-dark"><span class="an">@Temporal</span>(<span class="cl">TemporalType</span>.<span class="nm">DATE</span>)
+<span class="kw">private</span> <span class="cl">Date</span> <span class="nm">joiningDate</span>;
+<span class="cm">// Stores: 2025-06-17</span>
+
+<span class="an">@Temporal</span>(<span class="cl">TemporalType</span>.<span class="nm">TIME</span>)
+<span class="kw">private</span> <span class="cl">Date</span> <span class="nm">loginTime</span>;
+<span class="cm">// Stores: 10:30:45</span>
+
+<span class="an">@Temporal</span>(<span class="cl">TemporalType</span>.<span class="nm">TIMESTAMP</span>)
+<span class="kw">private</span> <span class="cl">Date</span> <span class="nm">createdAt</span>;
+<span class="cm">// Stores: 2025-06-17 10:30:45</span></div>
+        </div>
+      </div>
+
+      <!-- @Enumerated -->
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">9</span> @Enumerated <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Used to store Java Enum values in database.</p>
+          <div class="code-block-dark"><span class="kw">public enum</span> <span class="cl">Gender</span> { MALE, FEMALE }
+
+<span class="an">@Enumerated</span>(<span class="cl">EnumType</span>.<span class="nm">STRING</span>)
+<span class="kw">private</span> <span class="cl">Gender</span> <span class="nm">gender</span>;
+<span class="cm">// Stores "MALE" or "FEMALE" as String</span>
+<span class="cm">// EnumType.ORDINAL stores 0 or 1 (index)</span></div>
+          <p style="font-size:12px; margin-top:4px;"><strong>Why?</strong> Without it Hibernate cannot properly map Enum values to DB.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Relationships 10-13 -->
+    <div>
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">10</span> @OneToOne <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Represents One-to-One relationship between two entities.</p>
+          <div class="code-block-dark"><span class="an">@OneToOne</span>
+<span class="kw">private</span> <span class="cl">Passport</span> <span class="nm">passport</span>;</div>
+          <p style="font-size:12px; margin-top:4px;"><strong>Real Life:</strong> One Person → One Passport | One User → One Profile</p>
+        </div>
+      </div>
+
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">11</span> @OneToMany <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> One record related to multiple records.</p>
+          <div class="code-block-dark"><span class="an">@OneToMany</span>
+<span class="kw">private</span> <span class="cl">List</span>&lt;<span class="cl">Employee</span>&gt; <span class="nm">employees</span>;</div>
+          <p style="font-size:12px; margin-top:4px;"><strong>Real Life:</strong> One Department → Many Employees | One Customer → Many Orders</p>
+        </div>
+      </div>
+
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">12</span> @ManyToOne <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Many records belong to one record.</p>
+          <div class="code-block-dark"><span class="an">@ManyToOne</span>
+<span class="kw">private</span> <span class="cl">Department</span> <span class="nm">department</span>;</div>
+          <p style="font-size:12px; margin-top:4px;"><strong>Real Life:</strong> Many Employees → One Department | Many Students → One College</p>
+        </div>
+      </div>
+
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">13</span> @ManyToMany <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Many records related to many records.</p>
+          <div class="code-block-dark"><span class="an">@ManyToMany</span>
+<span class="kw">private</span> <span class="cl">List</span>&lt;<span class="cl">Course</span>&gt; <span class="nm">courses</span>;</div>
+          <p style="font-size:12px; margin-top:4px;"><strong>Real Life:</strong> Students ↔ Courses (Many:Many) | Doctors ↔ Patients</p>
+        </div>
+      </div>
+
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">14</span> @JoinColumn <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Used to specify the Foreign Key column name.</p>
+          <div class="code-block-dark"><span class="an">@ManyToOne</span>
+<span class="an">@JoinColumn</span>(name=<span class="st">"dept_id"</span>)
+<span class="kw">private</span> <span class="cl">Department</span> <span class="nm">department</span>;
+<span class="cm">// dept_id created as Foreign Key column</span></div>
+        </div>
+      </div>
+
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">15</span> @JoinTable <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Used in Many-to-Many relationships. Creates an intermediate (join) table.</p>
+          <div class="code-block-dark"><span class="an">@ManyToMany</span>
+<span class="an">@JoinTable</span>(name=<span class="st">"student_course"</span>)
+<span class="kw">private</span> <span class="cl">List</span>&lt;<span class="cl">Course</span>&gt; <span class="nm">courses</span>;
+<span class="cm">// Creates: student_course table</span>
+<span class="cm">// with student_id + course_id columns</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 4 — ANNOTATIONS 16–21 + MASTER TABLE + INTERVIEW ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Annotations | Page 4 — Annotations 16–21 + Master Table + Interview Answer</div>
+
+  <!-- 16-21 in grid -->
+  <div class="two-col">
+    <div>
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">16</span> @CascadeType <span class="ann-level">Relationship Attribute</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Automatically performs operations on related entities when performed on parent.</p>
+          <div class="code-block-dark"><span class="an">@OneToMany</span>(cascade=<span class="cl">CascadeType</span>.<span class="nm">ALL</span>)
+<span class="kw">private</span> <span class="cl">List</span>&lt;<span class="cl">Employee</span>&gt; <span class="nm">employees</span>;</div>
+          <div class="def-row" style="margin-top:5px;"><div class="def-term">PERSIST</div><div class="def-meaning">Save child automatically with parent</div></div>
+          <div class="def-row"><div class="def-term">REMOVE</div><div class="def-meaning">Delete child automatically with parent</div></div>
+          <div class="def-row"><div class="def-term">ALL</div><div class="def-meaning">Perform all cascade operations</div></div>
+        </div>
+      </div>
+
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">17</span> @FetchType <span class="ann-level">Relationship Attribute</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Controls how related data is fetched from the database.</p>
+          <div class="code-block-dark"><span class="cm">// EAGER — load immediately</span>
+<span class="an">@OneToMany</span>(fetch=<span class="cl">FetchType</span>.<span class="nm">EAGER</span>)
+
+<span class="cm">// LAZY — load when accessed</span>
+<span class="an">@OneToMany</span>(fetch=<span class="cl">FetchType</span>.<span class="nm">LAZY</span>)</div>
+          <div class="note-box" style="margin-top:5px;">
+            <strong>💬 Interview Point:</strong> Most commonly used = <code>FetchType.LAZY</code> because it improves performance — loads related data only when actually needed.
+          </div>
+        </div>
+      </div>
+
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">18</span> @Embedded <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Used to embed one class inside another entity. Embedded fields become part of the parent entity table.</p>
+          <div class="code-block-dark"><span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="cl">Student</span> {
+    <span class="an">@Id</span>
+    <span class="kw">private int</span> <span class="nm">id</span>;
+
+    <span class="an">@Embedded</span>
+    <span class="kw">private</span> <span class="cl">Address</span> <span class="nm">address</span>;
+    <span class="cm">// city + state become Student table columns</span>
+}</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">19</span> @Embeddable <span class="ann-level">Class Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Marks a class whose objects can be embedded inside an entity. Used together with @Embedded.</p>
+          <div class="code-block-dark"><span class="an">@Embeddable</span>
+<span class="kw">public class</span> <span class="cl">Address</span> {
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">city</span>;
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">state</span>;
+}
+<span class="cm">// Used inside @Entity via @Embedded</span>
+<span class="cm">// city + state stored in parent table</span></div>
+        </div>
+      </div>
+
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">20</span> @Inheritance <span class="ann-level">Class Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Used for inheritance mapping. Maps Java inheritance hierarchy to database tables.</p>
+          <div class="code-block-dark"><span class="an">@Entity</span>
+<span class="an">@Inheritance</span>(
+    strategy=<span class="cl">InheritanceType</span>.<span class="nm">SINGLE_TABLE</span>)
+<span class="kw">public class</span> <span class="cl">Person</span> { }
+
+<span class="cm">// Strategies:</span>
+<span class="cm">// SINGLE_TABLE — one table for all</span>
+<span class="cm">// TABLE_PER_CLASS — separate tables</span>
+<span class="cm">// JOINED — shared + child tables</span></div>
+        </div>
+      </div>
+
+      <div class="ann-card">
+        <div class="ann-header"><span class="ann-num">21</span> @Version <span class="ann-level">Field Level</span></div>
+        <div class="ann-body">
+          <p><strong>Definition:</strong> Used for Optimistic Locking. Prevents concurrent update problems.</p>
+          <div class="code-block-dark"><span class="an">@Version</span>
+<span class="kw">private int</span> <span class="nm">version</span>;</div>
+          <p style="font-size:12px; margin-top:4px;"><strong>Real Life:</strong> Two users edit same record simultaneously → Hibernate checks version number before updating → prevents data corruption.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Master Table -->
+  <div class="section">
+    <div class="section-header">📘 Master Reference Table — All 21 Annotations</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <table class="comp-table">
+            <tr><th>Annotation</th><th>Level</th><th>Purpose</th></tr>
+            <tr><td><code>@Entity</code></td><td>Class</td><td>Makes class an entity (maps to table)</td></tr>
+            <tr><td><code>@Table</code></td><td>Class</td><td>Specifies/renames table</td></tr>
+            <tr><td><code>@Id</code></td><td>Field</td><td>Defines Primary Key</td></tr>
+            <tr><td><code>@GeneratedValue</code></td><td>Field</td><td>Auto-generates PK (IDENTITY for PostgreSQL)</td></tr>
+            <tr><td><code>@Column</code></td><td>Field</td><td>name / length / nullable / unique</td></tr>
+            <tr><td><code>@Transient</code></td><td>Field</td><td>Ignores field — not stored in DB</td></tr>
+            <tr><td><code>@Lob</code></td><td>Field</td><td>Stores large text (CLOB) or binary (BLOB)</td></tr>
+            <tr><td><code>@Temporal</code></td><td>Field</td><td>Maps Date to DATE/TIME/TIMESTAMP</td></tr>
+            <tr><td><code>@Enumerated</code></td><td>Field</td><td>Stores Enum as STRING or ORDINAL</td></tr>
+            <tr><td><code>@OneToOne</code></td><td>Field</td><td>One-to-One relationship</td></tr>
+          </table>
+        </div>
+        <div>
+          <table class="comp-table">
+            <tr><th>Annotation</th><th>Level</th><th>Purpose</th></tr>
+            <tr><td><code>@OneToMany</code></td><td>Field</td><td>One-to-Many relationship</td></tr>
+            <tr><td><code>@ManyToOne</code></td><td>Field</td><td>Many-to-One relationship</td></tr>
+            <tr><td><code>@ManyToMany</code></td><td>Field</td><td>Many-to-Many relationship</td></tr>
+            <tr><td><code>@JoinColumn</code></td><td>Field</td><td>Specifies Foreign Key column</td></tr>
+            <tr><td><code>@JoinTable</code></td><td>Field</td><td>Creates intermediate join table</td></tr>
+            <tr><td><code>CascadeType</code></td><td>Attr</td><td>PERSIST / REMOVE / ALL cascading</td></tr>
+            <tr><td><code>FetchType.LAZY</code></td><td>Attr</td><td>Load when needed (preferred)</td></tr>
+            <tr><td><code>FetchType.EAGER</code></td><td>Attr</td><td>Load immediately</td></tr>
+            <tr><td><code>@Embedded</code></td><td>Field</td><td>Embeds another class's fields</td></tr>
+            <tr><td><code>@Embeddable</code></td><td>Class</td><td>Marks class as embeddable</td></tr>
+            <tr><td><code>@Inheritance</code></td><td>Class</td><td>Inheritance mapping strategy</td></tr>
+            <tr><td><code>@Version</code></td><td>Field</td><td>Optimistic locking</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interview Answer -->
+  <div class="section">
+    <div class="section-header">🎯 Interview Answer</div>
+    <div class="section-body">
+      <div class="interview-answer">
+        <div class="interview-answer-title">✅ Q: What are the important Hibernate annotations?</div>
+        <p>The most commonly used Hibernate/JPA annotations are:</p>
+        <ol style="margin-top:5px;">
+          <li style="margin-bottom:3px;"><strong>@Entity</strong> — Declares a class as an Entity that maps to a database table.</li>
+          <li style="margin-bottom:3px;"><strong>@Table</strong> — Specifies custom table name and schema details.</li>
+          <li style="margin-bottom:3px;"><strong>@Id</strong> — Defines the Primary Key field.</li>
+          <li style="margin-bottom:3px;"><strong>@GeneratedValue</strong> — Automatically generates Primary Key values. Strategy IDENTITY is commonly used with PostgreSQL.</li>
+          <li style="margin-bottom:3px;"><strong>@Column</strong> — Customizes column properties: name, length, nullable, unique constraints.</li>
+          <li style="margin-bottom:3px;"><strong>@Transient</strong> — Marks a field to be ignored (not stored in DB).</li>
+          <li style="margin-bottom:3px;"><strong>@OneToOne, @OneToMany, @ManyToOne, @ManyToMany</strong> — Define entity relationships.</li>
+          <li><strong>@FetchType.LAZY</strong> — Preferred fetching strategy for better performance.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

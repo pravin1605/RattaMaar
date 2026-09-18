@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spring – Bean Life Cycle</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { font-family: 'Inter', sans-serif; background: #e8eaf0; color: #000; font-size: 13px; line-height: 1.6; }
+
+  .page { width: 794px; min-height: 1123px; background: #fff; margin: 32px auto; padding: 36px 40px 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.13); page-break-after: always; }
+
+  .page-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 22px; }
+  .page-header .subject { font-size: 11px; font-weight: 700; color: #000; letter-spacing: 1.5px; text-transform: uppercase; }
+  .page-header .topic { font-size: 20px; font-weight: 800; color: #000; }
+  .page-header .badge { background: #000; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 1px; }
+
+  .section-label { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #000; margin: 20px 0 8px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1.5px; background: #000; }
+
+  .card { border: 1.5px solid #000; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; background: #fff; }
+  .card-title { font-size: 12.5px; font-weight: 800; color: #000; margin-bottom: 6px; }
+  .card p { font-size: 12.5px; color: #000; margin-bottom: 5px; }
+
+  .def-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; }
+  .def-box .def-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .def-box p { font-size: 12.5px; color: #000; line-height: 1.65; }
+
+  .interview-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; }
+  .interview-box .int-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .interview-box p { font-size: 12.5px; color: #000; line-height: 1.65; margin-bottom: 5px; }
+
+  .trick-box { background: #fff; border: 2px dashed #000; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+  .trick-box .trick-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .trick-box p { font-size: 12px; color: #000; }
+
+  .tip-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 12px; }
+  .tip-box .tip-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .tip-box p { font-size: 12px; color: #000; }
+
+  .warn-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 12px; }
+  .warn-box .warn-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .warn-box p { font-size: 12px; color: #000; }
+
+  .example-card { border: 1.5px solid #000; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+  .example-card .ex-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+
+  .code-block { background: #000; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+  .code-block pre { font-family: 'Fira Code', monospace; font-size: 11.5px; color: #fff; white-space: pre-wrap; word-break: break-word; line-height: 1.7; }
+  .cm  { color: #888; font-style: italic; }
+  .kw  { color: #fff; font-weight: 700; }
+  .an  { color: #ccc; font-weight: 700; }
+  .str { color: #ccc; }
+  .tag { color: #ddd; font-weight: 700; }
+  .attr{ color: #aaa; }
+  .val { color: #ccc; }
+
+  .out-bar { background: #222; border-radius: 0 0 6px 6px; padding: 8px 14px; margin-top: -10px; margin-bottom: 10px; border-top: 1px solid #444; }
+  .out-bar .out-label { font-size: 9px; font-weight: 800; color: #888; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
+  .out-bar pre { font-family: 'Fira Code', monospace; font-size: 11px; color: #ccc; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 12px; }
+  .cmp-table thead th { background: #000; color: #fff; padding: 8px 10px; text-align: left; font-weight: 800; }
+  .cmp-table tbody tr:nth-child(even) { background: #f5f5f5; }
+  .cmp-table tbody td { padding: 7px 10px; border-bottom: 1px solid #000; color: #000; vertical-align: top; }
+  .cmp-table tbody tr td:first-child { font-weight: 700; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+  .pros-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .chip { background: #fff; border: 1.5px solid #000; color: #000; border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 700; }
+  .pill { display: inline-block; background: #000; color: #fff; border-radius: 4px; padding: 2px 9px; font-size: 11px; font-weight: 700; margin: 2px; }
+  .pill-outline { display: inline-block; background: #fff; color: #000; border: 1.5px solid #000; border-radius: 4px; padding: 2px 9px; font-size: 11px; font-weight: 700; margin: 2px; }
+
+  code { font-family: 'Fira Code', monospace; font-size: 11.5px; background: #f0f0f0; border: 1px solid #ccc; padding: 1px 5px; border-radius: 3px; color: #000; }
+
+  /* LIFECYCLE FLOW */
+  .lc-flow { display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 12px; }
+  .lc-step { border: 2px solid #000; border-radius: 8px; padding: 7px 20px; font-size: 12px; font-weight: 700; text-align: center; min-width: 300px; background: #fff; color: #000; margin: 2px 0; }
+  .lc-step.filled { background: #000; color: #fff; }
+  .lc-arrow { font-size: 14px; color: #000; line-height: 1; margin: 1px 0; }
+
+  /* STEP LIST */
+  .step-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+  .step-num { min-width: 24px; height: 24px; background: #000; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; margin-top: 2px; }
+  .step-text { font-size: 12.5px; color: #000; padding-top: 2px; }
+
+  @media print { body { background: #fff; } .page { box-shadow: none; margin: 0; } }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     PAGE 1 — What is Bean + Lifecycle + XML Method
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Bean Life Cycle</div>
+    </div>
+    <div class="badge">PART 1</div>
+  </div>
+
+  <div class="section-label">What is a Bean?</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 Definition</div>
+    <p>A <strong>Bean</strong> is a Java object whose <strong>lifecycle, dependencies, and configuration are managed by the Spring IoC Container</strong>.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="warn-box" style="margin-bottom:0;">
+      <div class="warn-label">❌ Normal Java Object</div>
+      <div class="code-block" style="margin-top:6px;margin-bottom:0;">
+        <pre>Student s = <span class="kw">new</span> Student();
+<span class="cm">// Developer creates &amp; manages</span></pre>
+      </div>
+    </div>
+    <div class="tip-box" style="margin-bottom:0;">
+      <div class="tip-label">✅ Spring Bean</div>
+      <div class="code-block" style="margin-top:6px;margin-bottom:0;">
+        <pre>ApplicationContext ac =
+  <span class="kw">new</span> ClassPathXmlApplicationContext(<span class="str">"config.xml"</span>);
+Student s = ac.getBean(<span class="str">"student"</span>);
+<span class="cm">// Spring creates &amp; manages → this is a Bean!</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">What is Bean Life Cycle?</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 Definition</div>
+    <p>Bean Life Cycle describes: <strong>(1)</strong> when the bean is created, <strong>(2)</strong> how dependencies are injected, <strong>(3)</strong> what actions are performed after creation (init), <strong>(4)</strong> when the bean is destroyed. The complete lifecycle is managed by the Spring Container.</p>
+  </div>
+
+  <div class="section-label">Bean Life Cycle Flow</div>
+
+  <div class="lc-flow">
+    <div class="lc-step filled">Spring Container Starts</div>
+    <div class="lc-arrow">▼</div>
+    <div class="lc-step">Bean Object Created &nbsp;<span style="font-size:10px;font-weight:500;">(new Person())</span></div>
+    <div class="lc-arrow">▼</div>
+    <div class="lc-step">Dependency Injection &nbsp;<span style="font-size:10px;font-weight:500;">(setter / constructor)</span></div>
+    <div class="lc-arrow">▼</div>
+    <div class="lc-step filled">Init Method Executed &nbsp;<span style="font-size:10px;font-weight:400;">(init-method / @PostConstruct)</span></div>
+    <div class="lc-arrow">▼</div>
+    <div class="lc-step">Bean Ready For Use</div>
+    <div class="lc-arrow">▼</div>
+    <div class="lc-step">Business Logic Executes &nbsp;<span style="font-size:10px;font-weight:500;">(your methods called)</span></div>
+    <div class="lc-arrow">▼</div>
+    <div class="lc-step filled">Container Closed &nbsp;<span style="font-size:10px;font-weight:400;">(c.close())</span></div>
+    <div class="lc-arrow">▼</div>
+    <div class="lc-step">Destroy Method Executed &nbsp;<span style="font-size:10px;font-weight:500;">(destroy-method / @PreDestroy)</span></div>
+    <div class="lc-arrow">▼</div>
+    <div class="lc-step filled">Bean Removed from Container</div>
+  </div>
+
+  <div class="section-label">Why Bean Life Cycle? — Real Need</div>
+
+  <div class="two-col">
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-title">🟢 Before Using Bean — Init Method</div>
+      <p>Open Database Connection</p>
+      <p>Load Configuration Files</p>
+      <p>Allocate Resources</p>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-title">🔴 Before Destroying Bean — Destroy Method</div>
+      <p>Close Database Connection</p>
+      <p>Release Memory</p>
+      <p>Save Logs</p>
+    </div>
+  </div>
+
+  <div class="section-label">3 Ways to Implement Bean Life Cycle</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>#</th><th>Method</th><th>How</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>XML Configuration</td><td>Use <code>init-method</code> and <code>destroy-method</code> attributes in <code>&lt;bean&gt;</code> tag</td></tr>
+      <tr><td>2</td><td>Annotations</td><td>Use <code>@PostConstruct</code> and <code>@PreDestroy</code> on methods</td></tr>
+      <tr><td>3</td><td>Interfaces</td><td>Implement <code>InitializingBean</code> and <code>DisposableBean</code> interfaces</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PAGE 2 — XML Lifecycle Example + Annotation Method
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Bean Life Cycle — XML &amp; Annotation Implementation</div>
+    </div>
+    <div class="badge">PART 2</div>
+  </div>
+
+  <div class="section-label">Method 1 — XML Configuration Lifecycle</div>
+
+  <!-- Person.java -->
+  <div class="card">
+    <div class="card-title">📄 Person.java — POJO with Init &amp; Destroy Methods</div>
+  </div>
+
+  <div class="code-block">
+    <pre><span class="kw">package</span> com.init_destroy;
+
+<span class="kw">public class</span> Person {
+
+    <span class="kw">public void</span> initimethod() {
+        System.out.println(<span class="str">"Init method executed after bean creation"</span>);
+    }
+
+    <span class="kw">public void</span> sing() {
+        System.out.println(<span class="str">"Person is singing"</span>);  <span class="cm">// business logic</span>
+    }
+
+    <span class="kw">public void</span> destroy_method() {
+        System.out.println(<span class="str">"Destroy method executed"</span>);
+    }
+}</pre>
+  </div>
+
+  <!-- XML Config -->
+  <div class="card">
+    <div class="card-title">📄 config2.xml — Bean with init-method &amp; destroy-method</div>
+  </div>
+
+  <div class="code-block">
+    <pre><span class="tag">&lt;bean</span>
+    <span class="attr">id</span>=<span class="val">"person"</span>
+    <span class="attr">class</span>=<span class="val">"com.init_destroy.Person"</span>
+    <span class="attr">init-method</span>=<span class="val">"initimethod"</span>       <span class="cm">&lt;!-- called after bean creation --&gt;</span>
+    <span class="attr">destroy-method</span>=<span class="val">"destroy_method"</span>  <span class="cm">&lt;!-- called when container closes --&gt;</span>
+<span class="tag">&gt;
+&lt;/bean&gt;</span></pre>
+  </div>
+
+  <div class="warn-box">
+    <div class="warn-label">⚠️ Common Mistake</div>
+    <p>❌ Wrong: <code>destroy-method="initimethod"</code> &nbsp;&nbsp;(same as init — copy-paste error!)<br/>
+    ✅ Correct: <code>destroy-method="destroy_method"</code></p>
+  </div>
+
+  <!-- Driver Class -->
+  <div class="card">
+    <div class="card-title">📄 Driver.java — Use ConfigurableApplicationContext to call close()</div>
+  </div>
+
+  <div class="code-block">
+    <pre><span class="kw">package</span> com.init_destroy;
+
+<span class="kw">import</span> org.springframework.context.ConfigurableApplicationContext;
+<span class="kw">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;
+
+<span class="kw">public class</span> Driver {
+    <span class="kw">public static void</span> main(String[] args) {
+
+        <span class="cm">// ConfigurableApplicationContext needed to call close()</span>
+        ConfigurableApplicationContext c =
+            <span class="kw">new</span> ClassPathXmlApplicationContext(<span class="str">"config2.xml"</span>);
+
+        Person p = (Person) c.getBean(<span class="str">"person"</span>);
+
+        p.sing();   <span class="cm">// business method</span>
+
+        c.close();  <span class="cm">// triggers destroy_method()</span>
+    }
+}</pre>
+  </div>
+  <div class="out-bar">
+    <div class="out-label">📤 Output</div>
+    <pre>Init method executed after bean creation
+Person is singing
+Destroy method executed</pre>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">💡 Why ConfigurableApplicationContext?</div>
+    <p><code>ApplicationContext</code> does NOT have a <code>close()</code> method. <code>ConfigurableApplicationContext</code> extends it and provides <code>close()</code> and <code>registerShutdownHook()</code> — needed to trigger the destroy method.</p>
+  </div>
+
+  <!-- Annotation Method -->
+  <div class="section-label">Method 2 — Annotation-Based Lifecycle</div>
+
+  <div class="code-block">
+    <pre><span class="an">@Component</span>
+<span class="kw">public class</span> Person {
+
+    <span class="an">@PostConstruct</span>              <span class="cm">// replaces init-method in XML</span>
+    <span class="kw">public void</span> init() {
+        System.out.println(<span class="str">"Init Method — @PostConstruct"</span>);
+    }
+
+    <span class="an">@PreDestroy</span>                 <span class="cm">// replaces destroy-method in XML</span>
+    <span class="kw">public void</span> destroy() {
+        System.out.println(<span class="str">"Destroy Method — @PreDestroy"</span>);
+    }
+}</pre>
+  </div>
+
+  <!-- Method 3 — Interfaces -->
+  <div class="section-label">Method 3 — Interface-Based Lifecycle</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Interface</th><th>Method to Override</th><th>When Called</th></tr></thead>
+    <tbody>
+      <tr><td><code>InitializingBean</code></td><td><code>afterPropertiesSet()</code></td><td>After dependencies are injected (init phase)</td></tr>
+      <tr><td><code>DisposableBean</code></td><td><code>destroy()</code></td><td>When container is closed (destroy phase)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="example-card">
+    <div class="ex-label">📱 Real-Life Analogy — Mobile Phone</div>
+    <div class="two-col">
+      <div>
+        <p style="font-size:12px;font-weight:800;margin-bottom:4px;">📱 Phone Starts → init()</p>
+        <p style="font-size:12px;">Load OS &nbsp;|&nbsp; Load Apps &nbsp;|&nbsp; Connect Network</p>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:800;margin-bottom:4px;">📴 Phone Shuts Down → destroy()</p>
+        <p style="font-size:12px;">Save Data &nbsp;|&nbsp; Close Applications &nbsp;|&nbsp; Release Resources</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PAGE 3 — XML vs Annotation Project Steps + Interview
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Project Setup Steps &amp; Interview Q&amp;A</div>
+    </div>
+    <div class="badge">PART 3</div>
+  </div>
+
+  <div class="section-label">Steps — Spring Core Project Using XML</div>
+
+  <div class="two-col">
+    <div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-text">Create Maven Project</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-text">Add <code>spring-context</code> dependency in <code>pom.xml</code></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-text">Create POJO class (<code>Student.java</code> / <code>Person.java</code>)</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-text">Create XML config file in <code>src/main/resources</code> (<code>config.xml</code>)</div></div>
+    </div>
+    <div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-text">Configure Bean: <code>&lt;bean id="..." class="..."/&gt;</code></div></div>
+      <div class="step-row"><div class="step-num">6</div><div class="step-text">Create Driver class with <code>ClassPathXmlApplicationContext</code></div></div>
+      <div class="step-row"><div class="step-num">7</div><div class="step-text">Retrieve bean: <code>ac.getBean("student")</code></div></div>
+    </div>
+  </div>
+
+  <div class="section-label">Steps — Spring Core Project Using Annotations</div>
+
+  <div class="step-row"><div class="step-num">1</div><div class="step-text">Create Maven Project + Add <code>spring-context</code> dependency</div></div>
+  <div class="step-row"><div class="step-num">2</div><div class="step-text">Create POJO class with <code>@Component</code> annotation</div></div>
+  <div class="step-row"><div class="step-num">3</div><div class="step-text">Create <strong>Configuration Class</strong> with <code>@Configuration</code> + <code>@ComponentScan("com.ty")</code></div></div>
+  <div class="step-row"><div class="step-num">4</div><div class="step-text">In Driver: use <code>AnnotationConfigApplicationContext(MyConfig.class)</code> instead of XML</div></div>
+  <div class="step-row" style="margin-bottom:12px;"><div class="step-num">5</div><div class="step-text">Retrieve bean: <code>ac.getBean(Student.class)</code></div></div>
+
+  <div class="two-col">
+    <div class="code-block" style="margin-bottom:0;">
+      <pre><span class="cm">// Config class (Annotation approach)</span>
+<span class="an">@Configuration</span>
+<span class="an">@ComponentScan</span>(<span class="str">"com.ty"</span>)
+<span class="kw">public class</span> MyConfig { }</pre>
+    </div>
+    <div class="code-block" style="margin-bottom:0;">
+      <pre><span class="cm">// Driver (Annotation approach)</span>
+ApplicationContext ac =
+  <span class="kw">new</span> AnnotationConfigApplicationContext(
+      MyConfig.<span class="kw">class</span>);
+Student s = ac.getBean(Student.<span class="kw">class</span>);</pre>
+    </div>
+  </div>
+
+  <!-- XML vs Annotation Comparison -->
+  <div class="section-label">XML vs Annotation Approach — Comparison</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Point</th><th>XML Configuration</th><th>Annotation Configuration</th></tr></thead>
+    <tbody>
+      <tr><td>Context Class</td><td><code>ClassPathXmlApplicationContext</code></td><td><code>AnnotationConfigApplicationContext</code></td></tr>
+      <tr><td>Bean Declaration</td><td><code>&lt;bean id="..." class="..."/&gt;</code></td><td><code>@Component</code> on the class</td></tr>
+      <tr><td>Config File</td><td><code>config.xml</code></td><td><code>@Configuration</code> Java class</td></tr>
+      <tr><td>Component Scan</td><td><code>&lt;context:component-scan/&gt;</code></td><td><code>@ComponentScan("com.ty")</code></td></tr>
+      <tr><td>Init Method</td><td><code>init-method="..."</code> in XML</td><td><code>@PostConstruct</code></td></tr>
+      <tr><td>Destroy Method</td><td><code>destroy-method="..."</code> in XML</td><td><code>@PreDestroy</code></td></tr>
+      <tr><td>Modern Usage</td><td>Legacy / older projects</td><td>✅ Preferred in modern Spring</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Interview Questions -->
+  <div class="section-label">Interview Questions</div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Q1. What is a Bean?</div>
+    <p>A Bean is a Java object whose <strong>lifecycle is managed by the Spring IoC Container</strong> — including creation, dependency injection, initialization, and destruction.</p>
+  </div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Q2. What is Bean Life Cycle?</div>
+    <p>Bean Life Cycle is the complete process: <strong>Container Starts → Bean Created → DI → Init Method → Bean Used → Container Closed → Destroy Method → Bean Removed</strong>.</p>
+  </div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Q3. How many ways to implement Bean Life Cycle?</div>
+    <p><strong>3 ways:</strong> (1) XML — <code>init-method</code> &amp; <code>destroy-method</code> attributes &nbsp;|&nbsp; (2) Annotations — <code>@PostConstruct</code> &amp; <code>@PreDestroy</code> &nbsp;|&nbsp; (3) Interfaces — <code>InitializingBean</code> &amp; <code>DisposableBean</code></p>
+  </div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Q4. Why use ConfigurableApplicationContext instead of ApplicationContext?</div>
+    <p><code>ApplicationContext</code> does not have <code>close()</code> method. <code>ConfigurableApplicationContext</code> provides <code>close()</code> which is needed to trigger the <strong>destroy method</strong> of the bean.</p>
+  </div>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 Final Memory Tricks</div>
+    <p><strong>Lifecycle order:</strong> <strong>C</strong>reate → <strong>D</strong>I → <strong>I</strong>nit → <strong>U</strong>se → <strong>D</strong>estroy</p>
+    <p style="margin-top:4px;">👉 <strong>"CD I UD"</strong> — <em>"Container Delivers Ice, Use Deliberately!"</em></p>
+    <p style="margin-top:6px;"><strong>Init runs:</strong> right after bean creation &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Destroy runs:</strong> when <code>c.close()</code> is called</p>
+    <p style="margin-top:4px;"><strong>XML:</strong> <code>init-method</code> / <code>destroy-method</code> &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Annotation:</strong> <code>@PostConstruct</code> / <code>@PreDestroy</code></p>
+  </div>
+</div>
+
+</body>
+</html>

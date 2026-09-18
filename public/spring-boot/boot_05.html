@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Response Structure, ResponseEntity, Exception Handling & Producer/Consumer — Study Notes</title>
+<style>
+  :root {
+    --primary: #4f46e5;
+    --primary-light: #eef2ff;
+    --accent: #06b6d4;
+    --accent2: #f59e0b;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --card-bg: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px;
+    background: #f8fafc;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .page { max-width: 980px; margin: 0 auto; }
+  h1.title { text-align: center; font-size: 26px; color: var(--primary); margin-bottom: 4px; }
+  .subtitle { text-align: center; color: var(--muted); margin-bottom: 28px; font-size: 14px; }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 6px solid var(--primary);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .card.accent { border-left-color: var(--accent); }
+  .card.warn { border-left-color: var(--accent2); }
+  h2.section-title { font-size: 20px; color: var(--primary); margin-top: 0; display: flex; align-items: center; gap: 8px; }
+  h3 { color: #111827; font-size: 16px; margin-bottom: 6px; border-bottom: 2px solid var(--primary-light); padding-bottom: 4px; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px;
+    border-radius: 999px; color: #fff; background: var(--accent2); margin-left: 6px; vertical-align: middle;
+  }
+  .badge.extra { background: var(--success); }
+  .def {
+    background: var(--primary-light);
+    border-left: 4px solid var(--primary);
+    padding: 10px 16px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 14.5px;
+  }
+  .def .label { font-weight: 700; color: var(--primary); display: block; margin-bottom: 2px; }
+  .flow {
+    background: #0f172a; color: #e2e8f0; font-family: 'Consolas','Courier New',monospace;
+    font-size: 13.5px; padding: 16px 18px; border-radius: 8px; overflow-x: auto;
+    white-space: pre; margin: 12px 0; line-height: 1.5;
+  }
+  pre.code {
+    background: #1e1e2f; color: #dcdcdc; padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; font-family: 'Consolas','Courier New',monospace; font-size: 13.5px;
+    margin: 12px 0; white-space: pre-wrap; word-break: break-word;
+  }
+  pre.code .kw { color: #569cd6; }
+  pre.code .str { color: #ce9178; }
+  pre.code .ann { color: #dcdcaa; }
+  pre.code .cls { color: #4ec9b0; }
+  pre.code .com { color: #6a9955; }
+  pre.code .lit { color: #569cd6; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th, td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; }
+  th { background: var(--primary-light); color: var(--primary); font-weight: 700; }
+  tr:nth-child(even) { background: #fafafa; }
+  .qa { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .qa .q { font-weight: 700; color: #15803d; }
+  .qa .a { margin-top: 4px; color: #1f2937; }
+  .trick { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .trick .label { font-weight: 700; color: #b45309; }
+  .analogy { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .analogy .label { font-weight: 700; color: #1d4ed8; }
+  .warn-box { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .warn-box .label { font-weight: 700; color: #b91c1c; }
+  .toc { background: var(--primary-light); border-radius: 10px; padding: 16px 22px; margin-bottom: 24px; }
+  .toc a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  .toc li { margin-bottom: 4px; }
+  .footer-note { text-align: center; color: var(--muted); font-size: 12px; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1 class="title">Response Structure, ResponseEntity, Exception Handling & Producer/Consumer</h1>
+  <p class="subtitle">Building a Consistent, Robust REST API Layer — Interview-Ready Notes</p>
+
+  <div class="toc">
+    <strong>Contents</strong>
+    <ol>
+      <li><a href="#s1">Response Structure</a></li>
+      <li><a href="#s2">ResponseEntity</a></li>
+      <li><a href="#s3">Response Structure vs ResponseEntity</a></li>
+      <li><a href="#s4">Custom Exception</a></li>
+      <li><a href="#s5">Global Exception Handler</a></li>
+      <li><a href="#s6">Producer in RESTful Applications</a></li>
+      <li><a href="#s7">Consumer in RESTful Applications</a></li>
+      <li><a href="#s8">Complete SocietyHub Flow</a></li>
+      <li><a href="#s9">🔥 Interview Definitions</a></li>
+      <li><a href="#s10">⭐ Memory Trick Diagram</a></li>
+      <li><a href="#s11">Interview Q&A Bank</a> <span class="badge extra">Added</span></li>
+      <li><a href="#s12">Memory Tricks</a> <span class="badge extra">Added</span></li>
+      <li><a href="#s13">Common Bugs / Gotchas</a> <span class="badge extra">Added</span></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="card" id="s1">
+    <h2 class="section-title">1. Response Structure</h2>
+    <div class="def">
+      <span class="label">📌 Proper Definition</span>
+      A response structure is a standardized format used by a REST API to send data, status information, and messages from the server to the client. It ensures that API responses follow a consistent structure across the application.
+    </div>
+    <pre class="code">{
+    "success": true,
+    "message": "Resident fetched successfully",
+    "data": {
+        "id": 101,
+        "name": "Rahul",
+        "flatNumber": "A-101"
+    }
+}</pre>
+    <p><code>success</code> → tells whether operation was successful. <code>message</code> → describes the result. <code>data</code> → contains actual response data.</p>
+
+    <h3>Why do we need Response Structure?</h3>
+    <p>Imagine your project has 50 APIs. Without a common structure, one API returns:</p>
+    <pre class="code">{
+    "id": 101,
+    "name": "Rahul"
+}</pre>
+    <p>Another API:</p>
+    <pre class="code">[
+    {
+        "id": 101
+    }
+]</pre>
+    <p>Another:</p>
+    <pre class="code">{
+    "error": "Resident not found"
+}</pre>
+    <p>The frontend has to understand different formats. With a common response structure — <code>{ "success": true, "message": "...", "data": {} }</code> — the frontend always knows where to look.</p>
+
+    <div class="analogy">
+      <div class="label">📦 Courier Company Analogy</div>
+      <div>Every parcel has a standard label: Status / Message / Receiver / Package. Regardless of what's inside the parcel, the label follows the same format. Similarly, your API can have Success / Message / Data.</div>
+    </div>
+
+    <h3>Project Example</h3>
+    <pre class="code"><span class="kw">public class</span> <span class="cls">ApiResponse</span>&lt;T&gt; {
+
+    <span class="kw">private boolean</span> success;
+    <span class="kw">private</span> String message;
+    <span class="kw">private</span> T data;
+}</pre>
+    <p><code>ApiResponse&lt;ResidentResponse&gt;</code> can contain one resident. <code>ApiResponse&lt;List&lt;ResidentResponse&gt;&gt;</code> can contain multiple residents.</p>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="card accent" id="s2">
+    <h2 class="section-title">2. ResponseEntity</h2>
+    <div class="def">
+      <span class="label">📌 Proper Definition</span>
+      ResponseEntity is a Spring class used to represent the complete HTTP response returned by a REST API. It allows us to control the response body, HTTP status code, and HTTP headers.
+    </div>
+    <p>This is the important definition.</p>
+
+    <h3>What can ResponseEntity control?</h3>
+    <div class="flow">ResponseEntity
+     │
+     ├── HTTP Status
+     │
+     ├── Headers
+     │
+     └── Body</div>
+    <pre class="code"><span class="kw">return</span> ResponseEntity.ok(response);</pre>
+    <p>means: HTTP Status → 200 OK, Body → response.</p>
+
+    <h3>Example</h3>
+    <pre class="code"><span class="ann">@GetMapping</span>(<span class="str">"/{id}"</span>)
+<span class="kw">public</span> ResponseEntity&lt;ApiResponse&lt;ResidentResponse&gt;&gt; getResident(
+        <span class="ann">@PathVariable</span> Long id) {
+
+    ResidentResponse resident =
+            residentService.getResident(id);
+
+    ApiResponse&lt;ResidentResponse&gt; response =
+            <span class="kw">new</span> ApiResponse&lt;&gt;(
+                <span class="lit">true</span>,
+                <span class="str">"Resident fetched successfully"</span>,
+                resident
+            );
+
+    <span class="kw">return</span> ResponseEntity.ok(response);
+}</pre>
+    <p>Response:</p>
+    <pre class="code">HTTP/1.1 200 OK
+{
+    "success": true,
+    "message": "Resident fetched successfully",
+    "data": {
+        "id": 101,
+        "name": "Rahul"
+    }
+}</pre>
+
+    <h3>Common ResponseEntity methods</h3>
+    <p><strong>ok()</strong></p>
+    <pre class="code">ResponseEntity.ok(response);</pre>
+    <p>Returns: <code>200 OK</code></p>
+    <p><strong>status()</strong></p>
+    <pre class="code">ResponseEntity
+    .status(HttpStatus.CREATED)
+    .body(response);</pre>
+    <p>Returns: <code>201 CREATED</code></p>
+    <p><strong>noContent()</strong></p>
+    <pre class="code">ResponseEntity.noContent().build();</pre>
+    <p>Returns: <code>204 NO CONTENT</code></p>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="card warn" id="s3">
+    <h2 class="section-title">3. Response Structure vs ResponseEntity</h2>
+    <p>This is very important for interviews.</p>
+    <table>
+      <tr><th>Response Structure</th><th>ResponseEntity</th></tr>
+      <tr><td>Defines response body format</td><td>Represents complete HTTP response</td></tr>
+      <tr><td>Usually custom class</td><td>Spring-provided class</td></tr>
+      <tr><td>Contains fields like success, message, data</td><td>Controls status, headers, body</td></tr>
+      <tr><td>Application-level design</td><td>HTTP-level response handling</td></tr>
+    </table>
+    <div class="qa">
+      <div class="q">Remember</div>
+      <div class="a">Response Structure = What data am I sending? &nbsp;·&nbsp; ResponseEntity = How am I sending the HTTP response?</div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="card" id="s4">
+    <h2 class="section-title">4. Custom Exception</h2>
+    <div class="def">
+      <span class="label">📌 Proper Definition</span>
+      A custom exception is a user-defined exception created to represent a specific application or business error in a meaningful way.
+    </div>
+    <p>Instead of using a generic:</p>
+    <pre class="code"><span class="kw">throw new</span> RuntimeException(<span class="str">"Something went wrong"</span>);</pre>
+    <p>we can create:</p>
+    <pre class="code"><span class="kw">public class</span> <span class="cls">ResidentNotFoundException</span>
+        <span class="kw">extends</span> RuntimeException {
+
+    <span class="kw">public</span> ResidentNotFoundException(String message) {
+        <span class="kw">super</span>(message);
+    }
+}</pre>
+    <p>Now we have a meaningful exception.</p>
+
+    <h3>Why Custom Exceptions?</h3>
+    <p>Suppose your SocietyHub application has: <code>ResidentNotFoundException</code>, <code>SocietyNotFoundException</code>, <code>ComplaintNotFoundException</code>, <code>MaintenanceNotFoundException</code>, <code>DuplicateEmailException</code>, <code>FlatAlreadyOccupiedException</code>. Each exception represents a specific problem. This makes the application: easier to understand, easier to debug, easier to maintain, easier to handle globally.</p>
+
+    <h3>Example</h3>
+    <p>Suppose we search for resident ID 999.</p>
+    <pre class="code"><span class="kw">public</span> ResidentResponse getResident(Long id) {
+
+    Resident resident =
+        residentRepository.findById(id)
+            .orElseThrow(() ->
+                <span class="kw">new</span> ResidentNotFoundException(
+                    <span class="str">"Resident with ID "</span>
+                    + id
+                    + <span class="str">" not found"</span>
+                )
+            );
+
+    <span class="kw">return</span> mapToResponse(resident);
+}</pre>
+    <p>If the resident doesn't exist, <code>ResidentNotFoundException</code> is thrown.</p>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="card" id="s5">
+    <h2 class="section-title">5. Global Exception Handler</h2>
+    <p>A custom exception becomes much more useful when we handle it centrally.</p>
+    <div class="def">
+      <span class="label">📌 Proper Definition</span>
+      A global exception handler is a centralized mechanism in Spring Boot used to catch and handle exceptions thrown by controllers or service operations and convert them into appropriate HTTP responses.
+    </div>
+    <p>We commonly use <code>@RestControllerAdvice</code> with <code>@ExceptionHandler</code>.</p>
+
+    <h3>Example</h3>
+    <pre class="code"><span class="ann">@RestControllerAdvice</span>
+<span class="kw">public class</span> <span class="cls">GlobalExceptionHandler</span> {
+
+    <span class="ann">@ExceptionHandler</span>(
+        ResidentNotFoundException.<span class="kw">class</span>
+    )
+    <span class="kw">public</span> ResponseEntity&lt;ApiResponse&lt;Void&gt;&gt;
+    handleResidentNotFound(
+            ResidentNotFoundException ex) {
+
+        ApiResponse&lt;Void&gt; response =
+            <span class="kw">new</span> ApiResponse&lt;&gt;(
+                <span class="lit">false</span>,
+                ex.getMessage(),
+                <span class="lit">null</span>
+            );
+
+        <span class="kw">return</span> ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+}</pre>
+    <div class="flow">Resident doesn't exist
+    ↓
+ResidentNotFoundException
+    ↓
+GlobalExceptionHandler
+    ↓
+HTTP 404
+    ↓
+JSON Response</div>
+    <p>Response:</p>
+    <pre class="code">{
+    "success": false,
+    "message": "Resident with ID 999 not found",
+    "data": null
+}</pre>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="card accent" id="s6">
+    <h2 class="section-title">6. Producer in RESTful Applications</h2>
+    <div class="def">
+      <span class="label">📌 Proper Definition</span>
+      A producer in a RESTful application is an application or service that provides or exposes REST APIs for other applications or clients to consume.
+    </div>
+    <div class="flow">Spring Boot
+    ↓
+Exposes REST APIs</div>
+    <p>Therefore Spring Boot is the producer for those APIs. Example: <code>GET /api/residents</code>, <code>POST /api/residents</code>, <code>DELETE /api/residents/101</code> — Spring Boot provides these APIs.</p>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="card accent" id="s7">
+    <h2 class="section-title">7. Consumer in RESTful Applications</h2>
+    <div class="def">
+      <span class="label">📌 Proper Definition</span>
+      A consumer in a RESTful application is an application or client that calls and uses REST APIs provided by another application or service.
+    </div>
+    <div class="flow">React
+    ↓
+Calls Spring Boot API</div>
+    <p>React is the consumer of the Spring Boot APIs.</p>
+
+    <div class="analogy">
+      <div class="label">🍽️ Restaurant Analogy</div>
+      <div>Restaurant → Provides food → <strong>Producer</strong>. Customer → Consumes food → <strong>Consumer</strong>. Similarly: Spring Boot → Provides REST API → React → Uses REST API. Therefore: Spring Boot → Producer, React → Consumer.</div>
+    </div>
+
+    <div class="warn-box">
+      <div class="label">⚠️ Important Point for Interview</div>
+      <div>Don't memorize "Frontend is always consumer" — that's not technically correct. Producer and consumer depend on which API communication you're talking about.</div>
+    </div>
+    <p>For example: SocietyHub → Payment Gateway. SocietyHub calls the Payment Gateway API. Therefore SocietyHub → Consumer, Payment Gateway → Producer. But the Payment Gateway could call another service: Payment Gateway → Notification Service. Then Payment Gateway → Consumer, Notification → Producer.</p>
+    <div class="qa">
+      <div class="q">So the correct concept is:</div>
+      <div class="a">The application providing an API is the producer, and the application calling that API is the consumer.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="card warn" id="s8">
+    <h2 class="section-title">8. Complete SocietyHub Flow</h2>
+    <p>This is the most important diagram to understand. Suppose Chairman opens Residents → View Resident. React sends:</p>
+    <div class="flow">GET /api/residents/101</div>
+    <p>Flow:</p>
+    <div class="flow">┌─────────────────────┐
+│   React Frontend     │
+│     Consumer         │
+└──────────┬──────────┘
+           │
+           │ HTTP Request
+           ▼
+┌─────────────────────┐
+│ ResidentController   │
+│    @RestController   │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ ResidentService      │
+│      @Service        │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ ResidentRepository   │
+│     @Repository      │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│      Database        │
+└─────────────────────┘</div>
+
+    <h3>If resident exists:</h3>
+    <div class="flow">Database
+    ↓
+Repository
+    ↓
+Service
+    ↓
+Controller
+    ↓
+Response Structure
+    ↓
+ResponseEntity
+    ↓
+JSON
+    ↓
+React</div>
+
+    <h3>If Resident Doesn't Exist</h3>
+    <div class="flow">Repository
+    ↓
+Resident not found
+    ↓
+ResidentNotFoundException
+    ↓
+GlobalExceptionHandler
+    ↓
+ResponseEntity
+    ↓
+404 NOT FOUND
+    ↓
+JSON</div>
+    <p>Response:</p>
+    <pre class="code">{
+    "success": false,
+    "message": "Resident with ID 101 not found",
+    "data": null
+}</pre>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="card" id="s9">
+    <h2 class="section-title">9. 🔥 Interview Definitions — Learn These</h2>
+    <div class="qa"><div class="q">Response Structure</div><div class="a">"A response structure is a standardized format used by a REST API to return data, messages and status information consistently to the client."</div></div>
+    <div class="qa"><div class="q">ResponseEntity</div><div class="a">"ResponseEntity is a Spring class used to represent the complete HTTP response and allows us to control the response body, HTTP status code and headers."</div></div>
+    <div class="qa"><div class="q">Custom Exception</div><div class="a">"A custom exception is a user-defined exception created to represent a specific application or business error in a meaningful way."</div></div>
+    <div class="qa"><div class="q">Global Exception Handler</div><div class="a">"A global exception handler provides centralized exception handling in a Spring Boot application and converts exceptions into appropriate HTTP responses."</div></div>
+    <div class="qa"><div class="q">Producer</div><div class="a">"A producer is an application or service that provides or exposes REST APIs to other applications or clients."</div></div>
+    <div class="qa"><div class="q">Consumer</div><div class="a">"A consumer is an application or client that calls and uses REST APIs provided by another application or service."</div></div>
+  </div>
+
+  <!-- SECTION 10 -->
+  <div class="card warn" id="s10">
+    <h2 class="section-title">10. ⭐ One Memory Trick</h2>
+    <p>Think about your SocietyHub API:</p>
+    <div class="flow">                    REST API
+                       │
+             ┌─────────┴─────────┐
+             │                   │
+          Consumer             Producer
+             │                   │
+           React              Spring Boot
+                                 │
+                         ┌───────┴───────┐
+                         │               │
+                     Controller       Service
+                                         │
+                                     Repository
+                                         │
+                                      Database</div>
+    <p>And for errors:</p>
+    <div class="flow">Database
+    ↓
+Not Found
+    ↓
+Custom Exception
+    ↓
+Global Exception Handler
+    ↓
+ResponseEntity
+    ↓
+Response Structure
+    ↓
+JSON
+    ↓
+Consumer</div>
+    <p>This is the level of explanation you should use in your interview: first give the proper definition, then explain it in simple words, then give your project example. It shows the interviewer that you understand the concept rather than just memorizing the definition.</p>
+  </div>
+
+  <!-- SECTION 11 - EXTRA -->
+  <div class="card accent" id="s11">
+    <h2 class="section-title">11. Interview Q&A Bank <span class="badge extra">Added</span></h2>
+    <div class="qa"><div class="q">Q: Why use @RestControllerAdvice instead of try-catch in every controller method?</div><div class="a">try-catch in every method duplicates error-handling logic across the codebase. @RestControllerAdvice centralizes it in one place — cleaner, more maintainable, and guarantees consistent error response format across all controllers.</div></div>
+    <div class="qa"><div class="q">Q: What's the difference between @ControllerAdvice and @RestControllerAdvice?</div><div class="a">@RestControllerAdvice = @ControllerAdvice + @ResponseBody, just like RestController vs Controller — it ensures exception handler return values are serialized directly as JSON rather than resolved as view names.</div></div>
+    <div class="qa"><div class="q">Q: How would you handle validation errors (e.g. @Valid failures) globally?</div><div class="a">Add an @ExceptionHandler(MethodArgumentNotValidException.class) in the same GlobalExceptionHandler, extract field errors from the exception's BindingResult, and wrap them in the same ApiResponse structure with a 400 Bad Request status.</div></div>
+    <div class="qa"><div class="q">Q: Can one GlobalExceptionHandler catch a generic Exception.class as a fallback?</div><div class="a">Yes — add an @ExceptionHandler(Exception.class) as a catch-all beneath more specific handlers, typically returning 500 Internal Server Error, so unexpected errors still return the standard response shape instead of a raw stack trace.</div></div>
+    <div class="qa"><div class="q">Q: Is a microservice always a producer or always a consumer?</div><div class="a">Neither — the same service is often both: a producer for its own exposed APIs and a consumer when it calls other services (e.g. a payment gateway or notification service). The role is relative to each specific API call.</div></div>
+    <div class="qa"><div class="q">Q: What status code should a validation failure vs a not-found error return?</div><div class="a">Validation failure (bad client input) → 400 Bad Request. Resource not found → 404 Not Found. Keeping these distinct helps consumers programmatically distinguish error types.</div></div>
+  </div>
+
+  <!-- SECTION 12 - EXTRA -->
+  <div class="card warn" id="s12">
+    <h2 class="section-title">12. Memory Tricks <span class="badge extra">Added</span></h2>
+    <div class="trick"><div class="label">🧠 Structure vs Entity</div><div>"Structure is the <strong>Suitcase contents</strong> (what's packed inside: success/message/data), Entity is the <strong>whole shipment</strong> (status + headers + body)."</div></div>
+    <div class="trick"><div class="label">🧠 Producer/Consumer relativity</div><div>"Whoever <strong>answers the phone</strong> is the Producer; whoever <strong>dials</strong> is the Consumer" — and the same app can do both, just on different calls.</div></div>
+    <div class="trick"><div class="label">🧠 Exception flow</div><div>"Not Found → Named (custom exception) → Handled globally → Translated to HTTP" — NNHT: catchy shorthand for the whole error pipeline.</div></div>
+    <div class="trick"><div class="label">🧠 success/message/data</div><div>Think "SMD" like a courier label: <strong>S</strong>tatus, <strong>M</strong>essage, <strong>D</strong>elivery(data) — same shape every time regardless of what's inside.</div></div>
+  </div>
+
+  <!-- SECTION 13 - EXTRA -->
+  <div class="card" id="s13">
+    <h2 class="section-title">13. Common Bugs / Gotchas <span class="badge extra">Added</span></h2>
+    <div class="qa"><div class="q">⚠️ Returning raw entities/exceptions instead of the ApiResponse wrapper</div><div class="a">If some endpoints return ApiResponse and others return raw objects or default Spring error pages, the frontend has to special-case each — defeating the entire purpose of a standardized response structure.</div></div>
+    <div class="qa"><div class="q">⚠️ Forgetting to register a new custom exception in the GlobalExceptionHandler</div><div class="a">If you add FlatAlreadyOccupiedException but never add a matching @ExceptionHandler, it falls through to Spring's default error handling — producing an inconsistent, non-ApiResponse-shaped error body.</div></div>
+    <div class="qa"><div class="q">⚠️ Using the wrong HTTP status in exception handlers</div><div class="a">Returning 200 OK with "success": false in the body (instead of an appropriate 4xx/5xx status) breaks HTTP semantics and can confuse consumers or monitoring tools that check status codes rather than body content.</div></div>
+    <div class="qa"><div class="q">⚠️ Overly broad exception hierarchies</div><div class="a">Catching generic RuntimeException everywhere instead of specific custom exceptions loses the meaningful, debuggable error information that custom exceptions were designed to provide.</div></div>
+    <div class="qa"><div class="q">⚠️ Leaking internal exception messages/stack traces to the client</div><div class="a">For unexpected 500-level errors, avoid putting raw exception messages or stack traces in the response body — return a generic safe message instead and log the details server-side.</div></div>
+  </div>
+
+  <p class="footer-note">Study Notes — Response Structure · ResponseEntity · Custom Exceptions · Global Exception Handler · Producer/Consumer · SocietyHub Project Reference</p>
+</div>
+</body>
+</html>

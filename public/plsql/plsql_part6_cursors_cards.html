@@ -1,0 +1,624 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+.warn-box{background:#fce4ec;border-left:5px solid #c62828;padding:10px 14px;margin-top:10px}
+.warn-box .lbl{font-size:10px;font-weight:700;color:#c62828;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.warn-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:4px}
+.mini-card p,.mini-card li{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+/* ── CODE BLOCK ── */
+.prog-wrap{margin:10px 0}
+.prog-header{background:#2c2c2c;padding:6px 14px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.prog-label{color:#bbb;font-size:11px;margin-left:6px;font-family:Arial,sans-serif;font-weight:700;letter-spacing:.3px}
+.prog-body{background:#1e1e1e;border-radius:0 0 6px 6px;padding:13px 16px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.9;white-space:pre;overflow-x:auto;color:#d4d4d4}
+.kw{color:#569cd6;font-weight:700}
+.cm{color:#6a9955;font-style:italic}
+.str{color:#ce9178}
+.fn{color:#dcdcaa}
+.tp{color:#4ec9b0}
+.out-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:0 0 5px 5px;padding:6px 14px;font-family:'Courier New',monospace;font-size:12.5px;color:#1b5e20;margin-bottom:12px}
+/* ── LIFECYCLE ── */
+.lc-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+.lc-card{background:#f5f6ff;border:2px solid #1a1a6e;border-radius:6px;padding:10px 10px;text-align:center}
+.lc-num{font-size:22px;font-weight:700;color:#1a1a6e}
+.lc-title{font-size:12px;font-weight:700;color:#111;margin-top:2px}
+.lc-desc{font-size:11px;color:#555;margin-top:4px;line-height:1.4}
+/* ── ATTR CARD ── */
+.attr-card{border:1px solid #ccc;border-radius:6px;overflow:hidden;margin-bottom:8px}
+.attr-head{background:#1a1a6e;color:#fff;padding:6px 12px;font-size:13px;font-weight:700}
+.attr-body{padding:9px 12px;font-size:13px;color:#111}
+.attr-body p{margin-bottom:3px}
+/* ── EXAMPLE BLOCK ── */
+.ex-block{border:1px solid #ccc;border-radius:6px;margin-bottom:14px;overflow:hidden}
+.ex-head{background:#1a1a6e;color:#fff;padding:7px 14px;font-size:13px;font-weight:700}
+.ex-logic{background:#f5f6ff;padding:8px 14px;font-size:12.5px;color:#333;border-bottom:1px solid #ddd}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">PL/SQL — Part 6: Cursors</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; Implicit Cursor &amp; Explicit Cursor &nbsp;|&nbsp; Orange tag = Extra content</div>
+</div>
+
+<!-- ===== 1 ===== -->
+<div class="sec-label">1. What is a Cursor?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>A Cursor is a private SQL memory area — also called an Active Set Memory Area or Context Memory Area — which is used to process multiple records returned by a SQL query. A cursor processes data record by record, one row at a time.</p>
+  </div>
+  <ul>
+    <li>A cursor is a pointer to a private memory area (PGA — Program Global Area) allocated by Oracle</li>
+    <li>It stores the result set of a SQL query temporarily in memory</li>
+    <li>Used whenever a SQL statement returns or affects one or more rows</li>
+    <li>Allows PL/SQL to process rows one at a time using FETCH</li>
+  </ul>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Cursor = Private Memory Box where Oracle stores query results row by row</p>
+    <p>SELECT INTO = 1 row → Implicit Cursor &nbsp;|&nbsp; Multiple rows → Explicit Cursor</p>
+  </div>
+</div>
+
+<!-- ===== 2 ===== -->
+<div class="sec-label">2. Types of Cursors</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">Implicit Cursor</div>
+      <ul style="margin-top:4px">
+        <li>Automatically created by Oracle</li>
+        <li>Used for single-row SELECT INTO and DML statements</li>
+        <li>Developer cannot control it</li>
+        <li>Always named SQL by Oracle</li>
+        <li>Attributes accessed as SQL%attribute</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct">Explicit Cursor</div>
+      <ul style="margin-top:4px">
+        <li>Manually created and controlled by the developer</li>
+        <li>Used for multi-row queries</li>
+        <li>Developer controls DECLARE→OPEN→FETCH→CLOSE</li>
+        <li>Also called Active Set Memory Area</li>
+        <li>Named by the developer (e.g., C1)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 3 ===== -->
+<div class="sec-label">3. Implicit Cursor — Definition & Attributes</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>An Implicit Cursor is automatically created and managed by Oracle whenever a SQL statement returns a single record. It is used with SELECT INTO and DML operations (INSERT, UPDATE, DELETE). Oracle always names it SQL — accessed as SQL%attribute_name.</p>
+  </div>
+
+  <div class="attr-card">
+    <div class="attr-head">1. SQL%FOUND</div>
+    <div class="attr-body">
+      <p>Returns TRUE if the last SQL statement affected at least one row.</p>
+      <p>Returns FALSE if no rows were affected.</p>
+      <p>Used after: SELECT INTO, UPDATE, DELETE, INSERT</p>
+    </div>
+  </div>
+  <div class="attr-card">
+    <div class="attr-head">2. SQL%NOTFOUND</div>
+    <div class="attr-body">
+      <p>Returns TRUE if the last SQL statement did NOT affect any row.</p>
+      <p>Returns FALSE if at least one row was affected.</p>
+      <p>Exact opposite of SQL%FOUND</p>
+    </div>
+  </div>
+  <div class="attr-card">
+    <div class="attr-head">3. SQL%ROWCOUNT</div>
+    <div class="attr-body">
+      <p>Returns the number of rows affected by the last DML operation.</p>
+      <p>Example: If UPDATE affects 5 rows → SQL%ROWCOUNT returns 5</p>
+    </div>
+  </div>
+  <div class="attr-card">
+    <div class="attr-head">4. SQL%ISOPEN</div>
+    <div class="attr-body">
+      <p>Always returns FALSE for Implicit Cursors.</p>
+      <p>Oracle automatically opens and closes them — the developer cannot keep them open.</p>
+    </div>
+  </div>
+
+  <table style="margin-top:10px">
+    <tr><th>Attribute</th><th>Returns</th><th>TRUE When</th><th>FALSE When</th></tr>
+    <tr><td>SQL%FOUND</td><td>BOOLEAN</td><td>At least one row was affected</td><td>No rows were affected</td></tr>
+    <tr><td>SQL%NOTFOUND</td><td>BOOLEAN</td><td>No rows were affected</td><td>At least one row was affected</td></tr>
+    <tr><td>SQL%ROWCOUNT</td><td>NUMBER</td><td>Returns count of rows affected</td><td>Returns 0 if no rows affected</td></tr>
+    <tr><td>SQL%ISOPEN</td><td>BOOLEAN</td><td>Never TRUE for Implicit Cursor</td><td>Always FALSE</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — Important Rule</div>
+    <p>SQL%FOUND and SQL%NOTFOUND are always exact opposites. SQL%ISOPEN is always FALSE for Implicit Cursors. Always check SQL%FOUND or SQL%ROWCOUNT BEFORE calling ROLLBACK — ROLLBACK resets the cursor state.</p>
+  </div>
+</div>
+
+<!-- ===== 4 ===== -->
+<div class="sec-label">4. Implicit Cursor — Program Examples</div>
+<div class="card">
+
+  <!-- EX 1 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 1 — SQL%FOUND with UPDATE (DEPTNO 10)</div>
+    <div class="ex-logic">Task: Update salary of all employees in DEPTNO 10 by +100. Check if update was successful using SQL%FOUND.<br>Logic: CLARK, KING, MILLER are in DEPTNO 10 → 3 rows affected → SQL%FOUND = TRUE → IF block executes.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">SQL%FOUND — UPDATE DEPTNO 10</span>
+      </div>
+      <div class="prog-body"><span class="kw">BEGIN</span>
+
+   <span class="cm">-- Update salary of DEPTNO 10 employees by 100</span>
+   <span class="kw">UPDATE</span> EMP
+   <span class="kw">SET</span>    SAL = SAL + 100
+   <span class="kw">WHERE</span>  DEPTNO = 10;
+
+   <span class="cm">-- Check if any rows were updated</span>
+   <span class="kw">IF</span> SQL%FOUND <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD UPDATED'</span>);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD NOT UPDATED'</span>);
+   <span class="kw">END IF</span>;
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: RECORD UPDATED &nbsp;→ CLARK, KING, MILLER salaries increased by 100</div>
+  </div>
+
+  <!-- EX 2 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 2 — SQL%FOUND after ROLLBACK</div>
+    <div class="ex-logic">Task: Same UPDATE on DEPTNO 10, but ROLLBACK is called before checking SQL%FOUND.<br>Logic: ROLLBACK is itself a SQL statement. After it executes, SQL%FOUND checks ROLLBACK's result — which affects no data rows → SQL%FOUND = FALSE → ELSE block runs.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">SQL%FOUND — AFTER ROLLBACK</span>
+      </div>
+      <div class="prog-body"><span class="kw">BEGIN</span>
+
+   <span class="cm">-- Update salary of DEPTNO 10 employees</span>
+   <span class="kw">UPDATE</span> EMP
+   <span class="kw">SET</span>    SAL = SAL + 100
+   <span class="kw">WHERE</span>  DEPTNO = 10;
+
+   <span class="cm">-- Rollback undoes the update</span>
+   <span class="kw">ROLLBACK</span>;
+
+   <span class="cm">-- SQL%FOUND now reflects ROLLBACK's result (no data affected)</span>
+   <span class="kw">IF</span> SQL%FOUND <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD UPDATED'</span>);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD NOT UPDATED'</span>);
+   <span class="kw">END IF</span>;
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: RECORD NOT UPDATED &nbsp;→ ROLLBACK reset the DML state</div>
+  </div>
+
+  <!-- EX 3 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 3 — SQL%FOUND with DELETE (EMPNO 7934)</div>
+    <div class="ex-logic">Task: Delete MILLER (EMPNO 7934). Check if deletion was successful using SQL%FOUND.<br>Logic: MILLER exists → DELETE affects 1 row → SQL%FOUND = TRUE → IF block executes.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">SQL%FOUND — DELETE</span>
+      </div>
+      <div class="prog-body"><span class="kw">BEGIN</span>
+
+   <span class="cm">-- Delete MILLER from EMP table</span>
+   <span class="kw">DELETE FROM</span> EMP
+   <span class="kw">WHERE</span>  EMPNO = 7934;
+
+   <span class="cm">-- Check if deletion was successful</span>
+   <span class="kw">IF</span> SQL%FOUND <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD DELETED'</span>);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD NOT FOUND'</span>);
+   <span class="kw">END IF</span>;
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: RECORD DELETED &nbsp;→ EMPNO 7934 (MILLER) found and deleted</div>
+  </div>
+
+  <!-- EX 4 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 4 — SQL%FOUND with INSERT</div>
+    <div class="ex-logic">Task: Insert a new employee PRAVIN (EMPNO 101). Check if insertion was successful using SQL%FOUND.<br>Logic: INSERT always affects exactly 1 row when it succeeds → SQL%FOUND = TRUE → IF block executes.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">SQL%FOUND — INSERT</span>
+      </div>
+      <div class="prog-body"><span class="kw">BEGIN</span>
+
+   <span class="cm">-- Insert a new employee record</span>
+   <span class="kw">INSERT INTO</span> EMP(EMPNO, ENAME)
+   <span class="kw">VALUES</span>(101, <span class="str">'PRAVIN'</span>);
+
+   <span class="cm">-- Check if insertion was successful</span>
+   <span class="kw">IF</span> SQL%FOUND <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD INSERTED'</span>);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD NOT INSERTED'</span>);
+   <span class="kw">END IF</span>;
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: RECORD INSERTED &nbsp;→ INSERT always affects 1 row on success</div>
+  </div>
+
+  <!-- EX 5 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 5 — SQL%NOTFOUND with UPDATE (DEPTNO 10)</div>
+    <div class="ex-logic">Task: Update salary of DEPTNO 10. Check using SQL%NOTFOUND (opposite of %FOUND).<br>Logic: Rows exist → UPDATE affects rows → SQL%NOTFOUND = FALSE → ELSE block runs (RECORD UPDATED is printed).</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">SQL%NOTFOUND — UPDATE DEPTNO 10</span>
+      </div>
+      <div class="prog-body"><span class="kw">BEGIN</span>
+
+   <span class="cm">-- Update salary of DEPTNO 10 employees</span>
+   <span class="kw">UPDATE</span> EMP
+   <span class="kw">SET</span>    SAL = SAL + 100
+   <span class="kw">WHERE</span>  DEPTNO = 10;
+
+   <span class="cm">-- SQL%NOTFOUND = FALSE (rows were updated) → ELSE block runs</span>
+   <span class="kw">IF</span> SQL%NOTFOUND <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD NOT UPDATED'</span>);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD UPDATED'</span>);
+   <span class="kw">END IF</span>;
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: RECORD UPDATED &nbsp;→ SQL%NOTFOUND = FALSE → ELSE block executes</div>
+  </div>
+
+  <!-- EX 6 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 6 — SQL%ROWCOUNT with UPDATE (DEPTNO 20)</div>
+    <div class="ex-logic">Task: Update salary of DEPTNO 20 by +10. Display how many rows were affected using SQL%ROWCOUNT.<br>Logic: DEPTNO 20 has SMITH, JONES, SCOTT, ADAMS, FORD = 5 employees → SQL%ROWCOUNT = 5.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">SQL%ROWCOUNT — UPDATE DEPTNO 20</span>
+      </div>
+      <div class="prog-body"><span class="kw">BEGIN</span>
+
+   <span class="cm">-- Update salary of all DEPTNO 20 employees by 10</span>
+   <span class="kw">UPDATE</span> EMP
+   <span class="kw">SET</span>    SAL = SAL + 10
+   <span class="kw">WHERE</span>  DEPTNO = 20;
+
+   <span class="cm">-- Display how many rows were affected</span>
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(SQL%ROWCOUNT || <span class="str">' RECORDS WERE AFFECTED'</span>);
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: 5 RECORDS WERE AFFECTED &nbsp;→ SMITH, JONES, SCOTT, ADAMS, FORD are in DEPTNO 20</div>
+  </div>
+
+</div>
+
+<!-- ===== 5 ===== -->
+<div class="sec-label">5. Explicit Cursor — Definition & Lifecycle</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>An Explicit Cursor is a cursor that is manually defined and controlled by the developer. It is used when a SQL statement returns multiple records. The developer explicitly controls every step: DECLARE, OPEN, FETCH, and CLOSE. It is also called an Active Set Memory Area.</p>
+  </div>
+
+  <div class="lc-row">
+    <div class="lc-card">
+      <div class="lc-num">1</div>
+      <div class="lc-title">DECLARE</div>
+      <div class="lc-desc">Define cursor with SELECT in DECLARE section. Only structure created — no data yet.</div>
+    </div>
+    <div class="lc-card">
+      <div class="lc-num">2</div>
+      <div class="lc-title">OPEN</div>
+      <div class="lc-desc">Execute SELECT query. Oracle loads all matching rows into cursor memory. Pointer placed before row 1.</div>
+    </div>
+    <div class="lc-card">
+      <div class="lc-num">3</div>
+      <div class="lc-title">FETCH</div>
+      <div class="lc-desc">Retrieve one row at a time from cursor memory into PL/SQL variables. Use LOOP to fetch all rows.</div>
+    </div>
+    <div class="lc-card">
+      <div class="lc-num">4</div>
+      <div class="lc-title">CLOSE</div>
+      <div class="lc-desc">Release all PGA memory allocated for the cursor. Always CLOSE after use.</div>
+    </div>
+  </div>
+
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>D-O-F-C → DECLARE → OPEN → FETCH → CLOSE &nbsp;|&nbsp; "Don't Open Files Carelessly"</p>
+  </div>
+
+  <table style="margin-top:12px">
+    <tr><th>Step</th><th>Syntax</th><th>Where Written</th><th>What Happens</th></tr>
+    <tr><td>DECLARE</td><td>CURSOR C1 IS SELECT col FROM table;</td><td>DECLARE section</td><td>Cursor defined — structure only, no data</td></tr>
+    <tr><td>OPEN</td><td>OPEN C1;</td><td>BEGIN section</td><td>SELECT executes — rows loaded into cursor memory</td></tr>
+    <tr><td>FETCH</td><td>FETCH C1 INTO var1, var2;</td><td>Inside LOOP</td><td>One row retrieved into variables per call</td></tr>
+    <tr><td>CLOSE</td><td>CLOSE C1;</td><td>After LOOP</td><td>Memory released — cursor no longer usable</td></tr>
+  </table>
+</div>
+
+<!-- ===== 6 ===== -->
+<div class="sec-label">6. Explicit Cursor Attributes</div>
+<div class="card">
+  <table>
+    <tr><th>Attribute</th><th>Syntax</th><th>Returns</th><th>When to Use</th></tr>
+    <tr><td>%FOUND</td><td>C1%FOUND</td><td>TRUE if last FETCH returned a row</td><td>Check if a row was fetched successfully</td></tr>
+    <tr><td>%NOTFOUND</td><td>C1%NOTFOUND</td><td>TRUE if last FETCH returned no row</td><td>Used with EXIT WHEN to stop the loop</td></tr>
+    <tr><td>%ISOPEN</td><td>C1%ISOPEN</td><td>TRUE if cursor is currently open</td><td>Check if cursor is open before FETCH</td></tr>
+    <tr><td>%ROWCOUNT</td><td>C1%ROWCOUNT</td><td>Number of rows fetched so far</td><td>Track how many rows have been processed</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — %ISOPEN: Implicit vs Explicit</div>
+    <p>Implicit Cursor: SQL%ISOPEN = ALWAYS FALSE — Oracle auto-manages it.</p>
+    <p>Explicit Cursor: C1%ISOPEN = TRUE while cursor is open (between OPEN and CLOSE), FALSE otherwise.</p>
+  </div>
+</div>
+
+<!-- ===== 7 ===== -->
+<div class="sec-label">7. Explicit Cursor — Program Examples</div>
+<div class="card">
+
+  <!-- EX 1 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 1 — Fetch Only the First Row (Single FETCH, No Loop)</div>
+    <div class="ex-logic">Task: Open cursor C1 on EMP table and fetch only the first row — no loop used.<br>Logic: Single FETCH retrieves only the first row (SMITH 800). Remaining 13 rows stay in cursor memory but are never fetched.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">EXPLICIT CURSOR — SINGLE FETCH</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   V_NAME  <span class="tp">VARCHAR2</span>(20);
+   V_SAL   <span class="tp">NUMBER</span>;
+
+   <span class="cm">-- Define cursor with SELECT query</span>
+   <span class="kw">CURSOR</span> C1 <span class="kw">IS</span>
+      <span class="kw">SELECT</span> ENAME, SAL
+      <span class="kw">FROM</span>   EMP;
+
+<span class="kw">BEGIN</span>
+   <span class="kw">OPEN</span>  C1;                              <span class="cm">-- Execute query, load rows</span>
+   <span class="kw">FETCH</span> C1 <span class="kw">INTO</span> V_NAME, V_SAL;          <span class="cm">-- Fetch only first row</span>
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' '</span> || V_SAL);
+   <span class="kw">CLOSE</span> C1;                              <span class="cm">-- Release memory</span>
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: SMITH 800 &nbsp;→ Only first row fetched — a single FETCH retrieves one row only</div>
+  </div>
+
+  <!-- EX 2 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 2 — Fetch All Rows Using SIMPLE LOOP + EXIT WHEN %NOTFOUND</div>
+    <div class="ex-logic">Task: Fetch and display name and salary of all 14 employees from EMP table.<br>Logic: LOOP → FETCH one row → EXIT WHEN C1%NOTFOUND (stops when no more rows) → display → repeat.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">EXPLICIT CURSOR — FETCH ALL ROWS</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   V_NAME  <span class="tp">VARCHAR2</span>(20);
+   V_SAL   <span class="tp">NUMBER</span>;
+
+   <span class="cm">-- Define cursor to fetch all employees</span>
+   <span class="kw">CURSOR</span> C1 <span class="kw">IS</span>
+      <span class="kw">SELECT</span> ENAME, SAL
+      <span class="kw">FROM</span>   EMP;
+
+<span class="kw">BEGIN</span>
+   <span class="kw">OPEN</span> C1;                               <span class="cm">-- Load all rows into cursor memory</span>
+
+   <span class="kw">LOOP</span>
+      <span class="kw">FETCH</span> C1 <span class="kw">INTO</span> V_NAME, V_SAL;       <span class="cm">-- Fetch one row at a time</span>
+      <span class="kw">EXIT WHEN</span> C1%NOTFOUND;              <span class="cm">-- Exit when no more rows remain</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' '</span> || V_SAL);
+   <span class="kw">END LOOP</span>;
+
+   <span class="kw">CLOSE</span> C1;                              <span class="cm">-- Release cursor memory</span>
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: SMITH 800 → ALLEN 1600 → WARD 1250 → JONES 2975 → ... → MILLER 1300 &nbsp;(all 14 rows)</div>
+  </div>
+
+  <!-- EX 3 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 3 — Fetch Only Employees with SAL > 2000 Using WHERE in Cursor</div>
+    <div class="ex-logic">Task: Fetch names and salaries of employees whose salary is greater than 2000.<br>Logic: WHERE SAL > 2000 filters at cursor level — only 6 employees qualify: JONES, BLAKE, CLARK, SCOTT, KING, FORD.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">EXPLICIT CURSOR — FILTERED FETCH (SAL &gt; 2000)</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   V_NAME  <span class="tp">VARCHAR2</span>(20);
+   V_SAL   <span class="tp">NUMBER</span>;
+
+   <span class="cm">-- Define cursor with WHERE filter</span>
+   <span class="kw">CURSOR</span> C1 <span class="kw">IS</span>
+      <span class="kw">SELECT</span> ENAME, SAL
+      <span class="kw">FROM</span>   EMP
+      <span class="kw">WHERE</span>  SAL > 2000;
+
+<span class="kw">BEGIN</span>
+   <span class="kw">OPEN</span> C1;                               <span class="cm">-- Only 6 matching rows loaded</span>
+
+   <span class="kw">LOOP</span>
+      <span class="kw">FETCH</span> C1 <span class="kw">INTO</span> V_NAME, V_SAL;       <span class="cm">-- Fetch one row at a time</span>
+      <span class="kw">EXIT WHEN</span> C1%NOTFOUND;              <span class="cm">-- Exit when no more rows remain</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' '</span> || V_SAL);
+   <span class="kw">END LOOP</span>;
+
+   <span class="kw">CLOSE</span> C1;                              <span class="cm">-- Release cursor memory</span>
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: JONES 2975 &nbsp; BLAKE 2850 &nbsp; CLARK 2450 &nbsp; SCOTT 3000 &nbsp; KING 5000 &nbsp; FORD 3000</div>
+  </div>
+
+</div>
+
+<!-- ===== 8 ===== -->
+<div class="sec-label">8. Implicit vs Explicit Cursor — Full Comparison</div>
+<div class="card">
+  <table>
+    <tr><th>Feature</th><th>Implicit Cursor</th><th>Explicit Cursor</th></tr>
+    <tr><td>Created by</td><td>Oracle automatically</td><td>Developer manually</td></tr>
+    <tr><td>Used for</td><td>Single row — SELECT INTO and DML</td><td>Multiple rows</td></tr>
+    <tr><td>Developer control</td><td>No — Oracle manages it entirely</td><td>Yes — DECLARE, OPEN, FETCH, CLOSE</td></tr>
+    <tr><td>Cursor name</td><td>Always SQL (fixed by Oracle)</td><td>Named by developer (e.g., C1)</td></tr>
+    <tr><td>Also called</td><td>—</td><td>Active Set Memory Area</td></tr>
+    <tr><td>Attribute syntax</td><td>SQL%FOUND, SQL%ROWCOUNT</td><td>C1%FOUND, C1%ROWCOUNT</td></tr>
+    <tr><td>%ISOPEN</td><td>Always FALSE</td><td>TRUE when open, FALSE when closed</td></tr>
+    <tr><td>Loop needed?</td><td>No — only one row</td><td>Yes — to process all rows</td></tr>
+    <tr><td>Must CLOSE manually?</td><td>No — Oracle closes it</td><td>Yes — developer must CLOSE</td></tr>
+  </table>
+</div>
+
+<!-- ===== 9 ===== -->
+<div class="sec-label">9. Quick Revision — All Keywords</div>
+<div class="card">
+  <table>
+    <tr><th>Keyword</th><th>Used In</th><th>Purpose</th></tr>
+    <tr><td>CURSOR name IS SELECT…</td><td>DECLARE section</td><td>Define the cursor with a query</td></tr>
+    <tr><td>OPEN cursor_name</td><td>BEGIN section</td><td>Execute query and load data into cursor memory</td></tr>
+    <tr><td>FETCH cursor INTO vars</td><td>Inside LOOP</td><td>Retrieve one row at a time into variables</td></tr>
+    <tr><td>EXIT WHEN name%NOTFOUND</td><td>After FETCH inside LOOP</td><td>Exit loop when no more rows remain</td></tr>
+    <tr><td>CLOSE cursor_name</td><td>After LOOP</td><td>Release cursor memory</td></tr>
+    <tr><td>SQL%FOUND</td><td>After DML</td><td>TRUE if at least one row was affected</td></tr>
+    <tr><td>SQL%NOTFOUND</td><td>After DML</td><td>TRUE if no rows were affected</td></tr>
+    <tr><td>SQL%ROWCOUNT</td><td>After DML</td><td>Number of rows affected by last DML</td></tr>
+    <tr><td>SQL%ISOPEN</td><td>Implicit cursor</td><td>Always FALSE for implicit cursors</td></tr>
+  </table>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>D-O-F-C → Declare → Open → Fetch → Close &nbsp;|&nbsp; "Don't Open Files Carelessly"</p>
+    <p>Always place EXIT WHEN cursor%NOTFOUND immediately AFTER FETCH — never before it</p>
+  </div>
+  <div class="warn-box">
+    <div class="lbl">Common Mistakes with Cursors</div>
+    <p>1. Forgetting EXIT WHEN cursor%NOTFOUND → loop runs forever after last row</p>
+    <p>2. Placing EXIT WHEN before FETCH → last row is always skipped and never displayed</p>
+    <p>3. Forgetting CLOSE cursor → memory not released — causes memory leak</p>
+    <p>4. Using Explicit Cursor for a single row → use SELECT INTO instead</p>
+    <p>5. FETCH without OPEN → ORA-01001: Invalid Cursor error</p>
+  </div>
+</div>
+
+<!-- ===== 10 ===== -->
+<div class="sec-label">10. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What is a cursor in PL/SQL?</div>
+  <div class="qa-a">A cursor is a private SQL memory area (also called a Context Memory Area or Active Set Memory Area) used to process SQL query results. It processes data record by record, one row at a time.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. What are the types of cursors in PL/SQL?</div>
+  <div class="qa-a">1. Implicit Cursor — automatically created by Oracle for single-row SELECT INTO and DML statements. &nbsp; 2. Explicit Cursor — manually defined and controlled by the developer for multi-row queries.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. What is the lifecycle of an Explicit Cursor?</div>
+  <div class="qa-a">DECLARE → OPEN → FETCH → CLOSE. Memory tip: D-O-F-C — "Don't Open Files Carelessly". Only BEGIN and CLOSE are mandatory after DECLARE.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. What are the Implicit Cursor attributes?</div>
+  <div class="qa-a">SQL%FOUND (TRUE if rows affected), SQL%NOTFOUND (TRUE if no rows affected), SQL%ROWCOUNT (number of rows affected), SQL%ISOPEN (always FALSE for implicit cursors).</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. What is the difference between Implicit and Explicit Cursors?</div>
+  <div class="qa-a">Implicit Cursor is auto-created by Oracle for single-row operations — developer cannot control it. Explicit Cursor is manually created by the developer for multi-row queries — developer fully controls DECLARE, OPEN, FETCH, and CLOSE.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. Why is EXIT WHEN placed after FETCH and not before? <span class="extra">Extra</span></div>
+  <div class="qa-a">If EXIT WHEN is placed before FETCH, it checks the result of the previous iteration's FETCH — meaning the last row is always skipped. Placing it after FETCH ensures every fetched row is processed before checking if the cursor is exhausted.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q7. What happens if we do not CLOSE a cursor? <span class="extra">Extra</span></div>
+  <div class="qa-a">PGA memory allocated to the cursor is not released — causing a memory leak. In large applications, unclosed cursors can cause ORA-01000: maximum open cursors exceeded error.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q8. What is SQL%ROWCOUNT and when is it used? <span class="extra">Extra</span></div>
+  <div class="qa-a">SQL%ROWCOUNT returns the number of rows affected by the last DML operation. Example: UPDATE EMP SET SAL = SAL+10 WHERE DEPTNO = 20 → SQL%ROWCOUNT returns 5 because DEPTNO 20 has 5 employees.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q9. What is the difference between %ISOPEN for Implicit and Explicit Cursors? <span class="extra">Extra</span></div>
+  <div class="qa-a">For Implicit Cursors: SQL%ISOPEN is always FALSE — Oracle auto-manages them. For Explicit Cursors: C1%ISOPEN returns TRUE when cursor is open (between OPEN and CLOSE) and FALSE otherwise.</div>
+</div>
+
+<div class="divider"></div>
+<footer>PL/SQL Part 6 — Cursors (Implicit &amp; Explicit) &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>

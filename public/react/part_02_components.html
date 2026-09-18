@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>React.js – Chapter 2 Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --text: #111111;
+    --muted: #555555;
+    --border: #e0e0e0;
+
+    --blue:      #1a6bff;
+    --blue-bg:   #e8f0ff;
+    --green:     #0a8a3c;
+    --green-bg:  #e4f5ec;
+    --orange:    #d95f00;
+    --orange-bg: #fff0e4;
+    --purple:    #6b2fbd;
+    --purple-bg: #f0eaff;
+    --red:       #c4001a;
+    --red-bg:    #fff0f2;
+    --teal:      #006d77;
+    --teal-bg:   #e0f4f5;
+    --pink:      #b5006e;
+    --pink-bg:   #ffe8f5;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 20px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: linear-gradient(135deg, #0a8a3c 0%, #1a6bff 60%, #6b2fbd 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 36px 40px;
+    margin-bottom: 36px;
+  }
+  .page-header .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 4px 14px; margin-bottom: 14px;
+  }
+  .page-header h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+  .page-header p  { font-size: 14px; opacity: .88; }
+
+  /* ── SECTION CARD ── */
+  .section {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .sec-num {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0; color: #fff;
+  }
+  .section-header h2 { font-size: 18px; font-weight: 700; color: var(--text); }
+  .section-body { padding: 22px 24px; }
+
+  /* ── DEFINITION BOX ── */
+  .def-box {
+    border-left: 4px solid var(--blue);
+    background: var(--blue-bg);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px; margin: 14px 0;
+  }
+  .def-box .def-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--blue); margin-bottom: 4px;
+  }
+  .def-box p { color: var(--text); font-size: 14.5px; }
+
+  /* ── CODE BLOCK ── */
+  pre {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px; line-height: 1.6;
+    overflow-x: auto; margin: 10px 0;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .kw   { color: #c792ea; }
+  .fn   { color: #82aaff; }
+  .str  { color: #c3e88d; }
+  .tag-c{ color: #f07178; }
+  .attr { color: #ffcb6b; }
+  .cmt  { color: #546e7a; }
+  .num  { color: #f78c6c; }
+
+  /* ── COMPARE ROW ── */
+  .compare-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0;
+  }
+  .compare-box { border-radius: 8px; padding: 14px 16px; font-size: 13.5px; }
+  .compare-box .cb-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing:.08em; margin-bottom: 6px;
+  }
+  .cb-wrong { background: var(--red-bg);   border-left: 4px solid var(--red);   }
+  .cb-right { background: var(--green-bg); border-left: 4px solid var(--green); }
+  .cb-wrong .cb-label { color: var(--red);   }
+  .cb-right .cb-label { color: var(--green); }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 14px; margin-top: 14px;
+  }
+  .feature-card { border-radius: 10px; padding: 16px 18px; border: 1.5px solid transparent; }
+  .feature-card .fc-title {
+    font-weight: 700; font-size: 14px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .feature-card p { font-size: 13.5px; color: var(--muted); }
+  .fc-blue   { background: var(--blue-bg);   border-color: #b8d0ff; }
+  .fc-green  { background: var(--green-bg);  border-color: #9ddbb9; }
+  .fc-orange { background: var(--orange-bg); border-color: #ffc999; }
+  .fc-purple { background: var(--purple-bg); border-color: #c9abf0; }
+  .fc-teal   { background: var(--teal-bg);   border-color: #90d4d8; }
+  .fc-pink   { background: var(--pink-bg);   border-color: #f0a0d4; }
+  .fc-blue   .fc-title { color: var(--blue);   }
+  .fc-green  .fc-title { color: var(--green);  }
+  .fc-orange .fc-title { color: var(--orange); }
+  .fc-purple .fc-title { color: var(--purple); }
+  .fc-teal   .fc-title { color: var(--teal);   }
+  .fc-pink   .fc-title { color: var(--pink);   }
+
+  /* ── FLOW ── */
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0; }
+  .flow-step {
+    background: var(--blue-bg); border: 1.5px solid #b8d0ff;
+    border-radius: 8px; padding: 8px 14px;
+    font-size: 13px; font-weight: 600; color: var(--blue);
+  }
+  .flow-arrow { color: #888; font-size: 18px; font-weight: 700; }
+
+  /* ── SYNTAX BOX ── */
+  .syntax-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .syntax-box {
+    border-radius: 10px; padding: 14px 16px;
+    border: 1.5px solid var(--border);
+  }
+  .syntax-box .sb-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; margin-bottom: 8px;
+  }
+
+  /* ── RULE LIST ── */
+  .rule-list { list-style: none; margin: 10px 0; }
+  .rule-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; margin-bottom: 8px;
+  }
+  .rule-list li .dot {
+    width: 22px; height: 22px; border-radius: 6px;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+  }
+  .dot-blue   { background: var(--blue-bg);   color: var(--blue);   }
+  .dot-green  { background: var(--green-bg);  color: var(--green);  }
+  .dot-orange { background: var(--orange-bg); color: var(--orange); }
+  .dot-purple { background: var(--purple-bg); color: var(--purple); }
+
+  /* ── TIP / WARNING ── */
+  .tip {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--teal-bg); border-left: 4px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 14px; color: var(--teal);
+  }
+  .tip .tip-icon { font-size: 18px; flex-shrink: 0; }
+  .warn {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--orange-bg); border-left: 4px solid var(--orange);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 14px; color: var(--orange);
+  }
+  .warn .tip-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* ── INTERVIEW BOX ── */
+  .interview-box {
+    background: var(--orange-bg); border: 1.5px solid #ffc999;
+    border-radius: 10px; padding: 16px 18px; margin: 14px 0;
+  }
+  .interview-box .ib-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--orange); margin-bottom: 8px;
+  }
+  .interview-box .qa { margin-bottom: 8px; }
+  .interview-box .qa:last-child { margin-bottom: 0; }
+  .interview-box .q { font-weight: 600; font-size: 13.5px; color: var(--text); }
+  .interview-box .a { font-size: 13.5px; color: var(--muted); margin-left: 14px; }
+
+  /* ── EXAMPLE HEADER ── */
+  .example-header {
+    display: flex; align-items: center; gap: 10px;
+    background: #f5f5f5; border-radius: 8px 8px 0 0;
+    padding: 10px 16px; margin-bottom: -1px;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    border: 1.5px solid var(--border); border-bottom: none;
+  }
+  .example-header .dot-file { width: 10px; height: 10px; border-radius: 50%; }
+  .example-wrap { border: 1.5px solid var(--border); border-radius: 0 8px 8px 8px; overflow: hidden; margin: 14px 0; }
+  .example-wrap pre { border-radius: 0; margin: 0; }
+
+  /* ── OUTPUT BOX ── */
+  .output-box {
+    background: var(--green-bg); border: 1.5px solid #9ddbb9;
+    border-radius: 8px; padding: 12px 16px; margin: 10px 0;
+    font-family: 'Fira Code', monospace; font-size: 13px; color: var(--green);
+  }
+  .output-box .out-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing:.08em; color: var(--green); margin-bottom: 6px;
+  }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th {
+    background: var(--purple-bg); color: var(--purple);
+    font-weight: 700; text-align: left;
+    padding: 10px 14px; border: 1px solid #d6c4f4;
+  }
+  td { padding: 9px 14px; border: 1px solid var(--border); }
+  tr:nth-child(even) td { background: #fafafa; }
+
+  /* ── TREE ── */
+  .tree-box {
+    background: var(--purple-bg); border: 1.5px solid #c9abf0;
+    border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+    font-family: 'Fira Code', monospace; font-size: 13.5px; color: var(--purple);
+    line-height: 1.8;
+  }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block; border-radius: 6px;
+    font-size: 11px; font-weight: 700;
+    padding: 2px 10px; margin-left: 8px; vertical-align: middle;
+  }
+  .badge-green  { background: var(--green-bg);  color: var(--green);  }
+  .badge-orange { background: var(--orange-bg); color: var(--orange); }
+
+  h3 { font-size: 16px; font-weight: 700; margin: 18px 0 8px; color: var(--text); }
+  h4 { font-size: 14px; font-weight: 700; margin: 12px 0 6px; color: var(--muted); }
+  p  { margin-bottom: 8px; font-size: 14.5px; }
+  ul, ol { padding-left: 20px; margin-bottom: 10px; }
+  li { font-size: 14.5px; margin-bottom: 4px; }
+
+  @media print { body { padding: 10px; } .section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="page-header">
+  <div class="tag">React.js · Chapter 2</div>
+  <h1>Components, Fragments &amp; Class Components</h1>
+  <p>React Fragment · Components · Rules · Types · Class Components · Examples · Destructuring</p>
+</div>
+
+
+<!-- ═══ 1. REACT FRAGMENT ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--teal);">1</div>
+    <h2>React Fragment</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box">
+      <div class="def-label">📘 Definition</div>
+      <p>A <strong>Fragment</strong> is a React feature that allows us to return <strong>multiple elements</strong> from a component <strong>without adding an extra HTML element</strong> to the DOM.</p>
+    </div>
+
+    <h3>Why Use Fragments?</h3>
+    <ul class="rule-list">
+      <li><span class="dot dot-blue">✓</span> Avoid unnecessary <code>&lt;div&gt;</code> tags in the DOM</li>
+      <li><span class="dot dot-blue">✓</span> Keep the DOM clean and lightweight</li>
+      <li><span class="dot dot-blue">✓</span> Improve code readability</li>
+      <li><span class="dot dot-blue">✓</span> Return multiple elements from a single component</li>
+    </ul>
+
+    <h3>Syntax</h3>
+    <div class="syntax-row">
+      <div class="syntax-box" style="background:var(--blue-bg); border-color:#b8d0ff;">
+        <div class="sb-label" style="color:var(--blue);">📄 Full Syntax</div>
+        <pre style="margin:0;"><span class="tag-c">&lt;React.Fragment&gt;</span>
+  <span class="tag-c">&lt;h1&gt;</span>Hello<span class="tag-c">&lt;/h1&gt;</span>
+  <span class="tag-c">&lt;h2&gt;</span>Welcome<span class="tag-c">&lt;/h2&gt;</span>
+<span class="tag-c">&lt;/React.Fragment&gt;</span></pre>
+      </div>
+      <div class="syntax-box" style="background:var(--green-bg); border-color:#9ddbb9;">
+        <div class="sb-label" style="color:var(--green);">⚡ Short Syntax (Preferred)</div>
+        <pre style="margin:0;"><span class="tag-c">&lt;&gt;</span>
+  <span class="tag-c">&lt;h1&gt;</span>Hello<span class="tag-c">&lt;/h1&gt;</span>
+  <span class="tag-c">&lt;h2&gt;</span>Welcome<span class="tag-c">&lt;/h2&gt;</span>
+<span class="tag-c">&lt;/&gt;</span></pre>
+      </div>
+    </div>
+
+    <h3>Example</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; App.jsx
+      </div>
+      <pre><span class="kw">import</span> React <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;&gt;</span>
+      <span class="tag-c">&lt;h1&gt;</span>Hello React<span class="tag-c">&lt;/h1&gt;</span>
+      <span class="tag-c">&lt;h2&gt;</span>Welcome to Fragments<span class="tag-c">&lt;/h2&gt;</span>
+    <span class="tag-c">&lt;/&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> App;</pre>
+    </div>
+    <div class="output-box">
+      <div class="out-label">▶ Output</div>
+      Hello React<br/>Welcome to Fragments
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <span><strong>Real-Life Example:</strong> Creating a Student Details component — <code>&lt;&gt;&lt;h1&gt;Name: Pravin&lt;/h1&gt;&lt;h2&gt;Age: 21&lt;/h2&gt;&lt;/&gt;</code> — no unnecessary <code>&lt;div&gt;</code> wrapping needed!</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 2. REACT COMPONENTS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--blue);">2</div>
+    <h2>React Components</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box">
+      <div class="def-label">📘 Definition</div>
+      <p>React Components are <strong>reusable building blocks</strong> of a React application that help create and manage different parts of the User Interface (UI).</p>
+    </div>
+
+    <h3>Why Components?</h3>
+    <div class="feature-grid">
+      <div class="feature-card fc-blue">
+        <div class="fc-title">♻️ Reusability</div>
+        <p>Write once, use anywhere in the application — Header, Footer, Button, etc.</p>
+      </div>
+      <div class="feature-card fc-green">
+        <div class="fc-title">🔧 Maintainability</div>
+        <p>Changes in one component don't affect others. Easy to update and fix bugs.</p>
+      </div>
+      <div class="feature-card fc-orange">
+        <div class="fc-title">📁 Better Organization</div>
+        <p>Each UI part has its own file — keeps code clean and structured.</p>
+      </div>
+      <div class="feature-card fc-purple">
+        <div class="fc-title">🐛 Easy Debugging</div>
+        <p>Isolate and test individual components independently.</p>
+      </div>
+      <div class="feature-card fc-teal">
+        <div class="fc-title">⚡ Faster Development</div>
+        <p>Reuse existing components to build new features quickly.</p>
+      </div>
+    </div>
+
+    <h3>Real-Life Example — Website Structure</h3>
+    <div class="tree-box">
+      Website<br/>
+      │<br/>
+      ├── 🔷 Header Component<br/>
+      ├── 🔷 Navbar Component<br/>
+      ├── 🔷 Content Component<br/>
+      ├── 🔷 Sidebar Component<br/>
+      └── 🔷 Footer Component
+    </div>
+
+    <h3>Types of Components</h3>
+    <div class="compare-row">
+      <div class="compare-box" style="background:var(--blue-bg); border-left:4px solid var(--blue);">
+        <div class="cb-label" style="color:var(--blue);">1️⃣ Functional Component</div>
+        <p style="font-size:13px; margin-bottom:8px; color:var(--muted);">Created using JavaScript functions. Simple, modern, and preferred today.</p>
+        <pre style="margin:0;"><span class="kw">function</span> <span class="fn">Student</span>() {
+  <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Hello Student<span class="tag-c">&lt;/h1&gt;</span>;
+}</pre>
+      </div>
+      <div class="compare-box" style="background:var(--purple-bg); border-left:4px solid var(--purple);">
+        <div class="cb-label" style="color:var(--purple);">2️⃣ Class Component</div>
+        <p style="font-size:13px; margin-bottom:8px; color:var(--muted);">Created using ES6 Classes. Older approach, supports lifecycle methods.</p>
+        <pre style="margin:0;"><span class="kw">class</span> <span class="fn">Student</span> <span class="kw">extends</span> React.Component {
+  <span class="fn">render</span>() {
+    <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Hello Student<span class="tag-c">&lt;/h1&gt;</span>;
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 3. RULES OF COMPONENTS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--orange);">3</div>
+    <h2>Rules of React Components</h2>
+  </div>
+  <div class="section-body">
+
+    <!-- Rule 1 -->
+    <div style="background:#f8f8f8; border-radius:10px; padding:16px; margin-bottom:14px; border:1.5px solid var(--border);">
+      <div style="font-weight:700; font-size:14px; color:var(--blue); margin-bottom:10px;">Rule 1 — Component Name Must Start with Capital Letter</div>
+      <div class="compare-row">
+        <div class="compare-box cb-right">
+          <div class="cb-label">✅ Correct</div>
+          <pre style="background:#e4f5ec; color:#333; border-radius:6px; padding:8px; font-size:12.5px; margin:0;"><span class="kw">function</span> <span style="color:var(--green);">Student</span>() {
+  <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Student<span class="tag-c">&lt;/h1&gt;</span>;
+}</pre>
+        </div>
+        <div class="compare-box cb-wrong">
+          <div class="cb-label">❌ Wrong</div>
+          <pre style="background:#fff0f2; color:#333; border-radius:6px; padding:8px; font-size:12.5px; margin:0;"><span class="kw">function</span> <span style="color:var(--red);">student</span>() {
+  <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Student<span class="tag-c">&lt;/h1&gt;</span>;
+}</pre>
+        </div>
+      </div>
+      <div class="tip" style="margin-top:8px;">
+        <span class="tip-icon">💡</span>
+        <span>React treats lowercase tags as HTML elements (<code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>) and uppercase as Components (<code>&lt;Student /&gt;</code>).</span>
+      </div>
+    </div>
+
+    <!-- Rule 2 -->
+    <div style="background:#f8f8f8; border-radius:10px; padding:16px; margin-bottom:14px; border:1.5px solid var(--border);">
+      <div style="font-weight:700; font-size:14px; color:var(--green); margin-bottom:10px;">Rule 2 — Component Must Return One Parent Element</div>
+      <div class="compare-row">
+        <div class="compare-box cb-right">
+          <div class="cb-label">✅ Option A — div wrapper</div>
+          <pre style="background:#e4f5ec; color:#333; border-radius:6px; padding:8px; font-size:12.5px; margin:0;"><span class="kw">return</span> (
+  <span class="tag-c">&lt;div&gt;</span>
+    <span class="tag-c">&lt;h1&gt;</span>Hello<span class="tag-c">&lt;/h1&gt;</span>
+    <span class="tag-c">&lt;h2&gt;</span>React<span class="tag-c">&lt;/h2&gt;</span>
+  <span class="tag-c">&lt;/div&gt;</span>
+)</pre>
+        </div>
+        <div class="compare-box cb-right">
+          <div class="cb-label">✅ Option B — Fragment (Preferred)</div>
+          <pre style="background:#e4f5ec; color:#333; border-radius:6px; padding:8px; font-size:12.5px; margin:0;"><span class="kw">return</span> (
+  <span class="tag-c">&lt;&gt;</span>
+    <span class="tag-c">&lt;h1&gt;</span>Hello<span class="tag-c">&lt;/h1&gt;</span>
+    <span class="tag-c">&lt;h2&gt;</span>React<span class="tag-c">&lt;/h2&gt;</span>
+  <span class="tag-c">&lt;/&gt;</span>
+)</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rule 3 & 4 -->
+    <div class="compare-row">
+      <div style="background:#f8f8f8; border-radius:10px; padding:16px; border:1.5px solid var(--border);">
+        <div style="font-weight:700; font-size:14px; color:var(--purple); margin-bottom:10px;">Rule 3 — Component Name = File Name</div>
+        <div class="flow" style="flex-direction:column; align-items:flex-start;">
+          <div class="flow-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">Student.jsx</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">Student Component</div>
+        </div>
+        <p style="font-size:13px; color:var(--muted); margin-top:8px;">Naming convention — keep file name and component name same for clarity.</p>
+      </div>
+      <div style="background:#f8f8f8; border-radius:10px; padding:16px; border:1.5px solid var(--border);">
+        <div style="font-weight:700; font-size:14px; color:var(--teal); margin-bottom:10px;">Rule 4 — Save File with .jsx Extension</div>
+        <pre style="margin:0; background:#1a1a2e; border-radius:6px; padding:10px; font-size:13px;"><span class="str">Student.jsx</span>
+<span class="str">Header.jsx</span>
+<span class="str">Footer.jsx</span></pre>
+      </div>
+    </div>
+
+    <!-- Ways to use -->
+    <h3>Ways to Use a Component</h3>
+    <div class="compare-row">
+      <div class="compare-box" style="background:var(--blue-bg); border-left:4px solid var(--blue);">
+        <div class="cb-label" style="color:var(--blue);">1 — Paired Tag</div>
+        <pre style="margin:0; background:#1a1a2e; border-radius:6px; padding:10px; font-size:13px;"><span class="tag-c">&lt;Student&gt;&lt;/Student&gt;</span></pre>
+      </div>
+      <div class="compare-box" style="background:var(--green-bg); border-left:4px solid var(--green);">
+        <div class="cb-label" style="color:var(--green);">2 — Self-Closing Tag (Preferred)</div>
+        <pre style="margin:0; background:#1a1a2e; border-radius:6px; padding:10px; font-size:13px;"><span class="tag-c">&lt;Student /&gt;</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 4. CLASS COMPONENTS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--purple);">4</div>
+    <h2>Class Components</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box">
+      <div class="def-label">📘 Definition</div>
+      <p>A <strong>Class Component</strong> is an ES6 class that extends <code>React.Component</code> and contains a mandatory <code>render()</code> method which returns JSX.</p>
+    </div>
+
+    <h3>Characteristics of Class Components</h3>
+    <div class="feature-grid">
+      <div class="feature-card fc-blue">
+        <div class="fc-title">🏛️ Uses ES6 Classes</div>
+        <pre style="margin:4px 0; font-size:12px;"><span class="kw">class</span> <span class="fn">Student</span> <span class="kw">extends</span>
+  React.Component</pre>
+      </div>
+      <div class="feature-card fc-green">
+        <div class="fc-title">🔗 Extends React.Component</div>
+        <p>Inheritance gives access to all React features and built-in methods.</p>
+      </div>
+      <div class="feature-card fc-orange">
+        <div class="fc-title">⚠️ render() is Mandatory</div>
+        <pre style="margin:4px 0; font-size:12px;"><span class="fn">render</span>() {
+  <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Hello<span class="tag-c">&lt;/h1&gt;</span>;
+}</pre>
+      </div>
+      <div class="feature-card fc-purple">
+        <div class="fc-title">💾 Stateful Component</div>
+        <pre style="margin:4px 0; font-size:12px;"><span class="kw">this</span>.state = {
+  name: <span class="str">"Pravin"</span>
+}</pre>
+      </div>
+      <div class="feature-card fc-teal">
+        <div class="fc-title">🔄 Lifecycle Methods</div>
+        <p><code>componentDidMount()</code><br/><code>componentDidUpdate()</code><br/><code>componentWillUnmount()</code></p>
+      </div>
+      <div class="feature-card fc-pink">
+        <div class="fc-title">📤 Returns JSX</div>
+        <p><code>render()</code> always returns JSX which gets displayed on the browser.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 5. EXAMPLES ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--green);">5</div>
+    <h2>Class Component Examples</h2>
+  </div>
+  <div class="section-body">
+
+    <!-- Example 1 -->
+    <h3>Example 1 — Simple Class Component</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; Task.jsx
+      </div>
+      <pre><span class="kw">import</span> React <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">class</span> <span class="fn">Task</span> <span class="kw">extends</span> React.Component {
+  <span class="fn">render</span>() {
+    <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Hello, This is a Class Component<span class="tag-c">&lt;/h1&gt;</span>;
+  }
+}
+
+<span class="kw">export default</span> Task;</pre>
+    </div>
+    <div class="output-box">
+      <div class="out-label">▶ Output</div>
+      Hello, This is a Class Component
+    </div>
+
+    <!-- Example 2 -->
+    <h3>Example 2 — Using Fragment in Class Component</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; Data.jsx
+      </div>
+      <pre><span class="kw">import</span> React, { Component } <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">class</span> <span class="fn">Data</span> <span class="kw">extends</span> Component {
+  <span class="fn">render</span>() {
+    <span class="kw">return</span> (
+      <span class="tag-c">&lt;&gt;</span>
+        <span class="tag-c">&lt;h1&gt;</span>Hello React<span class="tag-c">&lt;/h1&gt;</span>
+        <span class="tag-c">&lt;h1&gt;</span>Welcome<span class="tag-c">&lt;/h1&gt;</span>
+        <span class="tag-c">&lt;h1&gt;</span>Fragment Example<span class="tag-c">&lt;/h1&gt;</span>
+      <span class="tag-c">&lt;/&gt;</span>
+    );
+  }
+}
+
+<span class="kw">export default</span> Data;</pre>
+    </div>
+    <div class="output-box">
+      <div class="out-label">▶ Output</div>
+      Hello React<br/>Welcome<br/>Fragment Example
+    </div>
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <span>Notice: <code>{ Component }</code> is imported directly — so we can write <code>extends Component</code> instead of <code>extends React.Component</code>. Both are same!</span>
+    </div>
+
+    <!-- Example 3 -->
+    <h3>Example 3 — Student Object and Destructuring</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; Student.jsx
+      </div>
+      <pre><span class="kw">import</span> React <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">class</span> <span class="fn">Student</span> <span class="kw">extends</span> React.Component {
+  <span class="fn">render</span>() {
+    <span class="kw">let</span> student = {
+      name: <span class="str">"Pravin"</span>,
+      age: <span class="num">21</span>
+    };
+
+    <span class="kw">let</span> { name, age } = student;  <span class="cmt">// Destructuring</span>
+
+    <span class="kw">return</span> (
+      <span class="tag-c">&lt;&gt;</span>
+        <span class="tag-c">&lt;h1&gt;</span>My Name is {name} and My Age is {age}<span class="tag-c">&lt;/h1&gt;</span>
+      <span class="tag-c">&lt;/&gt;</span>
+    );
+  }
+}
+
+<span class="kw">export default</span> Student;</pre>
+    </div>
+    <div class="output-box">
+      <div class="out-label">▶ Output</div>
+      My Name is Pravin and My Age is 21
+    </div>
+
+    <!-- Destructuring Explainer -->
+    <div style="background:var(--purple-bg); border:1.5px solid #c9abf0; border-radius:10px; padding:16px 18px; margin:14px 0;">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--purple); margin-bottom:10px;">🔍 What is Destructuring?</div>
+      <p style="font-size:13.5px; margin-bottom:10px;">Destructuring allows <strong>extracting values from objects</strong> directly into variables.</p>
+      <div class="compare-row">
+        <div class="compare-box cb-wrong">
+          <div class="cb-label">❌ Without Destructuring</div>
+          <pre style="background:#fff0f2; color:#333; border-radius:6px; padding:8px; font-size:12.5px; margin:0;">student.name
+student.age</pre>
+        </div>
+        <div class="compare-box cb-right">
+          <div class="cb-label">✅ With Destructuring</div>
+          <pre style="background:#e4f5ec; color:#333; border-radius:6px; padding:8px; font-size:12.5px; margin:0;"><span class="kw">let</span> { name, age } = student;</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Example 4 -->
+    <h3>Example 4 — Addition Component</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; Addtion.jsx
+      </div>
+      <pre><span class="kw">import</span> React <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">class</span> <span class="fn">Addtion</span> <span class="kw">extends</span> React.Component {
+  <span class="fn">render</span>() {
+    <span class="kw">let</span> a = <span class="fn">parseInt</span>(<span class="fn">prompt</span>(<span class="str">"Enter First Number"</span>));
+    <span class="kw">let</span> b = <span class="fn">parseInt</span>(<span class="fn">prompt</span>(<span class="str">"Enter Second Number"</span>));
+    <span class="kw">return</span> (
+      <span class="tag-c">&lt;&gt;</span>
+        <span class="tag-c">&lt;h1&gt;</span>The Sum of {a} and {b} is {a + b}<span class="tag-c">&lt;/h1&gt;</span>
+      <span class="tag-c">&lt;/&gt;</span>
+    );
+  }
+}
+
+<span class="kw">export default</span> Addtion;</pre>
+    </div>
+    <div class="output-box">
+      <div class="out-label">▶ Output (Input: 10, 20)</div>
+      The Sum of 10 and 20 is 30
+    </div>
+
+    <div class="warn">
+      <span class="tip-icon">⚠️</span>
+      <div>
+        <strong>Important Note:</strong> Using <code>prompt()</code> inside <code>render()</code> is <strong>NOT recommended</strong> because:
+        <ul style="margin-top:6px; font-size:13.5px;">
+          <li><code>render()</code> may execute multiple times → multiple popups appear</li>
+          <li>It blocks the browser and affects user experience</li>
+        </ul>
+        <p style="margin-top:6px; font-size:13.5px;"><strong>Correct approach:</strong> Handle user input using <strong>State</strong>, <strong>Forms</strong>, and <strong>Event Handling</strong> (covered in later chapters).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 6. RENDERING IN main.jsx ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--teal);">6</div>
+    <h2>Rendering Components in main.jsx</h2>
+  </div>
+  <div class="section-body">
+
+    <p>After creating a component, it must be <strong>imported and rendered</strong> inside <code>main.jsx</code> to appear in the browser.</p>
+
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; main.jsx
+      </div>
+      <pre><span class="kw">import</span> { createRoot } <span class="kw">from</span> <span class="str">"react-dom/client"</span>;
+<span class="kw">import</span> Addtion <span class="kw">from</span> <span class="str">"./Addtion"</span>;
+
+<span class="fn">createRoot</span>(document.<span class="fn">getElementById</span>(<span class="str">"root"</span>)).<span class="fn">render</span>(
+  <span class="tag-c">&lt;Addtion /&gt;</span>
+);</pre>
+    </div>
+
+    <h3>Flow</h3>
+    <div class="flow">
+      <div class="flow-step">Addtion.jsx (Component)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">import in main.jsx</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">createRoot()</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">.render(&lt;Addtion /&gt;)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background:var(--teal-bg); border-color:#90d4d8; color:var(--teal);">Browser 🖥️</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 7. QUICK REFERENCE TABLE ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--pink);">7</div>
+    <h2>Quick Reference — Functional vs Class Component</h2>
+  </div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>Functional Component</th><th>Class Component</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Syntax</strong></td><td>JavaScript function</td><td>ES6 class</td></tr>
+        <tr><td><strong>render()</strong></td><td>Not needed</td><td>Mandatory</td></tr>
+        <tr><td><strong>State</strong></td><td>useState() hook</td><td>this.state</td></tr>
+        <tr><td><strong>Lifecycle</strong></td><td>useEffect() hook</td><td>componentDidMount() etc.</td></tr>
+        <tr><td><strong>Code Length</strong></td><td>Shorter</td><td>Longer</td></tr>
+        <tr><td><strong>Preferred Today</strong></td><td>✅ Yes</td><td>⚠️ Legacy</td></tr>
+      </tbody>
+    </table>
+
+    <div class="interview-box">
+      <div class="ib-label">🎯 Interview Q&amp;A</div>
+      <div class="qa">
+        <div class="q">Q: What is a React Component?</div>
+        <div class="a">A: A reusable, independent piece of UI. React apps are built by combining multiple components.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What is the difference between Functional and Class Component?</div>
+        <div class="a">A: Functional components are plain JS functions; Class components extend React.Component and need a render() method. Functional components are preferred now with Hooks.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Why is render() mandatory in Class Components?</div>
+        <div class="a">A: Because render() is the only method React calls to get JSX — without it, React doesn't know what to display.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What is a React Fragment?</div>
+        <div class="a">A: A wrapper that lets you return multiple elements without adding extra DOM nodes. Syntax: <code>&lt;&gt;...&lt;/&gt;</code> or <code>&lt;React.Fragment&gt;...&lt;/React.Fragment&gt;</code>.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What is Destructuring in JS?</div>
+        <div class="a">A: A shorthand to extract values from objects/arrays. <code>let {name, age} = student;</code> instead of <code>student.name</code>, <code>student.age</code>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="text-align:center; padding:20px; color:#aaa; font-size:12.5px; margin-top:10px;">
+  React.js Chapter 2 · Study Notes · White Theme
+</div>
+
+</body>
+</html>

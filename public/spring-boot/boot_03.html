@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spring Boot Annotations — Layers, Mappings & Parameters — Study Notes</title>
+<style>
+  :root {
+    --primary: #4f46e5;
+    --primary-light: #eef2ff;
+    --accent: #06b6d4;
+    --accent2: #f59e0b;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --card-bg: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px;
+    background: #f8fafc;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .page { max-width: 980px; margin: 0 auto; }
+  h1.title { text-align: center; font-size: 28px; color: var(--primary); margin-bottom: 4px; }
+  .subtitle { text-align: center; color: var(--muted); margin-bottom: 28px; font-size: 14px; }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 6px solid var(--primary);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .card.accent { border-left-color: var(--accent); }
+  .card.warn { border-left-color: var(--accent2); }
+  h2.section-title { font-size: 20px; color: var(--primary); margin-top: 0; display: flex; align-items: center; gap: 8px; }
+  h3 { color: #111827; font-size: 16px; margin-bottom: 6px; border-bottom: 2px solid var(--primary-light); padding-bottom: 4px; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px;
+    border-radius: 999px; color: #fff; background: var(--accent2); margin-left: 6px; vertical-align: middle;
+  }
+  .badge.extra { background: var(--success); }
+  .flow {
+    background: #0f172a; color: #e2e8f0; font-family: 'Consolas','Courier New',monospace;
+    font-size: 13.5px; padding: 16px 18px; border-radius: 8px; overflow-x: auto;
+    white-space: pre; margin: 12px 0; line-height: 1.5;
+  }
+  pre.code {
+    background: #1e1e2f; color: #dcdcdc; padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; font-family: 'Consolas','Courier New',monospace; font-size: 13.5px;
+    margin: 12px 0; white-space: pre-wrap; word-break: break-word;
+  }
+  pre.code .kw { color: #569cd6; }
+  pre.code .str { color: #ce9178; }
+  pre.code .ann { color: #dcdcaa; }
+  pre.code .cls { color: #4ec9b0; }
+  pre.code .com { color: #6a9955; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th, td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; }
+  th { background: var(--primary-light); color: var(--primary); font-weight: 700; }
+  tr:nth-child(even) { background: #fafafa; }
+  .qa { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .qa .q { font-weight: 700; color: #15803d; }
+  .qa .a { margin-top: 4px; color: #1f2937; }
+  .trick { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .trick .label { font-weight: 700; color: #b45309; }
+  .analogy { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .analogy .label { font-weight: 700; color: #1d4ed8; }
+  .warn-box { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .warn-box .label { font-weight: 700; color: #b91c1c; }
+  .toc { background: var(--primary-light); border-radius: 10px; padding: 16px 22px; margin-bottom: 24px; }
+  .toc a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  .toc li { margin-bottom: 4px; }
+  .footer-note { text-align: center; color: var(--muted); font-size: 12px; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1 class="title">Spring Boot Annotations</h1>
+  <p class="subtitle">Layer Annotations, Request Mappings & Parameter Annotations — Interview-Ready Notes</p>
+
+  <div class="toc">
+    <strong>Contents</strong>
+    <ol>
+      <li><a href="#s1">@EnableAutoConfiguration (Recap)</a></li>
+      <li><a href="#s2">@Service</a></li>
+      <li><a href="#s3">@Repository</a></li>
+      <li><a href="#s4">@RestController</a></li>
+      <li><a href="#s5">@Controller</a></li>
+      <li><a href="#s6">@RequestMapping</a></li>
+      <li><a href="#s7">HTTP Method Mappings — @GetMapping ... @DeleteMapping</a></li>
+      <li><a href="#s8">@RequestBody</a></li>
+      <li><a href="#s9">@PathVariable</a></li>
+      <li><a href="#s10">@RequestParam</a></li>
+      <li><a href="#s11">Complete Controller Example</a></li>
+      <li><a href="#s12">⭐ Interview Cheat Sheet</a></li>
+      <li><a href="#s13">Interview Q&A Bank</a> <span class="badge extra">Added</span></li>
+      <li><a href="#s14">Memory Tricks</a> <span class="badge extra">Added</span></li>
+      <li><a href="#s15">Common Bugs / Gotchas</a> <span class="badge extra">Added</span></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="card" id="s1">
+    <h2 class="section-title">1. @EnableAutoConfiguration (Recap)</h2>
+    <p>We already saw that <code>@SpringBootApplication</code> contains <code>@Configuration</code>, <code>@EnableAutoConfiguration</code>, <code>@ComponentScan</code>.</p>
+    <h3>Simple Meaning</h3>
+    <p><code>@EnableAutoConfiguration</code> tells Spring Boot: <em>"Automatically configure the application based on the dependencies and configuration present in the project."</em></p>
+    <p>If you add <code>spring-boot-starter-web</code>, Spring Boot understands you're building a web application and automatically configures much of the required web infrastructure. If you add <code>spring-boot-starter-data-jpa</code>, Spring Boot can automatically configure many JPA-related components based on your configuration.</p>
+
+    <h3>Without Auto Configuration</h3>
+    <p>Traditionally, developers had to configure many things manually: Web configuration, Database configuration, JPA configuration, Transaction configuration, JSON configuration, Server configuration.</p>
+    <div class="flow">Dependencies
+    ↓
+Spring Boot detects them
+    ↓
+Auto Configuration
+    ↓
+Required infrastructure configured</div>
+
+    <div class="analogy">
+      <div class="label">💻 New Laptop Analogy</div>
+      <div>Without automatic setup: Install OS → Install drivers → Configure network → Configure display → Configure audio → Configure keyboard... With automatic setup, much of this happens automatically based on the hardware. Similarly: Spring Boot → Looks at dependencies → Configures appropriate infrastructure.</div>
+    </div>
+    <div class="qa">
+      <div class="q">Interview answer</div>
+      <div class="a">"@EnableAutoConfiguration enables Spring Boot's automatic configuration mechanism. It configures the application based on the dependencies available in the classpath and the application's configuration."</div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="card accent" id="s2">
+    <h2 class="section-title">2. @Service</h2>
+    <p>Used to mark a class as a service/business-logic component managed by Spring.</p>
+    <pre class="code"><span class="ann">@Service</span>
+<span class="kw">public class</span> <span class="cls">ResidentServiceImpl</span> {
+
+    <span class="kw">public</span> Resident createResident(Resident resident) {
+        <span class="com">// business logic</span>
+        <span class="kw">return</span> resident;
+    }
+}</pre>
+    <p>Spring detects this class and creates a Spring Bean for it.</p>
+
+    <h3>Why do we need @Service?</h3>
+    <p>Suppose Chairman wants to create a resident. There might be business rules:</p>
+    <div class="flow">Check society
+    ↓
+Check whether email already exists
+    ↓
+Check flat number
+    ↓
+Create user
+    ↓
+Create resident profile
+    ↓
+Save data</div>
+    <p>This is business logic. We should not put all this logic inside the controller. Instead:</p>
+    <div class="flow">Controller
+    ↓
+Service
+    ↓
+Repository</div>
+
+    <div class="analogy">
+      <div class="label">🏦 Bank Analogy</div>
+      <div>Customer → Bank Counter → Bank Officer → Bank Database. The counter receives the request. The bank officer performs the actual business operation. Similarly: Controller → Service → Repository.</div>
+    </div>
+    <div class="qa">
+      <div class="q">Interview answer</div>
+      <div class="a">"@Service is a specialization of @Component used to mark a class as a service layer component. It is generally used to contain business logic and is managed by the Spring IoC container."</div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="card accent" id="s3">
+    <h2 class="section-title">3. @Repository</h2>
+    <p>Used to indicate the data-access/persistence layer.</p>
+    <pre class="code"><span class="ann">@Repository</span>
+<span class="kw">public interface</span> <span class="cls">ResidentRepository</span>
+        <span class="kw">extends</span> JpaRepository&lt;Resident, Long&gt; {
+}</pre>
+    <p>Its responsibility is mainly interaction with the database through Spring Data/JPA.</p>
+    <h3>Architecture</h3>
+    <div class="flow">Controller
+    ↓
+Service
+    ↓
+Repository
+    ↓
+JPA / Hibernate
+    ↓
+Database</div>
+    <pre class="code">residentRepository.findById(id);
+residentRepository.save(resident);</pre>
+
+    <div class="analogy">
+      <div class="label">🏢 Company Analogy</div>
+      <div>Manager → Accounts Department → Company Records. The manager doesn't directly go and manipulate the physical records; the accounts/data department handles them. Similarly: Service → Repository → Database.</div>
+    </div>
+    <h3>Important point</h3>
+    <p>When using Spring Data JPA, you commonly write an interface extending <code>JpaRepository</code> — you don't generally need to manually implement CRUD methods. Spring Data provides them.</p>
+    <div class="qa">
+      <div class="q">Interview answer</div>
+      <div class="a">"@Repository is used to indicate the persistence or data-access layer. It allows Spring to detect the repository component and provides database-related exception translation. In Spring Data JPA, repositories commonly extend JpaRepository."</div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="card accent" id="s4">
+    <h2 class="section-title">4. @RestController</h2>
+    <p>One of the most important annotations — used to create REST APIs.</p>
+    <pre class="code"><span class="ann">@RestController</span>
+<span class="ann">@RequestMapping</span>(<span class="str">"/api/residents"</span>)
+<span class="kw">public class</span> <span class="cls">ResidentController</span> {
+}</pre>
+    <p>It is effectively a combination of <code>@Controller</code> + <code>@ResponseBody</code>. The important part is <code>@ResponseBody</code> — returned objects are generally written directly into the HTTP response body, commonly as JSON.</p>
+    <pre class="code"><span class="ann">@GetMapping</span>(<span class="str">"/101"</span>)
+<span class="kw">public</span> Resident getResident() {
+    <span class="kw">return new</span> Resident(
+        101,
+        <span class="str">"Rahul"</span>,
+        <span class="str">"A-101"</span>
+    );
+}</pre>
+    <p>Spring can convert the object into JSON:</p>
+    <pre class="code">{
+  "id": 101,
+  "name": "Rahul",
+  "flatNumber": "A-101"
+}</pre>
+    <div class="analogy">
+      <div class="label">Real-life</div>
+      <div>React asks "Give me resident 101" → <code>GET /api/residents/101</code>. Spring Boot: @RestController → Find resident → Return object → JSON response.</div>
+    </div>
+    <div class="qa">
+      <div class="q">Interview answer</div>
+      <div class="a">"@RestController is used to create RESTful controllers in Spring Boot. It combines @Controller and @ResponseBody, so the return value of controller methods is written directly to the HTTP response, usually as JSON."</div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="card accent" id="s5">
+    <h2 class="section-title">5. @Controller</h2>
+    <p>Also a Spring MVC controller annotation, but with an important difference — traditionally used when the controller returns a view/page.</p>
+    <pre class="code"><span class="ann">@Controller</span>
+<span class="kw">public class</span> <span class="cls">HomeController</span> {
+
+    <span class="ann">@GetMapping</span>(<span class="str">"/home"</span>)
+    <span class="kw">public</span> String home() {
+        <span class="kw">return</span> <span class="str">"home"</span>;
+    }
+}</pre>
+    <p>Here <code>"home"</code> can represent a view such as <code>home.html</code>.</p>
+
+    <h3>@Controller vs @RestController</h3>
+    <div class="flow">@Controller
+    ↓
+Usually returns View
+
+@RestController
+    ↓
+Usually returns Data / JSON</div>
+    <p><strong>Traditional Spring MVC:</strong></p>
+    <pre class="code"><span class="ann">@Controller</span>
+<span class="kw">public class</span> <span class="cls">HomeController</span> {
+
+    <span class="ann">@GetMapping</span>(<span class="str">"/home"</span>)
+    <span class="kw">public</span> String home() {
+        <span class="kw">return</span> <span class="str">"home"</span>;
+    }
+}</pre>
+    <p><strong>REST API:</strong></p>
+    <pre class="code"><span class="ann">@RestController</span>
+<span class="kw">public class</span> <span class="cls">ResidentController</span> {
+
+    <span class="ann">@GetMapping</span>(<span class="str">"/residents"</span>)
+    <span class="kw">public</span> List&lt;Resident&gt; getResidents() {
+        <span class="kw">return</span> residentService.getAllResidents();
+    }
+}</pre>
+    <p>The second one returns data.</p>
+    <div class="qa">
+      <div class="q">Interview answer</div>
+      <div class="a">"@Controller is used in Spring MVC to define controller classes, especially when returning views. @RestController is designed for REST APIs and returns data directly in the HTTP response, commonly JSON."</div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="card" id="s6">
+    <h2 class="section-title">6. @RequestMapping</h2>
+    <p>Used to map an HTTP request to a controller or controller method.</p>
+    <pre class="code"><span class="ann">@RestController</span>
+<span class="ann">@RequestMapping</span>(<span class="str">"/api/residents"</span>)
+<span class="kw">public class</span> <span class="cls">ResidentController</span> {}</pre>
+    <p>This defines a common base URL: <code>/api/residents</code>. Then <code>@GetMapping</code> means <code>GET /api/residents</code>, and <code>@GetMapping("/{id}")</code> means <code>GET /api/residents/{id}</code>.</p>
+
+    <h3>Why use @RequestMapping at class level?</h3>
+    <p>Suppose you have <code>@GetMapping("/api/residents")</code>, <code>@PostMapping("/api/residents")</code>, <code>@DeleteMapping("/api/residents/{id}")</code> — repeating <code>/api/residents</code> everywhere is unnecessary. Instead, put <code>@RequestMapping("/api/residents")</code> at class level, then use <code>@GetMapping</code>, <code>@PostMapping</code>, <code>@DeleteMapping("/{id}")</code>.</p>
+
+    <pre class="code"><span class="ann">@RestController</span>
+<span class="ann">@RequestMapping</span>(<span class="str">"/api/residents"</span>)
+<span class="kw">public class</span> <span class="cls">ResidentController</span> {
+
+    <span class="ann">@GetMapping</span>
+    <span class="kw">public</span> List&lt;Resident&gt; getAll() {
+        <span class="kw">return</span> residentService.getAll();
+    }
+
+    <span class="ann">@PostMapping</span>
+    <span class="kw">public</span> Resident create(
+            <span class="ann">@RequestBody</span> ResidentRequest request) {
+        <span class="kw">return</span> residentService.create(request);
+    }
+
+    <span class="ann">@DeleteMapping</span>(<span class="str">"/{id}"</span>)
+    <span class="kw">public void</span> delete(
+            <span class="ann">@PathVariable</span> Long id) {
+        residentService.delete(id);
+    }
+}</pre>
+    <p>The resulting APIs are:</p>
+    <div class="flow">GET       /api/residents
+POST      /api/residents
+DELETE    /api/residents/101</div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="card warn" id="s7">
+    <h2 class="section-title">7. HTTP Method Mappings</h2>
+
+    <h3>@GetMapping</h3>
+    <p>Maps an HTTP GET request to a controller method.</p>
+    <pre class="code"><span class="ann">@GetMapping</span>
+<span class="kw">public</span> List&lt;Resident&gt; getAllResidents() {
+    <span class="kw">return</span> residentService.getAllResidents();
+}</pre>
+    <p>Request: <code>GET /api/residents</code> — Purpose: retrieve data.</p>
+    <pre class="code"><span class="ann">@GetMapping</span>(<span class="str">"/{id}"</span>)
+<span class="kw">public</span> Resident getResident(
+        <span class="ann">@PathVariable</span> Long id) {
+    <span class="kw">return</span> residentService.getResident(id);
+}</pre>
+    <p>Request: <code>GET /api/residents/101</code> — Meaning: give me resident 101.</p>
+
+    <h3>@PostMapping</h3>
+    <p>Maps an HTTP POST request. Usually used to create a resource.</p>
+    <pre class="code"><span class="ann">@PostMapping</span>
+<span class="kw">public</span> Resident createResident(
+        <span class="ann">@RequestBody</span> ResidentRequest request) {
+    <span class="kw">return</span> residentService.createResident(request);
+}</pre>
+    <p>Request: <code>POST /api/residents</code>, body: <code>{ "name": "Rahul", "flatNumber": "A-101" }</code> — Meaning: create a new resident.</p>
+
+    <h3>@PutMapping</h3>
+    <p>Used for HTTP PUT requests. Generally used for complete updates/replacement.</p>
+    <pre class="code"><span class="ann">@PutMapping</span>(<span class="str">"/{id}"</span>)
+<span class="kw">public</span> Resident updateResident(
+        <span class="ann">@PathVariable</span> Long id,
+        <span class="ann">@RequestBody</span> ResidentRequest request) {
+    <span class="kw">return</span> residentService.updateResident(id, request);
+}</pre>
+    <p>Request: <code>PUT /api/residents/101</code></p>
+
+    <h3>@PatchMapping</h3>
+    <p>Used for HTTP PATCH requests. Generally used for partial updates.</p>
+    <pre class="code"><span class="ann">@PatchMapping</span>(<span class="str">"/{id}"</span>)
+<span class="kw">public</span> Resident updateMobile(
+        <span class="ann">@PathVariable</span> Long id,
+        <span class="ann">@RequestBody</span> Map&lt;String, Object&gt; data) {
+    <span class="kw">return</span> residentService.partialUpdate(id, data);
+}</pre>
+    <p>Request: <code>PATCH /api/residents/101</code>, body: <code>{ "mobile": "9999999999" }</code> — Meaning: change only the mobile number.</p>
+
+    <h3>@DeleteMapping</h3>
+    <p>Used for HTTP DELETE requests.</p>
+    <pre class="code"><span class="ann">@DeleteMapping</span>(<span class="str">"/{id}"</span>)
+<span class="kw">public</span> ResponseEntity&lt;Void&gt; deleteResident(
+        <span class="ann">@PathVariable</span> Long id) {
+    residentService.deleteResident(id);
+    <span class="kw">return</span> ResponseEntity.noContent().build();
+}</pre>
+    <p>Request: <code>DELETE /api/residents/101</code> — Meaning: delete resident 101.</p>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="card" id="s8">
+    <h2 class="section-title">8. @RequestBody</h2>
+    <p>Extremely important — used to get data from the HTTP request body and convert it into a Java object.</p>
+    <p>Suppose React sends:</p>
+    <pre class="code">{
+    "name": "Rahul",
+    "flatNumber": "A-101",
+    "mobile": "9876543210"
+}</pre>
+    <p>Controller:</p>
+    <pre class="code"><span class="ann">@PostMapping</span>
+<span class="kw">public</span> Resident createResident(
+        <span class="ann">@RequestBody</span> ResidentRequest request) {
+    <span class="kw">return</span> residentService.createResident(request);
+}</pre>
+    <p>Spring converts JSON → ResidentRequest Java object. So <code>request.getName()</code> gives <code>Rahul</code>.</p>
+    <div class="analogy">
+      <div class="label">📝 Form Analogy</div>
+      <div>Imagine filling a form: Name: Rahul, Flat: A-101, Mobile: 9876543210. You submit the form — the server receives the information. In a REST API: Frontend → JSON Request Body → @RequestBody → Java Object.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="card" id="s9">
+    <h2 class="section-title">9. @PathVariable</h2>
+    <p>Suppose: <code>GET /api/residents/101</code> — we want to extract <code>101</code>.</p>
+    <pre class="code"><span class="ann">@GetMapping</span>(<span class="str">"/{id}"</span>)
+<span class="kw">public</span> Resident getResident(
+        <span class="ann">@PathVariable</span> Long id) {
+    <span class="kw">return</span> residentService.getResident(id);
+}</pre>
+    <div class="flow">URL: /api/residents/101
+    ↓
+@PathVariable
+    ↓
+id = 101</div>
+  </div>
+
+  <!-- SECTION 10 -->
+  <div class="card" id="s10">
+    <h2 class="section-title">10. @RequestParam</h2>
+    <p>Used to read query parameters.</p>
+    <div class="flow">GET /api/residents?name=Rahul</div>
+    <pre class="code"><span class="ann">@GetMapping</span>
+<span class="kw">public</span> List&lt;Resident&gt; search(
+        <span class="ann">@RequestParam</span> String name) {
+    <span class="kw">return</span> residentService.search(name);
+}</pre>
+    <p>Here <code>name = Rahul</code>.</p>
+
+    <h3>Important Difference (Frequently Asked)</h3>
+    <table>
+      <tr><th>Annotation</th><th>Data comes from</th><th>Example</th></tr>
+      <tr><td>@RequestBody</td><td>Request body (JSON)</td><td><code>{ "name": "Rahul" }</code></td></tr>
+      <tr><td>@PathVariable</td><td>URL path</td><td><code>/residents/101</code></td></tr>
+      <tr><td>@RequestParam</td><td>Query parameter</td><td><code>/residents?name=Rahul</code></td></tr>
+    </table>
+    <div class="flow">@RequestBody
+    ↓
+JSON Body
+
+@PathVariable
+    ↓
+URL Path
+
+@RequestParam
+    ↓
+Query Parameter</div>
+  </div>
+
+  <!-- SECTION 11 -->
+  <div class="card warn" id="s11">
+    <h2 class="section-title">11. Complete Controller Example</h2>
+    <pre class="code"><span class="ann">@RestController</span>
+<span class="ann">@RequestMapping</span>(<span class="str">"/api/residents"</span>)
+<span class="kw">public class</span> <span class="cls">ResidentController</span> {
+
+    <span class="ann">@GetMapping</span>
+    <span class="kw">public</span> List&lt;Resident&gt; getAllResidents() {
+        <span class="kw">return</span> residentService.getAllResidents();
+    }
+
+    <span class="ann">@GetMapping</span>(<span class="str">"/{id}"</span>)
+    <span class="kw">public</span> Resident getResident(
+            <span class="ann">@PathVariable</span> Long id) {
+        <span class="kw">return</span> residentService.getResident(id);
+    }
+
+    <span class="ann">@PostMapping</span>
+    <span class="kw">public</span> Resident createResident(
+            <span class="ann">@RequestBody</span> ResidentRequest request) {
+        <span class="kw">return</span> residentService.createResident(request);
+    }
+
+    <span class="ann">@PutMapping</span>(<span class="str">"/{id}"</span>)
+    <span class="kw">public</span> Resident updateResident(
+            <span class="ann">@PathVariable</span> Long id,
+            <span class="ann">@RequestBody</span> ResidentRequest request) {
+        <span class="kw">return</span> residentService.updateResident(id, request);
+    }
+
+    <span class="ann">@PatchMapping</span>(<span class="str">"/{id}"</span>)
+    <span class="kw">public</span> Resident partialUpdate(
+            <span class="ann">@PathVariable</span> Long id,
+            <span class="ann">@RequestBody</span> Map&lt;String, Object&gt; data) {
+        <span class="kw">return</span> residentService.partialUpdate(id, data);
+    }
+
+    <span class="ann">@DeleteMapping</span>(<span class="str">"/{id}"</span>)
+    <span class="kw">public</span> ResponseEntity&lt;Void&gt; deleteResident(
+            <span class="ann">@PathVariable</span> Long id) {
+        residentService.deleteResident(id);
+        <span class="kw">return</span> ResponseEntity.noContent().build();
+    }
+}</pre>
+    <p>Now your APIs become:</p>
+    <div class="flow">GET     /api/residents
+GET     /api/residents/101
+POST    /api/residents
+PUT     /api/residents/101
+PATCH   /api/residents/101
+DELETE  /api/residents/101</div>
+  </div>
+
+  <!-- SECTION 12 -->
+  <div class="card accent" id="s12">
+    <h2 class="section-title">12. ⭐ Interview Cheat Sheet</h2>
+    <table>
+      <tr><th>Annotation</th><th>Simple Meaning</th></tr>
+      <tr><td>@SpringBootApplication</td><td>Main Spring Boot annotation</td></tr>
+      <tr><td>@Configuration</td><td>Defines configuration/beans</td></tr>
+      <tr><td>@EnableAutoConfiguration</td><td>Automatically configures application</td></tr>
+      <tr><td>@ComponentScan</td><td>Finds Spring components</td></tr>
+      <tr><td>@Service</td><td>Business/service layer</td></tr>
+      <tr><td>@Repository</td><td>Database/persistence layer</td></tr>
+      <tr><td>@Controller</td><td>Spring MVC controller</td></tr>
+      <tr><td>@RestController</td><td>REST API controller</td></tr>
+      <tr><td>@RequestMapping</td><td>Maps request URL</td></tr>
+      <tr><td>@GetMapping</td><td>Handles GET</td></tr>
+      <tr><td>@PostMapping</td><td>Handles POST</td></tr>
+      <tr><td>@PutMapping</td><td>Handles PUT</td></tr>
+      <tr><td>@PatchMapping</td><td>Handles PATCH</td></tr>
+      <tr><td>@DeleteMapping</td><td>Handles DELETE</td></tr>
+      <tr><td>@RequestBody</td><td>Reads JSON/body data</td></tr>
+      <tr><td>@PathVariable</td><td>Reads value from URL path</td></tr>
+      <tr><td>@RequestParam</td><td>Reads query parameter</td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 13 - EXTRA -->
+  <div class="card accent" id="s13">
+    <h2 class="section-title">13. Interview Q&A Bank <span class="badge extra">Added</span></h2>
+    <div class="qa"><div class="q">Q: Is @RequestParam required by default? What if the query param is missing?</div><div class="a">Yes, @RequestParam is required by default — a missing param throws a 400 Bad Request. Use @RequestParam(required = false) or provide a defaultValue to make it optional.</div></div>
+    <div class="qa"><div class="q">Q: Can you have both @PathVariable and @RequestParam in the same method?</div><div class="a">Yes — e.g. GET /api/residents/101/notices?type=urgent can combine @PathVariable Long id with @RequestParam String type in the same method signature.</div></div>
+    <div class="qa"><div class="q">Q: What does @RestController actually add beyond @Controller?</div><div class="a">@RestController = @Controller + @ResponseBody. Without @ResponseBody, a @Controller method returning an object would be treated as a view name to resolve, not serialized data.</div></div>
+    <div class="qa"><div class="q">Q: Why use PATCH with Map&lt;String, Object&gt; instead of the full DTO?</div><div class="a">Since PATCH only needs to update a subset of fields, using a generic Map lets the client send only the changed fields; the full DTO would force sending unrelated fields too, defeating the purpose of a partial update.</div></div>
+    <div class="qa"><div class="q">Q: What's the benefit of ResponseEntity over returning the object directly?</div><div class="a">ResponseEntity gives control over the HTTP status code, headers, and body together — e.g. returning 204 No Content on delete versus always defaulting to 200 OK.</div></div>
+    <div class="qa"><div class="q">Q: Can @RequestMapping be used instead of @GetMapping/@PostMapping etc.?</div><div class="a">Yes, via @RequestMapping(method = RequestMethod.GET) — but @GetMapping, @PostMapping etc. are shorthand, more readable, composed annotations introduced for convenience.</div></div>
+  </div>
+
+  <!-- SECTION 14 - EXTRA -->
+  <div class="card warn" id="s14">
+    <h2 class="section-title">14. Memory Tricks <span class="badge extra">Added</span></h2>
+    <div class="trick"><div class="label">🧠 Layer Analogy Chain</div><div>Bank Counter (Controller) → Bank Officer (Service) → Company Records (Repository) — request flows down, decisions flow up.</div></div>
+    <div class="trick"><div class="label">🧠 Body vs Path vs Param</div><div>"<strong>B</strong>ody is <strong>B</strong>ig data (JSON), <strong>P</strong>ath is the <strong>P</strong>osition in the URL, <strong>P</strong>aram is the <strong>P</strong>lus-sign after '?'."</div></div>
+    <div class="trick"><div class="label">🧠 @Controller vs @RestController</div><div>"@Controller shows you a page (View), @RestController hands you the data (JSON)" — think of View = visual, Rest = raw data.</div></div>
+    <div class="trick"><div class="label">🧠 Mapping to CRUD</div><div>GET = "fetch", POST = "make new", PUT = "replace whole", PATCH = "tweak one thing", DELETE = "remove" — same CRUD mnemonic as before, just annotated this time.</div></div>
+  </div>
+
+  <!-- SECTION 15 - EXTRA -->
+  <div class="card" id="s15">
+    <h2 class="section-title">15. Common Bugs / Gotchas <span class="badge extra">Added</span></h2>
+    <div class="qa"><div class="q">⚠️ Forgetting @ResponseBody on a plain @Controller</div><div class="a">If you use @Controller instead of @RestController but forget @ResponseBody, Spring tries to resolve the returned string as a view name, causing a "whitelabel error page" / view-not-found error instead of JSON output.</div></div>
+    <div class="qa"><div class="q">⚠️ Mismatched @PathVariable name and URL placeholder</div><div class="a">If the URL has {residentId} but the method parameter is annotated @PathVariable Long id (no matching name specified), Spring throws a binding error — use @PathVariable("residentId") or keep names identical.</div></div>
+    <div class="qa"><div class="q">⚠️ Putting business logic inside the Controller</div><div class="a">Beginners often write validation and business rules directly in controller methods. This breaks separation of concerns — that logic belongs in the @Service layer, keeping controllers thin (just handling HTTP concerns).</div></div>
+    <div class="qa"><div class="q">⚠️ Using @RequestParam when the value is part of the resource path</div><div class="a">e.g. writing /api/residents?id=101 instead of /api/residents/101 for fetching a single resource. This is not idiomatic REST — path variables should represent resource identity, query params should represent filters/options.</div></div>
+    <div class="qa"><div class="q">⚠️ Repository not extending JpaRepository properly</div><div class="a">Forgetting the generic types (&lt;Entity, IdType&gt;) or extending the wrong interface means Spring Data won't generate the expected CRUD methods, leading to compilation or runtime errors.</div></div>
+  </div>
+
+  <p class="footer-note">Study Notes — Spring Boot Layer, Mapping & Parameter Annotations · SocietyHub Project Reference</p>
+</div>
+</body>
+</html>

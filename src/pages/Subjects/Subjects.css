@@ -1,0 +1,595 @@
+/* =========================================================
+   SUBJECTS PAGE
+========================================================= */
+
+.subjects-page {
+  min-height: 100vh;
+
+  padding-bottom: 90px;
+
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.subjects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 24px 18px;
+
+  background: var(--bg-secondary);
+
+  border-bottom: 1px solid var(--border-color);
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+/* =========================================================
+   HEADER TEXT
+========================================================= */
+
+.subjects-label {
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+
+  color: var(--text-muted);
+}
+
+.subjects-header h1 {
+  margin: 4px 0;
+
+  font-size: 27px;
+
+  color: var(--text-primary);
+}
+
+.subjects-header p {
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   HEADER ICON
+========================================================= */
+
+.subjects-header-icon {
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 14px;
+
+  background: var(--text-primary);
+  color: var(--bg-secondary);
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.subjects-header-icon-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 21px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.subjects-content {
+  padding: 18px;
+}
+
+
+/* =========================================================
+   SUBJECT GRID
+========================================================= */
+
+.subjects-grid {
+  display: grid;
+
+  gap: 12px;
+}
+
+
+/* =========================================================
+   SUBJECT ITEM
+========================================================= */
+
+.subject-item {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 15px;
+
+  text-align: left;
+
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+
+  background: var(--bg-secondary);
+
+  color: var(--text-primary);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.25s ease;
+}
+
+.subject-item:active {
+  transform: scale(0.98);
+}
+
+
+/* =========================================================
+   SUBJECT ICON
+========================================================= */
+
+.subject-icon {
+  width: 52px;
+  min-width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 15px;
+
+  font-size: 25px;
+
+  background: var(--bg-tertiary);
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+
+/* =========================================================
+   SUBJECT COLORS — LIGHT
+========================================================= */
+
+.subject-icon.purple {
+  background: #f3e8ff;
+}
+
+.subject-icon.orange {
+  background: #ffedd5;
+}
+
+.subject-icon.blue {
+  background: #dbeafe;
+}
+
+.subject-icon.yellow {
+  background: #fef9c3;
+}
+
+.subject-icon.red {
+  background: #fee2e2;
+}
+
+.subject-icon.cyan {
+  background: #cffafe;
+}
+
+.subject-icon.green,
+.subject-icon.emerald {
+  background: #dcfce7;
+}
+
+.subject-icon.teal {
+  background: #ccfbf1;
+}
+
+.subject-icon.indigo {
+  background: #e0e7ff;
+}
+
+
+/* =========================================================
+   SUBJECT COLORS — DARK
+========================================================= */
+
+html[data-theme="dark"] .subject-icon.purple {
+  background: #3b1f50;
+}
+
+html[data-theme="dark"] .subject-icon.orange {
+  background: #4a2d12;
+}
+
+html[data-theme="dark"] .subject-icon.blue {
+  background: #172f52;
+}
+
+html[data-theme="dark"] .subject-icon.yellow {
+  background: #463d12;
+}
+
+html[data-theme="dark"] .subject-icon.red {
+  background: #4a1f22;
+}
+
+html[data-theme="dark"] .subject-icon.cyan {
+  background: #123d43;
+}
+
+html[data-theme="dark"] .subject-icon.green,
+html[data-theme="dark"] .subject-icon.emerald {
+  background: #123b29;
+}
+
+html[data-theme="dark"] .subject-icon.teal {
+  background: #123b38;
+}
+
+html[data-theme="dark"] .subject-icon.indigo {
+  background: #20264d;
+}
+
+
+/* =========================================================
+   SUBJECT COLORS — SYSTEM DARK
+========================================================= */
+
+@media (prefers-color-scheme: dark) {
+
+  html[data-theme="system"] .subject-icon.purple {
+    background: #3b1f50;
+  }
+
+  html[data-theme="system"] .subject-icon.orange {
+    background: #4a2d12;
+  }
+
+  html[data-theme="system"] .subject-icon.blue {
+    background: #172f52;
+  }
+
+  html[data-theme="system"] .subject-icon.yellow {
+    background: #463d12;
+  }
+
+  html[data-theme="system"] .subject-icon.red {
+    background: #4a1f22;
+  }
+
+  html[data-theme="system"] .subject-icon.cyan {
+    background: #123d43;
+  }
+
+  html[data-theme="system"] .subject-icon.green,
+  html[data-theme="system"] .subject-icon.emerald {
+    background: #123b29;
+  }
+
+  html[data-theme="system"] .subject-icon.teal {
+    background: #123b38;
+  }
+
+  html[data-theme="system"] .subject-icon.indigo {
+    background: #20264d;
+  }
+}
+
+
+/* =========================================================
+   SUBJECT INFORMATION
+========================================================= */
+
+.subject-info {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.subject-info h2 {
+  margin: 0 0 4px;
+
+  font-size: 16px;
+
+  color: var(--text-primary);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subject-info p {
+  margin: 0 0 7px;
+
+  font-size: 12px;
+  line-height: 1.4;
+
+  color: var(--text-muted);
+}
+
+
+/* =========================================================
+   NOTE COUNT
+========================================================= */
+
+.note-count {
+  font-size: 11px;
+  font-weight: 600;
+
+  color: var(--accent);
+}
+
+
+/* =========================================================
+   SUBJECT ARROW
+========================================================= */
+
+.subject-arrow {
+  flex-shrink: 0;
+
+  color: var(--text-light);
+
+  font-size: 26px;
+  line-height: 1;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.subject-item:hover .subject-arrow {
+  color: var(--accent);
+
+  transform: translateX(3px);
+}
+
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+========================================================= */
+
+.subject-item:focus-visible {
+  outline: 2px solid var(--accent);
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width: 600px) {
+
+  .subjects-header {
+    padding: 30px;
+  }
+
+  .subjects-content {
+    padding: 24px;
+  }
+
+  .subjects-grid {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 16px;
+  }
+
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 900px) {
+
+  .subjects-page {
+    padding-bottom: 30px;
+  }
+
+  .subjects-header {
+    padding: 35px 7%;
+  }
+
+  .subjects-content {
+    max-width: 1200px;
+
+    margin: 0 auto;
+
+    padding: 30px 7%;
+  }
+
+  .subjects-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .subject-item:hover {
+    transform: translateY(-2px);
+
+    border-color: var(--border-color);
+
+    box-shadow:
+      0 8px 25px var(--shadow-color);
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .subjects-header {
+    padding: 20px 14px;
+  }
+
+  .subjects-content {
+    padding: 16px 14px;
+  }
+
+  .subjects-header h1 {
+    font-size: 24px;
+  }
+
+  .subjects-header p {
+    font-size: 13px;
+  }
+
+  .subjects-header-icon {
+    width: 43px;
+    height: 43px;
+  }
+
+  .subject-item {
+    gap: 10px;
+
+    padding: 12px;
+
+    border-radius: 16px;
+  }
+
+  .subject-icon {
+    width: 46px;
+    min-width: 46px;
+    height: 46px;
+
+    border-radius: 13px;
+
+    font-size: 22px;
+  }
+
+  .subject-info h2 {
+    font-size: 15px;
+  }
+
+  .subject-info p {
+    font-size: 11px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .subjects-header {
+    padding: 18px 12px;
+  }
+
+  .subjects-content {
+    padding: 14px 12px;
+  }
+
+  .subjects-header h1 {
+    font-size: 22px;
+  }
+
+  .subjects-label {
+    font-size: 10px;
+  }
+
+  .subjects-header-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 12px;
+  }
+
+  .subjects-header-icon-symbol {
+    font-size: 19px;
+  }
+
+  .subject-item {
+    gap: 8px;
+
+    padding: 10px;
+  }
+
+  .subject-icon {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+
+    border-radius: 12px;
+
+    font-size: 20px;
+  }
+
+  .subject-info h2 {
+    font-size: 14px;
+  }
+
+  .subject-info p {
+    font-size: 10px;
+
+    margin-bottom: 5px;
+  }
+
+  .note-count {
+    font-size: 10px;
+  }
+
+  .subject-arrow {
+    font-size: 22px;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .subjects-page,
+  .subjects-header,
+  .subjects-header-icon,
+  .subject-icon,
+  .subject-item,
+  .subject-arrow {
+    transition: none;
+  }
+}

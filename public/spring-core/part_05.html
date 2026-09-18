@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spring – Dependency Injection (DI)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { font-family: 'Inter', sans-serif; background: #e8eaf0; color: #000; font-size: 13px; line-height: 1.6; }
+
+  .page { width: 794px; min-height: 1123px; background: #fff; margin: 32px auto; padding: 36px 40px 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.13); page-break-after: always; }
+
+  .page-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 22px; }
+  .page-header .subject { font-size: 11px; font-weight: 700; color: #000; letter-spacing: 1.5px; text-transform: uppercase; }
+  .page-header .topic { font-size: 20px; font-weight: 800; color: #000; }
+  .page-header .badge { background: #000; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 1px; }
+
+  .section-label { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #000; margin: 20px 0 8px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1.5px; background: #000; }
+
+  .card { border: 1.5px solid #000; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; background: #fff; }
+  .card-title { font-size: 12.5px; font-weight: 800; color: #000; margin-bottom: 6px; }
+  .card p { font-size: 12.5px; color: #000; margin-bottom: 5px; }
+
+  .def-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; }
+  .def-box .def-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .def-box p { font-size: 12.5px; color: #000; line-height: 1.65; }
+
+  .interview-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; }
+  .interview-box .int-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .interview-box p { font-size: 12.5px; color: #000; line-height: 1.65; margin-bottom: 6px; }
+
+  .trick-box { background: #fff; border: 2px dashed #000; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+  .trick-box .trick-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .trick-box p { font-size: 12px; color: #000; }
+
+  .tip-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 12px; }
+  .tip-box .tip-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .tip-box p { font-size: 12px; color: #000; }
+
+  .warn-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 12px; }
+  .warn-box .warn-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .warn-box p { font-size: 12px; color: #000; }
+
+  .example-card { border: 1.5px solid #000; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+  .example-card .ex-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+
+  .code-block { background: #000; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+  .code-block pre { font-family: 'Fira Code', monospace; font-size: 11.5px; color: #fff; white-space: pre-wrap; word-break: break-word; line-height: 1.7; }
+  .cm { color: #888; font-style: italic; }
+  .kw { color: #fff; font-weight: 700; }
+  .str { color: #ccc; }
+  .tag { color: #ddd; font-weight: 700; }
+  .attr { color: #aaa; }
+  .val { color: #ccc; }
+
+  .out-bar { background: #222; border-radius: 0 0 6px 6px; padding: 8px 14px; margin-top: -10px; margin-bottom: 10px; border-top: 1px solid #444; }
+  .out-bar .out-label { font-size: 9px; font-weight: 800; color: #888; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
+  .out-bar pre { font-family: 'Fira Code', monospace; font-size: 11px; color: #ccc; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 12px; }
+  .cmp-table thead th { background: #000; color: #fff; padding: 8px 10px; text-align: left; font-weight: 800; }
+  .cmp-table tbody tr:nth-child(even) { background: #f5f5f5; }
+  .cmp-table tbody td { padding: 7px 10px; border-bottom: 1px solid #000; color: #000; vertical-align: top; }
+  .cmp-table tbody tr td:first-child { font-weight: 700; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+  .pros-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .chip { background: #fff; border: 1.5px solid #000; color: #000; border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 700; }
+  .pill { display: inline-block; background: #000; color: #fff; border-radius: 4px; padding: 2px 9px; font-size: 11px; font-weight: 700; margin: 2px; }
+  .pill-outline { display: inline-block; background: #fff; color: #000; border: 1.5px solid #000; border-radius: 4px; padding: 2px 9px; font-size: 11px; font-weight: 700; margin: 2px; }
+
+  code { font-family: 'Fira Code', monospace; font-size: 11.5px; background: #f0f0f0; border: 1px solid #ccc; padding: 1px 5px; border-radius: 3px; color: #000; }
+
+  .step-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+  .step-num { min-width: 24px; height: 24px; background: #000; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; margin-top: 2px; }
+  .step-text { font-size: 12.5px; color: #000; padding-top: 2px; }
+
+  @media print { body { background: #fff; } .page { box-shadow: none; margin: 0; } }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     PAGE 1 — What is DI + Why + IoC vs DI
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Dependency Injection (DI)</div>
+    </div>
+    <div class="badge">PART 1</div>
+  </div>
+
+  <div class="section-label">What is Dependency Injection?</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 Definition</div>
+    <p><strong>Dependency Injection (DI)</strong> is the main feature provided by the <strong>Spring IoC Container</strong>. It is a design pattern in which Spring <strong>creates the required objects and injects them into other objects at runtime</strong>, instead of the developer creating objects manually using <code>new</code> keyword.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔧 Spring Takes Responsibility For:</div>
+    <div class="pros-grid" style="margin-bottom:0;">
+      <span class="pill">Creating Objects</span>
+      <span class="pill">Managing Lifecycle</span>
+      <span class="pill">Injecting Dependencies</span>
+      <span class="pill">Destroying Objects</span>
+    </div>
+  </div>
+
+  <div class="section-label">Without DI vs With DI</div>
+
+  <div class="two-col">
+    <div>
+      <div class="warn-box">
+        <div class="warn-label">❌ Without DI — Tight Coupling</div>
+        <div class="code-block">
+          <pre><span class="kw">class</span> Engine {}
+
+<span class="kw">class</span> Car {
+    Engine e = <span class="kw">new</span> Engine();
+    <span class="cm">// Car creates Engine itself</span>
+    <span class="cm">// Tightly coupled!</span>
+}</pre>
+        </div>
+        <p style="font-size:12px;">Car is directly dependent on Engine. If Engine changes → Car breaks.</p>
+      </div>
+    </div>
+    <div>
+      <div class="tip-box">
+        <div class="tip-label">✅ With DI — Loose Coupling</div>
+        <div class="code-block">
+          <pre><span class="kw">class</span> Engine {}
+
+<span class="kw">class</span> Car {
+    Engine e;
+    <span class="kw">public void</span> setEngine(Engine e) {
+        <span class="kw">this</span>.e = e;
+        <span class="cm">// Spring injects Engine!</span>
+    }
+}</pre>
+        </div>
+        <p style="font-size:12px;">Car doesn't create Engine. Spring injects it → <strong>Loose Coupling</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Why Dependency Injection?</div>
+
+  <div class="example-card">
+    <div class="ex-label">🏢 Problem Example — Company &amp; Employee</div>
+    <div class="code-block">
+      <pre><span class="kw">class</span> Employee {}
+
+<span class="kw">class</span> Company {
+    Employee emp = <span class="kw">new</span> Employee(); <span class="cm">// Tight coupling!</span>
+}</pre>
+    </div>
+    <p style="font-size:12.5px;color:#000;">If <code>Employee</code> changes to <code>Manager</code> → <strong>Company class must also be modified</strong>.</p>
+  </div>
+
+  <div class="warn-box">
+    <div class="warn-label">❌ Problems Without DI</div>
+    <p><strong>Tight Coupling</strong> — Changes in one class break another &nbsp;|&nbsp; <strong>Difficult Testing</strong> — Can't replace object with dummy &nbsp;|&nbsp; <strong>Difficult Maintenance</strong> — Large projects become unmanageable</p>
+  </div>
+
+  <div class="pros-grid">
+    <span class="chip">✅ Loose Coupling</span>
+    <span class="chip">✅ Better Maintainability</span>
+    <span class="chip">✅ Easy Testing</span>
+    <span class="chip">✅ Reusability</span>
+    <span class="chip">✅ Better Code Quality</span>
+  </div>
+
+  <!-- IoC vs DI -->
+  <div class="section-label">IoC vs DI — Difference (Very Important for Interview)</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Point</th><th>IoC (Inversion of Control)</th><th>DI (Dependency Injection)</th></tr></thead>
+    <tbody>
+      <tr><td>What is it?</td><td>A <strong>Design Principle</strong></td><td>A <strong>Design Pattern</strong> (implementation of IoC)</td></tr>
+      <tr><td>Concept</td><td>Transfer control of object creation from developer to Spring</td><td>Spring injects required objects into other objects</td></tr>
+      <tr><td>Relation</td><td>IoC is the <strong>broader concept</strong></td><td>DI is <strong>one way to achieve IoC</strong></td></tr>
+      <tr><td>Focus</td><td>Who controls object creation?</td><td>How are dependencies provided?</td></tr>
+      <tr><td>Implemented by</td><td>Spring Container</td><td>Setter Injection / Constructor Injection</td></tr>
+      <tr><td>Analogy</td><td>IT Department manages all laptops (concept)</td><td>IT Department delivers laptop to your desk (action)</td></tr>
+      <tr><td>Without the other?</td><td>IoC can exist without DI (e.g. using Service Locator)</td><td>DI always implies IoC</td></tr>
+    </tbody>
+  </table>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 One-Line Difference</div>
+    <p><strong>IoC</strong> = "Spring will manage objects" → <em>the idea</em><br/>
+    <strong>DI</strong> = "Spring will inject objects into your class" → <em>the action</em><br/>
+    👉 DI is <strong>how</strong> IoC is achieved in Spring.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PAGE 2 — Setter DI (SDI)
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Setter Dependency Injection (SDI)</div>
+    </div>
+    <div class="badge">PART 2</div>
+  </div>
+
+  <div class="section-label">Types of Dependency Injection</div>
+
+  <div class="two-col">
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-title">1. Setter DI (SDI)</div>
+      <p>Spring injects values using <strong>setter methods</strong>. Object created first, then values set.</p>
+      <p style="margin-top:6px;"><span class="pill">XML Tag: &lt;property&gt;</span></p>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-title">2. Constructor DI (CDI)</div>
+      <p>Spring injects values through <strong>constructor</strong>. Object created with values at the same time.</p>
+      <p style="margin-top:6px;"><span class="pill">XML Tag: &lt;constructor-arg&gt;</span></p>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:16px;">Setter DI — Student Class (POJO)</div>
+
+  <div class="code-block">
+    <pre><span class="kw">package</span> com.ty;
+
+<span class="kw">public class</span> Student {
+
+    <span class="kw">private int</span> sid;
+    <span class="kw">private</span> String sname;
+    <span class="kw">private</span> String sage;
+
+    <span class="cm">// Getters and Setters</span>
+    <span class="kw">public int</span> getSid()              { <span class="kw">return</span> sid; }
+    <span class="kw">public void</span> setSid(<span class="kw">int</span> sid)     { <span class="kw">this</span>.sid = sid; }
+
+    <span class="kw">public</span> String getSname()         { <span class="kw">return</span> sname; }
+    <span class="kw">public void</span> setSname(String s)   { <span class="kw">this</span>.sname = s; }
+
+    <span class="kw">public</span> String getSage()          { <span class="kw">return</span> sage; }
+    <span class="kw">public void</span> setSage(String s)    { <span class="kw">this</span>.sage = s; }
+}</pre>
+  </div>
+
+  <div class="section-label">Setter DI — XML Configuration (myconfig.xml)</div>
+
+  <div class="code-block">
+    <pre><span class="tag">&lt;bean</span> <span class="attr">id</span>=<span class="val">"student1"</span> <span class="attr">class</span>=<span class="val">"com.ty.Student"</span><span class="tag">&gt;</span>
+
+    <span class="tag">&lt;property</span> <span class="attr">name</span>=<span class="val">"sid"</span>   <span class="attr">value</span>=<span class="val">"101"</span><span class="tag">/&gt;</span>   <span class="cm">&lt;!-- calls setSid(101) --&gt;</span>
+    <span class="tag">&lt;property</span> <span class="attr">name</span>=<span class="val">"sname"</span> <span class="attr">value</span>=<span class="val">"Pravin"</span><span class="tag">/&gt;</span> <span class="cm">&lt;!-- calls setSname("Pravin") --&gt;</span>
+    <span class="tag">&lt;property</span> <span class="attr">name</span>=<span class="val">"sage"</span>  <span class="attr">value</span>=<span class="val">"22"</span><span class="tag">/&gt;</span>    <span class="cm">&lt;!-- calls setSage("22") --&gt;</span>
+
+<span class="tag">&lt;/bean&gt;</span></pre>
+  </div>
+
+  <div class="section-label">Setter DI — Driver Class</div>
+
+  <div class="code-block">
+    <pre><span class="kw">public class</span> DriverStudent {
+    <span class="kw">public static void</span> main(String[] args) {
+
+        ApplicationContext ac =
+            <span class="kw">new</span> ClassPathXmlApplicationContext(<span class="str">"myconfig.xml"</span>);
+
+        Student s = (Student) ac.getBean(<span class="str">"student1"</span>);
+
+        System.out.println(s.getSid() + <span class="str">" "</span> + s.getSname() + <span class="str">" "</span> + s.getSage());
+    }
+}</pre>
+  </div>
+  <div class="out-bar">
+    <div class="out-label">📤 Output</div>
+    <pre>101 Pravin 22</pre>
+  </div>
+
+  <div class="section-label">How Setter DI Works Internally</div>
+
+  <div class="example-card">
+    <div class="ex-label">⚙️ Spring Internally Does This</div>
+    <div class="code-block" style="margin-bottom:0;">
+      <pre>Student s = <span class="kw">new</span> Student();  <span class="cm">// Step 1: Object created</span>
+s.setSid(<span class="str">101</span>);             <span class="cm">// Step 2: setSid() called</span>
+s.setSname(<span class="str">"Pravin"</span>);     <span class="cm">// Step 3: setSname() called</span>
+s.setSage(<span class="str">"22"</span>);          <span class="cm">// Step 4: setSage() called</span></pre>
+    </div>
+  </div>
+
+  <div class="section-label">Important Attributes of &lt;property&gt;</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Attribute</th><th>Used For</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><code>name</code></td><td>Variable / property name in the class</td><td><code>&lt;property name="sid"/&gt;</code></td></tr>
+      <tr><td><code>value</code></td><td>Primitive values and Strings</td><td><code>&lt;property name="sid" value="101"/&gt;</code></td></tr>
+      <tr><td><code>ref</code></td><td>Object injection (reference to another bean)</td><td><code>&lt;property name="emp" ref="emp1"/&gt;</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 SDI Memory Trick</div>
+    <p><strong>S</strong>etter DI → <strong>S</strong>etter Methods → <strong>&lt;property&gt;</strong> tag → Object created <strong>first</strong>, values set <strong>after</strong>.</p>
+    <p style="margin-top:4px;">👉 Use SDI for <strong>optional</strong> fields (email, phone, address).</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PAGE 3 — Constructor DI + SDI vs CDI + Interview
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Constructor DI + Comparison + Interview</div>
+    </div>
+    <div class="badge">PART 3</div>
+  </div>
+
+  <div class="section-label">Constructor DI — Person Class</div>
+
+  <div class="code-block">
+    <pre><span class="kw">package</span> com.Variable;
+
+<span class="kw">public class</span> Person {
+
+    <span class="kw">int</span> id;
+    String name;
+    <span class="kw">double</span> sal;
+
+    <span class="cm">// Spring calls this constructor to inject values</span>
+    <span class="kw">public</span> Person(<span class="kw">int</span> id, String name, <span class="kw">double</span> sal) {
+        <span class="kw">this</span>.id   = id;
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.sal  = sal;
+    }
+}</pre>
+  </div>
+
+  <div class="section-label">Constructor DI — XML Configuration (config.xml)</div>
+
+  <div class="code-block">
+    <pre><span class="cm">&lt;!-- Bean 1 --&gt;</span>
+<span class="tag">&lt;bean</span> <span class="attr">id</span>=<span class="val">"person"</span> <span class="attr">class</span>=<span class="val">"com.Variable.Person"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;constructor-arg</span> <span class="attr">value</span>=<span class="val">"101"</span><span class="tag">/&gt;</span>      <span class="cm">&lt;!-- id --&gt;</span>
+    <span class="tag">&lt;constructor-arg</span> <span class="attr">value</span>=<span class="val">"Pravin"</span><span class="tag">/&gt;</span>   <span class="cm">&lt;!-- name --&gt;</span>
+    <span class="tag">&lt;constructor-arg</span> <span class="attr">value</span>=<span class="val">"45000"</span><span class="tag">/&gt;</span>   <span class="cm">&lt;!-- sal --&gt;</span>
+<span class="tag">&lt;/bean&gt;</span>
+
+<span class="cm">&lt;!-- Bean 2 --&gt;</span>
+<span class="tag">&lt;bean</span> <span class="attr">id</span>=<span class="val">"person2"</span> <span class="attr">class</span>=<span class="val">"com.Variable.Person"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;constructor-arg</span> <span class="attr">value</span>=<span class="val">"102"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;constructor-arg</span> <span class="attr">value</span>=<span class="val">"Rahul"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;constructor-arg</span> <span class="attr">value</span>=<span class="val">"55000"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/bean&gt;</span></pre>
+  </div>
+
+  <div class="section-label">Constructor DI — Driver Class + Output</div>
+
+  <div class="code-block">
+    <pre>ApplicationContext ac =
+    <span class="kw">new</span> ClassPathXmlApplicationContext(<span class="str">"config.xml"</span>);
+
+Person p1 = (Person) ac.getBean(<span class="str">"person"</span>);
+System.out.println(p1.id + <span class="str">" "</span> + p1.name + <span class="str">" "</span> + p1.sal);
+
+Person p2 = (Person) ac.getBean(<span class="str">"person2"</span>);
+System.out.println(p2.id + <span class="str">" "</span> + p2.name + <span class="str">" "</span> + p2.sal);</pre>
+  </div>
+  <div class="out-bar">
+    <div class="out-label">📤 Output</div>
+    <pre>101 Pravin 45000.0
+102 Rahul 55000.0</pre>
+  </div>
+
+  <div class="section-label">How Constructor DI Works Internally</div>
+
+  <div class="example-card">
+    <div class="ex-label">⚙️ Spring Internally Does This</div>
+    <div class="code-block" style="margin-bottom:0;">
+      <pre><span class="cm">// Object created AND values injected in ONE step:</span>
+Person p = <span class="kw">new</span> Person(<span class="str">101</span>, <span class="str">"Pravin"</span>, <span class="str">45000</span>);
+<span class="cm">// No setter methods needed!</span></pre>
+    </div>
+  </div>
+
+  <div class="section-label">Attributes of &lt;constructor-arg&gt;</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Attribute</th><th>Used For</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><code>value</code></td><td>Primitive values and Strings</td><td><code>&lt;constructor-arg value="101"/&gt;</code></td></tr>
+      <tr><td><code>ref</code></td><td>Object injection (another bean)</td><td><code>&lt;constructor-arg ref="emp1"/&gt;</code></td></tr>
+      <tr><td><code>name</code></td><td>When parameter name is specified</td><td><code>&lt;constructor-arg name="id" value="101"/&gt;</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Setter DI vs Constructor DI — Full Comparison</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Point</th><th>Setter DI (SDI)</th><th>Constructor DI (CDI)</th></tr></thead>
+    <tbody>
+      <tr><td>XML Tag</td><td><code>&lt;property&gt;</code></td><td><code>&lt;constructor-arg&gt;</code></td></tr>
+      <tr><td>Injection Method</td><td>Uses Setter Methods</td><td>Uses Constructor</td></tr>
+      <tr><td>Object Creation</td><td>Object created first, then values set</td><td>Object created with values simultaneously</td></tr>
+      <tr><td>When to Use</td><td>Suitable for <strong>Optional</strong> values</td><td>Suitable for <strong>Mandatory</strong> values</td></tr>
+      <tr><td>Modification</td><td>Values can be changed later</td><td>Values fixed at creation time</td></tr>
+      <tr><td>Flexibility</td><td>More flexible</td><td>More secure / immutable</td></tr>
+      <tr><td>Real Example</td><td>setEmail(), setPhone(), setAddress()</td><td>Person(id, name) — must have these</td></tr>
+      <tr><td>Recommended?</td><td>For optional dependencies</td><td>✅ Recommended (Spring also prefers CDI)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Interview Questions</div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Q1. What is Dependency Injection?</div>
+    <p>DI is a design pattern in which the <strong>Spring Container creates objects and injects dependencies</strong> into them instead of allowing classes to create dependencies themselves. It promotes loose coupling.</p>
+  </div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Q2. What are the types of DI?</div>
+    <p>1. <strong>Setter DI</strong> — uses setter methods, <code>&lt;property&gt;</code> tag, for optional values.<br/>
+    2. <strong>Constructor DI</strong> — uses constructor, <code>&lt;constructor-arg&gt;</code> tag, for mandatory values.</p>
+  </div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Q3. Which DI is recommended?</div>
+    <p><strong>Constructor DI</strong> is generally recommended because: dependencies are mandatory, object is fully initialized at creation, better immutability, and easier testing. Setter DI is used for optional dependencies.</p>
+  </div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Q4. Difference between IoC and DI?</div>
+    <p><strong>IoC</strong> is the <em>principle</em> — control of object creation transferred from developer to Spring.<br/>
+    <strong>DI</strong> is the <em>implementation</em> — Spring injects required objects into your class.<br/>
+    DI is the most common way IoC is achieved in Spring. IoC is the "what", DI is the "how".</p>
+  </div>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 Final Memory Tricks</div>
+    <p><strong>SDI</strong> → <strong>S</strong>etter → <code>&lt;property&gt;</code> → <strong>S</strong>et after creation → <strong>O</strong>ptional values</p>
+    <p style="margin-top:4px;"><strong>CDI</strong> → <strong>C</strong>onstructor → <code>&lt;constructor-arg&gt;</code> → <strong>C</strong>reate with values → <strong>M</strong>andatory values</p>
+    <p style="margin-top:6px;"><strong>IoC vs DI:</strong> IoC = "IT Dept manages" (idea) &nbsp;|&nbsp; DI = "IT Dept delivers laptop to your desk" (action)</p>
+  </div>
+</div>
+
+</body>
+</html>

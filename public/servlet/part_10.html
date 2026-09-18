@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RequestDispatcher — Notes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 18mm 15mm 20mm;
+    margin: 0 auto;
+    background: #fff;
+    page-break-after: always;
+    border-bottom: 2px dashed #bbb;
+  }
+
+  .page-header {
+    border-top: 3px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 5px 0;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-header .subject { font-size: 10.5px; font-weight: normal; letter-spacing: 1px; text-transform: uppercase; }
+  .page-header .topic-label { font-size: 10.5px; font-weight: bold; letter-spacing: 1px; }
+
+  .main-title {
+    font-size: 19px;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid #000;
+    padding: 9px 0;
+    margin-bottom: 16px;
+    background: #000;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-size: 13.5px;
+    font-weight: bold;
+    border-left: 5px solid #000;
+    padding-left: 10px;
+    margin: 14px 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .sub-title {
+    font-size: 12.5px;
+    font-weight: bold;
+    margin: 10px 0 5px 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+  }
+
+  .example-header {
+    background: #000;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 7px 14px;
+    margin: 14px 0 8px 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .def-box {
+    border: 2px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .def-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .interview-box {
+    border: 2px solid #000;
+    padding: 10px 13px;
+    margin: 10px 0;
+    background: #f5f5f5;
+  }
+  .interview-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 8px; padding-bottom: 3px;
+  }
+  .interview-box .q { font-weight: bold; margin-top: 9px; }
+  .interview-box .a { margin-left: 14px; margin-top: 3px; }
+
+  .memory-box {
+    border: 2px dashed #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .memory-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  .example-box {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: #fafafa;
+  }
+  .example-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .tip-box {
+    border: 2px solid #000;
+    border-left: 6px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .tip-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #f2f2f2;
+    border: 1px solid #000;
+    border-left: 4px solid #000;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.8;
+    margin: 8px 0;
+    white-space: pre;
+  }
+  .code-block .comment { color: #555; font-style: italic; }
+  .code-block .hl { font-weight: bold; }
+
+  .file-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1px;
+    text-transform: uppercase; background: #000; color: #fff;
+    padding: 2px 8px; display: inline-block; margin-bottom: 0;
+  }
+
+  /* FLOW */
+  .flow { display: flex; flex-direction: column; align-items: center; margin: 8px auto; }
+  .flow-box {
+    border: 2px solid #000; padding: 6px 18px; font-weight: bold;
+    font-size: 12px; min-width: 180px; text-align: center; background: #fff;
+  }
+  .flow-box.dark { background: #000; color: #fff; }
+  .flow-arrow { font-size: 17px; font-weight: bold; color: #000; text-align: center; padding: 1px 0; }
+  .flow-label { font-size: 10px; color: #444; text-align: center; font-style: italic; }
+
+  /* SIDE-BY-SIDE FLOW */
+  .dual-flow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 10px 0;
+  }
+  .dual-flow-col { display: flex; flex-direction: column; align-items: center; }
+  .dual-flow-col .df-title {
+    font-size: 12px; font-weight: bold; text-align: center;
+    border: 2px solid #000; padding: 5px 12px; margin-bottom: 6px;
+    width: 100%; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .dual-flow-col.left .df-title { background: #000; color: #fff; }
+  .df-box {
+    border: 1px solid #000; padding: 5px 10px;
+    font-size: 11.5px; text-align: center; width: 100%;
+    font-weight: bold; margin: 1px 0;
+  }
+  .df-box.dark { background: #000; color: #fff; }
+  .df-arrow { font-size: 15px; font-weight: bold; text-align: center; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+  th { background: #000; color: #fff; padding: 6px 9px; font-size: 12px; text-align: left; border: 1px solid #000; }
+  td { padding: 5px 9px; border: 1px solid #000; font-size: 12px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f6f6f6; }
+
+  ul.notes-list { list-style: none; margin: 5px 0 5px 10px; padding: 0; }
+  ul.notes-list li { padding: 2px 0 2px 16px; position: relative; }
+  ul.notes-list li::before { content: "▸"; position: absolute; left: 0; font-size: 11px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 8px 0; }
+
+  code {
+    font-family: 'Courier New', monospace; font-size: 11.5px;
+    background: #efefef; padding: 1px 5px; border: 1px solid #ccc;
+  }
+
+  /* PROJECT STRUCT */
+  .proj-struct {
+    font-family: 'Courier New', monospace; font-size: 11px;
+    border: 1px solid #000; background: #f8f8f8;
+    padding: 8px 14px; margin: 8px 0; line-height: 1.8;
+  }
+
+  /* STEP FLOW */
+  .step-grid { display: grid; grid-template-columns: 30px 1fr; gap: 5px 10px; margin: 10px 0; }
+  .step-num {
+    background: #000; color: #fff; font-weight: bold;
+    font-size: 12px; text-align: center; padding: 5px 0;
+    height: fit-content; min-width: 30px;
+  }
+  .step-content { border: 1px solid #000; padding: 5px 10px; font-size: 12px; }
+  .step-content strong { display: block; margin-bottom: 2px; }
+
+  /* DIAGRAM from image */
+  .diagram-box {
+    border: 2px solid #000;
+    padding: 10px 14px;
+    margin: 10px 0;
+  }
+  .diagram-box .diag-title {
+    font-weight: bold; font-size: 12px; text-align: center;
+    border-bottom: 1px solid #000; margin-bottom: 10px; padding-bottom: 4px;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .diag-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 4px 0;
+    flex-wrap: wrap;
+  }
+  .diag-oval {
+    border: 2px solid #000;
+    border-radius: 50%;
+    padding: 7px 18px;
+    font-weight: bold;
+    font-size: 11.5px;
+    text-align: center;
+    background: #e0e0e0;
+  }
+  .diag-rect {
+    border: 2px solid #000;
+    padding: 6px 14px;
+    font-weight: bold;
+    font-size: 11.5px;
+    text-align: center;
+    background: #fff;
+  }
+  .diag-arrow { font-size: 14px; font-weight: bold; }
+  .diag-label { font-size: 10px; font-style: italic; color: #444; }
+
+  p { margin: 5px 0; }
+
+  @media print {
+    body { background: #fff; }
+    .page { border-bottom: none; margin: 0; page-break-after: always; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: CONCEPT + INTERFACE METHODS ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 10 : RequestDispatcher</span>
+  </div>
+
+  <div class="main-title">10. RequestDispatcher</div>
+
+  <!-- What is RequestDispatcher -->
+  <div class="section-title">What is RequestDispatcher?</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Definition</div>
+    <p><strong>RequestDispatcher</strong> is an <strong>interface</strong> provided by the Servlet API that is used to:</p>
+    <ul class="notes-list">
+      <li><strong>Forward</strong> a request from one resource to another resource</li>
+      <li><strong>Include</strong> the content of another resource in the current response</li>
+    </ul>
+    <p style="margin-top:5px;">The resource can be: <strong>HTML Page</strong>, <strong>JSP Page</strong>, or another <strong>Servlet</strong>.</p>
+  </div>
+
+  <!-- Why Needed -->
+  <div class="section-title">Why RequestDispatcher is Needed?</div>
+
+  <div class="example-box">
+    <div class="box-label">📘 Problem Without RequestDispatcher</div>
+    <p>Suppose a <strong>Login Servlet</strong> verifies a user. After successful verification, we want to show a Welcome Page.</p>
+    <p>Without RequestDispatcher, the browser would have to send a <strong>new request</strong> — which is slow and exposes URLs.</p>
+    <p>With RequestDispatcher, the <strong>same request</strong> is transferred internally from Login Servlet → Welcome Servlet — faster, secure, no extra browser trip.</p>
+  </div>
+
+  <div class="three-col">
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">Real-World Use 1</div>
+      <p>Login → Forward to Dashboard Servlet on success</p>
+    </div>
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">Real-World Use 2</div>
+      <p>Include header/footer JSP in every page response</p>
+    </div>
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">Real-World Use 3</div>
+      <p>Include error message + show login page again on failure</p>
+    </div>
+  </div>
+
+  <!-- Interface Methods -->
+  <div class="section-title">RequestDispatcher Interface — 2 Methods</div>
+
+  <div class="two-col">
+    <div class="def-box">
+      <div class="box-label">Method 1 — forward()</div>
+      <p><strong>Syntax:</strong> <code>rd.forward(request, response);</code></p>
+      <ul class="notes-list">
+        <li>Transfers <strong>complete control</strong> to another resource</li>
+        <li>First servlet's response is <strong>discarded</strong></li>
+        <li>Only the <strong>second</strong> resource's response is shown</li>
+        <li>URL in browser does <strong>NOT change</strong> (server-side)</li>
+        <li>Used after <strong>successful processing</strong></li>
+      </ul>
+    </div>
+    <div class="def-box">
+      <div class="box-label">Method 2 — include()</div>
+      <p><strong>Syntax:</strong> <code>rd.include(request, response);</code></p>
+      <ul class="notes-list">
+        <li>Includes another resource's content into <strong>current response</strong></li>
+        <li>First servlet's response is <strong>retained</strong></li>
+        <li><strong>Both</strong> outputs are visible in browser</li>
+        <li>Control returns back to the calling servlet</li>
+        <li>Used for <strong>error messages, headers, footers</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- How to Create Object -->
+  <div class="section-title">How to Create RequestDispatcher Object?</div>
+
+  <div class="tip-box">
+    <div class="box-label">⚠️ Important — Why We Can't Use new?</div>
+    <p>RequestDispatcher is an <strong>Interface</strong>. Interfaces cannot be instantiated directly.</p>
+    <p><code>new RequestDispatcher()</code> → ❌ NOT Allowed</p>
+    <p>Therefore, we use <code>request.getRequestDispatcher("resource")</code> which returns an implementation object provided by the Container.</p>
+  </div>
+
+  <div class="code-block"><span class="comment">// Syntax — Getting RequestDispatcher object</span>
+RequestDispatcher rd = request.getRequestDispatcher("url-of-resource");
+
+<span class="comment">// Examples</span>
+RequestDispatcher rd = request.getRequestDispatcher("welcome");    <span class="comment">// → Servlet</span>
+RequestDispatcher rd = request.getRequestDispatcher("login.html"); <span class="comment">// → HTML</span>
+RequestDispatcher rd = request.getRequestDispatcher("result.jsp"); <span class="comment">// → JSP</span>
+
+<span class="comment">// Then use forward or include</span>
+rd.forward(request, response);   <span class="comment">// Transfer control completely</span>
+rd.include(request, response);   <span class="comment">// Include content + return back</span></div>
+
+  <!-- Comparison Table -->
+  <div class="section-title">forward() vs include() — Comparison</div>
+
+  <table>
+    <thead><tr><th>Feature</th><th>forward()</th><th>include()</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Control Transfer</strong></td><td>Moves completely to 2nd resource</td><td>Goes to 2nd resource, returns back</td></tr>
+      <tr><td><strong>First Servlet Response</strong></td><td>❌ Discarded / Lost</td><td>✅ Retained</td></tr>
+      <tr><td><strong>Output Visible</strong></td><td>Only 2nd resource output</td><td>Both outputs visible</td></tr>
+      <tr><td><strong>Browser URL</strong></td><td>Does not change (server-side)</td><td>Does not change (server-side)</td></tr>
+      <tr><td><strong>Typically Used For</strong></td><td>After successful login/processing</td><td>Headers, Footers, Error messages</td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<!-- ==================== PAGE 2: FLOW DIAGRAMS FROM IMAGE ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 10 : RequestDispatcher (continued)</span>
+  </div>
+
+  <!-- Diagram from image -->
+  <div class="section-title">Visual Diagrams — forward() and include()</div>
+
+  <!-- FORWARD DIAGRAM -->
+  <div class="diagram-box">
+    <div class="diag-title">forward() Method — How It Works</div>
+    <div class="diag-row">
+      <div style="font-size:11px; font-weight:bold;">Client</div>
+      <div class="diag-arrow">→ 1) Request</div>
+      <div class="diag-oval">Servlet 1</div>
+      <div class="diag-arrow">→ 2) forward(req,res)</div>
+      <div class="diag-oval">Servlet 2</div>
+    </div>
+    <div style="text-align:center; margin: 6px 0; font-size:10.5px; font-style:italic;">
+      Servlet 1's response is discarded. Control moves fully to Servlet 2.
+    </div>
+    <div class="diag-row">
+      <div style="font-size:11px;">  </div>
+      <div style="font-size:11px; width:120px;"></div>
+      <div class="diag-rect" style="opacity:0.4;">Response (discarded)</div>
+      <div style="width:80px;"></div>
+      <div class="diag-arrow">↓ 3) Response generated</div>
+    </div>
+    <div class="diag-row" style="margin-top:4px;">
+      <div class="diag-arrow" style="font-size:12px;">← 4) Response sent back to browser</div>
+      <div style="flex:1;"></div>
+      <div class="diag-rect">Response</div>
+    </div>
+    <div style="text-align:center; margin-top:6px; font-size:11px; font-weight:bold; border-top:1px solid #ccc; padding-top:5px;">
+      Browser only receives Servlet 2's response
+    </div>
+  </div>
+
+  <!-- INCLUDE DIAGRAM -->
+  <div class="diagram-box">
+    <div class="diag-title">include() Method — How It Works</div>
+    <div class="diag-row">
+      <div style="font-size:11px; font-weight:bold;">Client</div>
+      <div class="diag-arrow">→ 1) Request</div>
+      <div class="diag-oval">Servlet 1</div>
+      <div class="diag-arrow">→ 2) include(req,res)</div>
+      <div class="diag-oval">Servlet 2</div>
+    </div>
+    <div class="diag-row" style="margin-top:6px;">
+      <div style="width:60px;"></div>
+      <div class="diag-oval" style="font-size:11px;">Servlet 1</div>
+      <div class="diag-arrow">← 3) Servlet 2's response included</div>
+      <div class="diag-rect">Response (Servlet 2)</div>
+    </div>
+    <div class="diag-row" style="margin-top:4px;">
+      <div style="width:60px;"></div>
+      <div class="diag-arrow">↓ 4) Final response generated</div>
+    </div>
+    <div class="diag-row">
+      <div class="diag-arrow">← 5) Final response sent to client</div>
+      <div class="diag-rect">Response (Combined)</div>
+    </div>
+    <div style="text-align:center; margin-top:6px; font-size:11px; font-weight:bold; border-top:1px solid #ccc; padding-top:5px;">
+      Browser receives BOTH Servlet 1 + Servlet 2 responses combined
+    </div>
+  </div>
+
+  <!-- Side-by-side text flow comparison -->
+  <div class="section-title">Side-by-Side Flow Summary</div>
+
+  <div class="dual-flow">
+    <div class="dual-flow-col left">
+      <div class="df-title">forward() Flow</div>
+      <div class="df-box dark">Request from Browser</div>
+      <div class="df-arrow">↓</div>
+      <div class="df-box">Servlet 1 (LoginPage)</div>
+      <div class="df-arrow">↓ rd.forward(req, res)</div>
+      <div class="df-box dark">Servlet 2 (WelcomeServlet)</div>
+      <div class="df-arrow">↓</div>
+      <div class="df-box">Response → Browser</div>
+      <div style="text-align:center; font-size:10.5px; font-style:italic; margin-top:5px;">Servlet 1 output → ❌ Gone</div>
+    </div>
+    <div class="dual-flow-col">
+      <div class="df-title" style="background:#000; color:#fff;">include() Flow</div>
+      <div class="df-box dark">Request from Browser</div>
+      <div class="df-arrow">↓</div>
+      <div class="df-box">Servlet 1 — writes "Invalid Password"</div>
+      <div class="df-arrow">↓ rd.include(req, res)</div>
+      <div class="df-box dark">login.html included</div>
+      <div class="df-arrow">↓ returns back to Servlet 1</div>
+      <div class="df-box">Combined Response → Browser</div>
+      <div style="text-align:center; font-size:10.5px; font-style:italic; margin-top:5px;">Both outputs visible ✅</div>
+    </div>
+  </div>
+
+  <!-- Project Structure -->
+  <div class="section-title">Project Structure — Servlet_chaining</div>
+  <div class="proj-struct">Servlet_chaining/
+ ├── src/main/java/
+ │     ├── LoginPage.java        ← Uses forward() on success, include() on failure
+ │     ├── WelcomeServlet.java   ← Receives forwarded request
+ │     ├── CalculateBmi.java     ← BMI Calculator servlet
+ │     └── Loan.java             ← Loan Eligibility servlet
+ ├── src/main/webapp/
+ │     ├── login.html            ← Login form
+ │     ├── bmi.html              ← BMI input form
+ │     ├── loan.html             ← Loan input form
+ │     └── WEB-INF/
+ │           └── web.xml         ← URL mappings</div>
+
+</div>
+
+<!-- ==================== PAGE 3: LOGIN EXAMPLE — FORWARD + INCLUDE ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 10 : RequestDispatcher (continued)</span>
+  </div>
+
+  <div class="example-header">Example 1 — Login Validation (forward + include)</div>
+
+  <!-- login.html -->
+  <div class="sub-title">login.html — Purpose: Collect Username &amp; Password</div>
+  <div class="file-label">login.html</div>
+  <div class="code-block">&lt;form action="login"&gt;
+
+  Username : &lt;input type="text"     name="username"&gt;
+  Password : &lt;input type="password" name="password"&gt;
+
+  &lt;input type="submit" value="Login"&gt;
+
+&lt;/form&gt;</div>
+
+  <!-- LoginPage.java — full logic -->
+  <div class="sub-title">LoginPage.java — Validates Credentials + Uses forward() and include()</div>
+  <div class="file-label">LoginPage.java</div>
+  <div class="code-block">@WebServlet("/login")
+public class LoginPage extends HttpServlet {
+
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String user = request.getParameter("username");
+        String pass = request.getParameter("password");
+
+        PrintWriter pw = response.getWriter();
+
+        if(pass.equals("123")) {
+
+            <span class="comment">// ✅ SUCCESS → FORWARD to WelcomeServlet</span>
+            <span class="hl">RequestDispatcher rd =
+                request.getRequestDispatcher("welcome");</span>
+            <span class="hl">rd.forward(request, response);</span>
+
+            <span class="comment">// Note: pw.print() before forward() is DISCARDED</span>
+
+        } else {
+
+            <span class="comment">// ❌ FAILURE → show error + INCLUDE login.html again</span>
+            pw.print("&lt;h3&gt;Invalid Password&lt;/h3&gt;");
+
+            <span class="hl">RequestDispatcher rd =
+                request.getRequestDispatcher("login.html");</span>
+            <span class="hl">rd.include(request, response);</span>
+
+            <span class="comment">// Both "Invalid Password" + login form shown together</span>
+        }
+    }
+}</div>
+
+  <!-- WelcomeServlet -->
+  <div class="sub-title">WelcomeServlet.java — Receives Forwarded Request</div>
+  <div class="file-label">WelcomeServlet.java</div>
+  <div class="code-block">@WebServlet("/welcome")
+public class WelcomeServlet extends HttpServlet {
+
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+            throws ServletException, IOException {
+
+        PrintWriter pw = response.getWriter();
+        pw.print("&lt;h1&gt;Welcome User!&lt;/h1&gt;");
+    }
+}</div>
+
+  <!-- Step by step flow -->
+  <div class="sub-title">Step-by-Step Flow — Login Scenarios</div>
+
+  <div class="two-col">
+    <div class="example-box">
+      <div class="box-label">✅ Scenario 1 — Correct Password (123)</div>
+      <div class="step-grid" style="margin-top:5px;">
+        <div class="step-num">1</div>
+        <div class="step-content">User enters: <code>username=Pravin, password=123</code></div>
+        <div class="step-num">2</div>
+        <div class="step-content">LoginPage reads params → <code>pass.equals("123")</code> → true</div>
+        <div class="step-num">3</div>
+        <div class="step-content"><code>rd.forward(req, res)</code> → control moves to WelcomeServlet</div>
+        <div class="step-num">4</div>
+        <div class="step-content">Browser displays: <strong>"Welcome User!"</strong></div>
+      </div>
+    </div>
+    <div class="example-box">
+      <div class="box-label">❌ Scenario 2 — Wrong Password</div>
+      <div class="step-grid" style="margin-top:5px;">
+        <div class="step-num">1</div>
+        <div class="step-content">User enters: <code>username=Pravin, password=abc</code></div>
+        <div class="step-num">2</div>
+        <div class="step-content">LoginPage → <code>pass.equals("123")</code> → false</div>
+        <div class="step-num">3</div>
+        <div class="step-content"><code>pw.print("Invalid Password")</code> then <code>rd.include("login.html")</code></div>
+        <div class="step-num">4</div>
+        <div class="step-content">Browser displays: <strong>"Invalid Password"</strong> + Login form again</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Important Point -->
+  <div class="tip-box">
+    <div class="box-label">⭐ Most Important Point — forward() Discards First Servlet Response</div>
+    <p>Even if you write <code>pw.print("Login Success")</code> in LoginPage servlet BEFORE calling <code>rd.forward()</code>, the output <strong>"Login Success"</strong> will be <strong>discarded</strong>.</p>
+    <p>The browser will only see <strong>WelcomeServlet's response</strong> — "Welcome User!"</p>
+    <p><strong>Why?</strong> Because <code>forward()</code> transfers control completely. The first servlet's output buffer is cleared.</p>
+  </div>
+
+  <!-- Common Use Cases for include() -->
+  <div class="sub-title">Common Real-World Uses of include()</div>
+  <div class="two-col">
+    <ul class="notes-list">
+      <li>Company Logo / Header on every page</li>
+      <li>Navigation Bar (Menu links)</li>
+      <li>Footer / Copyright text</li>
+      <li>Contact Information bar</li>
+    </ul>
+    <ul class="notes-list">
+      <li>"Invalid Username" error message</li>
+      <li>"Invalid Password" error + same form</li>
+      <li>Session expired message + login form</li>
+      <li>Advertisement panel in sidebar</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 4: BMI + LOAN + INTERVIEW Q&A ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 10 : RequestDispatcher (continued)</span>
+  </div>
+
+  <!-- Example 2: BMI -->
+  <div class="example-header">Example 2 — BMI Calculator</div>
+
+  <div class="two-col">
+    <div>
+      <div class="file-label">bmi.html</div>
+      <div class="code-block">&lt;form action="bmi"&gt;
+
+  Weight :
+  &lt;input type="text" name="weight"&gt;
+
+  Height :
+  &lt;input type="text" name="height"&gt;
+
+  &lt;input type="submit"&gt;
+
+&lt;/form&gt;</div>
+    </div>
+    <div>
+      <div class="file-label">CalculateBmi.java</div>
+      <div class="code-block">@WebServlet("/bmi")
+public class CalculateBmi
+    extends HttpServlet {
+
+  protected void doGet(
+    HttpServletRequest req,
+    HttpServletResponse res)
+      throws ... {
+
+    double w =
+      Double.parseDouble(
+        req.getParameter("weight"));
+    double h =
+      Double.parseDouble(
+        req.getParameter("height"));
+
+    double bmi = w / (h * h);
+
+    PrintWriter pw = res.getWriter();
+    pw.print("BMI = " + bmi);
+  }
+}</div>
+    </div>
+  </div>
+
+  <div class="flow" style="margin: 6px auto;">
+    <div class="flow-box">bmi.html (user enters weight &amp; height)</div>
+    <div class="flow-arrow">↓ form action="bmi"</div>
+    <div class="flow-box dark">CalculateBmi Servlet</div>
+    <div class="flow-arrow">↓ BMI = weight / height²</div>
+    <div class="flow-box">Response: "BMI = 22.5" shown in browser</div>
+  </div>
+
+  <!-- Example 3: Loan -->
+  <div class="example-header">Example 3 — Loan Eligibility</div>
+
+  <div class="two-col">
+    <div>
+      <div class="file-label">loan.html</div>
+      <div class="code-block">&lt;form action="loan"&gt;
+
+  Age :
+  &lt;input type="text" name="age"&gt;
+
+  Salary :
+  &lt;input type="text" name="salary"&gt;
+
+  &lt;input type="submit"&gt;
+
+&lt;/form&gt;</div>
+    </div>
+    <div>
+      <div class="file-label">Loan.java</div>
+      <div class="code-block">@WebServlet("/loan")
+public class Loan
+    extends HttpServlet {
+
+  protected void doGet(
+    HttpServletRequest req,
+    HttpServletResponse res)
+      throws ... {
+
+    int age =
+      Integer.parseInt(
+        req.getParameter("age"));
+    double salary =
+      Double.parseDouble(
+        req.getParameter("salary"));
+
+    PrintWriter pw = res.getWriter();
+
+    if(age >= 21 && salary >= 25000) {
+      pw.print("Loan Eligible ✅");
+    } else {
+      pw.print("Not Eligible ❌");
+    }
+  }
+}</div>
+    </div>
+  </div>
+
+  <div class="flow" style="margin: 6px auto;">
+    <div class="flow-box">loan.html (user enters age &amp; salary)</div>
+    <div class="flow-arrow">↓ form action="loan"</div>
+    <div class="flow-box dark">Loan Servlet → Eligibility Check</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Response: "Loan Eligible ✅" or "Not Eligible ❌"</div>
+  </div>
+
+  <!-- Interview Q&A -->
+  <div class="interview-box">
+    <div class="box-label">🎯 Interview Q&amp;A</div>
+
+    <div class="q">Q1. What is RequestDispatcher?</div>
+    <div class="a">RequestDispatcher is an interface in the Servlet API used to <strong>forward</strong> a request to another resource (servlet, JSP, HTML) or <strong>include</strong> the content of another resource in the current response — all on the server side without a new browser request.</div>
+
+    <div class="q">Q2. How do you get a RequestDispatcher object?</div>
+    <div class="a"><code>RequestDispatcher rd = request.getRequestDispatcher("resource-url");</code> — It is obtained from the <code>HttpServletRequest</code> object. We cannot use <code>new RequestDispatcher()</code> because it is an interface.</div>
+
+    <div class="q">Q3. What is the difference between forward() and include()?</div>
+    <div class="a"><strong>forward()</strong> — transfers complete control to another resource. First servlet's response is discarded. Only second resource output shown. <strong>include()</strong> — includes second resource's output into current response. Both outputs visible. Control returns to calling servlet.</div>
+
+    <div class="q">Q4. Which method is used after successful login?</div>
+    <div class="a"><code>rd.forward(request, response)</code> — because after successful authentication we want to move completely to the next page (e.g., Welcome Servlet or Dashboard) and discard the login page response.</div>
+
+    <div class="q">Q5. Which method is used for error messages?</div>
+    <div class="a"><code>rd.include(request, response)</code> — because we want to display the error message AND also show the original page (e.g., login form) again. Both are visible together in the browser.</div>
+
+    <div class="q">Q6. Does forward() change the URL in the browser?</div>
+    <div class="a"><strong>No.</strong> <code>forward()</code> happens on the server side. The browser URL remains the same (e.g., still shows <code>/login</code>). Only the displayed content changes to the forwarded resource's output.</div>
+
+    <div class="q">Q7. What happens if you write output before calling forward()?</div>
+    <div class="a">Any output written before <code>rd.forward()</code> is <strong>discarded</strong>. The browser only receives the response from the forwarded resource (e.g., WelcomeServlet). The first servlet's buffer is cleared on forward.</div>
+
+    <div class="q">Q8. What is the difference between RequestDispatcher and sendRedirect()?</div>
+    <div class="a"><strong>RequestDispatcher.forward()</strong> — server-side, same request/response, URL doesn't change, faster. <strong>sendRedirect()</strong> — client-side, browser sends a new request, URL changes, slightly slower. forward() can share request attributes; sendRedirect() cannot.</div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — forward vs include</div>
+    <p><strong>forward()</strong> = <strong>F</strong>ully moves (like handing a letter to someone else — you keep nothing)</p>
+    <p><strong>include()</strong> = <strong>I</strong>ncludes and returns (like photocopying a document and giving it back)</p>
+    <p><strong>Success → forward()</strong> | <strong>Error / Header / Footer → include()</strong></p>
+  </div>
+
+</div>
+
+</body>
+</html>

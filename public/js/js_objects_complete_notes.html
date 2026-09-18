@@ -1,0 +1,403 @@
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">JavaScript Objects — Complete Study Notes</h2>
+<style>
+  .w{padding:1rem 0;font-family:var(--font-sans);}
+  .hero{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.5rem;margin-bottom:1.25rem;border:0.5px solid var(--color-border-tertiary);}
+  .hero-title{font-size:22px;font-weight:500;color:var(--color-text-primary);margin:0 0 6px;}
+  .hero-def{font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin:0 0 14px;}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+  .mbox{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;}
+  .ml{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px;}
+  .mv{font-size:13px;color:var(--color-text-primary);line-height:1.55;margin:0;}
+  .sh{font-size:12px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.07em;margin:1.75rem 0 .75rem;border-bottom:.5px solid var(--color-border-tertiary);padding-bottom:6px;}
+  .card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.1rem 1.4rem;margin-bottom:1rem;}
+  .ctag{display:inline-block;font-size:11px;font-weight:500;padding:2px 9px;border-radius:var(--border-radius-md);margin-bottom:8px;}
+  .ctitle{font-size:16px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px;}
+  .cdef{font-size:13px;color:var(--color-text-secondary);line-height:1.65;margin:0 0 10px;}
+  .cl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px;}
+  pre{background:var(--color-background-tertiary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 13px;font-family:var(--font-mono);font-size:12.5px;line-height:1.6;margin:0 0 8px;color:var(--color-text-primary);white-space:pre-wrap;word-break:break-word;}
+  .out{background:var(--color-background-secondary);border-left:3px solid;border-radius:0;padding:7px 13px;font-family:var(--font-mono);font-size:12.5px;color:var(--color-text-primary);white-space:pre-wrap;word-break:break-word;}
+  .pts{margin:0;padding:0;list-style:none;}
+  .pts li{font-size:13px;color:var(--color-text-secondary);line-height:1.6;padding:3px 0 3px 18px;position:relative;border-bottom:.5px solid var(--color-border-tertiary);}
+  .pts li:last-child{border-bottom:none;}
+  .pts li::before{content:"→";position:absolute;left:0;color:var(--color-text-tertiary);font-size:11px;top:5px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md);margin-left:6px;font-weight:500;vertical-align:middle;}
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .vs{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.1rem 1.4rem;margin-bottom:1rem;border:.5px solid var(--color-border-tertiary);}
+  .vs-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;}
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+  .vs-box{background:var(--color-background-primary);border-radius:var(--border-radius-md);padding:10px 12px;border:.5px solid var(--color-border-tertiary);}
+  .vs-head{font-size:12px;font-weight:500;margin:0 0 6px;}
+  .vs-pts{margin:0;padding:0;list-style:none;}
+  .vs-pts li{font-size:12px;color:var(--color-text-secondary);padding:2px 0 2px 14px;position:relative;}
+  .vs-pts li::before{content:"·";position:absolute;left:0;color:var(--color-text-tertiary);}
+  .tick{color:#3B6D11;font-weight:500;}
+  .cross{color:#A32D2D;font-weight:500;}
+</style>
+
+<div class="w">
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-title">Objects in JavaScript</p>
+    <p class="hero-def">An object is a block of memory that stores data as <strong style="font-weight:500">key-value pairs</strong>. Every real-world thing can be modelled as an object — a student has a name, age, hobbies, and address. Objects have two things: <strong style="font-weight:500">properties</strong> (data/characteristics) and <strong style="font-weight:500">methods</strong> (functions attached to the object).</p>
+    <div class="mgrid">
+      <div class="mbox">
+        <p class="ml">Way 1 — literal</p>
+        <pre style="margin:0;font-size:12px;padding:7px 10px;">let obj = {
+  key: value,
+  key: value
+};</pre>
+      </div>
+      <div class="mbox">
+        <p class="ml">Way 2 — constructor</p>
+        <pre style="margin:0;font-size:12px;padding:7px 10px;">let obj = new Object();
+obj.name = "Pravin";
+obj.age  = 22;</pre>
+      </div>
+      <div class="mbox">
+        <p class="ml">Access values</p>
+        <pre style="margin:0;font-size:12px;padding:7px 10px;">obj.name       // dot notation
+obj["name"]    // bracket notation</pre>
+      </div>
+      <div class="mbox">
+        <p class="ml">Key traits</p>
+        <p class="mv">Can store any data type — strings, numbers, arrays, nested objects, and even functions as values.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL OBJECT EXAMPLE -->
+  <p class="sh">A real object — what it can hold</p>
+  <div class="card">
+    <p class="ctitle">Object with all data types inside</p>
+    <p class="cdef">An object can hold strings, numbers, booleans, arrays, nested objects, and methods — all at the same time.</p>
+    <p class="cl">Example</p>
+    <pre>let student = {
+  name     : "Pratham",          // string
+  age      : 22,                 // number
+  isMarried: false,              // boolean
+  hobbies  : ["cricket","football","coding"],  // array
+  address  : {                   // nested object
+    city   : "Pune",
+    state  : "Maharashtra",
+    country: "India"
+  },
+  isWorking: function() {        // method
+    return "Yes, I am working";
+  }
+};</pre>
+    <p class="cl">Accessing nested values</p>
+    <pre>console.log(student.name);             // Pratham
+console.log(student.hobbies[0]);       // cricket
+console.log(student.address.city);     // Pune
+console.log(student.isWorking());      // Yes, I am working
+console.log(student["address"]["state"]); // Maharashtra</pre>
+    <p class="cl">Output</p>
+    <div class="out" style="border-color:#7F77DD;">Pratham
+cricket
+Pune
+Yes, I am working
+Maharashtra</div>
+  </div>
+
+  <!-- DOT vs BRACKET -->
+  <div class="vs" style="margin-bottom:1rem;">
+    <p class="vs-title"><i class="ti ti-arrows-diff" aria-hidden="true" style="margin-right:6px;"></i>Dot notation vs Bracket notation</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="vs-box">
+        <p class="vs-head" style="color:#085041;">Dot notation — <code>obj.key</code></p>
+        <ul class="vs-pts">
+          <li>Simple and readable</li>
+          <li>Key must be a valid identifier</li>
+          <li>Cannot use variables as keys</li>
+          <li>Example: <code>student.name</code></li>
+        </ul>
+      </div>
+      <div class="vs-box">
+        <p class="vs-head" style="color:#3C3489;">Bracket notation — <code>obj["key"]</code></p>
+        <ul class="vs-pts">
+          <li>More flexible</li>
+          <li>Can use variables as keys</li>
+          <li>Works with special characters in keys</li>
+          <li>Example: <code>student["name"]</code></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEMPLATE LITERAL ACCESS -->
+  <div class="card">
+    <p class="ctitle">Accessing object values in a template literal</p>
+    <p class="cdef">You can embed object values directly inside a template literal using <code>${}</code>. This is the cleanest way to build dynamic strings from object data.</p>
+    <p class="cl">Example</p>
+    <pre>let emp = {
+  id      : 11,
+  name    : "ram",
+  hobbies : ["sleeping","eating"],
+  address : { city:"Pune", state:"Maharashtra", country:"India" },
+  isWorking: function(){ return "Yes, I am working"; }
+};
+
+let info = `Employee ID: ${emp["id"]}
+Name: ${emp["name"]}
+City: ${emp["address"]["city"]}, ${emp["address"]["state"]}
+Hobbies: ${emp["hobbies"][0]} and ${emp["hobbies"][1]}
+Status: ${emp["isWorking"]()}`;
+
+console.log(info);</pre>
+    <p class="cl">Output</p>
+    <div class="out" style="border-color:#1D9E75;">Employee ID: 11
+Name: ram
+City: Pune, Maharashtra
+Hobbies: sleeping and eating
+Status: Yes, I am working</div>
+  </div>
+
+  <!-- OBJECT METHODS -->
+  <p class="sh">Object methods</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">01</span>
+      <p class="ctitle"><code>Object.keys(obj)</code></p>
+      <p class="cdef">Returns an array of all the property <strong style="font-weight:500">keys</strong> (names) of the object. Think of it as reading all the labels on the filing cabinet drawers.</p>
+      <ul class="pts">
+        <li>Returns an array of strings.</li>
+        <li>Only returns own properties — not inherited ones.</li>
+        <li>Memory tip: "keys = give me all the drawer labels."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>console.log(Object.keys(student));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#7F77DD;">["name", "age", "isMarried", "hobbies", "address", "isWorking"]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">02</span>
+      <p class="ctitle"><code>Object.values(obj)</code></p>
+      <p class="cdef">Returns an array of all the property <strong style="font-weight:500">values</strong> of the object. Like opening all the drawers and listing what's inside.</p>
+      <ul class="pts">
+        <li>Returns an array of values (any type).</li>
+        <li>Order matches the order keys were added.</li>
+        <li>Memory tip: "values = give me the contents of every drawer."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>console.log(Object.values(student));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#1D9E75;">["Pratham", 22, false, ["cricket",...], {city:...}, function]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAECE7;color:#993C1D;">03</span>
+      <p class="ctitle"><code>Object.entries(obj)</code></p>
+      <p class="cdef">Returns an array of <strong style="font-weight:500">[key, value] pairs</strong>. Each item in the array is itself an array of two elements — the key and its value together.</p>
+      <ul class="pts">
+        <li>Returns array of arrays: <code>[["name","Pratham"], ["age",22], ...]</code>.</li>
+        <li>Perfect for looping: use with <code>forEach</code> or <code>for...of</code>.</li>
+        <li>Memory tip: "entries = give me label + contents together for each drawer."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>console.log(Object.entries(student));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#D85A30;">[["name","Pratham"],["age",22],["isMarried",false],...]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E6F1FB;color:#0C447C;">04</span>
+      <p class="ctitle"><code>Object.assign(target, source)</code></p>
+      <p class="cdef">Copies all properties from a source object into a target object. Used to <strong style="font-weight:500">clone</strong> or <strong style="font-weight:500">merge</strong> objects.</p>
+      <ul class="pts">
+        <li>Returns the target object after copying.</li>
+        <li>Use <code>{}</code> as target to create a fresh copy — avoids modifying original.</li>
+        <li>Shallow copy only — nested objects are still shared by reference.</li>
+        <li>Memory tip: "assign = photocopy one object into another."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let student2 = { name:"Pravin", age:22 };
+let student3  = Object.assign({}, student2);
+console.log(student3);</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#378ADD;">{ name: "Pravin", age: 22 }</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EAF3DE;color:#3B6D11;">05</span>
+      <p class="ctitle"><code>hasOwnProperty(key)</code></p>
+      <p class="cdef">Checks whether the object has the specified property as its own (not inherited). Returns <code>true</code> or <code>false</code>.</p>
+      <ul class="pts">
+        <li>Returns a boolean.</li>
+        <li>Checks only own properties — NOT inherited prototype properties.</li>
+        <li>Safer than using <code>in</code> operator which checks inherited too.</li>
+        <li>Memory tip: "hasOwnProperty = is this drawer MINE, not borrowed?"</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>console.log(student.hasOwnProperty("name"));
+console.log(student.hasOwnProperty("salary"));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#639922;">true
+false</div>
+    </div>
+
+  </div>
+
+  <!-- SEAL AND FREEZE -->
+  <p class="sh">Protecting objects — seal vs freeze</p>
+
+  <div class="vs">
+    <p class="vs-title"><i class="ti ti-shield" aria-hidden="true" style="margin-right:6px;"></i>Seal vs Freeze — what is allowed?</p>
+    <div class="vs-grid">
+      <div class="vs-box">
+        <p class="vs-head" style="color:#633806;">Normal object</p>
+        <ul class="vs-pts">
+          <li><span class="tick">✓</span> Add new properties</li>
+          <li><span class="tick">✓</span> Delete properties</li>
+          <li><span class="tick">✓</span> Modify properties</li>
+          <li>No protection at all</li>
+        </ul>
+      </div>
+      <div class="vs-box">
+        <p class="vs-head" style="color:#3C3489;"><code>Object.seal()</code></p>
+        <ul class="vs-pts">
+          <li><span class="cross">✗</span> Cannot add new properties</li>
+          <li><span class="cross">✗</span> Cannot delete properties</li>
+          <li><span class="tick">✓</span> Can still modify values</li>
+          <li>Like a sealed envelope — can edit inside, but can't add or tear pages</li>
+        </ul>
+      </div>
+      <div class="vs-box">
+        <p class="vs-head" style="color:#A32D2D;"><code>Object.freeze()</code></p>
+        <ul class="vs-pts">
+          <li><span class="cross">✗</span> Cannot add new properties</li>
+          <li><span class="cross">✗</span> Cannot delete properties</li>
+          <li><span class="cross">✗</span> Cannot modify values</li>
+          <li>Like ice — completely solid, nothing changes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">06</span>
+      <p class="ctitle"><code>Object.seal(obj)</code></p>
+      <p class="cdef">Seals the object — you can still <strong style="font-weight:500">modify</strong> existing values but you cannot <strong style="font-weight:500">add</strong> new properties or <strong style="font-weight:500">delete</strong> existing ones.</p>
+      <ul class="pts">
+        <li>Add → silently ignored (no error in non-strict mode).</li>
+        <li>Delete → silently ignored.</li>
+        <li>Modify → still works normally.</li>
+        <li>Memory tip: "seal = sealed envelope — edit what's inside, can't add or remove pages."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>Object.seal(student);
+
+student.salary = 50000;    // add — IGNORED
+delete student.name;       // delete — IGNORED
+student.name = "Pravin";   // modify — WORKS
+
+console.log(student.name);
+console.log(Object.isSealed(student));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#7F77DD;">Pravin
+true</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FCEBEB;color:#A32D2D;">07</span>
+      <p class="ctitle"><code>Object.freeze(obj)</code></p>
+      <p class="cdef">Freezes the object — you can do <strong style="font-weight:500">nothing</strong> to it. No adding, no deleting, no modifying. It becomes completely read-only.</p>
+      <ul class="pts">
+        <li>Add → silently ignored.</li>
+        <li>Delete → silently ignored.</li>
+        <li>Modify → silently ignored.</li>
+        <li>Freeze is stronger than seal — seal + no modify = freeze.</li>
+        <li>Memory tip: "freeze = ice block — completely solid, zero changes allowed."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>Object.freeze(student);
+
+student.salary = 50000;    // add — IGNORED
+delete student.name;       // delete — IGNORED
+student.name = "Pravin";   // modify — IGNORED
+
+console.log(student.name);
+console.log(Object.isFrozen(student));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#E24B4A;">Pratham
+true</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">08</span>
+      <p class="ctitle"><code>Object.isSealed(obj)</code></p>
+      <p class="cdef">Checks whether an object is sealed. Returns <code>true</code> if sealed, <code>false</code> if not.</p>
+      <ul class="pts">
+        <li>Returns a boolean.</li>
+        <li>A frozen object is also considered sealed — <code>isSealed</code> returns true for frozen objects too.</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>console.log(Object.isSealed(student));   // sealed
+console.log(Object.isSealed(student2));  // normal</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#7F77DD;">true
+false</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FCEBEB;color:#A32D2D;">09</span>
+      <p class="ctitle"><code>Object.isFrozen(obj)</code></p>
+      <p class="cdef">Checks whether an object is frozen. Returns <code>true</code> if frozen, <code>false</code> if not.</p>
+      <ul class="pts">
+        <li>Returns a boolean.</li>
+        <li>A sealed object is NOT necessarily frozen — they are different levels of protection.</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>console.log(Object.isFrozen(student));   // frozen
+console.log(Object.isFrozen(student2));  // normal</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#E24B4A;">true
+false</div>
+    </div>
+
+  </div>
+
+  <!-- CHEAT SHEET TABLE -->
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.1rem 1.4rem;margin-top:.5rem;border:.5px solid var(--color-border-tertiary);">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;"><i class="ti ti-table" aria-hidden="true" style="margin-right:6px;"></i>Quick cheat sheet — all object methods</p>
+    <table style="width:100%;font-size:12.5px;border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Method</th>
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Returns</th>
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">One-line memory</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">Object.keys(obj)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">array of keys</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Give me all the drawer labels</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">Object.values(obj)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">array of values</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Give me the contents of every drawer</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">Object.entries(obj)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">array of [k,v] pairs</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Label + contents together for each drawer</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">Object.assign(t, s)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">target object</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Photocopy source into target</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">obj.hasOwnProperty(k)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">boolean</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Is this drawer mine (not borrowed)?</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">Object.seal(obj)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">sealed object</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Sealed envelope — edit but no add/delete</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">Object.isSealed(obj)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">boolean</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Is the envelope sealed?</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">Object.freeze(obj)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">frozen object</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Ice block — zero changes allowed</td></tr>
+        <tr><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">Object.isFrozen(obj)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">boolean</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Is the ice block solid?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- GOLDEN RULES -->
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:1rem;border:.5px solid var(--color-border-tertiary);">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 8px;"><i class="ti ti-star" aria-hidden="true" style="margin-right:6px;"></i>Golden rules of objects — say these in an interview</p>
+    <ul class="pts">
+      <li>Objects store data as <strong style="font-weight:500">key-value pairs</strong> — keys are always strings (or symbols), values can be anything.</li>
+      <li>Objects are <strong style="font-weight:500">reference types</strong> — when you copy an object with <code>=</code>, both variables point to the same object in memory. Use <code>Object.assign()</code> or spread <code>{...obj}</code> to make an independent copy.</li>
+      <li><code>seal</code> = can modify, cannot add/delete. <code>freeze</code> = cannot do anything. Freeze is stronger than seal.</li>
+      <li>A frozen object is also sealed — <code>Object.isSealed(frozenObj)</code> returns <code>true</code>. But a sealed object is NOT frozen.</li>
+      <li><code>Object.assign()</code> is a <strong style="font-weight:500">shallow copy</strong> — nested objects inside are still shared by reference, not truly duplicated.</li>
+      <li>Use <code>hasOwnProperty()</code> over the <code>in</code> operator when you want to check only the object's own keys — <code>in</code> also checks the prototype chain.</li>
+    </ul>
+  </div>
+
+</div>

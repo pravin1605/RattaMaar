@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hibernate / JPA — CRUD Operations Notes</title>
+<style>
+  @page { size: A4; margin: 18mm 14mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    color: #1a1a1a;
+    background: #ffffff;
+    line-height: 1.55;
+    margin: 0;
+    padding: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 26px;
+    border-bottom: 3px solid #2563eb;
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+    color: #111827;
+  }
+  .subtitle { color: #4b5563; font-size: 14px; margin-bottom: 26px; }
+  h2 {
+    font-size: 19px;
+    margin-top: 34px;
+    color: #1e3a8a;
+    border-left: 5px solid #2563eb;
+    padding-left: 10px;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 15.5px;
+    margin-top: 18px;
+    color: #b45309;
+    page-break-after: avoid;
+  }
+  .card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin: 14px 0;
+    background: #f9fafb;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    page-break-inside: avoid;
+  }
+  .card.extra { border-left: 5px solid #f59e0b; background: #fffbeb; }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    letter-spacing: 0.4px;
+  }
+  .tag-orig { background: #dbeafe; color: #1e40af; }
+  .tag-extra { background: #fef3c7; color: #92400e; }
+  .tag-qa { background: #dcfce7; color: #166534; }
+  pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 14px 16px;
+    border-radius: 8px;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    margin: 10px 0;
+  }
+  .kw { color: #cba6f7; }
+  .type { color: #89dceb; }
+  .str { color: #a6e3a1; }
+  .cmt { color: #6c7086; font-style: italic; }
+  .method { color: #f9e2af; }
+  code.inline {
+    background: #eef2ff;
+    color: #3730a3;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13.5px;
+  }
+  th, td {
+    border: 1px solid #d1d5db;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th { background: #2563eb; color: white; }
+  tr:nth-child(even) { background: #f3f4f6; }
+  .flow {
+    background: #eff6ff;
+    border: 1px dashed #93c5fd;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+    color: #1e3a8a;
+    white-space: pre;
+    margin: 10px 0;
+    text-align: center;
+  }
+  .qa-item {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 10px 0;
+  }
+  .qa-item:last-child { border-bottom: none; }
+  .q { font-weight: 700; color: #111827; }
+  .a { color: #374151; margin-top: 4px; }
+  .memory-trick {
+    background: #fdf4ff;
+    border: 1px solid #e9d5ff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 13.5px;
+    color: #6b21a8;
+  }
+  .memory-trick b { color: #581c87; }
+  ul { margin: 6px 0; padding-left: 22px; }
+  li { margin: 3px 0; }
+  .toc {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+  }
+  .toc a { color: #2563eb; text-decoration: none; font-size: 13.5px; }
+  .toc ol { margin: 6px 0; }
+  .page-break { page-break-before: always; }
+  .footer-note {
+    margin-top: 40px;
+    padding-top: 14px;
+    border-top: 1px solid #e5e7eb;
+    color: #6b7280;
+    font-size: 12px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>Hibernate / JPA — CRUD Operations</h1>
+<div class="subtitle">Entity Mapping · Persist · Find · Update (Dirty Checking) · JPQL · Remove — Package: <code class="inline">com.ty</code></div>
+
+<div class="toc">
+  <b>Contents</b>
+  <ol>
+    <li><a href="#entity">Entity Class — Person</a></li>
+    <li><a href="#insert">Insert — persist()</a></li>
+    <li><a href="#fetchbyid">Fetch by ID — find()</a></li>
+    <li><a href="#update">Update — Dirty Checking</a></li>
+    <li><a href="#fetchall">Fetch All — JPQL</a></li>
+    <li><a href="#delete">Delete — remove()</a></li>
+    <li><a href="#flow-summary">Combined Flow Summary</a></li>
+    <li><a href="#comparison">Comparison Table — All Operations</a></li>
+    <li><a href="#qa">Interview Q&amp;A</a></li>
+    <li><a href="#tricks">Memory Tricks</a></li>
+  </ol>
+</div>
+
+<h2 id="entity">1. Entity Class — <code class="inline">Person.java</code></h2>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.ty;
+
+<span class="kw">import</span> javax.persistence.Entity;
+<span class="kw">import</span> javax.persistence.Id;
+
+<span class="cmt">/*
+ * @Entity
+ * Marks this class as Hibernate Entity Class.
+ * Hibernate maps this class with a database table.
+ */</span>
+@Entity
+<span class="kw">public class</span> <span class="type">Person</span> {
+
+	<span class="cmt">/*
+	 * @Id
+	 * Marks p_id as Primary Key.
+	 */</span>
+	@Id
+	<span class="kw">private</span> <span class="type">int</span> p_id;
+
+	<span class="kw">private</span> <span class="type">String</span> pName;
+	<span class="kw">private</span> <span class="type">int</span> pAge;
+
+	<span class="cmt">// Default Constructor (Recommended)</span>
+	<span class="kw">public</span> <span class="method">Person</span>() {
+
+	}
+
+	<span class="cmt">// Getter and Setter Methods</span>
+
+	<span class="kw">public</span> <span class="type">int</span> <span class="method">getP_id</span>() {
+		<span class="kw">return</span> p_id;
+	}
+
+	<span class="kw">public void</span> <span class="method">setP_id</span>(<span class="type">int</span> p_id) {
+		<span class="kw">this</span>.p_id = p_id;
+	}
+
+	<span class="kw">public</span> <span class="type">String</span> <span class="method">getpName</span>() {
+		<span class="kw">return</span> pName;
+	}
+
+	<span class="kw">public void</span> <span class="method">setpName</span>(<span class="type">String</span> pName) {
+		<span class="kw">this</span>.pName = pName;
+	}
+
+	<span class="kw">public</span> <span class="type">int</span> <span class="method">getpAge</span>() {
+		<span class="kw">return</span> pAge;
+	}
+
+	<span class="kw">public void</span> <span class="method">setpAge</span>(<span class="type">int</span> pAge) {
+		<span class="kw">this</span>.pAge = pAge;
+	}
+}</pre>
+</div>
+
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Explanation</span>
+  <ul>
+    <li><code class="inline">@Entity</code> tells Hibernate/JPA that this POJO maps to a database table. By default the table name = class name (<code class="inline">Person</code>), unless overridden with <code class="inline">@Table(name="...")</code>.</li>
+    <li><code class="inline">@Id</code> marks the primary key field. Every entity <b>must</b> have exactly one field annotated <code class="inline">@Id</code>.</li>
+    <li>A <b>no-arg (default) constructor</b> is mandatory for JPA — Hibernate uses reflection to instantiate entities, and it requires this constructor even if you never call it yourself.</li>
+    <li>Fields without explicit <code class="inline">@Column</code> are auto-mapped to columns with the same name as the field (<code class="inline">pName</code> → column <code class="inline">pName</code>). You can rename columns with <code class="inline">@Column(name="p_name")</code>.</li>
+    <li>Because there's no <code class="inline">@GeneratedValue</code> on <code class="inline">p_id</code>, the ID is <b>assigned manually</b> by the application (as seen in <code class="inline">PersonDriver</code>: <code class="inline">p.setP_id(1)</code>) rather than auto-generated by the database.</li>
+  </ul>
+</div>
+
+<h2 id="insert">2. Insert — <code class="inline">PersonDriver.java</code> (<code class="inline">persist()</code>)</h2>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.ty;
+
+<span class="kw">import</span> javax.persistence.EntityManager;
+<span class="kw">import</span> javax.persistence.EntityManagerFactory;
+<span class="kw">import</span> javax.persistence.EntityTransaction;
+<span class="kw">import</span> javax.persistence.Persistence;
+
+<span class="kw">public class</span> <span class="type">PersonDriver</span> {
+
+	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+
+		<span class="cmt">// Create EntityManagerFactory</span>
+		EntityManagerFactory emf =
+				Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"pravin"</span>);
+
+		<span class="cmt">// Create EntityManager</span>
+		EntityManager em = emf.<span class="method">createEntityManager</span>();
+
+		<span class="cmt">// Transaction Object</span>
+		EntityTransaction et = em.<span class="method">getTransaction</span>();
+
+		<span class="cmt">// Transient Object</span>
+		Person p = <span class="kw">new</span> <span class="method">Person</span>();
+
+		p.<span class="method">setP_id</span>(1);
+		p.<span class="method">setpName</span>(<span class="str">"Pravin"</span>);
+		p.<span class="method">setpAge</span>(21);
+
+		et.<span class="method">begin</span>();
+
+		<span class="cmt">/*
+		 * persist()
+		 * Used to save object into database.
+		 */</span>
+		em.<span class="method">persist</span>(p);
+
+		et.<span class="method">commit</span>();
+
+		System.out.<span class="method">println</span>(<span class="str">"Record Inserted Successfully"</span>);
+	}
+}</pre>
+</div>
+
+<div class="flow">INSERT
+persist()
+      ↓
+Record Created</div>
+
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Explanation</span>
+  <ul>
+    <li><b>EntityManagerFactory</b> is created once per persistence unit (<code class="inline">"pravin"</code> — the name configured in <code class="inline">persistence.xml</code>). It's expensive to create, so it's typically a singleton for the app.</li>
+    <li><b>EntityManager</b> is the lightweight, per-operation interface to the persistence context (like a JDBC <code class="inline">Connection</code>, but object-aware).</li>
+    <li>Before <code class="inline">persist()</code>, the <code class="inline">Person</code> object <code class="inline">p</code> is in the <b>Transient</b> state — it exists only in Java memory, unknown to Hibernate.</li>
+    <li>After <code class="inline">persist()</code> (inside an active transaction), it becomes <b>Persistent (Managed)</b> — Hibernate now tracks it and will sync any further changes to the DB.</li>
+    <li><code class="inline">et.begin()</code> / <code class="inline">et.commit()</code> wrap the write in a transaction — without <code class="inline">commit()</code>, the insert is never flushed to the database.</li>
+  </ul>
+</div>
+
+<h2 id="fetchbyid">3. Fetch by ID — <code class="inline">FetchById.java</code> (<code class="inline">find()</code>)</h2>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.ty;
+
+<span class="kw">import</span> javax.persistence.EntityManager;
+<span class="kw">import</span> javax.persistence.EntityManagerFactory;
+<span class="kw">import</span> javax.persistence.Persistence;
+
+<span class="kw">public class</span> <span class="type">FetchById</span> {
+
+	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+
+		EntityManagerFactory emf =
+				Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"pravin"</span>);
+
+		EntityManager em =
+				emf.<span class="method">createEntityManager</span>();
+
+		<span class="cmt">/*
+		 * find()
+		 * Fetches record using Primary Key.
+		 */</span>
+		Person p =
+				em.<span class="method">find</span>(Person.<span class="kw">class</span>, 1);
+
+		<span class="kw">if</span> (p != <span class="kw">null</span>) {
+
+			System.out.<span class="method">println</span>(<span class="str">"Id : "</span> + p.<span class="method">getP_id</span>());
+			System.out.<span class="method">println</span>(<span class="str">"Name : "</span> + p.<span class="method">getpName</span>());
+			System.out.<span class="method">println</span>(<span class="str">"Age : "</span> + p.<span class="method">getpAge</span>());
+
+		} <span class="kw">else</span> {
+
+			System.out.<span class="method">println</span>(<span class="str">"Record Not Found"</span>);
+		}
+	}
+}</pre>
+</div>
+
+<div class="flow">FETCH BY ID
+find()
+      ↓
+Single Record</div>
+
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Explanation</span>
+  <ul>
+    <li><code class="inline">em.find(Class, primaryKey)</code> is the standard way to fetch by primary key. It returns <code class="inline">null</code> if not found (unlike <code class="inline">getReference()</code>, which throws <code class="inline">EntityNotFoundException</code> lazily).</li>
+    <li><code class="inline">find()</code> first checks the <b>1st-level (session) cache</b> before hitting the database — if the entity was already loaded/persisted in this <code class="inline">EntityManager</code>, no SQL is fired at all.</li>
+    <li>No transaction is required for a simple read — <code class="inline">find()</code> works outside a transaction, unlike <code class="inline">persist()</code>/<code class="inline">remove()</code> which need one.</li>
+    <li>The returned object is in the <b>Persistent</b> state — any field changes made to it later will be auto-detected (see Update below).</li>
+  </ul>
+</div>
+
+<h2 id="update">4. Update — <code class="inline">UpdateById.java</code> (Dirty Checking)</h2>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.ty;
+
+<span class="kw">import</span> javax.persistence.EntityManager;
+<span class="kw">import</span> javax.persistence.EntityManagerFactory;
+<span class="kw">import</span> javax.persistence.EntityTransaction;
+<span class="kw">import</span> javax.persistence.Persistence;
+
+<span class="kw">public class</span> <span class="type">UpdateById</span> {
+
+	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+
+		EntityManagerFactory emf =
+				Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"pravin"</span>);
+
+		EntityManager em =
+				emf.<span class="method">createEntityManager</span>();
+
+		EntityTransaction et =
+				em.<span class="method">getTransaction</span>();
+
+		<span class="cmt">/*
+		 * Fetch Existing Record
+		 */</span>
+		Person p =
+				em.<span class="method">find</span>(Person.<span class="kw">class</span>, 1);
+
+		<span class="kw">if</span> (p != <span class="kw">null</span>) {
+
+			p.<span class="method">setpName</span>(<span class="str">"Shravan"</span>);
+
+			et.<span class="method">begin</span>();
+
+			<span class="cmt">/*
+			 * Dirty Checking
+			 * Hibernate automatically updates.
+			 */</span>
+
+			et.<span class="method">commit</span>();
+
+			System.out.<span class="method">println</span>(<span class="str">"Record Updated"</span>);
+		}
+	}
+}</pre>
+</div>
+
+<div class="flow">UPDATE
+find()
+      ↓
+Modify Object
+      ↓
+commit()</div>
+
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Explanation: Dirty Checking</span>
+  <ul>
+    <li>Notice there's <b>no explicit <code class="inline">em.update()</code> or <code class="inline">em.merge()</code> call</b> — the setter <code class="inline">p.setpName("Shravan")</code> is called <i>before</i> the transaction commits, on an object that's already <b>Persistent</b> (fetched via <code class="inline">find()</code>).</li>
+    <li>Hibernate's persistence context keeps a <b>snapshot</b> of the entity's state at load time. At flush/commit time it compares the current state vs the snapshot — any difference is called <b>"dirty"</b> and triggers an automatic <code class="inline">UPDATE</code> SQL statement.</li>
+    <li>This only works because <code class="inline">p</code> stays <b>attached/managed</b> to the same <code class="inline">EntityManager</code> the whole time. If you set the field <i>after</i> closing the <code class="inline">EntityManager</code>, the object becomes <b>Detached</b> and dirty checking won't fire — you'd need <code class="inline">em.merge(p)</code> instead.</li>
+    <li>Order matters here versus the setter placement: the field is changed <i>before</i> <code class="inline">et.begin()</code> in this code, but the change is still only flushed to the DB when <code class="inline">et.commit()</code> runs — Hibernate batches the dirty check to flush time, not the moment the setter is called.</li>
+  </ul>
+</div>
+
+<h2 id="fetchall">5. Fetch All — <code class="inline">FetchAll.java</code> (JPQL)</h2>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.ty;
+
+<span class="kw">import</span> java.util.List;
+
+<span class="kw">import</span> javax.persistence.EntityManager;
+<span class="kw">import</span> javax.persistence.EntityManagerFactory;
+<span class="kw">import</span> javax.persistence.Persistence;
+<span class="kw">import</span> javax.persistence.Query;
+
+<span class="kw">public class</span> <span class="type">FetchAll</span> {
+
+	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+
+		EntityManagerFactory emf =
+				Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"pravin"</span>);
+
+		EntityManager em =
+				emf.<span class="method">createEntityManager</span>();
+
+		<span class="cmt">/*
+		 * JPQL Query
+		 * p is alias
+		 */</span>
+		Query query =
+				em.<span class="method">createQuery</span>(<span class="str">"select p from Person p"</span>);
+
+		List&lt;Person&gt; persons =
+				query.<span class="method">getResultList</span>();
+
+		<span class="kw">for</span> (Person p : persons) {
+
+			System.out.<span class="method">println</span>(<span class="str">"----------------"</span>);
+
+			System.out.<span class="method">println</span>(<span class="str">"Id : "</span> + p.<span class="method">getP_id</span>());
+			System.out.<span class="method">println</span>(<span class="str">"Name : "</span> + p.<span class="method">getpName</span>());
+			System.out.<span class="method">println</span>(<span class="str">"Age : "</span> + p.<span class="method">getpAge</span>());
+		}
+	}
+}</pre>
+</div>
+
+<div class="flow">FETCH ALL
+createQuery()
+      ↓
+Multiple Records</div>
+
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Explanation: JPQL</span>
+  <ul>
+    <li><b>JPQL (Java Persistence Query Language)</b> queries operate on <i>entity objects and their fields</i>, not table/column names — <code class="inline">"select p from Person p"</code> refers to the <code class="inline">Person</code> <b>class</b>, not the DB table.</li>
+    <li><code class="inline">p</code> is an <b>alias</b> for the entity, similar to a table alias in SQL — required syntax in JPQL even for simple selects.</li>
+    <li><code class="inline">getResultList()</code> returns a raw <code class="inline">List</code> — this is unchecked, so the assignment <code class="inline">List&lt;Person&gt; persons = query.getResultList();</code> produces an unchecked-cast compiler warning (safe to ignore here, but worth knowing for interviews).</li>
+    <li>JPQL is <b>database-independent</b> — Hibernate translates it into the correct native SQL dialect at runtime, unlike a native <code class="inline">createNativeQuery()</code> call.</li>
+  </ul>
+</div>
+
+<h2 id="delete">6. Delete — <code class="inline">DeleteById.java</code> (<code class="inline">remove()</code>)</h2>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.ty;
+
+<span class="kw">import</span> javax.persistence.EntityManager;
+<span class="kw">import</span> javax.persistence.EntityManagerFactory;
+<span class="kw">import</span> javax.persistence.EntityTransaction;
+<span class="kw">import</span> javax.persistence.Persistence;
+
+<span class="kw">public class</span> <span class="type">DeleteById</span> {
+
+	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+
+		EntityManagerFactory emf =
+				Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"pravin"</span>);
+
+		EntityManager em =
+				emf.<span class="method">createEntityManager</span>();
+
+		EntityTransaction et =
+				em.<span class="method">getTransaction</span>();
+
+		Person p =
+				em.<span class="method">find</span>(Person.<span class="kw">class</span>, 1);
+
+		<span class="kw">if</span> (p != <span class="kw">null</span>) {
+
+			et.<span class="method">begin</span>();
+
+			<span class="cmt">/*
+			 * remove()
+			 * Deletes record from database.
+			 */</span>
+			em.<span class="method">remove</span>(p);
+
+			et.<span class="method">commit</span>();
+
+			System.out.<span class="method">println</span>(<span class="str">"Record Deleted"</span>);
+		}
+	}
+}</pre>
+</div>
+
+<div class="flow">DELETE
+find()
+      ↓
+remove()
+      ↓
+commit()</div>
+
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Explanation</span>
+  <ul>
+    <li><code class="inline">em.remove()</code> only accepts a <b>Managed</b> entity — this is why <code class="inline">find()</code> is always called first to load and attach the object before removing it. You cannot pass a Transient or Detached instance directly.</li>
+    <li>After <code class="inline">remove()</code>, the entity moves to the <b>Removed</b> state within the persistence context; the actual <code class="inline">DELETE</code> SQL fires at flush/commit time, not immediately.</li>
+    <li>If a foreign-key constrained child record exists and cascade delete isn't configured, this will throw a <code class="inline">ConstraintViolationException</code> at commit time.</li>
+  </ul>
+</div>
+
+<h2 id="flow-summary" class="page-break">7. Combined Flow Summary</h2>
+<div class="card">
+<pre style="background:#111827; color:#e5e7eb; text-align:center;">
+INSERT              FETCH BY ID          FETCH ALL             UPDATE                DELETE
+persist()   →        find()      →     createQuery()   →   find()+setter   →     find()+remove()
+   ↓                    ↓                    ↓                  ↓                     ↓
+commit()          Single Record       Multiple Records      commit()              commit()
+   ↓                                    (JPQL, alias p)     (Dirty Check)             ↓
+Record Created                                                                  Record Deleted
+</pre>
+</div>
+
+<h2 id="comparison">8. Comparison Table — All Operations</h2>
+<table>
+<tr><th>Operation</th><th>Core Method</th><th>Transaction Needed?</th><th>Entity State Before → After</th><th>SQL Generated</th></tr>
+<tr><td>Insert</td><td><code class="inline">persist()</code></td><td>Yes</td><td>Transient → Persistent</td><td>INSERT</td></tr>
+<tr><td>Fetch by ID</td><td><code class="inline">find()</code></td><td>No</td><td>— → Persistent</td><td>SELECT (or none if cached)</td></tr>
+<tr><td>Fetch All</td><td><code class="inline">createQuery()</code> + JPQL</td><td>No</td><td>— → Persistent (each row)</td><td>SELECT</td></tr>
+<tr><td>Update</td><td>Setter on managed entity (Dirty Checking)</td><td>Yes</td><td>Persistent → Persistent (modified)</td><td>UPDATE</td></tr>
+<tr><td>Delete</td><td><code class="inline">remove()</code></td><td>Yes</td><td>Persistent → Removed</td><td>DELETE</td></tr>
+</table>
+
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Entity Lifecycle States</span>
+  <ul>
+    <li><b>Transient</b> — plain Java object, not associated with any <code class="inline">EntityManager</code>, no row in DB. (<code class="inline">new Person()</code>)</li>
+    <li><b>Persistent (Managed)</b> — associated with an open <code class="inline">EntityManager</code>; any change is tracked and auto-synced to DB on flush.</li>
+    <li><b>Detached</b> — was persistent, but the <code class="inline">EntityManager</code> was closed or the entity was evicted. Changes are no longer tracked; must call <code class="inline">merge()</code> to reattach.</li>
+    <li><b>Removed</b> — scheduled for deletion; still in memory until the transaction commits.</li>
+  </ul>
+</div>
+
+<h2 id="qa">9. Interview Q&amp;A</h2>
+<div class="card">
+  <span class="tag tag-qa">INTERVIEW PREP</span>
+
+  <div class="qa-item">
+    <div class="q">Q1. What is Dirty Checking in Hibernate?</div>
+    <div class="a">Hibernate compares a managed entity's current field values against the snapshot taken when it was loaded. If they differ at flush/commit time, Hibernate automatically issues an UPDATE — no explicit save call is needed, as shown in <code class="inline">UpdateById.java</code>.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q2. Why does <code class="inline">remove()</code> require calling <code class="inline">find()</code> first?</div>
+    <div class="a"><code class="inline">remove()</code> only operates on managed (Persistent) entities. <code class="inline">find()</code> loads the object into the persistence context so Hibernate can track and later delete it correctly.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q3. What's the difference between <code class="inline">persist()</code> and <code class="inline">merge()</code>?</div>
+    <div class="a"><code class="inline">persist()</code> is for new (Transient) entities and makes them Persistent. <code class="inline">merge()</code> is for Detached entities — it copies their state onto a managed instance (creating one if needed) and returns that managed copy.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q4. Why is a default (no-arg) constructor mandatory in an <code class="inline">@Entity</code> class?</div>
+    <div class="a">Hibernate instantiates entities via reflection (<code class="inline">Class.newInstance()</code> style) before populating fields, which requires a no-arg constructor — even if the app code never calls it directly.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q5. Does JPQL query tables or entities?</div>
+    <div class="a">JPQL queries entity objects and their fields (e.g. <code class="inline">Person</code>, <code class="inline">pName</code>), not database table/column names. Hibernate translates the JPQL into the appropriate native SQL at runtime.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q6. What happens if you call <code class="inline">commit()</code> without <code class="inline">begin()</code>?</div>
+    <div class="a">It throws an <code class="inline">IllegalStateException</code> — a transaction must be explicitly started with <code class="inline">et.begin()</code> before it can be committed.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q7. Why doesn't <code class="inline">find()</code> need a transaction, but <code class="inline">persist()</code>/<code class="inline">remove()</code>/updates do?</div>
+    <div class="a">Reads don't modify data, so JPA allows them outside a transaction (though a transaction is still recommended for consistency in some providers). Any write operation must be wrapped in a transaction so it can be committed or rolled back atomically.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q8. What is the role of <code class="inline">EntityManagerFactory</code> vs <code class="inline">EntityManager</code>?</div>
+    <div class="a"><code class="inline">EntityManagerFactory</code> is a heavyweight, thread-safe factory created once per persistence unit. <code class="inline">EntityManager</code> is lightweight, not thread-safe, and represents one unit-of-work / persistence context — created per operation or per request.</div>
+  </div>
+</div>
+
+<h2 id="tricks">10. Memory Tricks</h2>
+<div class="memory-trick">
+  <b>CRUD → Methods:</b> "<b>P</b>ersist, <b>F</b>ind, <b>D</b>irty(update), <b>R</b>emove" — remember as <b>"Please Find Dirty Records"</b>.
+</div>
+<div class="memory-trick">
+  <b>Entity states in order:</b> <b>T</b>ransient → <b>P</b>ersistent → <b>D</b>etached → <b>R</b>emoved — remember as <b>"Two Pandas Danced Rapidly"</b>.
+</div>
+<div class="memory-trick">
+  <b>Transaction needed?</b> Anything that <i>writes</i> (persist / update / remove) needs <code class="inline">begin()</code>+<code class="inline">commit()</code>. Anything that only <i>reads</i> (find / query) doesn't. Think: <b>"Write = Wrap in transaction."</b>
+</div>
+<div class="memory-trick">
+  <b>Dirty Checking:</b> No save call for updates — just "get it, change it, commit it." Hibernate quietly compares old vs new snapshot at flush time, like a diff tool running in the background.
+</div>
+
+<div class="footer-note">Hibernate / JPA CRUD Notes — Package com.ty — Original code preserved exactly; explanations, tables, and Q&amp;A added as supplementary study material.</div>
+
+</body>
+</html>

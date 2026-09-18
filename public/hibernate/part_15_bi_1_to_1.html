@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 20 — Hibernate Bidirectional One-to-One Mapping</title>
+<style>
+  @page { size: A4; margin: 18mm 14mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    color: #1a1a1a;
+    background: #ffffff;
+    line-height: 1.6;
+    margin: 0;
+    padding: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 26px;
+    border-bottom: 3px solid #2563eb;
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+    color: #111827;
+  }
+  .subtitle { color: #4b5563; font-size: 14px; margin-bottom: 26px; }
+  h2 {
+    font-size: 19px;
+    margin-top: 34px;
+    color: #1e3a8a;
+    border-left: 5px solid #2563eb;
+    padding-left: 10px;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 15.5px;
+    margin-top: 18px;
+    color: #b45309;
+    page-break-after: avoid;
+  }
+  .card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin: 14px 0;
+    background: #f9fafb;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    page-break-inside: avoid;
+  }
+  .card.extra { border-left: 5px solid #f59e0b; background: #fffbeb; }
+  .card.theory { border-left: 5px solid #2563eb; background: #eff6ff; }
+  .card.bug { border-left: 5px solid #dc2626; background: #fef2f2; }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    letter-spacing: 0.4px;
+  }
+  .tag-orig { background: #dbeafe; color: #1e40af; }
+  .tag-extra { background: #fef3c7; color: #92400e; }
+  .tag-qa { background: #dcfce7; color: #166534; }
+  .tag-theory { background: #dbeafe; color: #1e3a8a; }
+  .tag-bug { background: #fee2e2; color: #991b1b; }
+  .tag-tip { background: #fde68a; color: #78350f; }
+  pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 14px 16px;
+    border-radius: 8px;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    margin: 10px 0;
+  }
+  .kw { color: #cba6f7; }
+  .type { color: #89dceb; }
+  .str { color: #a6e3a1; }
+  .cmt { color: #6c7086; font-style: italic; }
+  .method { color: #f9e2af; }
+  code.inline {
+    background: #eef2ff;
+    color: #3730a3;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13.5px;
+  }
+  th, td {
+    border: 1px solid #d1d5db;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th { background: #2563eb; color: white; }
+  tr:nth-child(even) { background: #f3f4f6; }
+  .flow {
+    background: #eff6ff;
+    border: 1px dashed #93c5fd;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+    color: #1e3a8a;
+    white-space: pre;
+    margin: 10px 0;
+    text-align: center;
+  }
+  .qa-item {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 10px 0;
+  }
+  .qa-item:last-child { border-bottom: none; }
+  .q { font-weight: 700; color: #111827; }
+  .a { color: #374151; margin-top: 4px; }
+  .memory-trick {
+    background: #fdf4ff;
+    border: 1px solid #e9d5ff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 13.5px;
+    color: #6b21a8;
+  }
+  .memory-trick b { color: #581c87; }
+  .definition-box {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 14px;
+    color: #14532d;
+    font-style: italic;
+  }
+  ul { margin: 6px 0; padding-left: 22px; }
+  li { margin: 3px 0; }
+  .toc {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+  }
+  .toc a { color: #2563eb; text-decoration: none; font-size: 13.5px; }
+  .toc ol { margin: 6px 0; }
+  .page-break { page-break-before: always; }
+  .footer-note {
+    margin-top: 40px;
+    padding-top: 14px;
+    border-top: 1px solid #e5e7eb;
+    color: #6b7280;
+    font-size: 12px;
+    text-align: center;
+  }
+  .box {
+    display: block;
+    background: #2563eb;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
+    margin: 4px auto;
+    max-width: 260px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .box.inverse { background: #7c3aed; }
+  .arrow-down { text-align: center; color: #93c5fd; font-size: 18px; margin: 0; }
+</style>
+</head>
+<body>
+
+<h1>Chapter 20: Hibernate Bidirectional One-to-One Mapping</h1>
+<div class="subtitle">Person ↔ Passport Example — Packages: <code class="inline">com.DTO</code>, <code class="inline">com.DAO</code>, <code class="inline">com.Controller</code></div>
+
+<div class="toc">
+  <b>Contents</b>
+  <ol>
+    <li><a href="#what">What is Bidirectional Mapping?</a></li>
+    <li><a href="#realworld">Real-Life Example</a></li>
+    <li><a href="#graphical">Graphical &amp; Database Representation</a></li>
+    <li><a href="#why">Why Do We Need Bidirectional Mapping?</a></li>
+    <li><a href="#unidiff">Difference — Unidirectional vs Bidirectional</a></li>
+    <li><a href="#annotations">Important Hibernate Annotations</a></li>
+    <li><a href="#mappedby">mappedBy — Why It's Needed</a></li>
+    <li><a href="#ownerinverse">Owning Side vs Inverse Side</a></li>
+    <li><a href="#structure">Project Structure</a></li>
+    <li><a href="#code">Code — Person, Passport, PersonDAO, Driver</a></li>
+    <li><a href="#bugs">Extra — Gaps in This Code</a></li>
+    <li><a href="#flow">Execution Flow</a></li>
+    <li><a href="#qa">Interview Q&amp;A</a></li>
+    <li><a href="#tricks">Memory Tricks</a></li>
+  </ol>
+</div>
+
+<h2 id="what">1. What is Bidirectional Mapping?</h2>
+<div class="card theory">
+  <span class="tag tag-theory">THEORY — DEFINITION</span>
+  <p><b>Bidirectional Mapping</b> is a relationship in Hibernate where both entity classes maintain a reference to each other.</p>
+  <p>In simple words:</p>
+  <ul>
+    <li>Entity A knows Entity B.</li>
+    <li>Entity B also knows Entity A.</li>
+  </ul>
+  <p>Both objects can access each other. Unlike Unidirectional Mapping, where only one entity is aware of the relationship, in Bidirectional Mapping <b>both</b> entities are aware of it.</p>
+</div>
+
+<h3>Simple Definition (Interview)</h3>
+<div class="definition-box">
+  "Bidirectional Mapping is a relationship in which both entity classes maintain references to each other. Therefore, navigation is possible from both sides of the relationship."
+</div>
+
+<h2 id="realworld">2. Real-Life Example</h2>
+<div class="card theory">
+  <span class="tag tag-theory">THEORY</span>
+  <p>Suppose a person has one passport. Similarly, every passport belongs to one person.</p>
+  <div class="flow">Person  ←────────→  Passport</div>
+  <p>Person knows Passport. Passport also knows Person.</p>
+
+  <h3>Real-Life Scenario</h3>
+  <div class="flow">Pravin
+   │
+   │ owns
+   ▼
+Passport</div>
+  <p>Now suppose someone asks: "Who owns Passport MH12345?" — Passport should know Person. Similarly, if someone asks "What is Pravin's Passport Number?" — Person should know Passport. So <b>both objects require references</b>.</p>
+</div>
+
+<h2 id="graphical">3. Graphical &amp; Database Representation</h2>
+<div class="flow">          Bidirectional One-To-One
+
+  +----------------------+
+  |        Person         |
+  +----------------------+
+  | personId              |
+  | personName             |
+  | Passport passport      |
+  +----------------------+
+             ▲
+             │
+             │
+             ▼
+  +----------------------+
+  |       Passport        |
+  +----------------------+
+  | passportId             |
+  | passportNumber         |
+  | Person person           |
+  +----------------------+</div>
+
+<div class="card theory">
+  <span class="tag tag-theory">THEORY — Database Representation</span>
+  <table>
+    <tr><th colspan="3">PERSON Table</th></tr>
+    <tr><th>Person_ID</th><th>Person_Name</th><th>Passport_ID</th></tr>
+    <tr><td>1</td><td>Pravin</td><td>101</td></tr>
+  </table>
+  <table>
+    <tr><th colspan="2">PASSPORT Table</th></tr>
+    <tr><th>Passport_ID</th><th>Passport_Number</th></tr>
+    <tr><td>101</td><td>MH123456</td></tr>
+  </table>
+  <p>Only <b>one</b> foreign key is created because Hibernate stores the relationship from the owning side.</p>
+</div>
+
+<h2 id="why">4. Why Do We Need Bidirectional Mapping?</h2>
+<div class="card theory">
+  <span class="tag tag-theory">THEORY</span>
+  <p>Suppose we only have unidirectional: Person → Passport. We can easily fetch Passport using Person. But — can Passport fetch Person? <b>No.</b></p>
+  <p>Now suppose police have a Passport Number and want owner details. Without Bidirectional Mapping, this is impossible directly. With Bidirectional Mapping, <code class="inline">passport.getPerson()</code> works immediately.</p>
+</div>
+
+<h2 id="unidiff">5. Difference — Unidirectional vs Bidirectional</h2>
+<table>
+<tr><th>Unidirectional</th><th>Bidirectional</th></tr>
+<tr><td>One object knows another</td><td>Both objects know each other</td></tr>
+<tr><td>Navigation in one direction</td><td>Navigation in both directions</td></tr>
+<tr><td>Simple relationship</td><td>More flexible relationship</td></tr>
+<tr><td>Less memory</td><td>Slightly more memory</td></tr>
+<tr><td>Less coding</td><td>More coding</td></tr>
+</table>
+
+<h2 id="annotations">6. Important Hibernate Annotations</h2>
+<div class="card theory">
+  <span class="tag tag-theory">THEORY</span>
+  <h3 style="margin-top:0;">1. @OneToOne</h3>
+  <p>Used to establish a one-to-one relationship.</p>
+<pre>@OneToOne
+<span class="kw">private</span> Passport passport;</pre>
+  <p>Meaning: one Person has one Passport.</p>
+
+  <h3>2. @JoinColumn</h3>
+  <p>Used to create the foreign key column.</p>
+<pre>@JoinColumn(name=<span class="str">"passport_id"</span>)</pre>
+  <p>Hibernate creates <code class="inline">passport_id</code> inside the Person table.</p>
+
+  <h3>3. mappedBy</h3>
+  <p>One of the most important concepts in Hibernate.</p>
+</div>
+
+<h2 id="mappedby">7. mappedBy — Why It's Needed</h2>
+<div class="card theory">
+  <span class="tag tag-theory">THEORY — DEFINITION</span>
+  <p><code class="inline">mappedBy</code> tells Hibernate that: <i>"I am not the owner of this relationship. The other entity manages the foreign key."</i></p>
+<pre>@OneToOne(mappedBy=<span class="str">"passport"</span>)
+<span class="kw">private</span> Person person;</pre>
+  <p>Meaning: Passport will not create another foreign key. It simply points to Person's mapping.</p>
+
+  <h3>Without mappedBy</h3>
+  <p>Hibernate thinks Person → Passport and Passport → Person are two <b>different</b> relationships.</p>
+  <p><b>Result:</b> Person Table gets a <code class="inline">passport_id</code> column, AND Passport Table gets a <code class="inline">person_id</code> column — <b>two foreign keys.</b> Wrong design.</p>
+
+  <h3>With mappedBy</h3>
+  <p>Only one foreign key is created. Correct design.</p>
+</div>
+
+<h2 id="ownerinverse">8. Owning Side vs Inverse Side</h2>
+<div class="card theory">
+  <span class="tag tag-theory">THEORY</span>
+  <h3 style="margin-top:0;">Owning Side</h3>
+  <p>The entity that contains <code class="inline">@JoinColumn</code> is called the <b>Owning Side</b>.</p>
+<pre>Person
+@OneToOne
+@JoinColumn(...)
+Passport</pre>
+  <p>Person owns the relationship.</p>
+
+  <h3>Inverse Side</h3>
+  <p>The entity using <code class="inline">mappedBy</code> is called the <b>Inverse Side</b>.</p>
+<pre>Passport
+@OneToOne(mappedBy=<span class="str">"passport"</span>)
+Person</pre>
+  <p>Passport doesn't own the relationship.</p>
+</div>
+
+<div class="flow">
+<span class="box">Person</span>
+<div style="font-size:11px; color:#1e3a8a;">Owning Side — has @JoinColumn</div>
+<div class="arrow-down">↕</div>
+<span class="box inverse">Passport</span>
+<div style="font-size:11px; color:#6b21a8;">Inverse Side — has mappedBy</div>
+</div>
+
+<h2 id="structure">9. Project Structure</h2>
+<div class="card theory">
+  <span class="tag tag-theory">THEORY</span>
+<pre>Hibernate_Bidirectional_OneToOne
+src/main/java
+com.DTO
+  Person.java
+  Passport.java
+com.DAO
+  PersonDAO.java
+com.Controller
+  Driver.java
+META-INF
+  persistence.xml</pre>
+</div>
+
+<h2 id="code" class="page-break">10. Code — Person, Passport, PersonDAO, Driver</h2>
+
+<h3>10.1 Entity — <code class="inline">Person.java</code> (com.DTO) — Owning Side</h3>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.DTO;
+<span class="kw">import</span> javax.persistence.*;
+@Entity
+<span class="kw">public class</span> <span class="type">Person</span> {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	<span class="kw">private</span> <span class="type">int</span> personId;
+
+	<span class="kw">private</span> <span class="type">String</span> personName;
+
+	<span class="cmt">// Owning Side</span>
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = <span class="str">"passport_id"</span>)
+	<span class="kw">private</span> Passport passport;
+
+	<span class="kw">public</span> <span class="type">int</span> <span class="method">getPersonId</span>() {
+		<span class="kw">return</span> personId;
+	}
+
+	<span class="kw">public void</span> <span class="method">setPersonId</span>(<span class="type">int</span> personId) {
+		<span class="kw">this</span>.personId = personId;
+	}
+
+	<span class="kw">public</span> <span class="type">String</span> <span class="method">getPersonName</span>() {
+		<span class="kw">return</span> personName;
+	}
+
+	<span class="kw">public void</span> <span class="method">setPersonName</span>(<span class="type">String</span> personName) {
+		<span class="kw">this</span>.personName = personName;
+	}
+
+	<span class="kw">public</span> Passport <span class="method">getPassport</span>() {
+		<span class="kw">return</span> passport;
+	}
+
+	<span class="kw">public void</span> <span class="method">setPassport</span>(Passport passport) {
+		<span class="kw">this</span>.passport = passport;
+	}
+}</pre>
+</div>
+
+<h3>10.2 Entity — <code class="inline">Passport.java</code> (com.DTO) — Inverse Side</h3>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.DTO;
+<span class="kw">import</span> javax.persistence.*;
+@Entity
+<span class="kw">public class</span> <span class="type">Passport</span> {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	<span class="kw">private</span> <span class="type">int</span> passportId;
+
+	<span class="kw">private</span> <span class="type">String</span> passportNumber;
+
+	<span class="cmt">// Inverse Side</span>
+	@OneToOne(mappedBy = <span class="str">"passport"</span>)
+	<span class="kw">private</span> Person person;
+
+	<span class="kw">public</span> <span class="type">int</span> <span class="method">getPassportId</span>() {
+		<span class="kw">return</span> passportId;
+	}
+
+	<span class="kw">public void</span> <span class="method">setPassportId</span>(<span class="type">int</span> passportId) {
+		<span class="kw">this</span>.passportId = passportId;
+	}
+
+	<span class="kw">public</span> <span class="type">String</span> <span class="method">getPassportNumber</span>() {
+		<span class="kw">return</span> passportNumber;
+	}
+
+	<span class="kw">public void</span> <span class="method">setPassportNumber</span>(<span class="type">String</span> passportNumber) {
+		<span class="kw">this</span>.passportNumber = passportNumber;
+	}
+
+	<span class="kw">public</span> Person <span class="method">getPerson</span>() {
+		<span class="kw">return</span> person;
+	}
+
+	<span class="kw">public void</span> <span class="method">setPerson</span>(Person person) {
+		<span class="kw">this</span>.person = person;
+	}
+}</pre>
+</div>
+
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Explanation</span>
+  <ul>
+    <li>This is the first chapter in the series where <code class="inline">import javax.persistence.*;</code> (a wildcard import) is used instead of listing each JPA class individually — functionally identical, just more compact.</li>
+    <li><code class="inline">cascade = CascadeType.ALL</code> on the <code class="inline">Person.passport</code> field means persisting a <code class="inline">Person</code> automatically persists its linked <code class="inline">Passport</code> too — this is exactly why <code class="inline">Driver.java</code> only needs to call <code class="inline">dao.insert(person)</code> and never touches the Passport DAO-side at all.</li>
+    <li><code class="inline">mappedBy = "passport"</code> in the <code class="inline">Passport</code> entity refers to the <b>field name</b> <code class="inline">passport</code> inside the <code class="inline">Person</code> class — not a column name or table name. This string must exactly match the owning-side field name, or Hibernate throws a mapping exception at startup.</li>
+    <li>Because <code class="inline">Passport</code> is the inverse side, changes made only on the Passport side (e.g. calling <code class="inline">passport.setPerson(x)</code> without also calling <code class="inline">person.setPassport(passport)</code>) are <b>not persisted</b> to the database — the inverse side is purely for in-memory navigation; only the owning side's mapping is what Hibernate actually writes to SQL.</li>
+  </ul>
+</div>
+
+<h3>10.3 DAO — <code class="inline">PersonDAO.java</code> (com.DAO)</h3>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.DAO;
+<span class="kw">import</span> javax.persistence.*;
+<span class="kw">import</span> com.DTO.Person;
+<span class="kw">public class</span> <span class="type">PersonDAO</span> {
+
+	EntityManagerFactory emf =
+			Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"pravin"</span>);
+
+	EntityManager em = emf.<span class="method">createEntityManager</span>();
+
+	EntityTransaction et = em.<span class="method">getTransaction</span>();
+
+	<span class="kw">public void</span> <span class="method">insert</span>(Person person) {
+
+		et.<span class="method">begin</span>();
+
+		em.<span class="method">persist</span>(person);
+
+		et.<span class="method">commit</span>();
+
+		System.out.<span class="method">println</span>(<span class="str">"Inserted Successfully"</span>);
+	}
+
+	<span class="kw">public</span> Person <span class="method">fetchById</span>(<span class="type">int</span> id) {
+
+		Person person = em.<span class="method">find</span>(Person.<span class="kw">class</span>, id);
+
+		<span class="kw">return</span> person;
+	}
+}</pre>
+</div>
+
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Explanation</span>
+  <ul>
+    <li>This DAO is intentionally minimal compared to earlier chapters — only <code class="inline">insert()</code> and <code class="inline">fetchById()</code> are provided, with no update/delete methods for this bidirectional example, since the chapter's focus is purely on demonstrating the owning/inverse relationship, not full CRUD.</li>
+    <li>Note the persistence unit name reverts to <code class="inline">"pravin"</code> here, matching the very first chapters (CRUD, layered architecture, One-to-One) rather than <code class="inline">"orm"</code> used in the Many-to-One and Many-to-Many chapters.</li>
+    <li><code class="inline">fetchById()</code> has no null-check before returning — consistent with the minimal style of this DAO, but the caller should still check the returned <code class="inline">Person</code> for <code class="inline">null</code> before calling <code class="inline">.getPassport()</code> etc.</li>
+  </ul>
+</div>
+
+<h3>10.4 Driver — <code class="inline">Driver.java</code> (com.Controller)</h3>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.Controller;
+<span class="kw">import</span> com.DAO.PersonDAO;
+<span class="kw">import</span> com.DTO.Passport;
+<span class="kw">import</span> com.DTO.Person;
+<span class="kw">public class</span> <span class="type">Driver</span> {
+
+	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+
+		Passport passport = <span class="kw">new</span> <span class="method">Passport</span>();
+		passport.<span class="method">setPassportNumber</span>(<span class="str">"MH123456"</span>);
+
+		Person person = <span class="kw">new</span> <span class="method">Person</span>();
+		person.<span class="method">setPersonName</span>(<span class="str">"Pravin"</span>);
+
+		<span class="cmt">// Bidirectional Linking</span>
+		person.<span class="method">setPassport</span>(passport);
+		passport.<span class="method">setPerson</span>(person);
+
+		PersonDAO dao = <span class="kw">new</span> <span class="method">PersonDAO</span>();
+
+		dao.<span class="method">insert</span>(person);
+	}
+}</pre>
+</div>
+
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Explanation</span>
+  <ul>
+    <li>Unlike every earlier chapter's Driver, this one is <b>not commented out</b> — <code class="inline">dao.insert(person)</code> actually runs, since this chapter is demonstrating a single focused concept (bidirectional linking) rather than offering a menu of CRUD operations to test one at a time.</li>
+    <li>Both linking calls are present: <code class="inline">person.setPassport(passport)</code> AND <code class="inline">passport.setPerson(person)</code>. This is essential in bidirectional mappings — setting only one side keeps the object graph consistent in memory (so both directions can be navigated via getters), even though only the owning side's assignment is what Hibernate persists as the actual foreign key.</li>
+    <li>If <code class="inline">passport.setPerson(person)</code> were omitted, the insert would still work correctly (since Person is the owning side), but calling <code class="inline">passport.getPerson()</code> afterward, within the same in-memory object graph before a fresh fetch, would return <code class="inline">null</code> — a classic bidirectional-mapping bug.</li>
+  </ul>
+</div>
+
+<h2 id="bugs" class="page-break">11. Extra — Gaps in This Code</h2>
+<div class="card bug">
+  <span class="tag tag-bug">⚠ WORTH KNOWING</span>
+  <ul>
+    <li><b>No helper/convenience method to keep both sides in sync.</b> A common real-world improvement is a method like <code class="inline">person.setPassport(Passport p) { this.passport = p; p.setPerson(this); }</code> that automatically updates both sides in one call, so a developer can't accidentally forget the second line (as seen manually done in <code class="inline">Driver.java</code> here).</li>
+    <li><b>No null-checks</b> in <code class="inline">PersonDAO.fetchById()</code> — if the ID doesn't exist, <code class="inline">em.find()</code> returns <code class="inline">null</code>, and any caller chaining <code class="inline">.getPassport()</code> on the result would throw <code class="inline">NullPointerException</code>.</li>
+    <li><b>No update or delete methods</b> in this DAO at all — worth remembering this chapter is scoped narrowly to insert + fetch, unlike the fuller DAOs in Chapters 17–19.</li>
+    <li><b>Fetching <code class="inline">Passport</code> independently (not shown here)</b> would require a separate <code class="inline">PassportDAO</code>, since <code class="inline">passport.getPerson()</code> only works once the Passport is already loaded as part of a fetched Person's object graph, or fetched directly by its own ID with its <code class="inline">person</code> field resolved via the inverse mapping.</li>
+  </ul>
+</div>
+
+<h2 id="flow">12. Execution Flow</h2>
+<div class="flow">Create Passport Object
+      ↓
+Create Person Object
+      ↓
+Set Passport inside Person
+      ↓
+Set Person inside Passport
+      ↓
+Persist Person
+      ↓
+Hibernate saves Passport
+      ↓
+Creates Foreign Key
+      ↓
+Stores Data in PostgreSQL</div>
+
+<h3>Final Working Flow</h3>
+<div class="flow">Driver.java
+      ↓
+Create Passport
+      ↓
+Create Person
+      ↓
+Set Passport into Person
+      ↓
+Set Person into Passport
+      ↓
+DAO
+      ↓
+EntityManager.persist(person)
+      ↓
+Cascade persists Passport
+      ↓
+Hibernate
+      ↓
+PostgreSQL</div>
+
+<h2 id="qa">13. Interview Q&amp;A</h2>
+<div class="card">
+  <span class="tag tag-qa">INTERVIEW PREP</span>
+
+  <div class="qa-item">
+    <div class="q">Q1. What is Bidirectional Mapping?</div>
+    <div class="a">A relationship where both entity classes maintain a reference to each other, so navigation is possible from both sides — Entity A can reach Entity B, and Entity B can reach Entity A.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q2. What does <code class="inline">mappedBy</code> do, and why is it necessary?</div>
+    <div class="a">It tells Hibernate "I am not the owner of this relationship — the other entity manages the foreign key." Without it, Hibernate would treat both sides as separate relationships and create two foreign key columns instead of one, which is incorrect.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q3. What is the "owning side" and how do you identify it in code?</div>
+    <div class="a">The entity that carries <code class="inline">@JoinColumn</code> — here, <code class="inline">Person</code>, since it has <code class="inline">@JoinColumn(name = "passport_id")</code>. The owning side is what Hibernate actually persists as the real foreign key relationship.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q4. What is the "inverse side"?</div>
+    <div class="a">The entity that uses <code class="inline">mappedBy</code> instead of <code class="inline">@JoinColumn</code> — here, <code class="inline">Passport</code>. It doesn't own the relationship; it only points back to the owning side's mapping for read/navigation purposes.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q5. Why does the Driver call both <code class="inline">person.setPassport(passport)</code> and <code class="inline">passport.setPerson(person)</code>?</div>
+    <div class="a">To keep the in-memory object graph consistent on both sides, so both <code class="inline">person.getPassport()</code> and <code class="inline">passport.getPerson()</code> work correctly for the objects currently held in memory. Only the owning side's assignment is what actually gets persisted as the foreign key, but skipping the inverse-side assignment would leave the in-memory graph inconsistent.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q6. If you only called <code class="inline">person.setPassport(passport)</code> and skipped <code class="inline">passport.setPerson(person)</code>, would the insert still work?</div>
+    <div class="a">Yes — since Person is the owning side, Hibernate would still correctly persist the foreign key. But <code class="inline">passport.getPerson()</code> on that same in-memory <code class="inline">passport</code> object (before a fresh database fetch) would incorrectly return <code class="inline">null</code>.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q7. What's the key difference between Unidirectional and Bidirectional mapping (interview-ready answer)?</div>
+    <div class="a">"In Unidirectional Mapping, only one entity maintains the relationship reference, so navigation is possible in only one direction. In Bidirectional Mapping, both entities maintain references to each other. One entity becomes the owning side using <code class="inline">@JoinColumn</code>, while the other becomes the inverse side using <code class="inline">mappedBy</code>, ensuring only one foreign key is created and avoiding redundant relationships."</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q8. Why must the string passed to <code class="inline">mappedBy</code> exactly match a field name?</div>
+    <div class="a">Because <code class="inline">mappedBy = "passport"</code> is Hibernate's way of pointing at the actual Java field (<code class="inline">private Passport passport;</code>) on the owning entity that defines the relationship — it's resolved via reflection at startup, so a typo or mismatch causes a mapping exception when the <code class="inline">EntityManagerFactory</code> is created.</div>
+  </div>
+</div>
+
+<h2 id="tricks">14. Memory Tricks</h2>
+<div class="memory-trick">
+  <b>Owning vs Inverse:</b> "Owner has the <b>Column</b> (<code class="inline">@JoinColumn</code>), Inverse just <b>Points</b> (<code class="inline">mappedBy</code>)." Only the owning side's field is what Hibernate actually writes to SQL.
+</div>
+<div class="memory-trick">
+  <b>mappedBy value = field name, not column name.</b> <code class="inline">mappedBy = "passport"</code> points at the <code class="inline">passport</code> field inside <code class="inline">Person</code> — never a database column.
+</div>
+<div class="memory-trick">
+  <b>Always set both sides in bidirectional code</b> — set the owning side for persistence to work, and set the inverse side so in-memory navigation (<code class="inline">.getX()</code> from either direction) doesn't silently return null.
+</div>
+<div class="memory-trick">
+  <b>No mappedBy = double trouble.</b> Forgetting <code class="inline">mappedBy</code> on one side makes Hibernate think there are two separate relationships — resulting in two foreign key columns instead of one, and a broken/duplicated design.
+</div>
+
+<div class="footer-note">Hibernate Bidirectional One-to-One Mapping Notes — Person/Passport (com.DTO), PersonDAO (com.DAO), Driver (com.Controller) — Original code preserved exactly; theory, explanations, and Q&amp;A added as supplementary study material.</div>
+
+</body>
+</html>

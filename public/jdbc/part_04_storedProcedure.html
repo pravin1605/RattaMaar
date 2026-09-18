@@ -1,0 +1,931 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center; font-size: 20px; font-weight: 700;
+    border: 2.5px solid #111; padding: 9px 18px;
+    margin-bottom: 5px; letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 13px; font-style: italic;
+  }
+  .page-title {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: #555; margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title {
+    font-weight: 700; font-size: 11.5px;
+    margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 10.8px; padding: 9px 12px;
+    margin: 7px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw  { color: #569cd6; }
+  .cm  { color: #6a9955; }
+  .st  { color: #ce9178; }
+  .cl  { color: #4ec9b0; }
+  .mt  { color: #dcdcaa; }
+  .nm  { color: #9cdcfe; }
+
+  .code-block {
+    background: #f5f5f5; border: 1px solid #ccc;
+    border-left: 3px solid #333;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px; padding: 7px 10px;
+    margin: 5px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.6;
+  }
+
+  .explain-box {
+    background: #fffdf0; border: 1px solid #ddd;
+    border-left: 3px solid #888;
+    padding: 7px 11px; margin: 6px 0; font-size: 12.5px;
+  }
+  .explain-box-title { font-weight: 700; font-size: 12px; margin-bottom: 4px; color: #333; }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  .line-explain { display: flex; gap: 0; margin: 3px 0; border: 1px solid #ddd; }
+  .line-code {
+    background: #f0f0f0; font-family: 'Courier New', monospace;
+    font-size: 11px; padding: 4px 8px;
+    border-right: 1px solid #ccc; min-width: 44%;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .line-meaning { padding: 4px 8px; font-size: 11.5px; color: #333; flex: 1; }
+
+  .step-row { display: flex; align-items: flex-start; gap: 9px; margin: 5px 0; }
+  .step-num {
+    min-width: 22px; height: 22px;
+    background: #111; color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .method-row { display: flex; gap: 6px; align-items: baseline; margin: 3px 0; }
+  .method-name {
+    font-family: 'Courier New', monospace; font-weight: 700;
+    font-size: 11.5px; background: #eee;
+    padding: 1px 5px; border-radius: 2px; white-space: nowrap;
+  }
+  .method-desc { font-size: 12px; color: #333; }
+
+  .tag {
+    display: inline-block; background: #111; color: #fff;
+    font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px;
+    margin-right: 4px; vertical-align: middle;
+  }
+  .tag-white {
+    display: inline-block; background: #fff; color: #111;
+    border: 1px solid #333;
+    font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px;
+    margin-right: 4px; vertical-align: middle;
+  }
+
+  .output-box {
+    background: #111; color: #00dd00;
+    font-family: 'Courier New', monospace;
+    font-size: 12px; padding: 7px 12px; margin: 6px 0;
+  }
+  .output-box::before { content: '▶ Output: '; color: #aaa; font-size: 10px; display:block; margin-bottom:2px; }
+
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  .hierarchy {
+    font-family: 'Courier New', monospace; font-size: 12px;
+    background: #f5f5f5; border: 1px solid #ccc;
+    border-left: 3px solid #333; padding: 10px 14px;
+    line-height: 2; margin: 6px 0;
+  }
+
+  .flow-row {
+    display: flex; align-items: center; gap: 0; margin: 8px 0; flex-wrap: wrap;
+  }
+  .flow-box {
+    border: 1.5px solid #333; padding: 5px 10px;
+    font-size: 11.5px; font-weight: 600; text-align: center;
+    background: #fff; min-width: 100px;
+  }
+  .flow-arrow { font-size: 16px; padding: 0 5px; color: #444; }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  ol { padding-left: 17px; margin: 3px 0; }
+  ol li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — PREPAREDSTATEMENT THEORY ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">JDBC — PreparedStatement (Complete Notes)</div>
+  <div class="main-subtitle">Package: com.ty | Theory + INSERT + UPDATE + DELETE + FETCH | SecondDayDataBase</div>
+
+  <!-- What is PreparedStatement -->
+  <div class="section">
+    <div class="section-header">📘 1. What is PreparedStatement?</div>
+    <div class="section-body">
+      <p>👉 <strong>PreparedStatement</strong> is an interface in the <code>java.sql</code> package that is used to execute <strong>parameterized SQL queries</strong>.</p>
+      <p style="margin-top:5px;">👉 It <strong>extends the Statement interface</strong> and adds the ability to use <strong>placeholders (<code>?</code>)</strong> in SQL queries instead of hardcoding values.</p>
+      <p style="margin-top:5px;">👉 The SQL query is <strong>pre-compiled by the database</strong> once and then executed multiple times with different parameter values — making it faster and more secure.</p>
+
+      <div class="subsection-title" style="margin-top:8px;">🔹 Real-Life Analogy</div>
+      <div class="two-col">
+        <div class="inline-box">
+          <div class="inline-box-title">Statement (Old Way)</div>
+          <p>Like writing a new letter every time you want to send to someone — you rewrite the full letter each time with different names.</p>
+          <p style="margin-top:4px;"><strong>❌ Slow. ❌ Not secure.</strong></p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">PreparedStatement (Better Way)</div>
+          <p>Like having a template letter with blanks (_____) — you just fill in the blanks each time. Template is ready — only values change.</p>
+          <p style="margin-top:4px;"><strong>✅ Fast. ✅ Secure.</strong></p>
+        </div>
+      </div>
+
+      <div class="interview-line">PreparedStatement is an interface in java.sql that extends Statement. It uses ? as placeholders for parameters, pre-compiles the SQL query, prevents SQL Injection, and is faster for repeated executions.</div>
+    </div>
+  </div>
+
+  <!-- Why PreparedStatement -->
+  <div class="section">
+    <div class="section-header">📘 2. Why PreparedStatement? (Problems with Statement)</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">❌ Problems with Statement:</div>
+          <ul>
+            <li><strong>SQL Injection Risk</strong> — user input is directly placed in SQL string → attacker can manipulate query</li>
+            <li><strong>Slow</strong> — DB compiles the SQL query every single time execute() is called</li>
+            <li><strong>Not Reusable</strong> — new compilation on every call</li>
+            <li><strong>Hard to read</strong> — SQL with concatenated strings is messy</li>
+          </ul>
+          <div class="code-block" style="margin-top:6px; font-size:11px;">// Statement — UNSAFE
+String name = "Pravin";
+stmt.execute(
+  "insert into student values(1,'"
+  + name + "',20)");
+// If name = "'; DROP TABLE student;--"
+// → SQL Injection attack!</div>
+        </div>
+        <div>
+          <div class="subsection-title">✅ Solutions with PreparedStatement:</div>
+          <ul>
+            <li><strong>SQL Injection Prevention</strong> — values set via setXxx() methods — treated as pure data, not SQL code</li>
+            <li><strong>Faster</strong> — SQL pre-compiled once, executed many times with different values</li>
+            <li><strong>Reusable</strong> — same PreparedStatement used with different parameter values</li>
+            <li><strong>Cleaner code</strong> — ? placeholders make SQL readable</li>
+          </ul>
+          <div class="code-block" style="margin-top:6px; font-size:11px;">// PreparedStatement — SAFE
+PreparedStatement ps =
+  con.prepareStatement(
+    "insert into student values(?,?,?)");
+ps.setInt(1, 1);
+ps.setString(2, "Pravin"); // Safe!
+ps.setInt(3, 20);</div>
+        </div>
+      </div>
+      <div class="interview-line">PreparedStatement solves two major problems of Statement: SQL Injection vulnerability and poor performance. It pre-compiles SQL once and treats all user input as data — never as SQL code — making it safe and fast.</div>
+    </div>
+  </div>
+
+  <!-- How Created -->
+  <div class="section">
+    <div class="section-header">📘 3. How to Create PreparedStatement</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 Syntax</div>
+      <div class="code-block">PreparedStatement ps = connection.prepareStatement(String sql);</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Breakdown</div>
+        <div class="line-explain">
+          <div class="line-code">PreparedStatement</div>
+          <div class="line-meaning">Interface in java.sql package. Extends Statement. Reference variable type.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ps</div>
+          <div class="line-meaning">Variable name — holds reference to PreparedStatement object returned by prepareStatement()</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">connection.prepareStatement(sql)</div>
+          <div class="line-meaning">Non-static (instance) method of Connection interface. Sends SQL to DB for PRE-COMPILATION. Returns PreparedStatement object.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">? (placeholder)</div>
+          <div class="line-meaning">Question mark in SQL = placeholder for a parameter. Each ? is replaced by actual value using setXxx() methods.</div>
+        </div>
+      </div>
+
+      <div class="subsection-title">🔹 What happens when prepareStatement() is called?</div>
+      <div class="flow-row">
+        <div class="flow-box">Java sends SQL with ? to DB</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">DB compiles/parses SQL</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">Compiled plan stored in DB</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">On execute() → just fill ? values</div>
+      </div>
+      <p style="margin-top:5px;">👉 DB does NOT re-compile on every execute — only fills in the ? values → <strong>much faster</strong></p>
+
+      <div class="interview-line">prepareStatement() is a non-static method of Connection interface. It sends SQL to DB for pre-compilation at the time of object creation — not at execution time. The compiled plan is reused on every executeUpdate()/executeQuery() call.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — THEORY CONTINUED ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">PreparedStatement Notes | Page 2 — setXxx() Methods + Steps + Statement vs PreparedStatement</div>
+
+  <!-- setXxx methods -->
+  <div class="section">
+    <div class="section-header">📘 4. setXxx() Methods — Setting Parameter Values</div>
+    <div class="section-body">
+      <p>👉 After creating PreparedStatement, we must set values for each <code>?</code> placeholder using <strong>setXxx() methods</strong>.</p>
+      <p>👉 <strong>Index starts from 1</strong> (not 0 — unlike Java arrays).</p>
+      <p>👉 setXxx() is a <strong>non-static (instance) method</strong> of PreparedStatement.</p>
+
+      <div class="subsection-title">🔹 Syntax</div>
+      <div class="code-block">ps.setInt(int parameterIndex, int value);
+ps.setString(int parameterIndex, String value);
+ps.setDouble(int parameterIndex, double value);
+ps.setFloat(int parameterIndex, float value);
+ps.setLong(int parameterIndex, long value);
+ps.setBoolean(int parameterIndex, boolean value);
+ps.setDate(int parameterIndex, Date value);
+ps.setNull(int parameterIndex, int sqlType);</div>
+
+      <table class="comp-table">
+        <tr>
+          <th>Method</th>
+          <th>Java Type</th>
+          <th>SQL Type</th>
+          <th>Example</th>
+        </tr>
+        <tr><td><code>setInt(index, value)</code></td><td>int</td><td>INTEGER</td><td><code>ps.setInt(1, 101)</code></td></tr>
+        <tr><td><code>setString(index, value)</code></td><td>String</td><td>VARCHAR / TEXT</td><td><code>ps.setString(2, "Pravin")</code></td></tr>
+        <tr><td><code>setDouble(index, value)</code></td><td>double</td><td>DOUBLE / NUMERIC</td><td><code>ps.setDouble(3, 50000.0)</code></td></tr>
+        <tr><td><code>setFloat(index, value)</code></td><td>float</td><td>FLOAT</td><td><code>ps.setFloat(3, 50000.0f)</code></td></tr>
+        <tr><td><code>setBoolean(index, value)</code></td><td>boolean</td><td>BOOLEAN</td><td><code>ps.setBoolean(4, true)</code></td></tr>
+        <tr><td><code>setDate(index, value)</code></td><td>java.sql.Date</td><td>DATE</td><td><code>ps.setDate(5, date)</code></td></tr>
+        <tr><td><code>setNull(index, sqlType)</code></td><td>null</td><td>NULL</td><td><code>ps.setNull(3, Types.INTEGER)</code></td></tr>
+      </table>
+
+      <div class="note-box">
+        <strong>⚠️ Index Rule — Very Important:</strong><br>
+        Index in setXxx() corresponds to the <strong>position of ? in SQL</strong> from left to right.<br>
+        Example: <code>"insert into student values(?,?,?)"</code><br>
+        → 1st ? = index 1, 2nd ? = index 2, 3rd ? = index 3<br>
+        → <code>ps.setInt(1, sid)</code> | <code>ps.setString(2, sname)</code> | <code>ps.setInt(3, sage)</code>
+      </div>
+
+      <div class="interview-line">setXxx() methods replace ? placeholders in PreparedStatement with actual values. Index starts from 1, corresponding to the left-to-right position of ? in the SQL string. Values are treated as pure data — never as SQL code — preventing SQL Injection.</div>
+    </div>
+  </div>
+
+  <!-- Steps for PreparedStatement -->
+  <div class="section">
+    <div class="section-header">📘 5. JDBC Steps for PreparedStatement (vs Statement)</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">Statement — 5 Steps:</div>
+          <div class="step-row"><div class="step-num">1</div><div>Load Driver — Class.forName()</div></div>
+          <div class="step-row"><div class="step-num">2</div><div>Create Connection — getConnection()</div></div>
+          <div class="step-row"><div class="step-num">3</div><div>Create Statement — createStatement()</div></div>
+          <div class="step-row"><div class="step-num">4</div><div>Execute Query — execute() / executeQuery()</div></div>
+          <div class="step-row"><div class="step-num">5</div><div>Close — connection.close()</div></div>
+        </div>
+        <div>
+          <div class="subsection-title">PreparedStatement — 6/7 Steps: <span class="tag" style="font-size:9px;">Extra Steps Added</span></div>
+          <div class="step-row"><div class="step-num">1</div><div>Load Driver — Class.forName()</div></div>
+          <div class="step-row"><div class="step-num">2</div><div>Create Connection — getConnection()</div></div>
+          <div class="step-row"><div class="step-num">3</div><div>Create PreparedStatement — <strong>prepareStatement(sql)</strong></div></div>
+          <div class="step-row"><div class="step-num" style="background:#555;">4</div><div><strong>Set Values — setXxx() methods</strong> ← NEW STEP</div></div>
+          <div class="step-row"><div class="step-num">5</div><div>Execute — executeUpdate() / executeQuery()</div></div>
+          <div class="step-row"><div class="step-num" style="background:#555;">6</div><div><strong>Process ResultSet</strong> (only for SELECT) ← NEW STEP</div></div>
+          <div class="step-row"><div class="step-num">7</div><div>Close — rs / ps / connection .close()</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statement vs PreparedStatement -->
+  <div class="section">
+    <div class="section-header">📘 6. Statement vs PreparedStatement — Full Comparison</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Feature</th>
+          <th>Statement</th>
+          <th>PreparedStatement</th>
+        </tr>
+        <tr><td><strong>Interface</strong></td><td>java.sql.Statement</td><td>java.sql.PreparedStatement (extends Statement)</td></tr>
+        <tr><td><strong>SQL Query</strong></td><td>Hardcoded as String</td><td>Parameterized with ? placeholders</td></tr>
+        <tr><td><strong>Created by</strong></td><td><code>con.createStatement()</code></td><td><code>con.prepareStatement(sql)</code></td></tr>
+        <tr><td><strong>SQL Compilation</strong></td><td>Every execute() call</td><td>Only ONCE at prepareStatement()</td></tr>
+        <tr><td><strong>Performance</strong></td><td>Slow (repeated compilation)</td><td>Fast (pre-compiled)</td></tr>
+        <tr><td><strong>SQL Injection</strong></td><td>❌ Vulnerable</td><td>✅ Protected</td></tr>
+        <tr><td><strong>Parameters</strong></td><td>❌ No parameters</td><td>✅ Parameters via setXxx()</td></tr>
+        <tr><td><strong>Reusability</strong></td><td>❌ Not reusable</td><td>✅ Reusable with different values</td></tr>
+        <tr><td><strong>execute() arg</strong></td><td>Takes String sql</td><td>No argument (SQL given at creation)</td></tr>
+        <tr><td><strong>Usage</strong></td><td>Simple / one-time queries</td><td>Real projects / user input / bulk</td></tr>
+      </table>
+      <div class="interview-line">Statement takes SQL at execution time and compiles on every call. PreparedStatement takes SQL at creation time via prepareStatement(), compiles ONCE, and reuses the plan. PreparedStatement is always preferred in production for security and performance.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — INSERT PROGRAM ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">PreparedStatement Notes | Page 3 — Program 1: InsertData.java</div>
+
+  <div class="section">
+    <div class="section-header">📄 Program 1 — InsertData.java (INSERT using PreparedStatement)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Inserts one student record into the <code>student</code> table in <code>SecondDayDataBase</code> using PreparedStatement with <code>?</code> placeholders and <code>executeUpdate()</code>.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">com.ty</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.PreparedStatement</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+
+<span class="kw">public class</span> <span class="cl">InsertData</span> {
+<span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">ClassNotFoundException</span>, <span class="cl">SQLException</span> {
+
+<span class="cm">// Step 1: Load and Register Driver</span>
+<span class="cl">Class</span>.<span class="mt">forName</span>(<span class="st">"org.postgresql.Driver"</span>);
+
+<span class="cm">// Step 2: Create Connection</span>
+<span class="cl">Connection</span> <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+<span class="st">"jdbc:postgresql://localhost:5433/SecondDayDataBase"</span>,
+<span class="st">"postgres"</span>,
+<span class="st">"root"</span>);
+
+<span class="cm">// Step 3: Create PreparedStatement</span>
+<span class="cm">// Query with placeholders (?)</span>
+<span class="cl">PreparedStatement</span> <span class="nm">preparedStatement</span> =
+connection.<span class="mt">prepareStatement</span>(<span class="st">"insert into student values(?,?,?)"</span>);
+
+<span class="cm">// Step 4: Set Values</span>
+<span class="cm">// Index starts from 1</span>
+<span class="nm">preparedStatement</span>.<span class="mt">setInt</span>(1, 2);
+<span class="nm">preparedStatement</span>.<span class="mt">setString</span>(2, <span class="st">"mayuresh"</span>);
+<span class="nm">preparedStatement</span>.<span class="mt">setInt</span>(3, 25);
+
+<span class="cm">// Step 5: Execute Query</span>
+<span class="cm">// executeUpdate() is better for INSERT</span>
+<span class="kw">int</span> <span class="nm">rows</span> = <span class="nm">preparedStatement</span>.<span class="mt">executeUpdate</span>();
+
+<span class="cm">// Step 6: Close Connection</span>
+<span class="nm">connection</span>.<span class="mt">close</span>();
+
+<span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Data added, rows affected = "</span> + <span class="nm">rows</span>);
+}
+}</div>
+
+      <div class="output-box">Data added, rows affected = 1</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">import java.sql.PreparedStatement;</div>
+          <div class="line-meaning">Import PreparedStatement interface from java.sql. Not auto-imported — must be declared explicitly.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">connection.prepareStatement("insert into student values(?,?,?)")</div>
+          <div class="line-meaning">Non-static method of Connection. Sends SQL to DB for pre-compilation. 3 ? placeholders — one for each column (sid, sname, sage).</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">preparedStatement.setInt(1, 2)</div>
+          <div class="line-meaning">Sets 1st ? → integer value 2 → sid column. Index 1 = first ? from left.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">preparedStatement.setString(2, "mayuresh")</div>
+          <div class="line-meaning">Sets 2nd ? → String "mayuresh" → sname column. Treated as data — not SQL code.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">preparedStatement.setInt(3, 25)</div>
+          <div class="line-meaning">Sets 3rd ? → integer 25 → sage column. Index 3 = third ? from left.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">int rows = preparedStatement.executeUpdate()</div>
+          <div class="line-meaning">executeUpdate() — NO argument (SQL was given at prepareStatement()). Returns int = rows affected. For INSERT = 1.</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>📝 Key difference from Statement:</strong><br>
+        Statement: <code>stmt.execute("insert into student values(1,'Pravin',20)")</code> — SQL hardcoded<br>
+        PreparedStatement: <code>ps.executeUpdate()</code> — NO SQL argument — SQL was given at prepareStatement() time.<br>
+        <strong>Also:</strong> executeUpdate() is used here (not execute()) because it returns <code>int</code> (rows affected) which is more meaningful for DML.
+      </div>
+
+      <div class="interview-line">In PreparedStatement, SQL is passed to prepareStatement() not to executeUpdate(). executeUpdate() takes NO argument. It returns int — number of rows affected. For INSERT, it returns 1. setXxx() index starts from 1, mapping to left-to-right position of ? in SQL.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 4 — UPDATE + DELETE ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">PreparedStatement Notes | Page 4 — Program 2: UpdateData.java &amp; Program 3: DeleteData.java</div>
+
+  <!-- UPDATE -->
+  <div class="section">
+    <div class="section-header">📄 Program 2 — UpdateData.java (UPDATE using PreparedStatement)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Updates <code>sname</code> and <code>sage</code> of the student where <code>sid = 1</code> using PreparedStatement. Demonstrates correct order of setXxx() calls matching the SQL ? positions.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">com.ty</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.PreparedStatement</span>;
+
+<span class="kw">public class</span> <span class="cl">UpdateData</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">Exception</span> {
+
+        <span class="cl">Class</span>.<span class="mt">forName</span>(<span class="st">"org.postgresql.Driver"</span>);
+
+        <span class="cl">Connection</span> <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+                        <span class="st">"jdbc:postgresql://localhost:5433/SecondDayDataBase"</span>,
+                        <span class="st">"postgres"</span>,
+                        <span class="st">"root"</span>);
+
+        <span class="cm">// SQL Query</span>
+        <span class="cl">PreparedStatement</span> <span class="nm">ps</span> = <span class="nm">connection</span>.<span class="mt">prepareStatement</span>(
+                        <span class="st">"UPDATE student SET sname=?, sage=? WHERE sid=?"</span>);
+
+        <span class="cm">// Set values</span>
+        <span class="cm">// Correct order</span>
+        <span class="nm">ps</span>.<span class="mt">setString</span>(1, <span class="st">"Pravin Updated"</span>); <span class="cm">// sname</span>
+        <span class="nm">ps</span>.<span class="mt">setInt</span>(2, 26);                  <span class="cm">// sage</span>
+        <span class="nm">ps</span>.<span class="mt">setInt</span>(3, 1);                   <span class="cm">// sid</span>
+
+        <span class="cm">// Execute</span>
+        <span class="kw">int</span> <span class="nm">rows</span> = <span class="nm">ps</span>.<span class="mt">executeUpdate</span>();
+
+        <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Rows updated: "</span> + <span class="nm">rows</span>);
+
+        <span class="nm">connection</span>.<span class="mt">close</span>();
+    }
+}</div>
+
+      <div class="output-box">Rows updated: 1</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">throws Exception</div>
+          <div class="line-meaning">Exception is parent of both ClassNotFoundException and SQLException — shortcut to handle both in one clause. Less specific but valid.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">"UPDATE student SET sname=?, sage=? WHERE sid=?"</div>
+          <div class="line-meaning">SQL with 3 placeholders. 1st ?=sname, 2nd ?=sage, 3rd ?=sid. Order of ? matters — setXxx() must match this order.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ps.setString(1, "Pravin Updated")</div>
+          <div class="line-meaning">1st ? → sname. Sets new name. Comment "// sname" confirms which column this index maps to.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ps.setInt(2, 26)</div>
+          <div class="line-meaning">2nd ? → sage. Sets new age value 26.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ps.setInt(3, 1)</div>
+          <div class="line-meaning">3rd ? → sid. WHERE condition — updates only row where sid = 1.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">int rows = ps.executeUpdate()</div>
+          <div class="line-meaning">Executes UPDATE. Returns 1 if row with sid=1 exists and updated, 0 if no row matched.</div>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>📝 Important — Order of setXxx() must match order of ? in SQL:</strong><br>
+        SQL: <code>UPDATE student SET sname=<u>?</u>, sage=<u>?</u> WHERE sid=<u>?</u></code><br>
+        Index:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3<br>
+        Wrong index → wrong column gets updated → data corruption!
+      </div>
+      <div class="interview-line">In UPDATE with PreparedStatement, the WHERE clause ? comes last in SQL, so its setXxx() index is highest. The index of each setXxx() call must exactly match the left-to-right position of its ? in the SQL string.</div>
+    </div>
+  </div>
+
+  <!-- DELETE -->
+  <div class="section">
+    <div class="section-header">📄 Program 3 — DeleteData.java (DELETE using PreparedStatement)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Deletes the student record where <code>sid = 2</code> using PreparedStatement. Simplest PreparedStatement — only one <code>?</code> placeholder for the WHERE condition.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">com.ty</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.PreparedStatement</span>;
+
+<span class="kw">public class</span> <span class="cl">DeleteData</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">Exception</span> {
+
+        <span class="cl">Class</span>.<span class="mt">forName</span>(<span class="st">"org.postgresql.Driver"</span>);
+
+        <span class="cl">Connection</span> <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+                        <span class="st">"jdbc:postgresql://localhost:5433/SecondDayDataBase"</span>,
+                        <span class="st">"postgres"</span>,
+                        <span class="st">"root"</span>);
+
+        <span class="cm">// SQL Query</span>
+        <span class="cl">PreparedStatement</span> <span class="nm">ps</span> = <span class="nm">connection</span>.<span class="mt">prepareStatement</span>(
+                        <span class="st">"DELETE FROM student WHERE sid=?"</span>);
+
+        <span class="cm">// Set value</span>
+        <span class="nm">ps</span>.<span class="mt">setInt</span>(1, 2);
+
+        <span class="cm">// Execute</span>
+        <span class="kw">int</span> <span class="nm">rows</span> = <span class="nm">ps</span>.<span class="mt">executeUpdate</span>();
+
+        <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Rows deleted: "</span> + <span class="nm">rows</span>);
+
+        <span class="nm">connection</span>.<span class="mt">close</span>();
+    }
+}</div>
+
+      <div class="output-box">Rows deleted: 1</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">"DELETE FROM student WHERE sid=?"</div>
+          <div class="line-meaning">One ? placeholder — for the sid value in WHERE clause. No ? in DELETE for the row data — only condition needs parameter.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ps.setInt(1, 2)</div>
+          <div class="line-meaning">Only one ? (index 1) — sets sid = 2. Deletes the row where sid = 2.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">int rows = ps.executeUpdate()</div>
+          <div class="line-meaning">Returns 1 if sid=2 existed and deleted, returns 0 if no row matched — no exception thrown.</div>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>📝 Safety of PreparedStatement DELETE:</strong><br>
+        With Statement: <code>stmt.execute("DELETE FROM student WHERE sid=" + userInput)</code> → If userInput = "1 OR 1=1" → deletes ALL rows!<br>
+        With PreparedStatement: <code>ps.setInt(1, userInput)</code> → treated as pure int data → safe!
+      </div>
+      <div class="interview-line">DELETE with PreparedStatement uses one ? for the WHERE condition. ps.setInt(1, 2) safely binds sid=2 as a parameter value — not SQL code. executeUpdate() returns 0 if no row matched — does not throw exception for "no rows deleted".</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 5 — FETCH DATA ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">PreparedStatement Notes | Page 5 — Program 4: FetchDataPrepared.java</div>
+
+  <div class="section">
+    <div class="section-header">📄 Program 4 — FetchDataPrepared.java (SELECT + ResultSet using PreparedStatement)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Fetches and displays student record where <code>sid = 1</code> using PreparedStatement + <code>executeQuery()</code> + ResultSet. Also shows proper resource closing order: <strong>rs → ps → connection</strong>.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">com.ty</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.PreparedStatement</span>;
+<span class="kw">import</span> <span class="nm">java.sql.ResultSet</span>;
+
+<span class="kw">public class</span> <span class="cl">FetchDataPrepared</span> {
+<span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">Exception</span> {
+
+<span class="cm">// Step 1: Load Driver</span>
+<span class="cl">Class</span>.<span class="mt">forName</span>(<span class="st">"org.postgresql.Driver"</span>);
+
+<span class="cm">// Step 2: Create Connection</span>
+<span class="cl">Connection</span> <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+<span class="st">"jdbc:postgresql://localhost:5433/SecondDayDataBase"</span>,
+<span class="st">"postgres"</span>,
+<span class="st">"root"</span>);
+
+<span class="cm">// Step 3: Create PreparedStatement</span>
+<span class="cl">PreparedStatement</span> <span class="nm">ps</span> = <span class="nm">connection</span>.<span class="mt">prepareStatement</span>(
+<span class="st">"SELECT * FROM student WHERE sid=?"</span>);
+
+<span class="cm">// Step 4: Set value</span>
+<span class="nm">ps</span>.<span class="mt">setInt</span>(1, 1);
+
+<span class="cm">// Step 5: Execute Query</span>
+<span class="cl">ResultSet</span> <span class="nm">rs</span> = <span class="nm">ps</span>.<span class="mt">executeQuery</span>();
+
+<span class="cm">// Step 6: Process Result</span>
+<span class="kw">while</span> (<span class="nm">rs</span>.<span class="mt">next</span>()) {
+<span class="kw">int</span> <span class="nm">id</span> = <span class="nm">rs</span>.<span class="mt">getInt</span>(<span class="st">"sid"</span>);
+<span class="cl">String</span> <span class="nm">name</span> = <span class="nm">rs</span>.<span class="mt">getString</span>(<span class="st">"sname"</span>);
+<span class="kw">int</span> <span class="nm">age</span> = <span class="nm">rs</span>.<span class="mt">getInt</span>(<span class="st">"sage"</span>);
+
+<span class="cl">System</span>.out.<span class="mt">println</span>(<span class="nm">id</span> + <span class="st">" "</span> + <span class="nm">name</span> + <span class="st">" "</span> + <span class="nm">age</span>);
+}
+
+<span class="cm">// Step 7: Close resources</span>
+<span class="nm">rs</span>.<span class="mt">close</span>();
+<span class="nm">ps</span>.<span class="mt">close</span>();
+<span class="nm">connection</span>.<span class="mt">close</span>();
+}
+}</div>
+
+      <div class="output-box">1 Pravin Updated 26</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">import java.sql.ResultSet;</div>
+          <div class="line-meaning">Extra import — ResultSet needed for SELECT. Not imported in INSERT/UPDATE/DELETE programs.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ps.prepareStatement("SELECT * FROM student WHERE sid=?")</div>
+          <div class="line-meaning">? placeholder for sid in WHERE clause. SQL pre-compiled with filter condition.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ps.setInt(1, 1)</div>
+          <div class="line-meaning">Sets 1st ? = 1. Fetches only student where sid = 1.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ResultSet rs = ps.executeQuery()</div>
+          <div class="line-meaning">executeQuery() — NO argument (SQL already in ps). Returns ResultSet with matching rows. Used for SELECT only.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">rs.next()</div>
+          <div class="line-meaning">Moves cursor to next row. Returns true if row exists. Cursor starts BEFORE first row.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">rs.getInt("sid"), rs.getString("sname"), rs.getInt("sage")</div>
+          <div class="line-meaning">Column name-based getters (better than index). "sid", "sname", "sage" match exact column names in DB table.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">rs.close(); ps.close(); connection.close();</div>
+          <div class="line-meaning">Correct closing order: ResultSet first → PreparedStatement second → Connection last. Reverse of creation order.</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>📝 Column name vs Column index — Comparison:</strong><br>
+        By index (Program 3 — Fetch_Data): <code>rs.getInt(1)</code> → fragile — breaks if column order changes in DB<br>
+        By name (this program): <code>rs.getInt("sid")</code> → robust — works regardless of column order<br>
+        <strong>👉 Column name method is preferred in real projects.</strong>
+      </div>
+
+      <div class="note-box">
+        <strong>⚠️ Resource Closing — FetchDataPrepared is BEST PRACTICE:</strong><br>
+        Programs 1, 2, 3 — only close <code>connection.close()</code> (Statement/PS not closed explicitly)<br>
+        Program 4 — closes ALL: <code>rs.close()</code> → <code>ps.close()</code> → <code>connection.close()</code><br>
+        <strong>Always close in reverse order of creation for complete resource cleanup.</strong>
+      </div>
+
+      <div class="interview-line">executeQuery() in PreparedStatement takes NO argument — SQL was given at prepareStatement(). It returns ResultSet. Column name-based getters (rs.getInt("sid")) are preferred over index-based as they are more readable and robust to schema changes.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 6 — SUMMARY ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">PreparedStatement Notes | Page 6 — All Programs Summary + Quick Revision</div>
+
+  <!-- 4 programs comparison -->
+  <div class="section">
+    <div class="section-header">🗂️ All 4 Programs — Comparison Table</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Program</th>
+          <th>Operation</th>
+          <th>SQL</th>
+          <th>? Count</th>
+          <th>Execute Method</th>
+          <th>Returns</th>
+          <th>Extra Import</th>
+        </tr>
+        <tr>
+          <td><strong>InsertData</strong></td>
+          <td>INSERT</td>
+          <td><code>insert into student values(?,?,?)</code></td>
+          <td>3</td>
+          <td><code>executeUpdate()</code></td>
+          <td>int (1)</td>
+          <td>SQLException</td>
+        </tr>
+        <tr>
+          <td><strong>UpdateData</strong></td>
+          <td>UPDATE</td>
+          <td><code>UPDATE student SET sname=?,sage=? WHERE sid=?</code></td>
+          <td>3</td>
+          <td><code>executeUpdate()</code></td>
+          <td>int (1)</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>DeleteData</strong></td>
+          <td>DELETE</td>
+          <td><code>DELETE FROM student WHERE sid=?</code></td>
+          <td>1</td>
+          <td><code>executeUpdate()</code></td>
+          <td>int (1)</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>FetchDataPrepared</strong></td>
+          <td>SELECT</td>
+          <td><code>SELECT * FROM student WHERE sid=?</code></td>
+          <td>1</td>
+          <td><code>executeQuery()</code></td>
+          <td>ResultSet</td>
+          <td>ResultSet</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Important methods -->
+  <div class="section">
+    <div class="section-header">📘 PreparedStatement — Important Methods Summary</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">🔹 setXxx() — Parameter Setting</div>
+          <div class="method-row"><span class="method-name">setInt(i, val)</span><span class="method-desc"> → set integer at index i</span></div>
+          <div class="method-row"><span class="method-name">setString(i, val)</span><span class="method-desc"> → set String at index i</span></div>
+          <div class="method-row"><span class="method-name">setDouble(i, val)</span><span class="method-desc"> → set double at index i</span></div>
+          <div class="method-row"><span class="method-name">setFloat(i, val)</span><span class="method-desc"> → set float at index i</span></div>
+          <div class="method-row"><span class="method-name">setBoolean(i, val)</span><span class="method-desc"> → set boolean at index i</span></div>
+          <div class="method-row"><span class="method-name">setDate(i, val)</span><span class="method-desc"> → set java.sql.Date at index i</span></div>
+          <div class="method-row"><span class="method-name">setNull(i, type)</span><span class="method-desc"> → set NULL at index i</span></div>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Execute Methods</div>
+          <div class="method-row"><span class="method-name">executeUpdate()</span><span class="method-desc"> → DML (INSERT/UPDATE/DELETE) → int</span></div>
+          <div class="method-row"><span class="method-name">executeQuery()</span><span class="method-desc"> → SELECT → ResultSet</span></div>
+          <div class="method-row"><span class="method-name">execute()</span><span class="method-desc"> → any SQL → boolean</span></div>
+          <div class="method-row"><span class="method-name">addBatch()</span><span class="method-desc"> → add to batch queue</span></div>
+          <div class="method-row"><span class="method-name">executeBatch()</span><span class="method-desc"> → run all batch → int[]</span></div>
+          <div class="method-row"><span class="method-name">clearBatch()</span><span class="method-desc"> → clear batch queue</span></div>
+          <div class="method-row"><span class="method-name">clearParameters()</span><span class="method-desc"> → reset all ? values to null</span></div>
+          <div class="method-row"><span class="method-name">close()</span><span class="method-desc"> → release PreparedStatement resources</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick revision -->
+  <div class="section">
+    <div class="section-header">🗂️ Quick Revision — PreparedStatement Key Rules</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <ul>
+            <li><code>?</code> = placeholder for parameter in SQL</li>
+            <li>Index of setXxx() starts from <strong>1</strong> (not 0)</li>
+            <li>Index maps to <strong>left-to-right</strong> position of ? in SQL</li>
+            <li>SQL is passed to <strong>prepareStatement()</strong> — not to executeUpdate()</li>
+            <li>executeUpdate() / executeQuery() take <strong>NO argument</strong></li>
+            <li>prepareStatement() = <strong>non-static</strong> method of Connection</li>
+            <li>PreparedStatement <strong>extends</strong> Statement interface</li>
+            <li>All in <strong>java.sql</strong> package</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>SQL pre-compiled <strong>once</strong> at prepareStatement()</li>
+            <li>Only <strong>? values</strong> change on each execution — not SQL structure</li>
+            <li>Prevents SQL Injection — user input is <strong>data, not SQL code</strong></li>
+            <li>executeUpdate() → DML → returns <strong>int</strong> (rows affected)</li>
+            <li>executeQuery() → SELECT → returns <strong>ResultSet</strong></li>
+            <li>Close order: <strong>rs → ps → connection</strong></li>
+            <li>throws Exception = shortcut for ClassNotFoundException + SQLException</li>
+            <li>Column name getter preferred: <code>rs.getInt("sid")</code> &gt; <code>rs.getInt(1)</code></li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">PreparedStatement pre-compiles SQL at creation time, reuses the plan on execution, treats all user input as data preventing SQL Injection, and is faster for repeated queries. It extends Statement. setXxx() index starts at 1. executeUpdate()/executeQuery() take no SQL argument.</div>
+    </div>
+  </div>
+
+  <!-- throws comparison -->
+  <div class="section">
+    <div class="section-header">📘 throws Clause Comparison — All 4 Programs</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Program</th>
+          <th>throws Clause</th>
+          <th>Why</th>
+        </tr>
+        <tr>
+          <td>InsertData</td>
+          <td><code>throws ClassNotFoundException, SQLException</code></td>
+          <td>Class.forName() → ClassNotFoundException | getConnection()/executeUpdate() → SQLException</td>
+        </tr>
+        <tr>
+          <td>UpdateData</td>
+          <td><code>throws Exception</code></td>
+          <td>Exception is parent of both — shortcut. Less specific but valid in Java.</td>
+        </tr>
+        <tr>
+          <td>DeleteData</td>
+          <td><code>throws Exception</code></td>
+          <td>Same as UpdateData — shortcut using parent Exception class</td>
+        </tr>
+        <tr>
+          <td>FetchDataPrepared</td>
+          <td><code>throws Exception</code></td>
+          <td>Same — Exception covers ClassNotFoundException + SQLException both</td>
+        </tr>
+      </table>
+      <div class="note-box">
+        <strong>📝 Exception vs Specific Exceptions:</strong><br>
+        <code>throws ClassNotFoundException, SQLException</code> — Explicit. Better practice. Tells caller exactly what to expect.<br>
+        <code>throws Exception</code> — Shorter. Works because Exception is parent of both. But less informative — hides detail from caller.<br>
+        <strong>In real projects:</strong> Always use specific exception classes for clarity.
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

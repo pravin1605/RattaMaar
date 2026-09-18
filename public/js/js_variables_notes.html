@@ -1,0 +1,393 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.root{font-family:'DM Sans',sans-serif;color:var(--color-text-primary);padding:2rem 0.5rem;max-width:680px;}
+.ch-sub{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:.3rem;}
+.ch-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;letter-spacing:-.5px;margin-bottom:2.5rem;}
+.sec{margin-bottom:3rem;}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.sec-num{font-size:11px;font-weight:500;color:var(--color-text-secondary);background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary);border-radius:20px;padding:3px 10px;letter-spacing:.05em;}
+.sec-title{font-size:18px;font-weight:500;}
+.accent{width:28px;height:3px;border-radius:2px;margin-bottom:1.1rem;}
+.a-blue{background:#378ADD;}.a-purple{background:#7F77DD;}.a-teal{background:#1D9E75;}.a-amber{background:#EF9F27;}.a-coral{background:#D85A30;}.a-green{background:#639922;}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:.75rem;}
+.clabel{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:.4rem;}
+.ctext{font-size:14px;line-height:1.65;color:var(--color-text-primary);}
+.mt{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-secondary);margin:.9rem 0 .4rem;}
+.code-b{background:#F1EFE8;border-radius:var(--border-radius-md);padding:.85rem 1rem;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75;color:#2C2C2A;white-space:pre;overflow-x:auto;margin-bottom:.4rem;}
+.out-b{background:#E1F5EE;border-radius:var(--border-radius-md);padding:.6rem 1rem;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:#085041;margin-bottom:.75rem;}
+.out-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:#0F6E56;margin-bottom:3px;}
+.err-b{background:#FAECE7;border-radius:var(--border-radius-md);padding:.6rem 1rem;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:#993C1D;margin-bottom:.75rem;}
+.err-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:#993C1D;margin-bottom:3px;}
+.rule{border-left:3px solid;padding:.65rem 1rem;border-radius:0;background:var(--color-background-secondary);margin-bottom:.55rem;font-size:13.5px;line-height:1.6;}
+.r-blue{border-color:#378ADD;}.r-teal{border-color:#1D9E75;}.r-purple{border-color:#7F77DD;}.r-amber{border-color:#EF9F27;}.r-coral{border-color:#D85A30;}
+.pill-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:.4rem;}
+.pill{font-size:12px;font-weight:500;padding:4px 11px;border-radius:20px;}
+.p-blue{background:#E6F1FB;color:#185FA5;}.p-purple{background:#EEEDFE;color:#3C3489;}.p-teal{background:#E1F5EE;color:#0F6E56;}.p-amber{background:#FAEEDA;color:#854F0B;}.p-coral{background:#FAECE7;color:#993C1D;}.p-green{background:#EAF3DE;color:#3B6D11;}.p-gray{background:#F1EFE8;color:#5F5E5A;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.75rem;}
+.mc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.8rem 1rem;border:.5px solid var(--color-border-tertiary);}
+.mc-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;}
+.bad{color:#993C1D;}.good{color:#0F6E56;}
+.ibox{background:#EEEDFE;border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin:.6rem 0;}
+.ibox-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:#534AB7;margin-bottom:.4rem;}
+.ibox-text{font-size:13.5px;line-height:1.65;color:#3C3489;}
+.trick{display:flex;gap:10px;align-items:flex-start;background:#FAEEDA;border-radius:var(--border-radius-md);padding:.8rem 1rem;margin-top:.75rem;}
+.trick i{font-size:17px;flex-shrink:0;margin-top:2px;color:#854F0B;}
+.trick-t{font-size:13.5px;line-height:1.5;color:#854F0B;font-weight:500;}
+hr.dv{border:none;border-top:.5px solid var(--color-border-tertiary);margin:2.2rem 0;}
+.tbl-wrap{overflow-x:auto;margin-top:.5rem;}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
+.tbl th{text-align:left;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);padding:0 8px 8px 0;border-bottom:.5px solid var(--color-border-tertiary);}
+.tbl td{padding:8px 8px 8px 0;border-bottom:.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:top;line-height:1.5;}
+.var-card{border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem;background:var(--color-background-primary);}
+.var-hdr{display:flex;align-items:center;gap:12px;margin-bottom:.85rem;}
+.var-badge{font-size:13px;font-weight:500;padding:4px 14px;border-radius:20px;}
+.var-name{font-size:17px;font-weight:500;}
+.var-sub{font-size:13px;color:var(--color-text-secondary);margin-top:2px;}
+.check-list{display:flex;flex-direction:column;gap:5px;margin:.5rem 0;}
+.check-item{display:flex;align-items:flex-start;gap:8px;font-size:13.5px;line-height:1.5;}
+.check-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:.5rem;}
+.adv-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem;border:.5px solid var(--color-border-tertiary);font-size:13px;line-height:1.5;color:var(--color-text-primary);}
+.adv-card strong{display:block;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);margin-bottom:4px;}
+.kw-pills{display:flex;gap:10px;margin:.75rem 0;}
+.kw-pill{font-size:16px;font-weight:500;padding:8px 20px;border-radius:var(--border-radius-md);border:.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);}
+</style>
+
+<div class="root">
+
+<p class="ch-sub">JavaScript · Chapter 3</p>
+<h1 class="ch-title">Variables in JavaScript</h1>
+
+<!-- ══════════════════════════════
+     01 · WHAT IS A VARIABLE
+══════════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">01</span><span class="sec-title">What is a variable?</span></div>
+<div class="accent a-blue"></div>
+
+<div class="card">
+<div class="clabel">Definition</div>
+<div class="ctext">A Variable is a named memory location used to store data or values. In simple words, variables are containers used to store information such as a name, age, salary, or marks.</div>
+</div>
+
+<div class="mt">Basic example</div>
+<div class="code-b">let name = "Pravin";
+console.log(name);</div>
+<div class="out-b"><div class="out-lbl">Output</div>Pravin</div>
+
+<div class="card">
+<div class="clabel">Breaking down the example</div>
+<div class="ctext">
+  <strong>name</strong> → the Variable (the container name)<br>
+  <strong>"Pravin"</strong> → the stored value inside the container<br>
+  <strong>let</strong> → the keyword used to declare the variable
+</div>
+</div>
+
+<div class="mt">3 ways to declare variables in JavaScript</div>
+<div class="kw-pills">
+<span class="kw-pill p-coral" style="background:#FAECE7;color:#993C1D;">var</span>
+<span class="kw-pill p-teal" style="background:#E1F5EE;color:#0F6E56;">let</span>
+<span class="kw-pill p-blue" style="background:#E6F1FB;color:#185FA5;">const</span>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════
+     02 · VAR
+══════════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">02</span><span class="sec-title">var — the old way</span></div>
+<div class="accent a-coral"></div>
+
+<div class="var-card">
+<div class="var-hdr">
+  <span class="var-badge p-coral">var</span>
+  <div>
+    <div class="var-name">Function-scoped variable</div>
+    <div class="var-sub">Old / traditional way of declaring variables</div>
+  </div>
+</div>
+
+<div class="clabel">Definition</div>
+<div class="ctext" style="margin-bottom:.6rem;">var is the old traditional way of declaring variables in JavaScript. It was the only option before ES6 was introduced in 2015.</div>
+
+<div class="ibox">
+<div class="ibox-lbl">Interview definition</div>
+<div class="ibox-text">var is a function-scoped variable declaration keyword that allows redeclaration and reassignment.</div>
+</div>
+
+<div class="mt">Characteristics of var</div>
+<div class="check-list">
+<div class="check-item"><span class="check-icon" style="color:#1D9E75;">i</span><span>Can be <strong>redeclared</strong> — same variable can be declared again</span></div>
+<div class="check-item"><span class="check-icon" style="color:#1D9E75;">i</span><span>Can be <strong>reassigned</strong> — value can be changed anytime</span></div>
+<div class="check-item"><span class="check-icon" style="color:#1D9E75;">i</span><span>Has <strong>function scope</strong> — accessible throughout the whole function</span></div>
+<div class="check-item"><span class="check-icon" style="color:#1D9E75;">i</span><span>Supports <strong>hoisting</strong> — declaration is moved to the top automatically</span></div>
+</div>
+
+<div class="mt">Basic example</div>
+<div class="code-b">var age = 20;
+console.log(age);</div>
+<div class="out-b"><div class="out-lbl">Output</div>20</div>
+
+<div class="mt">Redeclaration — allowed with var</div>
+<div class="code-b">var name = "Pravin";
+var name = "Rahul";   // redeclared — no error
+console.log(name);</div>
+<div class="out-b"><div class="out-lbl">Output</div>Rahul</div>
+
+<div class="mt">Problem — var ignores block scope</div>
+<div class="rule r-coral">var does NOT support block scope. A variable declared inside an if block using var leaks out into the surrounding code — this causes bugs.</div>
+<div class="code-b">var x = 10;
+if (true) {
+    var x = 50;   // same variable — overwrites the outer x
+}
+console.log(x);</div>
+<div class="out-b"><div class="out-lbl">Output</div>50</div>
+<div style="font-size:13px;color:#993C1D;margin-bottom:.75rem;">The outer x was overwritten because var has no block scope — this is a common bug source.</div>
+
+<div class="mt">Problems with var</div>
+<div class="adv-grid">
+<div class="adv-card"><strong>Accidental changes</strong>Variables can be accidentally overwritten anywhere in the code.</div>
+<div class="adv-card"><strong>Redeclaration bugs</strong>Redeclaring a variable silently overwrites the old value — no error shown.</div>
+<div class="adv-card"><strong>No block scope</strong>var ignores if, for, and while block boundaries.</div>
+<div class="adv-card"><strong>Hard to manage</strong>Very difficult to track and debug in large applications.</div>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════
+     03 · LET
+══════════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">03</span><span class="sec-title">let — the modern way</span></div>
+<div class="accent a-teal"></div>
+
+<div class="var-card">
+<div class="var-hdr">
+  <span class="var-badge p-teal">let</span>
+  <div>
+    <div class="var-name">Block-scoped variable</div>
+    <div class="var-sub">Introduced in ES6 (2015) — recommended for most variables</div>
+  </div>
+</div>
+
+<div class="clabel">Definition</div>
+<div class="ctext" style="margin-bottom:.6rem;">let is a modern variable declaration keyword introduced in ES6 (2015). It solves the major problems created by var by adding block scope and preventing accidental redeclaration.</div>
+
+<div class="ibox">
+<div class="ibox-lbl">Interview definition</div>
+<div class="ibox-text">let is a block-scoped variable declaration keyword that allows reassignment but prevents redeclaration within the same scope.</div>
+</div>
+
+<div class="mt">Characteristics of let</div>
+<div class="check-list">
+<div class="check-item"><span class="check-icon" style="color:#D85A30;">x</span><span>Cannot be <strong>redeclared</strong> in the same scope — prevents accidental bugs</span></div>
+<div class="check-item"><span class="check-icon" style="color:#1D9E75;">i</span><span>Can be <strong>reassigned</strong> — value can be updated anytime</span></div>
+<div class="check-item"><span class="check-icon" style="color:#1D9E75;">i</span><span>Has <strong>block scope</strong> — stays inside the { } block where it was declared</span></div>
+</div>
+
+<div class="mt">Basic example</div>
+<div class="code-b">let salary = 50000;
+salary = 60000;       // reassignment — allowed
+console.log(salary);</div>
+<div class="out-b"><div class="out-lbl">Output</div>60000</div>
+
+<div class="mt">Redeclaration — NOT allowed with let</div>
+<div class="code-b">let name = "Pravin";
+let name = "Rahul";   // ❌ Error — cannot redeclare</div>
+<div class="err-b"><div class="err-lbl">Error</div>SyntaxError: Identifier 'name' has already been declared</div>
+
+<div class="mt">Block scope example — let vs var</div>
+<div class="two">
+<div class="mc">
+<div class="mc-lbl bad">var — leaks out of block</div>
+<div class="code-b">var x = 10;
+if (true) {
+  var x = 50;
+}
+console.log(x);</div>
+<div class="out-b" style="margin-bottom:0;"><div class="out-lbl">Output</div>50 ← wrong!</div>
+</div>
+<div class="mc">
+<div class="mc-lbl good">let — stays inside block</div>
+<div class="code-b">let x = 10;
+if (true) {
+  let x = 50;
+}
+console.log(x);</div>
+<div class="out-b" style="margin-bottom:0;"><div class="out-lbl">Output</div>10 ← correct!</div>
+</div>
+</div>
+
+<div class="mt">Why let was introduced</div>
+<div class="adv-grid">
+<div class="adv-card"><strong>Prevent redeclaration</strong>Stops accidental variable overwriting in the same scope.</div>
+<div class="adv-card"><strong>Block scope</strong>Variable stays inside its own { } block — safer and predictable.</div>
+<div class="adv-card"><strong>Fewer bugs</strong>Reduces errors in large applications significantly.</div>
+<div class="adv-card"><strong>Better readability</strong>Makes code easier to understand and maintain.</div>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════
+     04 · CONST
+══════════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">const — fixed values</span></div>
+<div class="accent a-blue"></div>
+
+<div class="var-card">
+<div class="var-hdr">
+  <span class="var-badge p-blue">const</span>
+  <div>
+    <div class="var-name">Block-scoped constant</div>
+    <div class="var-sub">Introduced in ES6 (2015) — for values that never change</div>
+  </div>
+</div>
+
+<div class="clabel">Definition</div>
+<div class="ctext" style="margin-bottom:.6rem;">const is used to declare constant values — values that should never be changed after they are set. It must be given a value at the time of declaration and cannot be changed later.</div>
+
+<div class="ibox">
+<div class="ibox-lbl">Interview definition</div>
+<div class="ibox-text">const is a block-scoped variable declaration keyword used for values that should not be reassigned after their initial declaration.</div>
+</div>
+
+<div class="mt">Characteristics of const</div>
+<div class="check-list">
+<div class="check-item"><span class="check-icon" style="color:#D85A30;">x</span><span>Cannot be <strong>redeclared</strong> — ever</span></div>
+<div class="check-item"><span class="check-icon" style="color:#D85A30;">x</span><span>Cannot be <strong>reassigned</strong> — value is permanently fixed</span></div>
+<div class="check-item"><span class="check-icon" style="color:#1D9E75;">i</span><span>Has <strong>block scope</strong> — same as let</span></div>
+<div class="check-item"><span class="check-icon" style="color:#1D9E75;">i</span><span>Must be <strong>initialized</strong> at declaration — cannot be declared empty</span></div>
+</div>
+
+<div class="mt">Basic example</div>
+<div class="code-b">const pi = 3.14;
+console.log(pi);</div>
+<div class="out-b"><div class="out-lbl">Output</div>3.14</div>
+
+<div class="mt">Reassignment — NOT allowed with const</div>
+<div class="code-b">const country = "India";
+country = "USA";       // ❌ Error — cannot reassign</div>
+<div class="err-b"><div class="err-lbl">Error</div>TypeError: Assignment to constant variable.</div>
+
+<div class="mt">Must be initialized at declaration</div>
+<div class="two">
+<div class="mc">
+<div class="mc-lbl bad">Wrong — no value given</div>
+<div class="code-b">const x;
+// ❌ SyntaxError</div>
+</div>
+<div class="mc">
+<div class="mc-lbl good">Correct — value given</div>
+<div class="code-b">const x = 100;
+// Works perfectly</div>
+</div>
+</div>
+
+<div class="mt">Why const was introduced</div>
+<div class="adv-grid">
+<div class="adv-card"><strong>Prevent changes</strong>Stops accidental modification of important values.</div>
+<div class="adv-card"><strong>More secure</strong>Guarantees the value will never change — improves reliability.</div>
+<div class="adv-card"><strong>Predictable code</strong>Makes code easier to reason about — no surprises.</div>
+<div class="adv-card"><strong>Used for constants</strong>PI, tax rates, API URLs, config values — all should use const.</div>
+</div>
+
+<div class="mt">Real-life use cases for const</div>
+<div class="code-b">const PI       = 3.14159;
+const TAX_RATE = 18;
+const BASE_URL = "https://api.example.com";
+const APP_NAME = "MyApp";</div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════
+     05 · VAR vs LET vs CONST
+══════════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">05</span><span class="sec-title">var vs let vs const — full comparison</span></div>
+<div class="accent a-amber"></div>
+
+<div class="tbl-wrap">
+<table class="tbl">
+<thead>
+<tr>
+  <th style="width:22%;">Feature</th>
+  <th style="width:26%;">var</th>
+  <th style="width:26%;">let</th>
+  <th style="width:26%;">const</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Scope</td>
+  <td>Function scope</td>
+  <td>Block scope</td>
+  <td>Block scope</td>
+</tr>
+<tr>
+  <td>Redeclaration</td>
+  <td style="color:#1D9E75;">Yes — allowed</td>
+  <td style="color:#D85A30;">No — error</td>
+  <td style="color:#D85A30;">No — error</td>
+</tr>
+<tr>
+  <td>Reassignment</td>
+  <td style="color:#1D9E75;">Yes — allowed</td>
+  <td style="color:#1D9E75;">Yes — allowed</td>
+  <td style="color:#D85A30;">No — error</td>
+</tr>
+<tr>
+  <td>Must initialize?</td>
+  <td>No</td>
+  <td>No</td>
+  <td>Yes — required</td>
+</tr>
+<tr>
+  <td>Introduced in</td>
+  <td>Old JavaScript</td>
+  <td>ES6 (2015)</td>
+  <td>ES6 (2015)</td>
+</tr>
+<tr>
+  <td>Best used for</td>
+  <td>Avoid using</td>
+  <td>Most variables</td>
+  <td>Fixed values</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="mt">Quick code comparison — all three</div>
+<div class="code-b">var   city = "Pune";    // old way — function scoped
+let   age  = 22;        // modern — can change
+const PI   = 3.14;      // fixed — cannot change
+
+city = "Mumbai";  // allowed
+age  = 25;        // allowed
+// PI = 3;        // ❌ Error — const cannot be reassigned</div>
+
+<div class="ibox" style="margin-top:.75rem;">
+<div class="ibox-lbl">Interview — which one to use?</div>
+<div class="ibox-text">
+  Use <strong>const</strong> by default for everything.<br>
+  Use <strong>let</strong> only when the value needs to change.<br>
+  Avoid <strong>var</strong> completely in modern JavaScript — it causes too many bugs.
+</div>
+</div>
+
+<div class="trick">
+<i class="ti ti-bulb" aria-hidden="true"></i>
+<div class="trick-t">Memory Trick — var = old &amp; buggy &nbsp;·&nbsp; let = modern &amp; flexible &nbsp;·&nbsp; const = fixed &amp; safe &nbsp;·&nbsp; Default rule: use const first, switch to let if needed, never use var.</div>
+</div>
+</div>
+
+</div>

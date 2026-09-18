@@ -1,0 +1,253 @@
+
+<style>
+  body-wrap { font-family: var(--font-sans); }
+  .wrap { padding: 1rem 0; font-family: var(--font-sans); }
+
+  .hero { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; border: 0.5px solid var(--color-border-tertiary); }
+  .hero-title { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 8px; }
+  .hero-def { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; margin: 0 0 16px; }
+  .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+  .meta-box { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; }
+  .meta-label { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 5px; }
+  .meta-val { font-size: 13px; color: var(--color-text-primary); line-height: 1.5; margin: 0; }
+
+  .syntax-block { background: var(--color-background-tertiary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px 14px; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; color: var(--color-text-primary); margin: 10px 0; overflow-x: auto; }
+
+  .fn-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; }
+  .fn-tag { display: inline-block; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: var(--border-radius-md); margin-bottom: 10px; }
+  .fn-title { font-size: 17px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
+  .fn-def { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; margin: 0 0 10px; }
+  .fn-label { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin: 14px 0 5px; }
+  pre { background: var(--color-background-tertiary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px 14px; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; margin: 0 0 8px; overflow-x: auto; color: var(--color-text-primary); }
+  .output-box { background: var(--color-background-secondary); border-left: 3px solid; border-radius: 0; padding: 8px 14px; font-family: var(--font-mono); font-size: 13px; color: var(--color-text-primary); margin-bottom: 4px; }
+  .imp-points { margin: 0; padding: 0; list-style: none; }
+  .imp-points li { font-size: 13px; color: var(--color-text-secondary); line-height: 1.65; padding: 4px 0 4px 20px; position: relative; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .imp-points li:last-child { border-bottom: none; }
+  .imp-points li::before { content: "→"; position: absolute; left: 0; color: var(--color-text-tertiary); font-size: 12px; top: 5px; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); margin-left: 6px; font-weight: 500; vertical-align: middle; }
+  .badge-yes { background: #EAF3DE; color: #3B6D11; }
+  .badge-no  { background: #FCEBEB; color: #A32D2D; }
+  .badge-es6 { background: #EEEDFE; color: #3C3489; }
+  .badge-es1 { background: #E1F5EE; color: #085041; }
+
+  .return-box { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-top: 0.5rem; border: 0.5px solid var(--color-border-tertiary); }
+</style>
+
+<div class="wrap">
+
+  <!-- ── INTRO SECTION ── -->
+  <div class="hero">
+    <p class="hero-title">Functions in JavaScript</p>
+    <p class="hero-def">A <strong style="font-weight:500">function</strong> is a reusable, self-contained block of code designed to perform a specific task. It runs only when explicitly called, allowing you to write logic once and reuse it as many times as needed — keeping code clean, readable, and maintainable.</p>
+
+    <div class="meta-grid">
+      <div class="meta-box">
+        <p class="meta-label"><i class="ti ti-code" aria-hidden="true"></i> Syntax</p>
+        <pre style="margin:0;font-size:12px;padding:8px 10px;">function name(params) {
+  // code
+  return value;
+}</pre>
+      </div>
+      <div class="meta-box">
+        <p class="meta-label"><i class="ti ti-bulb" aria-hidden="true"></i> Why we need it</p>
+        <p class="meta-val">Avoid repetition (DRY principle), break big problems into smaller pieces, and make code easier to test and debug.</p>
+      </div>
+      <div class="meta-box">
+        <p class="meta-label"><i class="ti ti-bolt" aria-hidden="true"></i> Key uses</p>
+        <p class="meta-val">Reusable logic · Event handling · Async operations · Callbacks · Modular code structure</p>
+      </div>
+      <div class="meta-box">
+        <p class="meta-label"><i class="ti ti-info-circle" aria-hidden="true"></i> Introduced</p>
+        <p class="meta-val">Functions have been part of JavaScript since <strong style="font-weight:500">ES1 (1997)</strong>. Arrow functions were added in <strong style="font-weight:500">ES6 (2015)</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 01 NAMED ── -->
+  <div class="fn-card">
+    <span class="fn-tag" style="background:#EEEDFE;color:#3C3489;">01 — Named Function</span>
+    <p class="fn-title">Named Function <span class="badge badge-es1">ES1</span> <span class="badge badge-yes">Hoisting ✓</span></p>
+    <p class="fn-def">A function defined with the <code>function</code> keyword and a meaningful name. The name makes it self-documenting and easy to identify in stack traces and debuggers.</p>
+    <p class="fn-label">Key points</p>
+    <ul class="imp-points">
+      <li>Has a name visible in error stack traces — very helpful for debugging.</li>
+      <li>Can call itself recursively using its own name.</li>
+      <li>Hoisting applies — JavaScript moves the entire definition to the top before execution.</li>
+      <li>Preferred for standalone, reusable utility functions.</li>
+    </ul>
+    <p class="fn-label">Syntax</p>
+    <div class="syntax-block">function functionName(params) { return value; }</div>
+    <p class="fn-label">Example</p>
+    <pre>function greet() {
+  console.log("Hello Mayuresh");
+}
+greet();</pre>
+    <p class="fn-label">Output</p>
+    <div class="output-box" style="border-color:#7F77DD;">Hello Mayuresh</div>
+  </div>
+
+  <!-- ── 02 DECLARATION ── -->
+  <div class="fn-card">
+    <span class="fn-tag" style="background:#E1F5EE;color:#085041;">02 — Function Declaration</span>
+    <p class="fn-title">Function Declaration <span class="badge badge-es1">ES1</span> <span class="badge badge-yes">Hoisting ✓</span></p>
+    <p class="fn-def">The standard way to define a function using the <code>function</code> keyword. The entire function — name and body — is hoisted to the top of its scope, so it can be called before the line where it is written.</p>
+    <p class="fn-label">Key points</p>
+    <ul class="imp-points">
+      <li>Fully hoisted — both the name and body are moved to the top of the scope during compilation.</li>
+      <li>Calling it before its definition in the file works without errors.</li>
+      <li>Introduced in ES1 (1997) — the original function syntax.</li>
+      <li>Best choice when you need a clearly named, globally available function.</li>
+      <li>Interview tip: "Hoisting is possible because the JS engine processes function declarations in the compilation phase, before any code runs."</li>
+    </ul>
+    <p class="fn-label">Syntax</p>
+    <div class="syntax-block">function add(a, b) { return a + b; }</div>
+    <p class="fn-label">Example</p>
+    <pre>console.log(add(5, 3));  // called BEFORE declaration — still works!
+
+function add(a, b) {
+  return a + b;
+}</pre>
+    <p class="fn-label">Output</p>
+    <div class="output-box" style="border-color:#1D9E75;">8</div>
+  </div>
+
+  <!-- ── 03 ANONYMOUS ── -->
+  <div class="fn-card">
+    <span class="fn-tag" style="background:#FAECE7;color:#993C1D;">03 — Anonymous Function</span>
+    <p class="fn-title">Anonymous Function <span class="badge badge-es1">ES1</span> <span class="badge badge-no">Hoisting ✗</span></p>
+    <p class="fn-def">A function with no name. It cannot exist on its own — it must be assigned to a variable or passed as an argument. Because it has no name, it shows as <code>anonymous</code> in stack traces.</p>
+    <p class="fn-label">Key points</p>
+    <ul class="imp-points">
+      <li>No hoisting — cannot be used before assignment.</li>
+      <li>Shows as "anonymous" in error stack traces, making debugging harder.</li>
+      <li>Commonly used as a one-time callback or immediately invoked function (IIFE).</li>
+      <li>Must be stored in a variable to be called later.</li>
+      <li>Why introduced: to allow functions to be treated as values — passed around like data.</li>
+    </ul>
+    <p class="fn-label">Syntax</p>
+    <div class="syntax-block">const name = function() { /* code */ };</div>
+    <p class="fn-label">Example</p>
+    <pre>const sayHi = function() {
+  console.log("Hello from anonymous function");
+};
+sayHi();</pre>
+    <p class="fn-label">Output</p>
+    <div class="output-box" style="border-color:#D85A30;">Hello from anonymous function</div>
+  </div>
+
+  <!-- ── 04 EXPRESSION ── -->
+  <div class="fn-card">
+    <span class="fn-tag" style="background:#E6F1FB;color:#0C447C;">04 — Function Expression</span>
+    <p class="fn-title">Function Expression <span class="badge badge-es1">ES1</span> <span class="badge badge-no">Hoisting ✗</span></p>
+    <p class="fn-def">A function assigned to a variable. JavaScript treats it as a variable assignment, not a function declaration, so the function is only available from the line it is defined onwards.</p>
+    <p class="fn-label">Key points</p>
+    <ul class="imp-points">
+      <li>No hoisting — the variable is hoisted but its value (the function) is not.</li>
+      <li>Calling it before its assignment throws: <code>TypeError: multiply is not a function</code>.</li>
+      <li>Works with <code>var</code>, <code>let</code>, and <code>const</code> — but <code>const</code> is recommended to prevent reassignment.</li>
+      <li>Can be named or anonymous — naming helps in recursion and debugging.</li>
+      <li>Why introduced: enables functions as first-class values — stored, passed, and returned.</li>
+    </ul>
+    <p class="fn-label">Syntax</p>
+    <div class="syntax-block">const name = function(params) { return value; };</div>
+    <p class="fn-label">Example</p>
+    <pre>const multiply = function(a, b) {
+  return a * b;
+};
+console.log(multiply(4, 3));</pre>
+    <p class="fn-label">Output</p>
+    <div class="output-box" style="border-color:#378ADD;">12</div>
+  </div>
+
+  <!-- ── 05 ARROW ── -->
+  <div class="fn-card">
+    <span class="fn-tag" style="background:#EAF3DE;color:#3B6D11;">05 — Arrow Function</span>
+    <p class="fn-title">Arrow Function <span class="badge badge-es6">ES6 — 2015</span> <span class="badge badge-no">Hoisting ✗</span></p>
+    <p class="fn-def">A shorter syntax for writing functions, introduced in ES6. Designed to simplify callback-heavy code and to fix the common <code>this</code> binding problem in regular functions.</p>
+    <p class="fn-label">Key points</p>
+    <ul class="imp-points">
+      <li>No hoisting — treated as a variable assignment.</li>
+      <li>Does not have its own <code>this</code> — inherits <code>this</code> from the surrounding (lexical) scope. This was the primary reason for its introduction.</li>
+      <li>No <code>arguments</code> object — use rest parameters (<code>...args</code>) instead.</li>
+      <li>Cannot be used as a constructor — <code>new ArrowFn()</code> throws a TypeError.</li>
+      <li>Single-expression body: curly braces and <code>return</code> can be omitted.</li>
+      <li>Single parameter: parentheses around it can be omitted.</li>
+      <li>Why introduced (ES6): to solve <code>this</code> confusion inside callbacks (e.g. inside <code>setTimeout</code>, <code>map</code>, event listeners).</li>
+    </ul>
+    <p class="fn-label">Syntax</p>
+    <div class="syntax-block">const name = (params) => expression;
+// or with body:
+const name = (params) => { return value; };</div>
+    <p class="fn-label">Example</p>
+    <pre>const subtract = (a, b) => a - b;
+console.log(subtract(10, 4));</pre>
+    <p class="fn-label">Output</p>
+    <div class="output-box" style="border-color:#639922;">6</div>
+  </div>
+
+  <!-- ── 06 HIGHER ORDER ── -->
+  <div class="fn-card">
+    <span class="fn-tag" style="background:#FAEEDA;color:#633806;">06 — Higher Order Function</span>
+    <p class="fn-title">Higher Order Function <span class="badge badge-es1">ES1</span> <span class="badge badge-yes">Depends on type used</span></p>
+    <p class="fn-def">A function that takes another function as an argument, returns a function, or both. It is a concept from functional programming that makes code more abstract and composable.</p>
+    <p class="fn-label">Key points</p>
+    <ul class="imp-points">
+      <li>Hoisting depends on how the function itself is declared (declaration = yes, expression = no).</li>
+      <li>Built-in JS HOFs: <code>map()</code>, <code>filter()</code>, <code>reduce()</code>, <code>forEach()</code>, <code>sort()</code>.</li>
+      <li>Enables functional programming patterns — clean, reusable transformations on data.</li>
+      <li>The function it receives is called a callback function.</li>
+      <li>Why important: powers asynchronous JavaScript (event listeners, Promises, async/await internally).</li>
+    </ul>
+    <p class="fn-label">Syntax</p>
+    <div class="syntax-block">function higherOrder(a, callbackFn) { return callbackFn(a); }</div>
+    <p class="fn-label">Example</p>
+    <pre>function add(a, b) {
+  return a + b;
+}
+function num() {
+  return 8;          // callback function
+}
+console.log(add(num(), num()));</pre>
+    <p class="fn-label">Output</p>
+    <div class="output-box" style="border-color:#EF9F27;">16</div>
+  </div>
+
+  <!-- ── 07 CALLBACK ── -->
+  <div class="fn-card">
+    <span class="fn-tag" style="background:#FBEAF0;color:#72243E;">07 — Callback Function</span>
+    <p class="fn-title">Callback Function <span class="badge badge-es1">ES1</span> <span class="badge badge-yes">Depends on type used</span></p>
+    <p class="fn-def">A function passed as an argument to another function, to be executed later — either immediately (synchronous) or after an event or async operation (asynchronous).</p>
+    <p class="fn-label">Key points</p>
+    <ul class="imp-points">
+      <li>Not a special syntax — any function becomes a callback when passed as an argument.</li>
+      <li>Synchronous callbacks run immediately (e.g. inside <code>map</code>, <code>filter</code>).</li>
+      <li>Asynchronous callbacks run later (e.g. inside <code>setTimeout</code>, <code>fetch</code>, event listeners).</li>
+      <li>Nesting too many callbacks creates "callback hell" — Promises and async/await were introduced to solve this.</li>
+      <li>You can pass a named function, anonymous function, or arrow function as a callback.</li>
+      <li>Why important: the entire JS event system (browser events, Node.js I/O) is built on callbacks.</li>
+    </ul>
+    <p class="fn-label">Syntax</p>
+    <div class="syntax-block">outerFunction(arg, callbackFn);</div>
+    <p class="fn-label">Example</p>
+    <pre>function add(a, b) {
+  return a + b(4, 5);   // b is called as a function
+}
+console.log(add(5, (x, y) => x * y));
+// (x,y) => x*y  is the callback</pre>
+    <p class="fn-label">Output</p>
+    <div class="output-box" style="border-color:#D4537E;">25</div>
+  </div>
+
+  <!-- ── RETURN RULES ── -->
+  <div class="return-box">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 8px;"><i class="ti ti-corner-down-left" aria-hidden="true" style="margin-right:6px;"></i>Rules of the <code>return</code> keyword</p>
+    <ul class="imp-points">
+      <li>Stops the execution of a function immediately and sends a value back to the caller.</li>
+      <li>Any code written after <code>return</code> is unreachable and will never execute.</li>
+      <li>Without <code>return</code>, the function returns <code>undefined</code> by default.</li>
+      <li>Only one value can be returned — wrap multiple values in an array or object.</li>
+      <li><code>return</code> should always be the last meaningful line inside a block.</li>
+    </ul>
+  </div>
+
+</div>

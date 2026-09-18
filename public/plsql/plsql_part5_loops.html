@@ -1,0 +1,555 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+.warn-box{background:#fce4ec;border-left:5px solid #c62828;padding:10px 14px;margin-top:10px}
+.warn-box .lbl{font-size:10px;font-weight:700;color:#c62828;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.warn-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:5px}
+.mini-card p,.mini-card li{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+.code-wrap{margin:10px 0}
+.code-title{background:#2c2c2c;color:#ccc;font-size:11px;font-weight:700;padding:5px 12px;border-radius:5px 5px 0 0;letter-spacing:.4px}
+.code-body{background:#1e1e1e;border-radius:0 0 5px 5px;padding:12px 14px;font-family:'Courier New',monospace;font-size:12.5px;white-space:pre;color:#d4d4d4;overflow-x:auto}
+.kw{color:#569cd6}
+.cm{color:#6a9955}
+.str{color:#ce9178}
+.fn{color:#dcdcaa}
+.tp{color:#4ec9b0}
+.out-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:4px;padding:6px 12px;font-family:'Courier New',monospace;font-size:12.5px;color:#1b5e20;margin:4px 0 12px}
+.pq-block{border:1px solid #ccc;border-radius:6px;margin-bottom:12px;overflow:hidden}
+.pq-q{background:#1a1a6e;padding:8px 12px;font-size:13px;font-weight:700;color:#fff}
+.pq-note{background:#f5f6ff;padding:6px 12px;font-size:12px;color:#1a1a6e;font-weight:700;border-bottom:1px solid #ddd}
+.pq-body{background:#fff;padding:10px 12px}
+.flow-box{background:#f5f6ff;border:1px solid #b0bfff;border-radius:6px;padding:10px 14px;text-align:center;font-size:13px;color:#111;margin:8px 0;line-height:2}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">PL/SQL — Part 5: Control Statements (Loops)</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; Simple Loop / While Loop / For Loop &nbsp;|&nbsp; Orange tag = Extra content</div>
+</div>
+
+<!-- ===== SECTION 1 ===== -->
+<div class="sec-label">1. What are Loops?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>Loops are control statements used to execute a block of code repeatedly until a specified condition is satisfied. Instead of writing the same statement multiple times, loops allow us to execute it automatically.</p>
+  </div>
+  <p style="font-size:13px;color:#111;margin:8px 0 4px">Without loops — to print 1 to 100 we need 100 separate statements.</p>
+  <p style="font-size:13px;color:#111;margin-bottom:6px">With FOR LOOP — just one line handles it automatically.</p>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Loop = Doing the same thing again and again until told to stop</p>
+    <p>Three types: SIMPLE (EXIT WHEN) &nbsp;|&nbsp; WHILE (condition first) &nbsp;|&nbsp; FOR (auto counter)</p>
+  </div>
+</div>
+
+<!-- ===== SECTION 2 ===== -->
+<div class="sec-label">2. Types of Loops in PL/SQL</div>
+<div class="card">
+  <div class="three-col">
+    <div class="mini-card">
+      <div class="mct">1. Simple Loop</div>
+      <ul style="margin-top:4px">
+        <li>Runs indefinitely</li>
+        <li>Stopped using EXIT WHEN</li>
+        <li>Also called Infinite Loop</li>
+        <li>Counter managed manually</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct">2. While Loop</div>
+      <ul style="margin-top:4px">
+        <li>Condition checked first</li>
+        <li>Runs while condition is TRUE</li>
+        <li>Stops when condition is FALSE</li>
+        <li>Counter managed manually</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct">3. For Loop</div>
+      <ul style="margin-top:4px">
+        <li>Counter auto-incremented</li>
+        <li>Range defined upfront</li>
+        <li>REVERSE keyword for countdown</li>
+        <li>Most commonly used</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 3 ===== -->
+<div class="sec-label">3. Simple Loop</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>A Simple Loop repeatedly executes a block of code until an EXIT WHEN condition becomes TRUE. If no EXIT condition is provided, it runs forever — which is why it is also called an Infinite Loop.</p>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Syntax:</p>
+  <div class="code-wrap">
+    <div class="code-title">SIMPLE LOOP — SYNTAX</div>
+    <div class="code-body"><span class="kw">LOOP</span>
+   statements;
+   <span class="kw">EXIT WHEN</span> condition;
+<span class="kw">END LOOP</span>;</div>
+  </div>
+
+  <div class="flow-box">
+    Start Loop → Execute Statements → Check EXIT Condition<br>
+    TRUE → Exit Loop &nbsp;&nbsp;|&nbsp;&nbsp; FALSE → Repeat Loop
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 1 — Print Message 5 Times:</p>
+  <div class="code-wrap">
+    <div class="code-title">PRINT MESSAGE 5 TIMES</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   N <span class="tp">NUMBER</span> := 1;
+<span class="kw">BEGIN</span>
+   <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'LOOPS CLASS'</span>);
+      N := N + 1;
+      <span class="kw">EXIT WHEN</span> N > 5;
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: LOOPS CLASS (printed 5 times)</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 2 — Print 1 to 10:</p>
+  <div class="code-wrap">
+    <div class="code-title">PRINT 1 TO 10</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   N <span class="tp">NUMBER</span> := 1;
+<span class="kw">BEGIN</span>
+   <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(N);
+      N := N + 1;
+      <span class="kw">EXIT WHEN</span> N > 10;
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: 1 2 3 4 5 6 7 8 9 10</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 3 — Print 10 to 0 (Countdown):</p>
+  <div class="code-wrap">
+    <div class="code-title">PRINT 10 TO 0</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   N <span class="tp">NUMBER</span> := 10;
+<span class="kw">BEGIN</span>
+   <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(N);
+      N := N - 1;
+      <span class="kw">EXIT WHEN</span> N < 0;
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: 10 9 8 7 6 5 4 3 2 1 0</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 4 — Print Squares from 1 to 10:</p>
+  <div class="code-wrap">
+    <div class="code-title">SQUARES 1 TO 10</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   N <span class="tp">NUMBER</span> := 1;
+<span class="kw">BEGIN</span>
+   <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(N * N);
+      N := N + 1;
+      <span class="kw">EXIT WHEN</span> N > 10;
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: 1 4 9 16 25 36 49 64 81 100</div>
+
+  <div class="two-col" style="margin-top:12px">
+    <div class="mini-card">
+      <div class="mct" style="color:#1b5e20">Advantages</div>
+      <ul style="margin-top:4px">
+        <li>Easy to understand</li>
+        <li>Useful when number of iterations is unknown</li>
+        <li>Flexible exit condition</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct" style="color:#c62828">Disadvantages</div>
+      <ul style="margin-top:4px">
+        <li>Can become infinite if EXIT WHEN is forgotten</li>
+        <li>More code compared to FOR LOOP</li>
+        <li>Counter must be manually incremented</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 4 ===== -->
+<div class="sec-label">4. While Loop</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>A WHILE LOOP executes repeatedly as long as the condition remains TRUE. The condition is checked before each iteration. When the condition becomes FALSE, the loop stops immediately.</p>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Syntax:</p>
+  <div class="code-wrap">
+    <div class="code-title">WHILE LOOP — SYNTAX</div>
+    <div class="code-body"><span class="kw">WHILE</span> condition <span class="kw">LOOP</span>
+   statements;
+<span class="kw">END LOOP</span>;</div>
+  </div>
+
+  <div class="flow-box">
+    Check Condition → TRUE → Execute Statements → Return to Condition<br>
+    Check Condition → FALSE → Exit Loop
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 1 — Print 1 to 10:</p>
+  <div class="code-wrap">
+    <div class="code-title">PRINT 1 TO 10</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   N <span class="tp">NUMBER</span> := 1;
+<span class="kw">BEGIN</span>
+   <span class="kw">WHILE</span> N <= 10 <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(N);
+      N := N + 1;
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: 1 2 3 4 5 6 7 8 9 10</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 2 — Print 10 to 0 (Countdown):</p>
+  <div class="code-wrap">
+    <div class="code-title">PRINT 10 TO 0</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   N <span class="tp">NUMBER</span> := 10;
+<span class="kw">BEGIN</span>
+   <span class="kw">WHILE</span> N >= 0 <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(N);
+      N := N - 1;
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: 10 9 8 7 6 5 4 3 2 1 0</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 3 — Factorial Using While Loop:</p>
+  <div class="code-wrap">
+    <div class="code-title">FACTORIAL OF 5</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   N    <span class="tp">NUMBER</span> := 5;
+   FACT <span class="tp">NUMBER</span> := 1;
+<span class="kw">BEGIN</span>
+   <span class="kw">WHILE</span> N > 0 <span class="kw">LOOP</span>
+      FACT := FACT * N;
+      N    := N - 1;
+   <span class="kw">END LOOP</span>;
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'FACTORIAL = '</span> || FACT);
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: FACTORIAL = 120 &nbsp; (5×4×3×2×1 = 120)</div>
+
+  <div class="tip-box">
+    <div class="lbl">Extra — Key Difference from Simple Loop</div>
+    <p>In WHILE LOOP, the condition is checked BEFORE executing statements. If condition is FALSE from the start, the loop body never executes even once. In SIMPLE LOOP, the body executes at least once before EXIT WHEN is checked.</p>
+  </div>
+</div>
+
+<!-- ===== SECTION 5 ===== -->
+<div class="sec-label">5. For Loop</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>A FOR LOOP automatically manages a counter variable over a specified range. The counter is incremented automatically after each iteration. It is the most commonly used loop in PL/SQL when the number of iterations is known in advance.</p>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Syntax:</p>
+  <div class="code-wrap">
+    <div class="code-title">FOR LOOP — SYNTAX</div>
+    <div class="code-body"><span class="kw">FOR</span> counter <span class="kw">IN</span> lower_bound..upper_bound <span class="kw">LOOP</span>
+   statements;
+<span class="kw">END LOOP</span>;</div>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 1 — Print 1 to 10:</p>
+  <div class="code-wrap">
+    <div class="code-title">PRINT 1 TO 10</div>
+    <div class="code-body"><span class="kw">BEGIN</span>
+   <span class="kw">FOR</span> I <span class="kw">IN</span> 1..10 <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(I);
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: 1 2 3 4 5 6 7 8 9 10</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 2 — Print 10 to 1 Using REVERSE:</p>
+  <div class="code-wrap">
+    <div class="code-title">REVERSE FOR LOOP</div>
+    <div class="code-body"><span class="kw">BEGIN</span>
+   <span class="kw">FOR</span> I <span class="kw">IN REVERSE</span> 1..10 <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(I);
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: 10 9 8 7 6 5 4 3 2 1</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 3 — Print Table of 5:</p>
+  <div class="code-wrap">
+    <div class="code-title">TABLE OF 5</div>
+    <div class="code-body"><span class="kw">BEGIN</span>
+   <span class="kw">FOR</span> I <span class="kw">IN</span> 1..10 <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'5 X '</span> || I || <span class="str">' = '</span> || (5 * I));
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: 5 X 1 = 5 &nbsp; 5 X 2 = 10 &nbsp; ... &nbsp; 5 X 10 = 50</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 4 — Sum of Numbers 1 to 10:</p>
+  <div class="code-wrap">
+    <div class="code-title">SUM OF 1 TO 10</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   SUM_NUM <span class="tp">NUMBER</span> := 0;
+<span class="kw">BEGIN</span>
+   <span class="kw">FOR</span> I <span class="kw">IN</span> 1..10 <span class="kw">LOOP</span>
+      SUM_NUM := SUM_NUM + I;
+   <span class="kw">END LOOP</span>;
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'SUM = '</span> || SUM_NUM);
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: SUM = 55</div>
+
+  <div class="tip-box">
+    <div class="lbl">Extra — FOR LOOP Counter Rules</div>
+    <p>The counter variable (I) in a FOR LOOP is automatically declared by Oracle — you do NOT declare it in the DECLARE section. It is read-only inside the loop — you cannot assign a value to it manually.</p>
+  </div>
+</div>
+
+<!-- ===== SECTION 6 ===== -->
+<div class="sec-label">6. Difference Between All Three Loops</div>
+<div class="card">
+  <table>
+    <tr><th>Feature</th><th>Simple Loop</th><th>While Loop</th><th>For Loop</th></tr>
+    <tr><td>Exit Condition</td><td>EXIT WHEN condition</td><td>Checked before each iteration</td><td>Automatic — stops at upper bound</td></tr>
+    <tr><td>Counter Variable</td><td>Manual — declare and increment</td><td>Manual — declare and increment</td><td>Automatic — managed by Oracle</td></tr>
+    <tr><td>Infinite Loop Possible</td><td>Yes — if EXIT WHEN forgotten</td><td>No — stops when condition FALSE</td><td>No — auto stops at upper bound</td></tr>
+    <tr><td>Condition Check Timing</td><td>After execution (bottom)</td><td>Before execution (top)</td><td>No explicit condition needed</td></tr>
+    <tr><td>Use When</td><td>Iterations unknown, flexible exit needed</td><td>Iterations unknown, condition-based</td><td>Iterations known upfront</td></tr>
+    <tr><td>Most Common</td><td>Sometimes</td><td>Sometimes</td><td>Yes — most used</td></tr>
+    <tr><td>Keyword to Exit Early</td><td>EXIT WHEN</td><td>EXIT or change condition</td><td>EXIT WHEN (inside loop body)</td></tr>
+  </table>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Simple = EXIT WHEN controls it &nbsp;|&nbsp; WHILE = condition at TOP controls it &nbsp;|&nbsp; FOR = range controls it</p>
+    <p>FOR LOOP → Oracle handles the counter → you just give the range (1..10)</p>
+  </div>
+</div>
+
+<!-- ===== SECTION 7 ===== -->
+<div class="sec-label">7. EMP Table Practice Questions — Loops</div>
+<div class="card" style="margin-bottom:0">
+
+  <div class="pq-block">
+    <div class="pq-q">Q1. Print multiplication table of KING's salary (5000) from 1 to 5 using FOR LOOP</div>
+    <div class="pq-note">Uses: SELECT INTO + FOR LOOP + %TYPE</div>
+    <div class="pq-body">
+      <div class="code-wrap">
+        <div class="code-title">MULTIPLICATION TABLE OF KING'S SALARY</div>
+        <div class="code-body"><span class="kw">DECLARE</span>
+   V_SAL <span class="tp">EMP.SAL%TYPE</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> SAL
+   <span class="kw">INTO</span>   V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = 7839;
+
+   <span class="kw">FOR</span> I <span class="kw">IN</span> 1..5 <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_SAL || <span class="str">' X '</span> || I || <span class="str">' = '</span> || (V_SAL * I));
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+      </div>
+      <div class="out-bar">Output: 5000 X 1 = 5000 &nbsp; 5000 X 2 = 10000 &nbsp; ... &nbsp; 5000 X 5 = 25000</div>
+    </div>
+  </div>
+
+  <div class="pq-block">
+    <div class="pq-q">Q2. Fetch SMITH's salary and keep adding 100 using SIMPLE LOOP until it crosses 1200</div>
+    <div class="pq-note">Uses: SELECT INTO + SIMPLE LOOP + EXIT WHEN + %TYPE</div>
+    <div class="pq-body">
+      <div class="code-wrap">
+        <div class="code-title">INCREMENT SMITH SALARY UNTIL 1200</div>
+        <div class="code-body"><span class="kw">DECLARE</span>
+   V_SAL <span class="tp">EMP.SAL%TYPE</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> SAL
+   <span class="kw">INTO</span>   V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = 7369;
+
+   <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'CURRENT SAL : '</span> || V_SAL);
+      V_SAL := V_SAL + 100;
+      <span class="kw">EXIT WHEN</span> V_SAL > 1200;
+   <span class="kw">END LOOP</span>;
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'FINAL SAL : '</span> || V_SAL);
+<span class="kw">END</span>;
+/</div>
+      </div>
+      <div class="out-bar">Output: CURRENT SAL: 800 → 900 → 1000 → 1100 → 1200 &nbsp; FINAL SAL: 1300</div>
+    </div>
+  </div>
+
+  <div class="pq-block">
+    <div class="pq-q">Q3. Fetch ALLEN's salary and print it doubled for every year from year 1 to 5 using WHILE LOOP</div>
+    <div class="pq-note">Uses: SELECT INTO + WHILE LOOP + %TYPE</div>
+    <div class="pq-body">
+      <div class="code-wrap">
+        <div class="code-title">ALLEN SALARY DOUBLED EACH YEAR</div>
+        <div class="code-body"><span class="kw">DECLARE</span>
+   V_SAL <span class="tp">EMP.SAL%TYPE</span>;
+   V_YEAR <span class="tp">NUMBER</span> := 1;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> SAL
+   <span class="kw">INTO</span>   V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = 7499;
+
+   <span class="kw">WHILE</span> V_YEAR <= 5 <span class="kw">LOOP</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'YEAR '</span> || V_YEAR || <span class="str">' SAL : '</span> || (V_SAL * V_YEAR));
+      V_YEAR := V_YEAR + 1;
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+      </div>
+      <div class="out-bar">Output: YEAR 1 SAL: 1600 &nbsp; YEAR 2 SAL: 3200 &nbsp; YEAR 3 SAL: 4800 &nbsp; YEAR 4 SAL: 6400 &nbsp; YEAR 5 SAL: 8000</div>
+    </div>
+  </div>
+
+  <div class="pq-block">
+    <div class="pq-q">Q4. Print squares of numbers 1 to 5 and for each, check if it is greater than SMITH's salary (800) using FOR LOOP + IF <span class="extra">Extra</span></div>
+    <div class="pq-note">Uses: SELECT INTO + FOR LOOP + IF-ELSE + %TYPE</div>
+    <div class="pq-body">
+      <div class="code-wrap">
+        <div class="code-title">SQUARES VS SMITH SALARY</div>
+        <div class="code-body"><span class="kw">DECLARE</span>
+   V_SAL   <span class="tp">EMP.SAL%TYPE</span>;
+   V_SQ    <span class="tp">NUMBER</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> SAL
+   <span class="kw">INTO</span>   V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = 7369;
+
+   <span class="kw">FOR</span> I <span class="kw">IN</span> 1..5 <span class="kw">LOOP</span>
+      V_SQ := I * I * 100;  <span class="cm">-- scale up for comparison</span>
+      <span class="kw">IF</span> V_SQ > V_SAL <span class="kw">THEN</span>
+         <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(I || <span class="str">' SQ='</span> || V_SQ || <span class="str">' > SMITH SAL '</span> || V_SAL);
+      <span class="kw">ELSE</span>
+         <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(I || <span class="str">' SQ='</span> || V_SQ || <span class="str">' <= SMITH SAL '</span> || V_SAL);
+      <span class="kw">END IF</span>;
+   <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/</div>
+      </div>
+      <div class="out-bar">Output: Compares each scaled square with SMITH's salary 800</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== SECTION 8 ===== -->
+<div class="sec-label">8. Quick Revision — All Keywords</div>
+<div class="card">
+  <table>
+    <tr><th>Loop</th><th>Start Keyword</th><th>End Keyword</th><th>Exit Keyword</th><th>Special Keyword</th></tr>
+    <tr><td>Simple Loop</td><td>LOOP</td><td>END LOOP;</td><td>EXIT WHEN condition;</td><td>—</td></tr>
+    <tr><td>While Loop</td><td>WHILE cond LOOP</td><td>END LOOP;</td><td>Condition becomes FALSE</td><td>—</td></tr>
+    <tr><td>For Loop</td><td>FOR i IN range LOOP</td><td>END LOOP;</td><td>Auto at upper bound</td><td>REVERSE</td></tr>
+  </table>
+  <div class="warn-box">
+    <div class="lbl">Common Mistakes in Loops</div>
+    <p>1. Forgetting EXIT WHEN in Simple Loop → causes infinite loop</p>
+    <p>2. Forgetting to increment counter in Simple / While Loop → causes infinite loop</p>
+    <p>3. Declaring the FOR LOOP counter in DECLARE section → error — Oracle auto-declares it</p>
+    <p>4. Trying to assign a value to FOR LOOP counter inside loop → read-only, causes error</p>
+  </div>
+</div>
+
+<!-- ===== SECTION 9 ===== -->
+<div class="sec-label">9. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What are loops in PL/SQL?</div>
+  <div class="qa-a">Loops are control structures used to repeatedly execute a block of code until a specified condition is satisfied. They avoid writing the same statement multiple times.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. What are the types of loops in PL/SQL?</div>
+  <div class="qa-a">1. Simple Loop — uses EXIT WHEN to stop. &nbsp; 2. While Loop — runs while condition is TRUE. &nbsp; 3. For Loop — auto counter over a defined range.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. Which loop is also called an Infinite Loop and why?</div>
+  <div class="qa-a">Simple Loop is called an Infinite Loop because if EXIT WHEN is not provided, it runs forever without stopping. The programmer must explicitly provide an exit condition.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. What is EXIT WHEN in PL/SQL?</div>
+  <div class="qa-a">EXIT WHEN is used to terminate a Simple Loop when the specified condition becomes TRUE. Example: EXIT WHEN N > 10; — the loop exits as soon as N exceeds 10.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. Which loop is best when the number of iterations is known?</div>
+  <div class="qa-a">FOR LOOP — because Oracle automatically handles the counter variable. You only need to provide the range (lower bound and upper bound). No manual increment or declaration needed.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. What is the REVERSE keyword in FOR LOOP? <span class="extra">Extra</span></div>
+  <div class="qa-a">REVERSE keyword in a FOR LOOP makes the counter iterate from upper bound down to lower bound. Example: FOR I IN REVERSE 1..10 LOOP prints 10, 9, 8, ... 1. The range is still written lower..upper even with REVERSE.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q7. What is the difference between Simple Loop and While Loop? <span class="extra">Extra</span></div>
+  <div class="qa-a">In Simple Loop, statements execute at least once — EXIT WHEN is checked after execution (bottom check). In While Loop, the condition is checked before execution (top check) — if the condition is FALSE from the start, the loop body never executes even once.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q8. Can we declare the FOR LOOP counter variable in DECLARE section? <span class="extra">Extra</span></div>
+  <div class="qa-a">No. The FOR LOOP counter variable is automatically declared by Oracle for the duration of the loop. Declaring it manually in the DECLARE section is unnecessary and the manually declared variable becomes a separate variable — the loop uses its own internal copy.</div>
+</div>
+
+<div class="divider"></div>
+<footer>PL/SQL Part 5 — Control Statements (Loops) &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>

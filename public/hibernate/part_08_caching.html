@@ -1,0 +1,787 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center; font-size: 20px; font-weight: 700;
+    border: 2.5px solid #111; padding: 9px 18px;
+    margin-bottom: 5px; letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 13px; font-style: italic;
+  }
+  .page-title {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: #555; margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title {
+    font-weight: 700; font-size: 11.5px;
+    margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 10.8px; padding: 7px 11px;
+    margin: 5px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw { color: #569cd6; }
+  .cm { color: #6a9955; }
+  .st { color: #ce9178; }
+  .cl { color: #4ec9b0; }
+  .mt { color: #dcdcaa; }
+  .nm { color: #9cdcfe; }
+  .an { color: #c586c0; }
+
+  .xml-block {
+    background: #1a1a2e; color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    font-size: 10.5px; padding: 7px 11px;
+    margin: 5px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #888;
+  }
+  .xt { color: #4ec9b0; }
+  .xa { color: #9cdcfe; }
+  .xv { color: #ce9178; }
+  .xc { color: #6a9955; }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  .interview-answer {
+    background: #fff; border: 2px solid #111;
+    padding: 8px 12px; margin: 7px 0; font-size: 12.5px;
+  }
+  .interview-answer-title {
+    font-weight: 700; font-size: 12px;
+    margin-bottom: 5px; color: #111;
+    border-bottom: 1px solid #ccc; padding-bottom: 3px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  .def-row { display: flex; gap: 0; margin: 3px 0; border: 1px solid #ddd; }
+  .def-term {
+    background: #f0f0f0; font-weight: 700;
+    font-size: 12px; padding: 4px 9px;
+    border-right: 1px solid #ccc; min-width: 38%;
+  }
+  .def-meaning { padding: 4px 9px; font-size: 12px; color: #333; flex: 1; }
+
+  /* cache level cards */
+  .cache-card { border: 1.5px solid #333; margin-bottom: 9px; }
+  .cache-header {
+    padding: 5px 10px; font-size: 12.5px; font-weight: 700;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .cache-header-l1 { background: #e8f5e9; color: #1b5e20; border-bottom: 1.5px solid #2e7d32; }
+  .cache-header-l2 { background: #e3f2fd; color: #0d47a1; border-bottom: 1.5px solid #1565c0; }
+  .cache-header-l3 { background: #fff3e0; color: #e65100; border-bottom: 1.5px solid #e65100; }
+  .cache-body { padding: 8px 10px; }
+
+  .cache-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 8px;
+    border-radius: 2px; margin-left: auto;
+  }
+  .badge-green { background: #2e7d32; color: #fff; }
+  .badge-blue  { background: #1565c0; color: #fff; }
+  .badge-orange{ background: #e65100; color: #fff; }
+
+  /* hit/miss */
+  .hit-miss-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 6px 0; }
+  .hit-box  { border: 1.5px solid #2e7d32; padding: 7px 9px; background: #f1f8f1; }
+  .miss-box { border: 1.5px solid #b71c1c; padding: 7px 9px; background: #fff5f5; }
+  .hit-title  { font-weight: 700; font-size: 12px; color: #2e7d32; margin-bottom: 4px; }
+  .miss-title { font-weight: 700; font-size: 12px; color: #b71c1c; margin-bottom: 4px; }
+
+  .flow-col {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+  }
+  .flow-box {
+    border: 1.5px solid #333; padding: 4px 14px;
+    font-size: 11.5px; font-weight: 600; text-align: center;
+    background: #fff; min-width: 155px;
+  }
+  .flow-arrow { font-size: 13px; color: #444; line-height: 1.4; text-align: center; }
+
+  .problem-item {
+    display: flex; gap: 8px; align-items: flex-start;
+    border: 1px solid #ddd; padding: 5px 8px;
+    margin: 3px 0; background: #fafafa;
+  }
+  .problem-num {
+    min-width: 22px; height: 22px; background: #111; color: #fff;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — WHAT IS CACHING + WHY NEEDED + CACHE HIT/MISS ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">Hibernate — Caching (Complete Notes)</div>
+  <div class="main-subtitle">First Level | Second Level | Query Cache | Cache Hit/Miss | EhCache Config | Interview Answers</div>
+
+  <!-- What is Caching -->
+  <div class="section">
+    <div class="section-header">📘 1. What is Caching in Hibernate?</div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>Caching is a mechanism used to <strong>store frequently accessed data in memory</strong> so that Hibernate can retrieve it quickly without repeatedly accessing the database.</p>
+
+      <div class="subsection-title">🔹 Interview Definition</div>
+      <p>Caching is a <strong>performance optimization technique</strong> in Hibernate that temporarily stores frequently used data in memory to <strong>reduce database hits</strong>, <strong>decrease response time</strong>, and <strong>improve application performance</strong>.</p>
+
+      <div class="two-col" style="margin-top:8px;">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 What is Cache? (Simple)</div>
+          <p>Cache is a <strong>temporary memory area</strong> where frequently used data is stored. Instead of going to the database every time, Hibernate first checks cache.</p>
+          <div class="flow-col" style="margin-top:6px;">
+            <div class="flow-box">Application Request</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Hibernate</div>
+            <div class="flow-arrow">↓ checks first</div>
+            <div class="flow-box" style="background:#e8f5e9;">Cache</div>
+            <div class="flow-arrow">↓ only if not in cache</div>
+            <div class="flow-box">PostgreSQL Database</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Real-Life Examples:</div>
+          <div class="inline-box" style="margin-bottom:6px;">
+            <div class="inline-box-title">📚 Notes Analogy</div>
+            <p style="font-size:12px;"><strong>Without Cache:</strong> Need notes → Open laptop → Search folder → Open PDF → Read (every time!)</p>
+            <p style="font-size:12px; margin-top:4px;"><strong>With Cache:</strong> Need notes → Already open on screen → Read directly ✅</p>
+          </div>
+          <div class="inline-box">
+            <div class="inline-box-title">📖 Library Analogy</div>
+            <p style="font-size:12px;"><strong>Without Cache:</strong> Need book → Go to library → Search shelf → Get book (every time!)</p>
+            <p style="font-size:12px; margin-top:4px;"><strong>With Cache:</strong> Need book → Book already on desk → Read directly ✅</p>
+          </div>
+        </div>
+      </div>
+      <div class="interview-line">Caching is a performance optimization technique in Hibernate that stores frequently accessed data in memory to reduce DB hits, decrease response time, reduce network traffic, and improve scalability.</div>
+    </div>
+  </div>
+
+  <!-- Why Caching Needed -->
+  <div class="section">
+    <div class="section-header">📘 2. Why Caching is Needed? (The Problem)</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <p>Suppose our PostgreSQL DB has student with id=101. Now we write:</p>
+          <div class="code-block-dark"><span class="cl">Student</span> <span class="nm">s1</span> = <span class="nm">em</span>.<span class="mt">find</span>(<span class="cl">Student</span>.<span class="kw">class</span>, 101);
+<span class="cm">// DB hit 1 → SELECT * FROM student WHERE id=101</span>
+
+<span class="cl">Student</span> <span class="nm">s2</span> = <span class="nm">em</span>.<span class="mt">find</span>(<span class="cl">Student</span>.<span class="kw">class</span>, 101);
+<span class="cm">// DB hit 2 → same query again!</span>
+
+<span class="cl">Student</span> <span class="nm">s3</span> = <span class="nm">em</span>.<span class="mt">find</span>(<span class="cl">Student</span>.<span class="kw">class</span>, 101);
+<span class="cm">// DB hit 3 → same query again!</span></div>
+          <p style="font-size:12px; margin-top:5px;">👉 Same data fetched repeatedly from DB → WASTEFUL!</p>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 4 Problems Without Caching:</div>
+          <div class="problem-item">
+            <div class="problem-num">1</div>
+            <div><strong>DB Load Increases</strong> — DB receives same query repeatedly → overloaded</div>
+          </div>
+          <div class="problem-item">
+            <div class="problem-num">2</div>
+            <div><strong>Network Traffic Increases</strong> — every request travels App→DB→App, consuming network</div>
+          </div>
+          <div class="problem-item">
+            <div class="problem-num">3</div>
+            <div><strong>Response Time Increases</strong> — DB access is slower than memory access</div>
+          </div>
+          <div class="problem-item">
+            <div class="problem-num">4</div>
+            <div><strong>Performance Decreases</strong> — app slows down, users experience delays</div>
+          </div>
+          <p style="font-size:12px; margin-top:5px;">Imagine: <strong>10,000 users, 1 lakh records, thousands of requests/second</strong> → disaster without cache!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cache Hit / Miss -->
+  <div class="section">
+    <div class="section-header">📘 3. Cache Hit and Cache Miss (Very Common Interview Question)</div>
+    <div class="section-body">
+      <div class="hit-miss-grid">
+        <div class="hit-box">
+          <div class="hit-title">✅ Cache HIT</div>
+          <p style="font-size:12px;">When requested data is <strong>found in cache</strong>. Database is NOT accessed.</p>
+          <div class="flow-col" style="margin-top:5px;">
+            <div class="flow-box" style="min-width:130px; border-color:#2e7d32;">Request Data (id=101)</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="min-width:130px; border-color:#2e7d32; background:#e8f5e9;">Cache</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="min-width:130px; border-color:#2e7d32;">Data Found ✅</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="min-width:130px; border-color:#2e7d32;">Return Object (No DB)</div>
+          </div>
+          <p style="font-size:11.5px; margin-top:5px; font-weight:700; color:#2e7d32;">Benefit: Fast performance — memory speed!</p>
+        </div>
+        <div class="miss-box">
+          <div class="miss-title">❌ Cache MISS</div>
+          <p style="font-size:12px;">When requested data is <strong>NOT found in cache</strong>. Database is accessed.</p>
+          <div class="flow-col" style="margin-top:5px;">
+            <div class="flow-box" style="min-width:130px; border-color:#b71c1c;">Request Data (id=101)</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="min-width:130px; border-color:#b71c1c;">Cache</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="min-width:130px; border-color:#b71c1c; background:#fff5f5;">Data NOT Found ❌</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="min-width:130px; border-color:#b71c1c;">Database Hit</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="min-width:130px; border-color:#b71c1c;">Stored In Cache</div>
+          </div>
+          <p style="font-size:11.5px; margin-top:5px;">After miss: data stored in cache for next request.</p>
+        </div>
+      </div>
+      <div class="interview-line">Cache Hit = data found in cache → no DB access → fast. Cache Miss = data not in cache → DB accessed → data stored in cache for future requests. Goal: maximize Cache Hits, minimize Cache Misses.</div>
+    </div>
+  </div>
+
+  <!-- Advantages -->
+  <div class="section">
+    <div class="section-header">📘 4. Advantages of Caching</div>
+    <div class="section-body">
+      <div class="three-col">
+        <div class="inline-box"><div class="inline-box-title">⚡ Improves Performance</div><p>Memory access is much faster than DB access. Milliseconds vs nanoseconds.</p></div>
+        <div class="inline-box"><div class="inline-box-title">📉 Reduces DB Hits</div><p>Fewer SQL queries executed. DB server gets less load.</p></div>
+        <div class="inline-box"><div class="inline-box-title">🌐 Reduces Network Traffic</div><p>Less communication between app and DB server. Bandwidth saved.</p></div>
+        <div class="inline-box"><div class="inline-box-title">📈 Improves Scalability</div><p>Application can support more concurrent users without DB overload.</p></div>
+        <div class="inline-box"><div class="inline-box-title">🚀 Faster Response Time</div><p>Users receive data quickly. Better user experience.</p></div>
+        <div class="inline-box"><div class="inline-box-title">💰 Cost Reduction</div><p>Fewer DB calls = less server resources = lower infrastructure cost.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — FIRST LEVEL CACHE + SECOND LEVEL CACHE ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Caching Notes | Page 2 — Levels Overview + Level 1: First Level Cache + Level 2: Second Level Cache</div>
+
+  <!-- Levels Overview -->
+  <div class="section">
+    <div class="section-header">📘 5. Levels of Caching in Hibernate</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <p>Hibernate provides <strong>three levels</strong> of caching:</p>
+          <div style="margin-top:8px; display:flex; flex-direction:column; align-items:center; gap:1px;">
+            <div style="border:1.5px solid #b71c1c;padding:4px 16px;font-size:12px;font-weight:700;text-align:center;min-width:190px;background:#fff5f5;">Database (PostgreSQL)</div>
+            <div style="font-size:13px;color:#555;text-align:center;">↑</div>
+            <div style="border:1.5px solid #e65100;padding:4px 16px;font-size:12px;font-weight:700;text-align:center;min-width:190px;background:#fff3e0;">3. Query Cache (results)</div>
+            <div style="font-size:13px;color:#555;text-align:center;">↑</div>
+            <div style="border:1.5px solid #1565c0;padding:4px 16px;font-size:12px;font-weight:700;text-align:center;min-width:190px;background:#e3f2fd;">2. Second Level Cache (SessionFactory)</div>
+            <div style="font-size:13px;color:#555;text-align:center;">↑</div>
+            <div style="border:1.5px solid #2e7d32;padding:4px 16px;font-size:12px;font-weight:700;text-align:center;min-width:190px;background:#e8f5e9;">1. First Level Cache (Session)</div>
+            <div style="font-size:13px;color:#555;text-align:center;">↑</div>
+            <div style="border:1.5px solid #333;padding:4px 16px;font-size:12px;font-weight:700;text-align:center;min-width:190px;">EntityManager / Session</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Quick Overview:</div>
+          <table class="comp-table">
+            <tr><th>Level</th><th>Scope</th><th>Default</th><th>Who Uses</th></tr>
+            <tr><td style="background:#e8f5e9;"><strong>L1</strong></td><td>Session</td><td>✅ Yes</td><td>One EM</td></tr>
+            <tr><td style="background:#e3f2fd;"><strong>L2</strong></td><td>SessionFactory</td><td>❌ No</td><td>All EMs</td></tr>
+            <tr><td style="background:#fff3e0;"><strong>QC</strong></td><td>Query</td><td>❌ No</td><td>All EMs</td></tr>
+          </table>
+          <div class="note-box" style="margin-top:7px;">
+            <strong>Memory Trick:</strong><br>
+            First Level Cache → One Session<br>
+            Second Level Cache → Multiple Sessions<br>
+            Query Cache → Stores Query Results
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- First Level Cache -->
+  <div class="cache-card">
+    <div class="cache-header cache-header-l1">
+      📗 Level 1 — First Level Cache (L1 Cache)
+      <span class="cache-badge badge-green">Default ✅ Always ON</span>
+    </div>
+    <div class="cache-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+          <p>First Level Cache is the cache associated with a <strong>single Session (Hibernate) or EntityManager (JPA)</strong>. It is <strong>enabled by default</strong> — no configuration needed.</p>
+
+          <div class="subsection-title">🔹 Interview Definition</div>
+          <p>First Level Cache is a <strong>Session-level cache</strong> that stores objects within a single Session/EntityManager and is enabled by default.</p>
+
+          <div class="def-row" style="margin-top:6px;"><div class="def-term">Scope</div><div class="def-meaning">One Session / One EntityManager only</div></div>
+          <div class="def-row"><div class="def-term">Default</div><div class="def-meaning">YES — always enabled, no config needed</div></div>
+          <div class="def-row"><div class="def-term">Shared</div><div class="def-meaning">NO — private to one EntityManager</div></div>
+          <div class="def-row"><div class="def-term">Stores</div><div class="def-meaning">Entity objects</div></div>
+          <div class="def-row"><div class="def-term">Lifetime</div><div class="def-meaning">EntityManager created → EntityManager closed</div></div>
+          <div class="def-row"><div class="def-term">JDBC Equivalent</div><div class="def-meaning">Like Persistence Context within one Connection</div></div>
+
+          <div class="subsection-title" style="margin-top:8px;">🔹 Example:</div>
+          <div class="code-block-dark"><span class="cl">EntityManager</span> <span class="nm">em</span> = <span class="nm">emf</span>.<span class="mt">createEntityManager</span>();
+
+<span class="cl">Student</span> <span class="nm">s1</span> = <span class="nm">em</span>.<span class="mt">find</span>(<span class="cl">Student</span>.<span class="kw">class</span>, 101);
+<span class="cm">// 1st call → Cache miss → DB hit → SELECT executed</span>
+<span class="cm">// Object stored in L1 Cache</span>
+
+<span class="cl">Student</span> <span class="nm">s2</span> = <span class="nm">em</span>.<span class="mt">find</span>(<span class="cl">Student</span>.<span class="kw">class</span>, 101);
+<span class="cm">// 2nd call → Cache HIT → No DB hit ✅</span>
+<span class="cm">// s1 == s2 → true (same object reference!)</span></div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Internal Working:</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;margin-bottom:8px;">
+            <div style="font-size:11.5px;font-weight:700;margin-bottom:3px;">First Request:</div>
+            <div style="border:1px solid #2e7d32;padding:3px 14px;font-size:11px;font-weight:600;background:#e8f5e9;text-align:center;">find(101)</div>
+            <div style="font-size:12px;color:#555;">↓ Cache Empty</div>
+            <div style="border:1px solid #333;padding:3px 14px;font-size:11px;font-weight:600;text-align:center;">Database Hit → SQL executed</div>
+            <div style="font-size:12px;color:#555;">↓ Object returned + stored in L1</div>
+            <div style="border:1px solid #2e7d32;padding:3px 14px;font-size:11px;font-weight:600;background:#e8f5e9;text-align:center;">L1 Cache holds Student(101)</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px; margin-bottom:8px;">
+            <div style="font-size:11.5px;font-weight:700;margin-bottom:3px;">Second Request:</div>
+            <div style="border:1px solid #2e7d32;padding:3px 14px;font-size:11px;font-weight:600;background:#e8f5e9;text-align:center;">find(101)</div>
+            <div style="font-size:12px;color:#555;">↓ Cache HIT ✅</div>
+            <div style="border:1px solid #2e7d32;padding:3px 14px;font-size:11px;font-weight:600;background:#e8f5e9;text-align:center;">Object returned — NO DB query!</div>
+          </div>
+
+          <div class="subsection-title">🔹 Limitation of L1 Cache:</div>
+          <div class="code-block-dark"><span class="cl">EntityManager</span> <span class="nm">em1</span> = <span class="nm">emf</span>.<span class="mt">createEntityManager</span>();
+<span class="nm">em1</span>.<span class="mt">find</span>(<span class="cl">Student</span>.<span class="kw">class</span>, 101); <span class="cm">// DB hit, stored in L1</span>
+<span class="nm">em1</span>.<span class="mt">close</span>(); <span class="cm">// L1 Cache DESTROYED!</span>
+
+<span class="cl">EntityManager</span> <span class="nm">em2</span> = <span class="nm">emf</span>.<span class="mt">createEntityManager</span>();
+<span class="nm">em2</span>.<span class="mt">find</span>(<span class="cl">Student</span>.<span class="kw">class</span>, 101);
+<span class="cm">// L1 of em1 is gone! DB hit again ❌</span></div>
+          <p style="font-size:12px; margin-top:4px;">👉 <strong>Solution:</strong> Second Level Cache (shared across sessions)</p>
+        </div>
+      </div>
+      <div class="interview-line">First Level Cache is Session-level, enabled by default, private to one EntityManager. When em.find() called twice for same PK within same session — second call hits L1 cache, not DB. When EntityManager closes, L1 cache is destroyed — data must be re-fetched from DB by a new EM.</div>
+    </div>
+  </div>
+
+  <!-- Second Level Cache -->
+  <div class="cache-card">
+    <div class="cache-header cache-header-l2">
+      📘 Level 2 — Second Level Cache (L2 Cache)
+      <span class="cache-badge badge-blue">Must Enable ⚙️</span>
+    </div>
+    <div class="cache-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+          <p>Second Level Cache is a cache <strong>shared among multiple Sessions or EntityManagers</strong>. It is at the <strong>SessionFactory / EntityManagerFactory level</strong>.</p>
+
+          <div class="def-row" style="margin-top:6px;"><div class="def-term">Scope</div><div class="def-meaning">SessionFactory / EntityManagerFactory (all EMs)</div></div>
+          <div class="def-row"><div class="def-term">Default</div><div class="def-meaning">NO — must be explicitly configured</div></div>
+          <div class="def-row"><div class="def-term">Shared</div><div class="def-meaning">YES — all EntityManagers share it</div></div>
+          <div class="def-row"><div class="def-term">Stores</div><div class="def-meaning">Entity objects</div></div>
+          <div class="def-row"><div class="def-term">Lifetime</div><div class="def-meaning">Application start → Application shutdown</div></div>
+
+          <div class="subsection-title" style="margin-top:8px;">🔹 Common Cache Providers:</div>
+          <ul>
+            <li><strong>EhCache</strong> — most commonly used with Hibernate</li>
+            <li><strong>Redis</strong> — distributed cache for large apps</li>
+            <li><strong>Hazelcast</strong> — distributed in-memory data grid</li>
+            <li><strong>Infinispan</strong> — JBoss distributed cache</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Internal Working:</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;margin-bottom:7px;">
+            <div style="font-size:11.5px;font-weight:700;text-align:center;">User 1 (em1):</div>
+            <div style="border:1px solid #1565c0;padding:3px 14px;font-size:11px;font-weight:600;background:#e3f2fd;text-align:center;">em1.find(101) → DB Hit → stored in L2</div>
+            <div style="font-size:12px;color:#555;">em1.close() → L1 gone, L2 survives!</div>
+            <div style="font-size:11.5px;font-weight:700;text-align:center;margin-top:4px;">User 2 (em2):</div>
+            <div style="border:1px solid #1565c0;padding:3px 14px;font-size:11px;font-weight:600;background:#e3f2fd;text-align:center;">em2.find(101) → L2 Cache HIT ✅ No DB!</div>
+          </div>
+
+          <div class="subsection-title">🔹 Configuration in persistence.xml:</div>
+          <div class="xml-block"><span class="xc">&lt;!-- Enable Second Level Cache --&gt;</span>
+<span class="xt">&lt;property</span>
+  <span class="xa">name</span>=<span class="xv">"hibernate.cache.use_second_level_cache"</span>
+  <span class="xa">value</span>=<span class="xv">"true"</span><span class="xt">/&gt;</span>
+
+<span class="xc">&lt;!-- Specify Cache Provider --&gt;</span>
+<span class="xt">&lt;property</span>
+  <span class="xa">name</span>=<span class="xv">"hibernate.cache.region.factory_class"</span>
+  <span class="xa">value</span>=<span class="xv">"org.hibernate.cache.ehcache.EhCacheRegionFactory"</span><span class="xt">/&gt;</span></div>
+
+          <div class="subsection-title">🔹 Entity must also opt-in:</div>
+          <div class="code-block-dark"><span class="an">@Entity</span>
+<span class="an">@Cache</span>(usage = <span class="cl">CacheConcurrencyStrategy</span>.<span class="nm">READ_WRITE</span>)
+<span class="kw">public class</span> <span class="cl">Student</span> { ... }</div>
+        </div>
+      </div>
+      <div class="interview-line">Second Level Cache is SessionFactory-level, shared across all sessions, NOT enabled by default. After em1 closes (L1 gone), em2 can still find data in L2 cache — no DB hit. Requires external provider (EhCache, Redis) + persistence.xml config + @Cache annotation on entity.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — QUERY CACHE + EHCACHE SETUP + COMPARISON ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Caching Notes | Page 3 — Query Cache + EhCache Dependency + Full Comparison Table</div>
+
+  <!-- Query Cache -->
+  <div class="cache-card">
+    <div class="cache-header cache-header-l3">
+      📙 Level 3 — Query Cache
+      <span class="cache-badge badge-orange">Must Enable ⚙️ | Depends on L2</span>
+    </div>
+    <div class="cache-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+          <p>Query Cache stores <strong>query results</strong> rather than entity objects. When the same JPQL/HQL query is executed again, Hibernate returns the cached result instead of hitting DB.</p>
+
+          <div class="def-row" style="margin-top:6px;"><div class="def-term">Stores</div><div class="def-meaning">Query result sets (IDs / values — NOT entity objects)</div></div>
+          <div class="def-row"><div class="def-term">Default</div><div class="def-meaning">NO — must be enabled</div></div>
+          <div class="def-row"><div class="def-term">Depends on</div><div class="def-meaning">Second Level Cache — cannot work without L2</div></div>
+          <div class="def-row"><div class="def-term">Lifetime</div><div class="def-meaning">Application life (until data changes)</div></div>
+
+          <div class="subsection-title" style="margin-top:8px;">🔹 What Gets Stored?</div>
+          <p><strong>Very Important Interview Question!</strong></p>
+          <p>Query Cache stores: <strong>Query Result</strong> — NOT entity objects.</p>
+          <p style="font-size:12px; margin-top:3px;">Example: <code>SELECT * FROM STUDENT</code> → stores IDs [101, 102, 103, 104]</p>
+          <p style="font-size:12px; margin-top:3px;">Then uses L2 cache to fetch actual entity objects for those IDs.</p>
+
+          <div class="note-box" style="margin-top:7px;">
+            <strong>📝 Query Cache Dependency Chain:</strong><br>
+            Query Cache → needs → Second Level Cache → needs → EhCache/Redis<br>
+            If L2 not enabled → Query Cache will NOT work effectively.
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Example:</div>
+          <div class="code-block-dark"><span class="cm">// Without Query Cache:</span>
+<span class="cl">Query</span> <span class="nm">q</span> = <span class="nm">em</span>.<span class="mt">createQuery</span>(<span class="st">"FROM Student"</span>);
+<span class="nm">q</span>.<span class="mt">getResultList</span>(); <span class="cm">// DB hit 1 → SELECT *</span>
+
+<span class="nm">q</span>.<span class="mt">getResultList</span>(); <span class="cm">// DB hit 2 → same query again!</span>
+
+<span class="cm">// With Query Cache enabled:</span>
+<span class="nm">q</span>.<span class="mt">setHint</span>(<span class="st">"org.hibernate.cacheable"</span>, <span class="kw">true</span>);
+<span class="nm">q</span>.<span class="mt">getResultList</span>(); <span class="cm">// DB hit 1 → result stored in QC</span>
+<span class="nm">q</span>.<span class="mt">getResultList</span>(); <span class="cm">// QC hit ✅ → No DB!</span></div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Configuration:</div>
+          <div class="xml-block"><span class="xc">&lt;!-- Enable Query Cache --&gt;</span>
+<span class="xt">&lt;property</span>
+  <span class="xa">name</span>=<span class="xv">"hibernate.cache.use_query_cache"</span>
+  <span class="xa">value</span>=<span class="xv">"true"</span><span class="xt">/&gt;</span></div>
+
+          <div class="subsection-title" style="margin-top:6px;">🔹 When Query Cache is INVALIDATED:</div>
+          <ul>
+            <li>When any entity in the result is INSERT/UPDATE/DELETE</li>
+            <li>Hibernate automatically invalidates stale cache entries</li>
+            <li>Next query call fetches fresh from DB</li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">Query Cache stores query result sets (IDs/values — not full objects). When same query runs again, result returned from cache. Query Cache depends on Second Level Cache. Must be enabled with use_query_cache=true AND each query must be marked as cacheable using setHint().</div>
+    </div>
+  </div>
+
+  <!-- EhCache Setup -->
+  <div class="section">
+    <div class="section-header">📘 EhCache — Enabling Second Level Cache (Step by Step)</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Step 1: Add EhCache Dependency in pom.xml</div>
+          <div class="xml-block"><span class="xc">&lt;!-- pom.xml --&gt;</span>
+<span class="xc">&lt;!-- IMPORTANT: EhCache version must match --&gt;</span>
+<span class="xc">&lt;!-- Hibernate version! --&gt;</span>
+
+<span class="xt">&lt;dependency&gt;</span>
+  <span class="xt">&lt;groupId&gt;</span>org.hibernate<span class="xt">&lt;/groupId&gt;</span>
+  <span class="xt">&lt;artifactId&gt;</span>hibernate-ehcache<span class="xt">&lt;/artifactId&gt;</span>
+  <span class="xt">&lt;version&gt;</span>5.6.15.Final<span class="xt">&lt;/version&gt;</span>
+<span class="xt">&lt;/dependency&gt;</span>
+
+<span class="xt">&lt;dependency&gt;</span>
+  <span class="xt">&lt;groupId&gt;</span>org.hibernate<span class="xt">&lt;/groupId&gt;</span>
+  <span class="xt">&lt;artifactId&gt;</span>hibernate-core<span class="xt">&lt;/artifactId&gt;</span>
+  <span class="xt">&lt;version&gt;</span>5.6.15.Final<span class="xt">&lt;/version&gt;</span>
+<span class="xt">&lt;/dependency&gt;</span></div>
+          <div class="note-box" style="margin-top:5px;">
+            <strong>⚠️ Version must match!</strong> EhCache dependency version must be same as Hibernate-core version. Mismatch → runtime errors.
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Step 2: Configure persistence.xml</div>
+          <div class="xml-block"><span class="xt">&lt;property</span>
+  <span class="xa">name</span>=<span class="xv">"hibernate.cache.use_second_level_cache"</span>
+  <span class="xa">value</span>=<span class="xv">"true"</span><span class="xt">/&gt;</span>
+
+<span class="xt">&lt;property</span>
+  <span class="xa">name</span>=<span class="xv">"hibernate.cache.region.factory_class"</span>
+  <span class="xa">value</span>=<span class="xv">"org.hibernate.cache.ehcache
+           .EhCacheRegionFactory"</span><span class="xt">/&gt;</span>
+
+<span class="xc">&lt;!-- Optional: Enable Query Cache too --&gt;</span>
+<span class="xt">&lt;property</span>
+  <span class="xa">name</span>=<span class="xv">"hibernate.cache.use_query_cache"</span>
+  <span class="xa">value</span>=<span class="xv">"true"</span><span class="xt">/&gt;</span></div>
+
+          <div class="subsection-title" style="margin-top:6px;">🔹 Step 3: Annotate Entity with @Cache</div>
+          <div class="code-block-dark"><span class="kw">import</span> <span class="nm">org.hibernate.annotations.Cache</span>;
+<span class="kw">import</span> <span class="nm">org.hibernate.annotations.CacheConcurrencyStrategy</span>;
+
+<span class="an">@Entity</span>
+<span class="an">@Cache</span>(usage = <span class="cl">CacheConcurrencyStrategy</span>.<span class="nm">READ_WRITE</span>)
+<span class="kw">public class</span> <span class="cl">Student</span> { ... }
+<span class="cm">// READ_ONLY, READ_WRITE, NONSTRICT_READ_WRITE, TRANSACTIONAL</span></div>
+        </div>
+      </div>
+
+      <div class="subsection-title" style="margin-top:7px;">🔹 CacheConcurrencyStrategy Options:</div>
+      <table class="comp-table">
+        <tr><th>Strategy</th><th>When to Use</th><th>Description</th></tr>
+        <tr><td><code>READ_ONLY</code></td><td>Data never changes</td><td>Fastest — no locking, no update support</td></tr>
+        <tr><td><code>READ_WRITE</code></td><td>Data changes sometimes</td><td>Soft locking to maintain consistency on update</td></tr>
+        <tr><td><code>NONSTRICT_READ_WRITE</code></td><td>Occasional updates, stale data OK</td><td>No locking — may serve slightly stale data</td></tr>
+        <tr><td><code>TRANSACTIONAL</code></td><td>Strict consistency needed</td><td>Full transactional cache — needs JTA support</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Complete Comparison -->
+  <div class="section">
+    <div class="section-header">📘 Complete Cache Level Comparison Table</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Feature</th>
+          <th>First Level Cache</th>
+          <th>Second Level Cache</th>
+          <th>Query Cache</th>
+        </tr>
+        <tr><td><strong>Scope</strong></td><td>Session / EntityManager</td><td>SessionFactory / EMF</td><td>Query level</td></tr>
+        <tr><td><strong>Default Enabled</strong></td><td>✅ YES</td><td>❌ NO</td><td>❌ NO</td></tr>
+        <tr><td><strong>Shared Across Sessions</strong></td><td>❌ NO (private)</td><td>✅ YES</td><td>✅ YES</td></tr>
+        <tr><td><strong>What it Stores</strong></td><td>Entity objects</td><td>Entity objects</td><td>Query results (IDs)</td></tr>
+        <tr><td><strong>Lifetime</strong></td><td>Session life</td><td>Application life</td><td>Application life</td></tr>
+        <tr><td><strong>Configuration Needed</strong></td><td>❌ No</td><td>✅ Yes (persistence.xml + pom.xml)</td><td>✅ Yes + L2 required</td></tr>
+        <tr><td><strong>Cache Provider</strong></td><td>Built-in</td><td>EhCache / Redis / Hazelcast</td><td>Depends on L2 provider</td></tr>
+        <tr><td><strong>Invalidation</strong></td><td>On EM close</td><td>On entity update/delete</td><td>On result entity change</td></tr>
+        <tr><td><strong>JDBC Equivalent</strong></td><td>Per-Connection cache</td><td>Connection Pool level cache</td><td>Prepared statement result cache</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 4 — COMPLETE FLOW + INTERVIEW ANSWERS + QUICK REVISION ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Caching Notes | Page 4 — Complete Cache Flow + Interview Answers + Quick Revision</div>
+
+  <!-- Complete Flow -->
+  <div class="section">
+    <div class="section-header">📘 Complete Hibernate Cache Flow — All Levels</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="flow-col">
+            <div class="flow-box" style="border-color:#333; background:#f5f5f5;">Application Request<div style="font-size:10px;font-weight:400;color:#666;">em.find(Student.class, 101)</div></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="border-color:#2e7d32; background:#e8f5e9;">1. Check First Level Cache<div style="font-size:10px;font-weight:400;color:#555;">Session scope — always checked first</div></div>
+            <div class="flow-arrow">↓ if not found (miss)</div>
+            <div class="flow-box" style="border-color:#1565c0; background:#e3f2fd;">2. Check Second Level Cache<div style="font-size:10px;font-weight:400;color:#555;">SessionFactory scope — shared</div></div>
+            <div class="flow-arrow">↓ if not found (miss)</div>
+            <div class="flow-box" style="border-color:#e65100; background:#fff3e0;">3. Check Query Cache<div style="font-size:10px;font-weight:400;color:#555;">Query result scope</div></div>
+            <div class="flow-arrow">↓ if not found (miss)</div>
+            <div class="flow-box" style="border-color:#b71c1c; background:#fff5f5;">Database (PostgreSQL)<div style="font-size:10px;font-weight:400;color:#555;">SQL executed — last resort</div></div>
+            <div class="flow-arrow">↓ data returned + stored in caches</div>
+            <div class="flow-box" style="border-color:#333; background:#f5f5f5;">Response to Application</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Flow Rules:</div>
+          <ul>
+            <li>Hibernate always checks L1 first</li>
+            <li>If L1 miss → checks L2 (if configured)</li>
+            <li>If L2 miss → checks Query Cache (if configured)</li>
+            <li>If all miss → hits PostgreSQL DB</li>
+            <li>Data from DB stored in all configured caches</li>
+            <li>Next request → Cache Hit at appropriate level</li>
+          </ul>
+
+          <div class="subsection-title" style="margin-top:8px;">🔹 When Cache is Invalidated:</div>
+          <table class="comp-table">
+            <tr><th>Operation</th><th>L1 Effect</th><th>L2 Effect</th><th>QC Effect</th></tr>
+            <tr><td>INSERT</td><td>Added</td><td>Added</td><td>Invalidated</td></tr>
+            <tr><td>UPDATE</td><td>Updated</td><td>Updated</td><td>Invalidated</td></tr>
+            <tr><td>DELETE</td><td>Removed</td><td>Removed</td><td>Invalidated</td></tr>
+            <tr><td>EM Close</td><td>Destroyed</td><td>Survives</td><td>Survives</td></tr>
+            <tr><td>App Restart</td><td>Destroyed</td><td>Destroyed</td><td>Destroyed</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Extra Information Added -->
+  <div class="section">
+    <div class="section-header">📘 Extra — Memory vs Database Access Speed</div>
+    <div class="section-body">
+      <div class="three-col">
+        <div class="inline-box" style="text-align:center;">
+          <div class="inline-box-title">L1 Cache (RAM)</div>
+          <p style="font-size:20px; font-weight:700; color:#2e7d32;">~ns</p>
+          <p style="font-size:11.5px;">Nanoseconds — extremely fast</p>
+        </div>
+        <div class="inline-box" style="text-align:center;">
+          <div class="inline-box-title">L2 Cache (RAM/Disk)</div>
+          <p style="font-size:20px; font-weight:700; color:#1565c0;">~μs</p>
+          <p style="font-size:11.5px;">Microseconds — fast</p>
+        </div>
+        <div class="inline-box" style="text-align:center;">
+          <div class="inline-box-title">Database (Network)</div>
+          <p style="font-size:20px; font-weight:700; color:#b71c1c;">~ms</p>
+          <p style="font-size:11.5px;">Milliseconds — slow</p>
+        </div>
+      </div>
+      <p style="margin-top:6px; font-size:12px;">👉 Cache (RAM) access = 1000x faster than DB access over network. This is why caching improves performance so dramatically.</p>
+    </div>
+  </div>
+
+  <!-- Interview Answers -->
+  <div class="section">
+    <div class="section-header">🎯 Interview Answers</div>
+    <div class="section-body">
+      <div class="interview-answer">
+        <div class="interview-answer-title">✅ Q: What is Caching in Hibernate?</div>
+        <p>Caching is a mechanism used to <strong>temporarily store frequently accessed data in memory</strong> so that Hibernate can retrieve data without repeatedly hitting the database. It improves application performance, reduces database load, decreases network traffic, and provides faster response time.</p>
+      </div>
+
+      <div class="interview-answer" style="margin-top:7px;">
+        <div class="interview-answer-title">✅ Q: What are the Levels of Cache in Hibernate?</div>
+        <ol style="margin-top:5px;">
+          <li style="margin-bottom:4px;"><strong>First Level Cache</strong> — Session-level cache. <strong>Enabled by default</strong>. Available within a single EntityManager/Session. Private — not shared. Destroyed when EM closes.</li>
+          <li style="margin-bottom:4px;"><strong>Second Level Cache</strong> — SessionFactory-level cache. <strong>Not enabled by default</strong>. Shared across multiple sessions. Requires external providers like EhCache or Redis. Survives session closure.</li>
+          <li><strong>Query Cache</strong> — Stores query results (not entity objects). <strong>Not enabled by default</strong>. Depends on Second Level Cache. When same query runs again, returns cached result.</li>
+        </ol>
+      </div>
+
+      <div class="interview-answer" style="margin-top:7px;">
+        <div class="interview-answer-title">✅ Q: What is Cache Hit and Cache Miss?</div>
+        <p><strong>Cache Hit:</strong> When requested data is found in cache — no database access required. Results in fast response.</p>
+        <p style="margin-top:4px;"><strong>Cache Miss:</strong> When requested data is NOT found in cache — database is accessed. Data retrieved from DB and stored in cache for future requests.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Revision -->
+  <div class="section">
+    <div class="section-header">🗂️ Quick Revision — All Key Points</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <ul>
+            <li>Cache = temporary memory for frequently used data</li>
+            <li>Reduces DB hits → improves performance</li>
+            <li>Cache Hit = found in cache → no DB</li>
+            <li>Cache Miss = not in cache → DB accessed → stored in cache</li>
+            <li><strong>L1 Cache</strong> = Session level | Default ON | Private | Destroyed on EM close</li>
+            <li><strong>L2 Cache</strong> = SessionFactory level | Default OFF | Shared | Application lifetime</li>
+            <li><strong>Query Cache</strong> = Query results | Default OFF | Depends on L2</li>
+            <li>Order: L1 → L2 → Query Cache → DB</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>L2 providers: EhCache (most common), Redis, Hazelcast, Infinispan</li>
+            <li>Enable L2: <code>use_second_level_cache=true</code> in persistence.xml</li>
+            <li>Enable QC: <code>use_query_cache=true</code> in persistence.xml</li>
+            <li>Entity needs <code>@Cache(usage=...)</code> for L2</li>
+            <li>Query needs <code>setHint("org.hibernate.cacheable", true)</code></li>
+            <li>EhCache version must match Hibernate version!</li>
+            <li>L1 cannot be disabled | L2 is optional but recommended</li>
+            <li>Memory ~ns | DB ~ms → Cache is 1000x faster!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">Three cache levels: L1 (Session, default ON, private), L2 (SessionFactory, default OFF, shared, needs EhCache/Redis), Query Cache (default OFF, stores results, needs L2). Hibernate checks L1 → L2 → QC → DB. Cache Hit = no DB; Cache Miss = DB accessed + stored in cache.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

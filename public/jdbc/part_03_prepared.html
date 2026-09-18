@@ -1,0 +1,956 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    border: 2.5px solid #111;
+    padding: 9px 18px;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 13px;
+    font-style: italic;
+  }
+  .page-title {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #555;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title { font-weight: 700; font-size: 11.5px; margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px; }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 10.8px; padding: 9px 12px;
+    margin: 7px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw  { color: #569cd6; }
+  .cm  { color: #6a9955; }
+  .st  { color: #ce9178; }
+  .cl  { color: #4ec9b0; }
+  .mt  { color: #dcdcaa; }
+  .nm  { color: #9cdcfe; }
+
+  .code-block {
+    background: #f5f5f5; border: 1px solid #ccc;
+    border-left: 3px solid #333;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px; padding: 7px 10px;
+    margin: 5px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.6;
+  }
+
+  .explain-box {
+    background: #fffdf0; border: 1px solid #ddd;
+    border-left: 3px solid #888;
+    padding: 7px 11px; margin: 6px 0; font-size: 12.5px;
+  }
+  .explain-box-title { font-weight: 700; font-size: 12px; margin-bottom: 4px; color: #333; }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  .line-explain {
+    display: flex; gap: 0; margin: 3px 0;
+    border: 1px solid #ddd;
+  }
+  .line-code {
+    background: #f0f0f0; font-family: 'Courier New', monospace;
+    font-size: 11px; padding: 4px 8px;
+    border-right: 1px solid #ccc; min-width: 42%;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .line-meaning { padding: 4px 8px; font-size: 11.5px; color: #333; flex: 1; }
+
+  .step-row { display: flex; align-items: flex-start; gap: 9px; margin: 5px 0; }
+  .step-num {
+    min-width: 22px; height: 22px;
+    background: #111; color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .method-row { display: flex; gap: 6px; align-items: baseline; margin: 3px 0; }
+  .method-name {
+    font-family: 'Courier New', monospace; font-weight: 700;
+    font-size: 11.5px; background: #eee;
+    padding: 1px 5px; border-radius: 2px; white-space: nowrap;
+  }
+  .method-desc { font-size: 12px; color: #333; }
+
+  .badge {
+    display: inline-block; border: 1px solid #444;
+    font-size: 10px; padding: 1px 5px;
+    margin-right: 4px; font-weight: 600; vertical-align: middle;
+  }
+  .tag {
+    display: inline-block; background: #111; color: #fff;
+    font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px;
+    margin-right: 4px; vertical-align: middle;
+  }
+
+  .output-box {
+    background: #111; color: #00dd00;
+    font-family: 'Courier New', monospace;
+    font-size: 12px; padding: 7px 12px; margin: 6px 0;
+  }
+  .output-box::before { content: '▶ Output: '; color: #aaa; font-size: 10px; display:block; margin-bottom:2px; }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  ol { padding-left: 17px; margin: 3px 0; }
+  ol li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  /* comparison table */
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  /* hierarchy */
+  .hierarchy {
+    font-family: 'Courier New', monospace; font-size: 12px;
+    background: #f5f5f5; border: 1px solid #ccc;
+    border-left: 3px solid #333; padding: 10px 14px;
+    line-height: 2; margin: 6px 0;
+  }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — INSERT DATA ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">JDBC — Statement Codes (Complete Notes)</div>
+  <div class="main-subtitle">Package: jdbcfirstdayproject | INSERT • UPDATE • DELETE • FETCH | Hierarchy | Execute Methods</div>
+
+  <div class="section">
+    <div class="section-header">📄 Program 1 — InsertDataIntoTable.java (INSERT using Class.forName)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>This program demonstrates how to <strong>insert multiple rows</strong> into an employee table in PostgreSQL using JDBC. It uses <code>Class.forName()</code> to load the driver and <code>statement.execute()</code> to run INSERT queries.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbcfirstdayproject</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Statement</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+
+<span class="kw">public class</span> <span class="cl">InsertDataIntoTable</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">ClassNotFoundException</span>, <span class="cl">SQLException</span> {
+
+        <span class="cm">// Step 1: Load and Register the Driver</span>
+        <span class="cm">// Class is a predefined class in java.lang package</span>
+        <span class="cm">// forName() is a static method used to load the driver class into memory</span>
+        <span class="cl">Class</span>.<span class="mt">forName</span>(<span class="st">"org.postgresql.Driver"</span>);
+
+        <span class="cm">// Step 2: Create Connection</span>
+        <span class="cm">// DriverManager is a class that manages database drivers</span>
+        <span class="cm">// getConnection() is a static factory method that returns Connection object</span>
+        <span class="cl">Connection</span> <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+                <span class="st">"jdbc:postgresql://localhost:5433/FirstDayDataBase"</span>,
+                <span class="st">"postgres"</span>,
+                <span class="st">"root"</span>
+        );
+
+        <span class="cm">// Step 3: Create Statement</span>
+        <span class="cm">// Connection is an interface</span>
+        <span class="cm">// createStatement() is a non-static method of Connection</span>
+        <span class="cm">// It returns a Statement object used to execute SQL queries</span>
+        <span class="cl">Statement</span> <span class="nm">statement</span> = <span class="nm">connection</span>.<span class="mt">createStatement</span>();
+
+        <span class="cm">// Step 4: Execute Query (INSERT)</span>
+        <span class="cm">// execute() is a non-static method present in Statement interface</span>
+        <span class="cm">// It sends SQL query to database</span>
+        <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="st">"insert into employee values(101,'Pravin',50000)"</span>);
+        <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="st">"insert into employee values(102,'Mayuresh',40000)"</span>);
+        <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="st">"insert into employee values(103,'Vednat',50)"</span>);
+
+        <span class="cm">// Step 5: Close Connection</span>
+        <span class="cm">// Closes the database connection and releases resources</span>
+        <span class="nm">connection</span>.<span class="mt">close</span>();
+
+        <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Successfully data added"</span>);
+    }
+}</div>
+
+      <div class="output-box">Successfully data added</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Short Explanation — Key Points</div>
+        <div class="line-explain">
+          <div class="line-code">throws ClassNotFoundException, SQLException</div>
+          <div class="line-meaning">Propagates both checked exceptions. ClassNotFoundException from Class.forName(), SQLException from getConnection() and execute().</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">Class.forName("org.postgresql.Driver")</div>
+          <div class="line-meaning">Loads driver class into JVM. Internal static block calls DriverManager.registerDriver() automatically.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">DriverManager.getConnection(url, user, pwd)</div>
+          <div class="line-meaning">Static factory method. Picks registered PostgreSQL driver, establishes live DB session, returns Connection object.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">connection.createStatement()</div>
+          <div class="line-meaning">Non-static method of Connection interface. Creates Statement object to send SQL queries.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">statement.execute("insert into...")</div>
+          <div class="line-meaning">Non-static method of Statement. Sends INSERT SQL to DB. Returns boolean — false here (no ResultSet for INSERT).</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">connection.close()</div>
+          <div class="line-meaning">Ends DB session. Releases all resources. Prevents memory leaks and connection pool exhaustion.</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>📝 Important:</strong> <code>execute()</code> is used here for INSERT — it works but returns <code>false</code> (boolean) since no ResultSet. More appropriate method for INSERT is <code>executeUpdate()</code> which returns <strong>int</strong> (rows affected). Both are correct.
+      </div>
+
+      <div class="interview-line">Class.forName() loads the driver into JVM and its static block auto-registers it. execute() is a non-static method of Statement that sends any SQL to DB and returns boolean — false for DML operations like INSERT.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — UPDATE DATA ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Statement Codes | Page 2 — Program 2: UpdateData.java (UPDATE using Driver object)</div>
+
+  <div class="section">
+    <div class="section-header">📄 Program 2 — UpdateData.java (UPDATE using Driver object registration)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>This program demonstrates how to <strong>update an existing row</strong> in the employee table. It uses the <strong>alternative driver registration method</strong> — creating a Driver object manually and registering it with <code>DriverManager.registerDriver()</code> instead of <code>Class.forName()</code>.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbcfirstdayproject</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Statement</span>;
+
+<span class="kw">import</span> <span class="nm">org.postgresql.Driver</span>;
+
+<span class="kw">public class</span> <span class="cl">UpdateData</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">SQLException</span> {
+
+        <span class="cm">// Step 1: Load and Register the Driver</span>
+        <span class="cm">// Creating object of PostgreSQL Driver</span>
+        <span class="cm">// registerDriver() registers driver with DriverManager</span>
+        <span class="cl">Driver</span> <span class="nm">d</span> = <span class="kw">new</span> <span class="cl">Driver</span>();
+        <span class="cl">DriverManager</span>.<span class="mt">registerDriver</span>(<span class="nm">d</span>);
+
+        <span class="cm">// Step 2: Create Connection</span>
+        <span class="cm">// Establish connection with PostgreSQL database</span>
+        <span class="cl">Connection</span> <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+                <span class="st">"jdbc:postgresql://localhost:5433/FirstDayDataBase"</span>,
+                <span class="st">"postgres"</span>,
+                <span class="st">"root"</span>);
+
+        <span class="cm">// Step 3: Create Statement</span>
+        <span class="cm">// createStatement() is non-static method of Connection interface</span>
+        <span class="cm">// Returns Statement object to execute SQL queries</span>
+        <span class="cl">Statement</span> <span class="nm">statement</span> = <span class="nm">connection</span>.<span class="mt">createStatement</span>();
+
+        <span class="cm">// Step 4: Execute Update Query</span>
+        <span class="cm">// execute() method is used to run SQL query</span>
+        <span class="cm">// Here we are updating salary of employee whose id = 101</span>
+        <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="st">"update employee set salary=10 where id=101"</span>);
+
+        <span class="cm">// Step 5: Close Connection</span>
+        <span class="cm">// Close DB connection and release resources</span>
+        <span class="nm">connection</span>.<span class="mt">close</span>();
+
+        <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Successfully data updated"</span>);
+    }
+}</div>
+
+      <div class="output-box">Successfully data updated</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Short Explanation — Key Points</div>
+        <div class="line-explain">
+          <div class="line-code">import org.postgresql.Driver;</div>
+          <div class="line-meaning">We import the actual PostgreSQL Driver class explicitly — needed because we create its object manually.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">throws SQLException (only)</div>
+          <div class="line-meaning">No ClassNotFoundException here — because we're NOT using Class.forName(). Driver object is created directly so no dynamic class loading.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">Driver d = new Driver();</div>
+          <div class="line-meaning">Creates object of PostgreSQL Driver class directly. This is explicit manual instantiation of the driver.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">DriverManager.registerDriver(d);</div>
+          <div class="line-meaning">Static method of DriverManager. Manually registers the driver object with DriverManager so it can be used for connections.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">"update employee set salary=10 where id=101"</div>
+          <div class="line-meaning">SQL UPDATE query — changes salary column to 10 for the row where id = 101.</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>🔑 Key Difference from Program 1 — Two Ways to Register Driver:</strong><br>
+        <strong>Way 1 (Program 1):</strong> <code>Class.forName("org.postgresql.Driver")</code> → Dynamic loading, auto-registers via static block. Throws ClassNotFoundException.<br>
+        <strong>Way 2 (Program 2):</strong> <code>Driver d = new Driver(); DriverManager.registerDriver(d);</code> → Manual object creation + registration. Only throws SQLException.
+        <br>👉 Both achieve the same result — driver gets registered with DriverManager.
+      </div>
+
+      <div class="note-box">
+        <strong>📝 SQL UPDATE Breakdown:</strong> <code>update employee set salary=10 where id=101</code><br>
+        <code>update employee</code> → target table | <code>set salary=10</code> → column to change and new value | <code>where id=101</code> → condition — only row with id=101 is updated. Without WHERE clause — ALL rows would be updated!
+      </div>
+
+      <div class="interview-line">In UpdateData.java, the driver is registered manually using Driver object and DriverManager.registerDriver(). This is an alternative to Class.forName(). Since no dynamic class loading, only SQLException is declared in throws clause — not ClassNotFoundException.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — DELETE + FETCH ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Statement Codes | Page 3 — Program 3: DeleteData.java &amp; Program 4: Fetch_Data.java</div>
+
+  <!-- DELETE -->
+  <div class="section">
+    <div class="section-header">📄 Program 3 — DeleteData.java (DELETE + boolean return of execute())</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Deletes a record from employee table where id = 101. Also demonstrates that <code>execute()</code> returns a <strong>boolean</strong> — and that value is captured and printed.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbcfirstdayproject</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;  <span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;  <span class="kw">import</span> <span class="nm">java.sql.Statement</span>;
+
+<span class="kw">public class</span> <span class="cl">DeleteData</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">ClassNotFoundException</span>, <span class="cl">SQLException</span> {
+
+        <span class="cm">// Step 1: Load and Register Driver</span>
+        <span class="cm">// Loads PostgreSQL driver into memory and registers it</span>
+        <span class="cl">Class</span>.<span class="mt">forName</span>(<span class="st">"org.postgresql.Driver"</span>);
+
+        <span class="cm">// Step 2: Create Connection</span>
+        <span class="cm">// Establish connection with database</span>
+        <span class="cl">Connection</span> <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+                <span class="st">"jdbc:postgresql://localhost:5433/FirstDayDataBase"</span>,
+                <span class="st">"postgres"</span>, <span class="st">"root"</span>);
+
+        <span class="cm">// Step 3: Create Statement</span>
+        <span class="cm">// Used to execute SQL queries</span>
+        <span class="cl">Statement</span> <span class="nm">statement</span> = <span class="nm">connection</span>.<span class="mt">createStatement</span>();
+
+        <span class="cm">// Step 4: Execute Delete Query</span>
+        <span class="cm">// Deletes record where id = 101</span>
+        <span class="cm">// execute() returns false because no ResultSet is returned</span>
+        <span class="kw">boolean</span> <span class="nm">res</span> = <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="st">"delete from employee where id = 101"</span>);
+
+        <span class="cm">// Step 5: Close Connection</span>
+        <span class="cm">// Releases database resources</span>
+        <span class="nm">connection</span>.<span class="mt">close</span>();
+
+        <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Successfully data deleted = "</span> + <span class="nm">res</span>);
+    }
+}</div>
+
+      <div class="output-box">Successfully data deleted = false</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Short Explanation — Key Points</div>
+        <div class="line-explain">
+          <div class="line-code">boolean res = statement.execute("delete...")</div>
+          <div class="line-meaning">execute() returns boolean. For DELETE (DML) → returns false because no ResultSet is produced. Result is captured in variable res.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">"delete from employee where id = 101"</div>
+          <div class="line-meaning">SQL DELETE query — removes the row from employee table where id = 101. WHERE clause is mandatory otherwise ALL rows get deleted.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">"Successfully data deleted = " + res</div>
+          <div class="line-meaning">Prints the boolean result — output will be: Successfully data deleted = false</div>
+        </div>
+      </div>
+      <div class="interview-line">execute() returns false for DML operations (INSERT/UPDATE/DELETE) because they do not produce a ResultSet. It returns true only when a SELECT query is executed and a ResultSet is available.</div>
+    </div>
+  </div>
+
+  <!-- FETCH -->
+  <div class="section">
+    <div class="section-header">📄 Program 4 — Fetch_Data.java (SELECT + ResultSet + executeQuery())</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Fetches and displays employee data where id = 102. Uses <code>executeQuery()</code> which returns a <strong>ResultSet</strong>. Iterates using <code>rs.next()</code> and reads column values using index-based getters.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbcfirstdayproject</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;  <span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.ResultSet</span>;  <span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Statement</span>;
+
+<span class="kw">public class</span> <span class="cl">Fetch_Data</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">ClassNotFoundException</span>, <span class="cl">SQLException</span> {
+
+        <span class="cm">// Step 1: Load and Register Driver</span>
+        <span class="cm">// Loads PostgreSQL driver class into memory</span>
+        <span class="cl">Class</span>.<span class="mt">forName</span>(<span class="st">"org.postgresql.Driver"</span>);
+
+        <span class="cm">// Step 2: Create Connection</span>
+        <span class="cm">// Establish connection with database</span>
+        <span class="cl">Connection</span> <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+                <span class="st">"jdbc:postgresql://localhost:5433/FirstDayDataBase"</span>,
+                <span class="st">"postgres"</span>, <span class="st">"root"</span>);
+
+        <span class="cm">// Step 3: Create Statement</span>
+        <span class="cm">// Used to execute SQL queries</span>
+        <span class="cl">Statement</span> <span class="nm">statement</span> = <span class="nm">connection</span>.<span class="mt">createStatement</span>();
+
+        <span class="cm">// Step 4: Execute SELECT Query</span>
+        <span class="cm">// executeQuery() is used for SELECT and returns ResultSet</span>
+        <span class="cl">ResultSet</span> <span class="nm">rs</span> = <span class="nm">statement</span>.<span class="mt">executeQuery</span>(<span class="st">"select * from employee where id = 102"</span>);
+
+        <span class="cm">// ResultSet is an interface that holds data in tabular form</span>
+        <span class="cm">// Cursor initially points before first row</span>
+
+        <span class="kw">while</span> (<span class="nm">rs</span>.<span class="mt">next</span>()) {  <span class="cm">// Moves cursor to next row</span>
+
+            <span class="cm">// Fetch data column-wise</span>
+            <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="nm">rs</span>.<span class="mt">getInt</span>(1) + <span class="st">" = Id"</span>);
+            <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="nm">rs</span>.<span class="mt">getString</span>(2) + <span class="st">" = Name"</span>);
+            <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="nm">rs</span>.<span class="mt">getDouble</span>(3) + <span class="st">" = Salary"</span>);
+
+            <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"================================="</span>);
+        }
+
+        <span class="cm">// Step 5: Close Connection</span>
+        <span class="nm">connection</span>.<span class="mt">close</span>();
+
+        <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Successfully data displayed"</span>);
+    }
+}</div>
+
+      <div class="output-box">102 = Id
+Mayuresh = Name
+40000.0 = Salary
+=================================
+Successfully data displayed</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Short Explanation — Key Points</div>
+        <div class="line-explain">
+          <div class="line-code">import java.sql.ResultSet;</div>
+          <div class="line-meaning">Extra import needed — ResultSet interface holds SELECT query results. Not needed in INSERT/UPDATE/DELETE programs.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ResultSet rs = statement.executeQuery(...)</div>
+          <div class="line-meaning">executeQuery() — used ONLY for SELECT. Returns ResultSet (tabular data). Cannot be used for INSERT/UPDATE/DELETE.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">rs.next()</div>
+          <div class="line-meaning">Moves cursor to next row. Returns true if row exists, false when no more rows. Cursor starts BEFORE first row.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">rs.getInt(1), rs.getString(2), rs.getDouble(3)</div>
+          <div class="line-meaning">Column index-based getters (index starts at 1). getInt(1)=id, getString(2)=name, getDouble(3)=salary.</div>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>📝 Two ways to read ResultSet columns:</strong><br>
+        By index: <code>rs.getInt(1)</code> — column position (starts at 1)<br>
+        By name: <code>rs.getInt("id")</code> — column name (more readable, preferred in real projects)
+      </div>
+      <div class="interview-line">executeQuery() is used exclusively for SELECT statements and returns a ResultSet. ResultSet cursor initially points before first row — rs.next() moves it forward row by row, returning true as long as rows exist.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 4 — HIERARCHY + COMPARISON TABLE ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Statement Codes | Page 4 — Statement Hierarchy &amp; Feature Comparison</div>
+
+  <div class="section">
+    <div class="section-header">📘 Hierarchy of Statement in JDBC</div>
+    <div class="section-body">
+      <p>👉 All come under <code>java.sql</code> package</p>
+
+      <div class="hierarchy">Statement  (Interface)
+   ↑
+   ├── PreparedStatement  (Interface)
+   │              ↑
+   │               └── CallableStatement  (Interface)</div>
+
+      <div class="subsection-title">🔹 Explanation</div>
+      <div class="three-col" style="margin-top:6px;">
+        <div class="inline-box">
+          <div class="inline-box-title">Statement <span class="tag" style="font-size:9px;">Base Interface</span></div>
+          <ul>
+            <li>Base interface for all statement types</li>
+            <li>Executes static/hardcoded SQL</li>
+            <li>No parameters</li>
+            <li>No pre-compilation</li>
+            <li>Simple but less secure</li>
+          </ul>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">PreparedStatement <span class="tag" style="font-size:9px;">Extends Statement</span></div>
+          <ul>
+            <li>Extends Statement interface</li>
+            <li>Executes parameterized SQL using <code>?</code></li>
+            <li>Pre-compiled → faster on repeat</li>
+            <li>Prevents SQL Injection</li>
+            <li>Used in real projects</li>
+          </ul>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">CallableStatement <span class="tag" style="font-size:9px;">Extends PreparedStatement</span></div>
+          <ul>
+            <li>Extends PreparedStatement</li>
+            <li>Calls stored procedures in DB</li>
+            <li>Supports IN / OUT parameters</li>
+            <li>Pre-compiled</li>
+            <li>Used in enterprise logic</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subsection-title" style="margin-top:10px;">🔹 Feature Comparison Table</div>
+      <table class="comp-table">
+        <tr>
+          <th>Feature</th>
+          <th>Statement</th>
+          <th>PreparedStatement</th>
+          <th>CallableStatement</th>
+        </tr>
+        <tr>
+          <td><strong>Query Type</strong></td>
+          <td>Static</td>
+          <td>Dynamic</td>
+          <td>Stored Procedure</td>
+        </tr>
+        <tr>
+          <td><strong>Parameters</strong></td>
+          <td>❌ No</td>
+          <td>✅ Yes (?)</td>
+          <td>✅ Yes (IN/OUT)</td>
+        </tr>
+        <tr>
+          <td><strong>Performance</strong></td>
+          <td>Slow</td>
+          <td>Fast</td>
+          <td>Fast</td>
+        </tr>
+        <tr>
+          <td><strong>Security</strong></td>
+          <td>Low</td>
+          <td>High</td>
+          <td>High</td>
+        </tr>
+        <tr>
+          <td><strong>Compilation</strong></td>
+          <td>Every time</td>
+          <td>Precompiled</td>
+          <td>Precompiled</td>
+        </tr>
+        <tr>
+          <td><strong>Usage</strong></td>
+          <td>Simple queries</td>
+          <td>Real projects</td>
+          <td>Enterprise logic</td>
+        </tr>
+        <tr>
+          <td><strong>Created by</strong></td>
+          <td><code>createStatement()</code></td>
+          <td><code>prepareStatement(sql)</code></td>
+          <td><code>prepareCall(sql)</code></td>
+        </tr>
+        <tr>
+          <td><strong>SQL Injection</strong></td>
+          <td>❌ Vulnerable</td>
+          <td>✅ Protected</td>
+          <td>✅ Protected</td>
+        </tr>
+      </table>
+
+      <div class="interview-line">Statement hierarchy: Statement → PreparedStatement → CallableStatement. All are interfaces in java.sql. PreparedStatement extends Statement and adds pre-compilation + parameterized queries. CallableStatement extends PreparedStatement and adds support for stored procedures with IN/OUT parameters.</div>
+    </div>
+  </div>
+
+  <!-- 4 programs summary -->
+  <div class="section">
+    <div class="section-header">🗂️ Summary — All 4 Programs Comparison</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Program</th>
+          <th>Operation</th>
+          <th>Driver Loading Method</th>
+          <th>Execute Method Used</th>
+          <th>Return</th>
+          <th>Extra Import</th>
+        </tr>
+        <tr>
+          <td><strong>InsertDataIntoTable</strong></td>
+          <td>INSERT</td>
+          <td>Class.forName()</td>
+          <td>execute()</td>
+          <td>boolean (false)</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>UpdateData</strong></td>
+          <td>UPDATE</td>
+          <td>new Driver() + registerDriver()</td>
+          <td>execute()</td>
+          <td>boolean (false)</td>
+          <td>org.postgresql.Driver</td>
+        </tr>
+        <tr>
+          <td><strong>DeleteData</strong></td>
+          <td>DELETE</td>
+          <td>Class.forName()</td>
+          <td>execute()</td>
+          <td>boolean (false) → stored in res</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>Fetch_Data</strong></td>
+          <td>SELECT</td>
+          <td>Class.forName()</td>
+          <td>executeQuery()</td>
+          <td>ResultSet</td>
+          <td>java.sql.ResultSet</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 5 — EXECUTE METHODS ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Statement Codes | Page 5 — JDBC Execute Methods (Complete List)</div>
+
+  <div class="section">
+    <div class="section-header">📘 JDBC Execute Methods (Complete List)</div>
+    <div class="section-body">
+
+      <!-- executeQuery -->
+      <div class="subsection-title">🔹 1. executeQuery()</div>
+      <p>✅ <strong>Definition:</strong> Executes SELECT query and returns data as ResultSet.</p>
+      <p>✅ <strong>Syntax:</strong></p>
+      <div class="code-block">// Statement
+ResultSet rs = stmt.executeQuery(String sql);
+
+// PreparedStatement
+ResultSet rs = ps.executeQuery();
+
+// CallableStatement
+ResultSet rs = cs.executeQuery();</div>
+
+      <p>✅ <strong>Arguments:</strong></p>
+      <table class="comp-table" style="margin:5px 0;">
+        <tr><th>Interface</th><th>Argument</th></tr>
+        <tr><td>Statement</td><td>String sql</td></tr>
+        <tr><td>PreparedStatement</td><td>❌ No argument</td></tr>
+        <tr><td>CallableStatement</td><td>❌ No argument</td></tr>
+      </table>
+      <p>✅ <strong>Return:</strong> 👉 <code>ResultSet</code></p>
+      <div class="note-box"><strong>📝 Extra:</strong> Only for SELECT. Throws SQLException if used with INSERT/UPDATE/DELETE. ResultSet cursor starts before first row — use rs.next() to iterate.</div>
+
+      <hr/>
+
+      <!-- executeUpdate -->
+      <div class="subsection-title">🔹 2. executeUpdate()</div>
+      <p>✅ <strong>Definition:</strong> Executes INSERT, UPDATE, DELETE, DDL queries and returns affected rows.</p>
+      <p>✅ <strong>Syntax:</strong></p>
+      <div class="code-block">int rows = stmt.executeUpdate(String sql);
+int rows = ps.executeUpdate();
+int rows = cs.executeUpdate();</div>
+      <p>✅ <strong>Return:</strong> 👉 <code>int</code> (rows affected)</p>
+      <div class="note-box"><strong>📝 Extra:</strong> For DDL (CREATE, DROP) — returns 0. For DML — returns actual rows affected. More appropriate than execute() for INSERT/UPDATE/DELETE as it gives row count.</div>
+
+      <hr/>
+
+      <!-- execute -->
+      <div class="subsection-title">🔹 3. execute()</div>
+      <p>✅ <strong>Definition:</strong> Executes any SQL query and returns boolean.</p>
+      <p>✅ <strong>Syntax:</strong></p>
+      <div class="code-block">boolean result = stmt.execute(String sql);
+boolean result = ps.execute();
+boolean result = cs.execute();</div>
+      <p>✅ <strong>Return:</strong> 👉 <code>boolean</code></p>
+      <ul>
+        <li><code>true</code> → ResultSet available (SELECT)</li>
+        <li><code>false</code> → update count (DML)</li>
+      </ul>
+      <div class="note-box"><strong>📝 Extra:</strong> Most generic method — works for all SQL. Used in our 4 programs for INSERT/UPDATE/DELETE. Returns false for all DML because no ResultSet is produced.</div>
+
+      <hr/>
+
+      <!-- addBatch -->
+      <div class="subsection-title">🔹 4. addBatch() ⭐</div>
+      <p>✅ <strong>Definition:</strong> Adds multiple SQL queries to a batch to execute later.</p>
+      <p>✅ <strong>Syntax:</strong></p>
+      <p>🔸 Statement:</p>
+      <div class="code-block">stmt.addBatch("INSERT INTO student VALUES(1,'A',20)");
+stmt.addBatch("INSERT INTO student VALUES(2,'B',22)");</div>
+      <p>🔸 PreparedStatement:</p>
+      <div class="code-block">ps.setInt(1, 1);
+ps.setString(2, "A");
+ps.setInt(3, 20);
+ps.addBatch();
+
+ps.setInt(1, 2);
+ps.setString(2, "B");
+ps.setInt(3, 22);
+ps.addBatch();</div>
+      <p>🔸 CallableStatement:</p>
+      <div class="code-block">cs.addBatch();</div>
+      <p>✅ <strong>Argument:</strong></p>
+      <table class="comp-table" style="margin:5px 0;">
+        <tr><th>Interface</th><th>Argument</th></tr>
+        <tr><td>Statement</td><td>String sql</td></tr>
+        <tr><td>PreparedStatement</td><td>❌ No argument</td></tr>
+        <tr><td>CallableStatement</td><td>❌ No argument</td></tr>
+      </table>
+      <div class="note-box"><strong>📝 Extra:</strong> addBatch() does NOT execute the query immediately — it only adds to the batch queue. Actual execution happens when executeBatch() is called. Used for bulk operations — much faster than individual execute() calls.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 6 — executeBatch + clearBatch + Summary ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Statement Codes | Page 6 — executeBatch(), clearBatch() &amp; Complete Execute Method Summary</div>
+
+  <div class="section">
+    <div class="section-header">📘 JDBC Execute Methods — Continued</div>
+    <div class="section-body">
+
+      <!-- executeBatch -->
+      <div class="subsection-title">🔹 5. executeBatch() ⭐</div>
+      <p>✅ <strong>Definition:</strong> Executes all queries added in batch and returns array of results.</p>
+      <p>✅ <strong>Syntax:</strong></p>
+      <div class="code-block">int[] result = stmt.executeBatch();
+int[] result = ps.executeBatch();
+int[] result = cs.executeBatch();</div>
+      <p>✅ <strong>Return:</strong> 👉 <code>int[]</code> (array of update counts)</p>
+      <div class="note-box">
+        <strong>📝 Extra — How addBatch() + executeBatch() work together:</strong>
+        <div class="code-block" style="margin-top:5px;">// Step 1: Add queries to batch
+stmt.addBatch("INSERT INTO student VALUES(1,'A',20)");
+stmt.addBatch("INSERT INTO student VALUES(2,'B',22)");
+stmt.addBatch("INSERT INTO student VALUES(3,'C',21)");
+
+// Step 2: Execute all at once
+int[] result = stmt.executeBatch();
+// result = [1, 1, 1] — each 1 means 1 row inserted per query</div>
+        <strong>Why use batch?</strong> Instead of 1000 separate execute() calls (1000 trips to DB), batch sends all in one trip → much faster → reduces network overhead.
+      </div>
+
+      <hr/>
+
+      <!-- clearBatch -->
+      <div class="subsection-title">🔹 6. clearBatch()</div>
+      <p>✅ <strong>Definition:</strong> Clears all queries from batch.</p>
+      <p>✅ <strong>Syntax:</strong></p>
+      <div class="code-block">stmt.clearBatch();
+ps.clearBatch();
+cs.clearBatch();</div>
+      <p>✅ <strong>Return:</strong> 👉 <code>void</code></p>
+      <div class="note-box">
+        <strong>📝 Extra:</strong> Used to cancel/empty all previously added batch queries without executing them. Useful when you want to reset the batch in case of errors or conditional logic before calling executeBatch().
+      </div>
+
+      <div class="interview-line">addBatch() adds SQL queries to a batch queue without executing. executeBatch() sends all queued queries to DB in one trip and returns int[] (update count per query). clearBatch() empties the queue. Batch processing is significantly faster than individual execute() calls for bulk operations.</div>
+    </div>
+  </div>
+
+  <!-- Execute Method Master Table -->
+  <div class="section">
+    <div class="section-header">📋 Execute Methods — Complete Summary Table</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Method</th>
+          <th>Returns</th>
+          <th>Used For</th>
+          <th>Statement Arg</th>
+          <th>PS/CS Arg</th>
+        </tr>
+        <tr>
+          <td><code>executeQuery(sql)</code></td>
+          <td>ResultSet</td>
+          <td>SELECT only</td>
+          <td>String sql</td>
+          <td>❌ No arg</td>
+        </tr>
+        <tr>
+          <td><code>executeUpdate(sql)</code></td>
+          <td>int (rows)</td>
+          <td>INSERT/UPDATE/DELETE/DDL</td>
+          <td>String sql</td>
+          <td>❌ No arg</td>
+        </tr>
+        <tr>
+          <td><code>execute(sql)</code></td>
+          <td>boolean</td>
+          <td>Any SQL</td>
+          <td>String sql</td>
+          <td>❌ No arg</td>
+        </tr>
+        <tr>
+          <td><code>addBatch(sql)</code></td>
+          <td>void</td>
+          <td>Add to batch queue</td>
+          <td>String sql</td>
+          <td>❌ No arg</td>
+        </tr>
+        <tr>
+          <td><code>executeBatch()</code></td>
+          <td>int[]</td>
+          <td>Execute all batched queries</td>
+          <td>❌ No arg</td>
+          <td>❌ No arg</td>
+        </tr>
+        <tr>
+          <td><code>clearBatch()</code></td>
+          <td>void</td>
+          <td>Clear batch queue</td>
+          <td>❌ No arg</td>
+          <td>❌ No arg</td>
+        </tr>
+      </table>
+
+      <div class="note-box" style="margin-top:8px;">
+        <strong>📝 execute() return value rule (Important for Interview):</strong><br>
+        <code>true</code> → first result is a ResultSet (SELECT was run)<br>
+        <code>false</code> → first result is an update count (DML/DDL was run)<br>
+        In our programs — DELETE returns <code>false</code> → printed as: <em>Successfully data deleted = false</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final Quick Revision -->
+  <div class="section">
+    <div class="section-header">🗂️ Final Quick Revision — All Programs + Methods</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">4 Programs — What each uses:</div>
+          <div class="step-row">
+            <div class="step-num">1</div>
+            <div><strong>InsertDataIntoTable</strong> — Class.forName() + execute() → INSERT 3 rows</div>
+          </div>
+          <div class="step-row" style="margin-top:5px;">
+            <div class="step-num">2</div>
+            <div><strong>UpdateData</strong> — new Driver() + registerDriver() + execute() → UPDATE salary</div>
+          </div>
+          <div class="step-row" style="margin-top:5px;">
+            <div class="step-num">3</div>
+            <div><strong>DeleteData</strong> — Class.forName() + execute() → DELETE + capture boolean res</div>
+          </div>
+          <div class="step-row" style="margin-top:5px;">
+            <div class="step-num">4</div>
+            <div><strong>Fetch_Data</strong> — Class.forName() + executeQuery() → SELECT + ResultSet + rs.next()</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title">Statement Hierarchy (java.sql):</div>
+          <div class="hierarchy" style="font-size:11px; line-height:1.8;">Statement (Interface)
+  ↑
+  └── PreparedStatement (Interface)
+            ↑
+            └── CallableStatement (Interface)</div>
+          <div class="subsection-title" style="margin-top:8px;">Key Rules:</div>
+          <ul>
+            <li>executeQuery() → SELECT only → ResultSet</li>
+            <li>executeUpdate() → DML/DDL → int</li>
+            <li>execute() → any SQL → boolean</li>
+            <li>addBatch() → queue SQL (no execute)</li>
+            <li>executeBatch() → run all queued → int[]</li>
+            <li>clearBatch() → empty queue → void</li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">Statement is the base interface. PreparedStatement extends it for parameterized/pre-compiled queries. CallableStatement extends PreparedStatement for stored procedures. executeQuery() → ResultSet; executeUpdate() → int; execute() → boolean; executeBatch() → int[].</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

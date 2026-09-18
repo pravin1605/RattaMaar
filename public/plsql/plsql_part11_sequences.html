@@ -1,0 +1,564 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+.warn-box{background:#fce4ec;border-left:5px solid #c62828;padding:10px 14px;margin-top:10px}
+.warn-box .lbl{font-size:10px;font-weight:700;color:#c62828;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.warn-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:4px}
+.mini-card p,.mini-card li{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+.prog-wrap{margin:10px 0}
+.prog-header{background:#2c2c2c;padding:6px 14px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.prog-label{color:#bbb;font-size:11px;margin-left:6px;font-family:Arial,sans-serif;font-weight:700;letter-spacing:.3px}
+.prog-body{background:#1e1e1e;border-radius:0 0 6px 6px;padding:13px 16px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.9;white-space:pre;overflow-x:auto;color:#d4d4d4}
+.kw{color:#569cd6;font-weight:700}
+.cm{color:#6a9955;font-style:italic}
+.str{color:#ce9178}
+.fn{color:#dcdcaa}
+.tp{color:#4ec9b0}
+.num{color:#b5cea8}
+.out-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:0 0 5px 5px;padding:6px 14px;font-family:'Courier New',monospace;font-size:12.5px;color:#1b5e20;margin-bottom:12px}
+.ex-block{border:1px solid #ccc;border-radius:6px;margin-bottom:14px;overflow:hidden}
+.ex-head{background:#1a1a6e;color:#fff;padding:7px 14px;font-size:13px;font-weight:700}
+.ex-logic{background:#f5f6ff;padding:8px 14px;font-size:12.5px;color:#333;border-bottom:1px solid #ddd}
+.flow-box{background:#f5f6ff;border:1px solid #b0bfff;border-radius:6px;padding:10px 14px;text-align:center;font-size:13px;color:#111;margin:8px 0;line-height:2.2}
+.flow-box b{color:#1a1a6e}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.tag{background:#eef0ff;color:#1a1a6e;font-size:12px;padding:3px 10px;border-radius:12px;border:1px solid #b0bfff}
+.clause-card{border:1px solid #ccc;border-radius:6px;overflow:hidden;margin-bottom:8px}
+.clause-head{background:#1a1a6e;color:#fff;padding:6px 14px;font-size:13px;font-weight:700}
+.clause-body{padding:10px 14px;font-size:13px;color:#111}
+.clause-body p{margin-bottom:4px}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">SQL — Sequences in Oracle</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; Auto-Generate Unique Numbers &nbsp;|&nbsp; Orange tag = Extra content</div>
+</div>
+
+<!-- ===== 1 ===== -->
+<div class="sec-label">1. What is a Sequence?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition — One Line</div>
+    <p>A Sequence is an Oracle database object used to automatically generate unique numeric values, commonly used for primary keys, invoice numbers, employee IDs, and order IDs.</p>
+  </div>
+  <ul>
+    <li>A sequence is a database object — stored independently of any table</li>
+    <li>Generates unique numbers automatically without developer intervention</li>
+    <li>Mainly used to populate primary key columns</li>
+    <li>One sequence can be shared across multiple tables</li>
+    <li>Sequence values are independent of transactions — ROLLBACK does not restore them</li>
+  </ul>
+  <div class="tag-row">
+    <span class="tag">Primary Keys</span>
+    <span class="tag">Employee IDs</span>
+    <span class="tag">Invoice Numbers</span>
+    <span class="tag">Order IDs</span>
+    <span class="tag">Ticket Numbers</span>
+    <span class="tag">Auto-Increment IDs</span>
+  </div>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Sequence = Automatic Number Dispenser — like a token machine at a bank, each person gets the next number automatically</p>
+    <p>NEXTVAL = Get next token &nbsp;|&nbsp; CURRVAL = Check your current token number</p>
+  </div>
+</div>
+
+<!-- ===== 2 ===== -->
+<div class="sec-label">2. Why Do We Use Sequences?</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:8px">Without a sequence, developers must manually track and insert the next ID:</p>
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct" style="color:#c62828">Without Sequence — Problem</div>
+      <ul style="margin-top:4px">
+        <li>Developer must check MAX(EMP_ID) every time</li>
+        <li>Two users inserting simultaneously may generate the same ID → duplicate error</li>
+        <li>Manual tracking is error-prone in large systems</li>
+        <li>More code, more maintenance</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct" style="color:#2e7d32">With Sequence — Solution</div>
+      <ul style="margin-top:4px">
+        <li>Oracle generates the next unique number automatically</li>
+        <li>Safe in multi-user environments — no duplicate IDs</li>
+        <li>Improves performance using CACHE</li>
+        <li>Less code, zero maintenance</li>
+      </ul>
+    </div>
+  </div>
+  <div class="flow-box" style="margin-top:10px">
+    <b>Call NEXTVAL</b><br>↓<br>
+    <b>Sequence Object generates next unique number</b><br>↓<br>
+    <b>100 → 101 → 102 → 103 → 104 → ...</b>
+  </div>
+</div>
+
+<!-- ===== 3 ===== -->
+<div class="sec-label">3. Sequence — Full Syntax</div>
+<div class="card">
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="prog-label">CREATE SEQUENCE — FULL SYNTAX</span>
+    </div>
+    <div class="prog-body"><span class="kw">CREATE SEQUENCE</span> sequence_name
+   <span class="kw">START WITH</span>    number         <span class="cm">-- First value generated</span>
+   <span class="kw">INCREMENT BY</span>  number         <span class="cm">-- Step size between values</span>
+   <span class="kw">MAXVALUE</span>      number         <span class="cm">-- Maximum value (or NOMAXVALUE)</span>
+   <span class="kw">MINVALUE</span>      number         <span class="cm">-- Minimum value (or NOMINVALUE)</span>
+   [<span class="kw">CYCLE</span> | <span class="kw">NOCYCLE</span>]            <span class="cm">-- Restart after MAXVALUE or stop</span>
+   [<span class="kw">CACHE</span> number | <span class="kw">NOCACHE</span>];    <span class="cm">-- Pre-load values in memory for speed</span></div>
+  </div>
+</div>
+
+<!-- ===== 4 ===== -->
+<div class="sec-label">4. Sequence Clauses — Explained</div>
+<div class="card">
+
+  <div class="clause-card">
+    <div class="clause-head">1. START WITH</div>
+    <div class="clause-body">
+      <p>Specifies the first value generated by the sequence.</p>
+      <p>START WITH 1 → generates 1, 2, 3, 4, 5 ...</p>
+      <p>START WITH 1001 → generates 1001, 1002, 1003 ...</p>
+    </div>
+  </div>
+
+  <div class="clause-card">
+    <div class="clause-head">2. INCREMENT BY</div>
+    <div class="clause-body">
+      <p>Specifies how much the sequence value increases (or decreases) with each call.</p>
+      <p>INCREMENT BY 1 → 1, 2, 3, 4, 5 ...</p>
+      <p>INCREMENT BY 10 → 1, 11, 21, 31, 41 ...</p>
+      <p>INCREMENT BY -1 → 10, 9, 8, 7, 6 ... (descending sequence) <span class="extra">Extra</span></p>
+    </div>
+  </div>
+
+  <div class="clause-card">
+    <div class="clause-head">3. MAXVALUE / NOMAXVALUE</div>
+    <div class="clause-body">
+      <p>MAXVALUE specifies the maximum value the sequence can reach.</p>
+      <p>MAXVALUE 100 → sequence stops at 100 (if NOCYCLE) or restarts (if CYCLE).</p>
+      <p>NOMAXVALUE → no upper limit — sequence can go up to 10^27 (default).</p>
+    </div>
+  </div>
+
+  <div class="clause-card">
+    <div class="clause-head">4. MINVALUE / NOMINVALUE</div>
+    <div class="clause-body">
+      <p>MINVALUE specifies the minimum value for the sequence.</p>
+      <p>Used mainly with CYCLE — sequence restarts from MINVALUE after reaching MAXVALUE.</p>
+      <p>NOMINVALUE → no lower limit (default is 1 for ascending, very small number for descending).</p>
+    </div>
+  </div>
+
+  <div class="clause-card">
+    <div class="clause-head">5. CYCLE / NOCYCLE</div>
+    <div class="clause-body">
+      <p>CYCLE → after reaching MAXVALUE, sequence restarts from MINVALUE automatically.</p>
+      <p>Example: START WITH 1, MAXVALUE 5, CYCLE → 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1 ...</p>
+      <p>NOCYCLE (default) → after reaching MAXVALUE, Oracle stops and raises ORA-08004 error.</p>
+    </div>
+  </div>
+
+  <div class="clause-card">
+    <div class="clause-head">6. CACHE / NOCACHE</div>
+    <div class="clause-body">
+      <p>CACHE number → Oracle pre-generates and stores that many sequence values in memory. Faster performance because values are read from memory, not disk.</p>
+      <p>Default CACHE size is 20. Example: CACHE 20 → Oracle pre-loads 20 values.</p>
+      <p>NOCACHE → values are generated one at a time from disk. Safer but slower.</p>
+      <p>Risk with CACHE: if the database crashes, the cached but unused values are lost — causing gaps in the sequence.</p>
+    </div>
+  </div>
+
+  <table style="margin-top:10px">
+    <tr><th>Clause</th><th>Default</th><th>Purpose</th></tr>
+    <tr><td>START WITH</td><td>1</td><td>First value of the sequence</td></tr>
+    <tr><td>INCREMENT BY</td><td>1</td><td>Step between each generated value</td></tr>
+    <tr><td>MAXVALUE</td><td>NOMAXVALUE (10^27)</td><td>Maximum value allowed</td></tr>
+    <tr><td>MINVALUE</td><td>NOMINVALUE (1)</td><td>Minimum value allowed</td></tr>
+    <tr><td>CYCLE</td><td>NOCYCLE</td><td>Restart after max or stop</td></tr>
+    <tr><td>CACHE</td><td>20</td><td>Pre-load values in memory for speed</td></tr>
+  </table>
+</div>
+
+<!-- ===== 5 ===== -->
+<div class="sec-label">5. NEXTVAL and CURRVAL</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">NEXTVAL</div>
+      <ul style="margin-top:4px">
+        <li>Generates and returns the next value in the sequence</li>
+        <li>Increments the sequence every time it is called</li>
+        <li>Can be called any number of times</li>
+        <li>Each call = one new unique number</li>
+      </ul>
+      <p style="font-size:11px;color:#555;margin-top:6px">Syntax: SELECT sequence_name.NEXTVAL FROM DUAL;</p>
+    </div>
+    <div class="mini-card">
+      <div class="mct">CURRVAL</div>
+      <ul style="margin-top:4px">
+        <li>Returns the current value of the sequence in this session</li>
+        <li>Does NOT increment the sequence</li>
+        <li>Can only be called AFTER NEXTVAL has been called once in the same session</li>
+        <li>If called before NEXTVAL → ORA-08002 error</li>
+      </ul>
+      <p style="font-size:11px;color:#555;margin-top:6px">Syntax: SELECT sequence_name.CURRVAL FROM DUAL;</p>
+    </div>
+  </div>
+  <table style="margin-top:10px">
+    <tr><th>Feature</th><th>NEXTVAL</th><th>CURRVAL</th></tr>
+    <tr><td>Purpose</td><td>Generate next unique value</td><td>Return current value of this session</td></tr>
+    <tr><td>Increments sequence?</td><td>Yes — always</td><td>No — just reads current value</td></tr>
+    <tr><td>Can be called first?</td><td>Yes</td><td>No — NEXTVAL must be called first</td></tr>
+    <tr><td>Error if misused</td><td>ORA-08004 if MAXVALUE reached with NOCYCLE</td><td>ORA-08002 if NEXTVAL not called first</td></tr>
+  </table>
+  <div class="warn-box">
+    <div class="lbl">Important — ORA-08002</div>
+    <p>CURRVAL can only be used after NEXTVAL has been called at least once in the current session. If you call CURRVAL before NEXTVAL, Oracle raises ORA-08002: sequence.CURRVAL is not yet defined in this session.</p>
+  </div>
+</div>
+
+<!-- ===== 6 ===== -->
+<div class="sec-label">6. Create Sequence — Full Example</div>
+<div class="card">
+  <div class="ex-block">
+    <div class="ex-head">Example 1 — Create EMP_SEQ and Use NEXTVAL</div>
+    <div class="ex-logic">Task: Create a sequence starting at 1, incrementing by 1, with max value 9999. Use it to generate employee IDs.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">CREATE SEQUENCE AND USE NEXTVAL / CURRVAL</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the sequence</span>
+<span class="kw">CREATE SEQUENCE</span> EMP_SEQ
+   <span class="kw">START WITH</span>   <span class="num">1</span>
+   <span class="kw">INCREMENT BY</span> <span class="num">1</span>
+   <span class="kw">MAXVALUE</span>     <span class="num">9999</span>
+   <span class="kw">NOCYCLE</span>
+   <span class="kw">CACHE</span>        <span class="num">20</span>;
+
+<span class="cm">-- Step 2: Generate next value</span>
+<span class="kw">SELECT</span> EMP_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;    <span class="cm">-- Returns: 1</span>
+<span class="kw">SELECT</span> EMP_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;    <span class="cm">-- Returns: 2</span>
+<span class="kw">SELECT</span> EMP_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;    <span class="cm">-- Returns: 3</span>
+
+<span class="cm">-- Step 3: Get current value (only after NEXTVAL is called)</span>
+<span class="kw">SELECT</span> EMP_SEQ.CURRVAL <span class="kw">FROM</span> DUAL;    <span class="cm">-- Returns: 3 (last generated value)</span></div>
+    </div>
+    <div class="out-bar">NEXTVAL Output: 1 → 2 → 3 each call &nbsp;|&nbsp; CURRVAL Output: 3 (current value)</div>
+  </div>
+</div>
+
+<!-- ===== 7 ===== -->
+<div class="sec-label">7. Sequence with a Table — PLAYER Example</div>
+<div class="card">
+  <div class="ex-block">
+    <div class="ex-head">Example 2 — PLAYER Table with PLAYER_SEQ</div>
+    <div class="ex-logic">Task: Create a PLAYER table with a primary key PID. Use a sequence to auto-generate PID values on each INSERT.<br>Logic: First row inserted manually with PID=1. Sequence starts at 2. All subsequent INSERTs use PLAYER_SEQ.NEXTVAL for PID.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">PLAYER TABLE + PLAYER_SEQ</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the table</span>
+<span class="kw">CREATE TABLE</span> PLAYER
+(
+   PID    <span class="tp">NUMBER</span>        <span class="kw">PRIMARY KEY</span>,
+   PNAME  <span class="tp">VARCHAR2</span>(20)  <span class="kw">NOT NULL</span>,
+   PSAL   <span class="tp">NUMBER</span>        <span class="kw">NOT NULL CHECK</span>(PSAL > <span class="num">0</span>),
+   PTEAM  <span class="tp">VARCHAR2</span>(20)  <span class="kw">NOT NULL</span>
+);
+
+<span class="cm">-- Step 2: Insert first row manually</span>
+<span class="kw">INSERT INTO</span> PLAYER <span class="kw">VALUES</span>(<span class="num">1</span>, <span class="str">'VIRAT'</span>, <span class="num">18</span>, <span class="str">'RCB'</span>);
+
+<span class="cm">-- Step 3: Create sequence starting from 2</span>
+<span class="kw">CREATE SEQUENCE</span> PLAYER_SEQ
+   <span class="kw">START WITH</span>   <span class="num">2</span>
+   <span class="kw">INCREMENT BY</span> <span class="num">1</span>;
+
+<span class="cm">-- Step 4: Insert remaining rows using sequence</span>
+<span class="kw">INSERT INTO</span> PLAYER <span class="kw">VALUES</span>(PLAYER_SEQ.NEXTVAL, <span class="str">'ROHIT'</span>, <span class="num">45</span>, <span class="str">'MI'</span>);
+<span class="kw">INSERT INTO</span> PLAYER <span class="kw">VALUES</span>(PLAYER_SEQ.NEXTVAL, <span class="str">'DHONI'</span>, <span class="num">7</span>,  <span class="str">'CSK'</span>);
+<span class="kw">INSERT INTO</span> PLAYER <span class="kw">VALUES</span>(PLAYER_SEQ.NEXTVAL, <span class="str">'SACHIN'</span>, <span class="num">10</span>, <span class="str">'MI'</span>);
+
+<span class="cm">-- Step 5: View records</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> PLAYER;</div>
+    </div>
+    <div class="out-bar">PID=1 VIRAT RCB &nbsp;|&nbsp; PID=2 ROHIT MI &nbsp;|&nbsp; PID=3 DHONI CSK &nbsp;|&nbsp; PID=4 SACHIN MI</div>
+  </div>
+</div>
+
+<!-- ===== 8 ===== -->
+<div class="sec-label">8. Real-Time Example — Employee Management System</div>
+<div class="card">
+  <div class="ex-block">
+    <div class="ex-head">Example 3 — Auto-Generate Employee IDs Starting from 1001</div>
+    <div class="ex-logic">Task: Create an EMPLOYEE table where EMP_ID auto-starts from 1001 and increments by 1. No developer needs to track the next ID.<br>Logic: EMP_SEQ generates 1001, 1002, 1003 automatically on each INSERT.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">EMPLOYEE TABLE + EMP_SEQ STARTING AT 1001</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the table</span>
+<span class="kw">CREATE TABLE</span> EMPLOYEE
+(
+   EMP_ID  <span class="tp">NUMBER</span>        <span class="kw">PRIMARY KEY</span>,
+   ENAME   <span class="tp">VARCHAR2</span>(30),
+   SAL     <span class="tp">NUMBER</span>
+);
+
+<span class="cm">-- Step 2: Create sequence starting at 1001</span>
+<span class="kw">CREATE SEQUENCE</span> EMP_SEQ
+   <span class="kw">START WITH</span>   <span class="num">1001</span>
+   <span class="kw">INCREMENT BY</span> <span class="num">1</span>;
+
+<span class="cm">-- Step 3: Insert using sequence — no manual ID needed</span>
+<span class="kw">INSERT INTO</span> EMPLOYEE <span class="kw">VALUES</span>(EMP_SEQ.NEXTVAL, <span class="str">'PRAVIN'</span>, <span class="num">50000</span>);
+<span class="kw">INSERT INTO</span> EMPLOYEE <span class="kw">VALUES</span>(EMP_SEQ.NEXTVAL, <span class="str">'RAHUL'</span>,  <span class="num">45000</span>);
+<span class="kw">INSERT INTO</span> EMPLOYEE <span class="kw">VALUES</span>(EMP_SEQ.NEXTVAL, <span class="str">'AMIT'</span>,   <span class="num">60000</span>);
+
+<span class="cm">-- Step 4: View records</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> EMPLOYEE;</div>
+    </div>
+    <div class="out-bar">EMP_ID=1001 PRAVIN 50000 &nbsp;|&nbsp; EMP_ID=1002 RAHUL 45000 &nbsp;|&nbsp; EMP_ID=1003 AMIT 60000</div>
+  </div>
+</div>
+
+<!-- ===== 9 ===== -->
+<div class="sec-label">9. CYCLE Sequence Example <span class="extra">Extra</span></div>
+<div class="card">
+  <div class="ex-block">
+    <div class="ex-head">Example 4 — CYCLE Sequence: Restart After Maximum Value</div>
+    <div class="ex-logic">Task: Create a sequence that cycles from 1 to 5 and then restarts from 1 again automatically.<br>Logic: START WITH 1, MAXVALUE 5, CYCLE → generates 1, 2, 3, 4, 5, 1, 2, 3, 4, 5 ... infinitely.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">CYCLE SEQUENCE — RESTART AFTER MAX</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Create a cycling sequence from 1 to 5</span>
+<span class="kw">CREATE SEQUENCE</span> CYCLE_SEQ
+   <span class="kw">START WITH</span>   <span class="num">1</span>
+   <span class="kw">INCREMENT BY</span> <span class="num">1</span>
+   <span class="kw">MAXVALUE</span>     <span class="num">5</span>
+   <span class="kw">MINVALUE</span>     <span class="num">1</span>
+   <span class="kw">CYCLE</span>
+   <span class="kw">NOCACHE</span>;
+
+<span class="cm">-- Calling NEXTVAL multiple times</span>
+<span class="kw">SELECT</span> CYCLE_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;   <span class="cm">-- 1</span>
+<span class="kw">SELECT</span> CYCLE_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;   <span class="cm">-- 2</span>
+<span class="kw">SELECT</span> CYCLE_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;   <span class="cm">-- 3</span>
+<span class="kw">SELECT</span> CYCLE_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;   <span class="cm">-- 4</span>
+<span class="kw">SELECT</span> CYCLE_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;   <span class="cm">-- 5</span>
+<span class="kw">SELECT</span> CYCLE_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;   <span class="cm">-- 1 (restarts!)</span>
+<span class="kw">SELECT</span> CYCLE_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;   <span class="cm">-- 2</span></div>
+    </div>
+    <div class="out-bar">Output: 1 → 2 → 3 → 4 → 5 → 1 → 2 → 3 → ... (cycles forever)</div>
+  </div>
+</div>
+
+<!-- ===== 10 ===== -->
+<div class="sec-label">10. Alter and Drop Sequence</div>
+<div class="card">
+  <div class="ex-block">
+    <div class="ex-head">ALTER SEQUENCE — Modify Increment Value</div>
+    <div class="ex-logic">Task: Change the increment of PLAYER_SEQ from 1 to 5. After ALTER, values jump by 5 each time.<br>Logic: ALTER SEQUENCE only changes future behavior — does not affect values already generated.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">ALTER SEQUENCE AND DROP SEQUENCE</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Alter: change increment to 5</span>
+<span class="kw">ALTER SEQUENCE</span> PLAYER_SEQ
+   <span class="kw">INCREMENT BY</span> <span class="num">5</span>;
+
+<span class="cm">-- After ALTER: next values will be 6, 11, 16, 21 ...</span>
+<span class="kw">SELECT</span> PLAYER_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;   <span class="cm">-- 6</span>
+<span class="kw">SELECT</span> PLAYER_SEQ.NEXTVAL <span class="kw">FROM</span> DUAL;   <span class="cm">-- 11</span>
+
+<span class="cm">-- You can also alter MAXVALUE, CYCLE, CACHE via ALTER SEQUENCE</span>
+<span class="kw">ALTER SEQUENCE</span> PLAYER_SEQ <span class="kw">MAXVALUE</span> <span class="num">9999</span>;
+<span class="kw">ALTER SEQUENCE</span> PLAYER_SEQ <span class="kw">CACHE</span> <span class="num">50</span>;
+
+<span class="cm">-- Drop: permanently delete the sequence</span>
+<span class="kw">DROP SEQUENCE</span> PLAYER_SEQ;</div>
+    </div>
+    <div class="out-bar">After ALTER INCREMENT BY 5: 6 → 11 → 16 → 21 ...</div>
+  </div>
+  <div class="tip-box">
+    <div class="lbl">Extra — What Can ALTER SEQUENCE Change?</div>
+    <p>You can alter: INCREMENT BY, MAXVALUE, MINVALUE, CYCLE/NOCYCLE, CACHE/NOCACHE. You CANNOT alter START WITH using ALTER — you must DROP and recreate the sequence to change the starting value.</p>
+  </div>
+</div>
+
+<!-- ===== 11 ===== -->
+<div class="sec-label">11. View and Manage Sequences</div>
+<div class="card">
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+      <span class="prog-label">MANAGING SEQUENCES — VIEW, ALTER, DROP</span>
+    </div>
+    <div class="prog-body"><span class="cm">-- View all sequences in your schema</span>
+<span class="kw">SELECT</span> SEQUENCE_NAME
+<span class="kw">FROM</span>   USER_SEQUENCES;
+
+<span class="cm">-- View details of a specific sequence</span>
+<span class="kw">SELECT</span> *
+<span class="kw">FROM</span>   USER_SEQUENCES
+<span class="kw">WHERE</span>  SEQUENCE_NAME = <span class="str">'PLAYER_SEQ'</span>;
+
+<span class="cm">-- View sequence metadata columns:</span>
+<span class="cm">-- SEQUENCE_NAME, MIN_VALUE, MAX_VALUE, INCREMENT_BY,</span>
+<span class="cm">-- CYCLE_FLAG, ORDER_FLAG, CACHE_SIZE, LAST_NUMBER</span>
+
+<span class="cm">-- Alter increment</span>
+<span class="kw">ALTER SEQUENCE</span> EMP_SEQ <span class="kw">INCREMENT BY</span> <span class="num">5</span>;
+
+<span class="cm">-- Drop permanently</span>
+<span class="kw">DROP SEQUENCE</span> EMP_SEQ;</div>
+  </div>
+  <table style="margin-top:10px">
+    <tr><th>Column in USER_SEQUENCES</th><th>Description</th></tr>
+    <tr><td>SEQUENCE_NAME</td><td>Name of the sequence</td></tr>
+    <tr><td>MIN_VALUE</td><td>Minimum value of the sequence</td></tr>
+    <tr><td>MAX_VALUE</td><td>Maximum value allowed</td></tr>
+    <tr><td>INCREMENT_BY</td><td>Step size between values</td></tr>
+    <tr><td>CYCLE_FLAG</td><td>Y = CYCLE, N = NOCYCLE</td></tr>
+    <tr><td>CACHE_SIZE</td><td>Number of values cached in memory</td></tr>
+    <tr><td>LAST_NUMBER</td><td>Last value written to disk — next available value</td></tr>
+  </table>
+</div>
+
+<!-- ===== 12 ===== -->
+<div class="sec-label">12. Sequence Gaps — Why They Occur <span class="extra">Extra</span></div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">What are Sequence Gaps?</div>
+    <p>Sequence gaps occur when some generated numbers are skipped and never used. This is normal and expected behavior in Oracle sequences.</p>
+  </div>
+  <table>
+    <tr><th>Cause of Gap</th><th>Explanation</th></tr>
+    <tr><td>Transaction Rollback</td><td>NEXTVAL was called → sequence incremented → transaction rolled back → number is lost. Next NEXTVAL skips the rolled-back number.</td></tr>
+    <tr><td>Database Crash with CACHE</td><td>If CACHE 20 is set and Oracle pre-loaded 20 values, but only 5 were used before a crash → remaining 15 values are lost on restart.</td></tr>
+    <tr><td>Multiple Users</td><td>Multiple sessions calling NEXTVAL simultaneously — each gets a unique number — but some may rollback later leaving gaps.</td></tr>
+    <tr><td>ALTER SEQUENCE</td><td>Changing INCREMENT BY causes the sequence to jump by the new step value from the current number.</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Important — Gaps are Expected and Normal</div>
+    <p>Sequence gaps are a normal and accepted behavior in Oracle. Sequences guarantee uniqueness — not continuity. If you need gap-free sequential numbers, use a different approach (not recommended for high-concurrency systems).</p>
+  </div>
+</div>
+
+<!-- ===== 13 ===== -->
+<div class="sec-label">13. Quick Revision</div>
+<div class="card">
+  <table>
+    <tr><th>Operation</th><th>Syntax</th></tr>
+    <tr><td>Create Sequence</td><td>CREATE SEQUENCE seq_name START WITH 1 INCREMENT BY 1;</td></tr>
+    <tr><td>Get Next Value</td><td>SELECT seq_name.NEXTVAL FROM DUAL;</td></tr>
+    <tr><td>Get Current Value</td><td>SELECT seq_name.CURRVAL FROM DUAL;</td></tr>
+    <tr><td>Use in INSERT</td><td>INSERT INTO table VALUES(seq_name.NEXTVAL, ...);</td></tr>
+    <tr><td>View All Sequences</td><td>SELECT SEQUENCE_NAME FROM USER_SEQUENCES;</td></tr>
+    <tr><td>View Details</td><td>SELECT * FROM USER_SEQUENCES WHERE SEQUENCE_NAME = 'NAME';</td></tr>
+    <tr><td>Alter Sequence</td><td>ALTER SEQUENCE seq_name INCREMENT BY 5;</td></tr>
+    <tr><td>Drop Sequence</td><td>DROP SEQUENCE seq_name;</td></tr>
+  </table>
+  <div class="warn-box">
+    <div class="lbl">Common Mistakes with Sequences</div>
+    <p>1. Calling CURRVAL before NEXTVAL in a session → ORA-08002 error</p>
+    <p>2. Expecting no gaps in sequence values → gaps are normal due to rollback or cache loss</p>
+    <p>3. Trying to change START WITH using ALTER SEQUENCE → not allowed; must DROP and recreate</p>
+    <p>4. Assuming ROLLBACK restores sequence values → sequences are transaction-independent; rollback does NOT restore used values</p>
+    <p>5. Creating sequence with same START WITH as existing data without checking MAX → duplicate primary key error</p>
+  </div>
+</div>
+
+<!-- ===== 14 ===== -->
+<div class="sec-label">14. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What is a sequence in Oracle?</div>
+  <div class="qa-a">A sequence is an Oracle database object used to automatically generate unique numeric values. It is commonly used for primary keys, employee IDs, invoice numbers, and any column that requires unique auto-incrementing values.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. What is the difference between NEXTVAL and CURRVAL?</div>
+  <div class="qa-a">NEXTVAL generates and returns the next value in the sequence — it increments the sequence every time. CURRVAL returns the current value in the session without incrementing. CURRVAL can only be called after NEXTVAL has been called at least once in the same session.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. Can a sequence generate duplicate values?</div>
+  <div class="qa-a">No, sequence values are always unique in a single pass — unless CYCLE is used. With CYCLE, after reaching MAXVALUE the sequence restarts from MINVALUE — which can generate previously used values.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. Can one sequence be used for multiple tables?</div>
+  <div class="qa-a">Yes. One sequence can be shared across multiple tables. The sequence simply generates unique numbers — it is not tied to any specific table. However, the values across tables will not be consecutive.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. Is sequence affected by COMMIT or ROLLBACK?</div>
+  <div class="qa-a">No. Sequence values are transaction-independent. Once NEXTVAL is called, the number is consumed even if the transaction is rolled back. The sequence does not restore the used number — this is a common cause of gaps.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. Can sequence values have gaps? Why? <span class="extra">Extra</span></div>
+  <div class="qa-a">Yes, gaps are normal and expected. Causes: 1. Transaction rollback — NEXTVAL was called but the INSERT was rolled back. 2. Database crash with CACHE — cached unused values are lost on restart. 3. ALTER SEQUENCE — changing INCREMENT BY causes a jump in values.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q7. What is CACHE in a sequence? <span class="extra">Extra</span></div>
+  <div class="qa-a">CACHE pre-loads a specified number of sequence values into memory for faster access. Default is CACHE 20. Values are read from memory instead of disk — faster performance. Risk: if the database crashes, the cached but unused values are lost — causing gaps. Use NOCACHE for guaranteed gap-free behavior (at the cost of speed).</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q8. Can we change START WITH using ALTER SEQUENCE? <span class="extra">Extra</span></div>
+  <div class="qa-a">No. ALTER SEQUENCE does not allow changing the START WITH value. To change the starting value, you must DROP the sequence and CREATE it again with the new START WITH value. You can change INCREMENT BY, MAXVALUE, MINVALUE, CYCLE, and CACHE using ALTER SEQUENCE.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q9. What is the difference between CYCLE and NOCYCLE? <span class="extra">Extra</span></div>
+  <div class="qa-a">CYCLE: after reaching MAXVALUE, the sequence restarts from MINVALUE and continues generating values. NOCYCLE (default): after reaching MAXVALUE, Oracle stops generating values and raises ORA-08004: sequence limit exceeded error.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q10. What is USER_SEQUENCES in Oracle? <span class="extra">Extra</span></div>
+  <div class="qa-a">USER_SEQUENCES is an Oracle data dictionary view that stores metadata about all sequences owned by the current user. Columns include SEQUENCE_NAME, MIN_VALUE, MAX_VALUE, INCREMENT_BY, CYCLE_FLAG, CACHE_SIZE, and LAST_NUMBER.</div>
+</div>
+
+<div class="divider"></div>
+<footer>SQL — Sequences in Oracle &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>

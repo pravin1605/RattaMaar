@@ -1,0 +1,1209 @@
+/* =========================================================
+   FAVORITES PAGE
+========================================================= */
+
+.favorites-page {
+  min-height: 100vh;
+  padding-bottom: 90px;
+
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.favorites-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding: 14px 18px;
+
+  background: color-mix(
+    in srgb,
+    var(--bg-secondary) 96%,
+    transparent
+  );
+
+  border-bottom: 1px solid var(--border-color);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.favorites-back-button {
+  width: 42px;
+  height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  padding: 0;
+
+  border: 1px solid var(--border-color);
+  border-radius: 13px;
+
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+
+  font-size: 21px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.favorites-back-button:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.favorites-back-button:active {
+  transform: scale(0.95);
+}
+
+
+/* =========================================================
+   HEADER TITLE
+========================================================= */
+
+.favorites-header-title {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-width: 0;
+}
+
+
+/* =========================================================
+   HEADER HEART
+========================================================= */
+
+.favorites-heart {
+  width: 43px;
+  height: 43px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 13px;
+
+  background: var(--danger-soft);
+  color: var(--danger);
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.favorites-heart span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 20px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   HEADER TEXT
+========================================================= */
+
+.favorites-header-title > div:last-child {
+  min-width: 0;
+}
+
+.favorites-header-title span {
+  display: block;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 1.1px;
+
+  color: var(--text-light);
+}
+
+.favorites-header-title h1 {
+  margin: 2px 0 0;
+
+  font-size: 19px;
+  line-height: 1.2;
+
+  color: var(--text-primary);
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.favorites-content {
+  width: 100%;
+  max-width: 950px;
+
+  margin: 0 auto;
+
+  padding: 20px 18px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.favorites-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 17px;
+}
+
+.favorites-intro > div:first-child {
+  min-width: 0;
+}
+
+.favorites-intro h2 {
+  margin: 0 0 3px;
+
+  font-size: 23px;
+  line-height: 1.25;
+
+  color: var(--text-primary);
+}
+
+.favorites-intro p {
+  margin: 0;
+
+  font-size: 13px;
+
+  color: var(--text-muted);
+}
+
+
+/* =========================================================
+   CLEAR ALL BUTTON
+========================================================= */
+
+.clear-favorites {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  flex-shrink: 0;
+
+  padding: 8px 10px;
+
+  border: 1px solid var(--danger);
+  border-radius: 10px;
+
+  background: var(--danger-soft);
+  color: var(--danger);
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    color 0.15s ease;
+}
+
+.clear-favorites:hover {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+}
+
+.clear-favorites:active {
+  transform: scale(0.96);
+}
+
+.clear-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 16px;
+  height: 16px;
+
+  font-size: 18px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.favorites-search {
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 0 14px;
+
+  margin-bottom: 16px;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+
+  background: var(--bg-secondary);
+
+  color: var(--text-muted);
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    color 0.25s ease;
+}
+
+.favorites-search:focus-within {
+  border-color: var(--accent);
+
+  box-shadow:
+    0 0 0 3px var(--accent-soft);
+}
+
+
+/* =========================================================
+   SEARCH ICON
+========================================================= */
+
+.search-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  width: 20px;
+  height: 20px;
+
+  font-size: 22px;
+  line-height: 1;
+
+  transform: rotate(-20deg);
+}
+
+
+/* =========================================================
+   SEARCH INPUT
+========================================================= */
+
+.favorites-search input {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+
+  padding: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: var(--text-primary);
+
+  font-size: 14px;
+}
+
+.favorites-search input::placeholder {
+  color: var(--text-light);
+}
+
+
+/* =========================================================
+   CLEAR SEARCH
+========================================================= */
+
+.clear-search {
+  width: 25px;
+  height: 25px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+
+  font-size: 17px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.clear-search:hover {
+  background: var(--border-color);
+  color: var(--text-primary);
+}
+
+
+/* =========================================================
+   FAVORITES LIST
+========================================================= */
+
+.favorites-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+/* =========================================================
+   FAVORITE CARD
+========================================================= */
+
+.favorite-card {
+  display: flex;
+  align-items: stretch;
+
+  min-width: 0;
+
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+
+  background: var(--bg-secondary);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.25s ease;
+}
+
+
+/* =========================================================
+   CARD MAIN BUTTON
+========================================================= */
+
+.favorite-card-main {
+  min-width: 0;
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 13px;
+
+  text-align: left;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: inherit;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   SUBJECT ICON
+========================================================= */
+
+.favorite-subject-icon {
+  width: 44px;
+  height: 44px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  font-size: 20px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   SUBJECT COLORS
+========================================================= */
+
+.favorite-subject-icon.purple {
+  background: #f3e8ff;
+}
+
+.favorite-subject-icon.orange {
+  background: #ffedd5;
+}
+
+.favorite-subject-icon.blue {
+  background: #dbeafe;
+}
+
+.favorite-subject-icon.yellow {
+  background: #fef9c3;
+}
+
+.favorite-subject-icon.red {
+  background: #fee2e2;
+}
+
+.favorite-subject-icon.cyan {
+  background: #cffafe;
+}
+
+.favorite-subject-icon.green,
+.favorite-subject-icon.emerald {
+  background: #dcfce7;
+}
+
+.favorite-subject-icon.teal {
+  background: #ccfbf1;
+}
+
+.favorite-subject-icon.indigo {
+  background: #e0e7ff;
+}
+
+
+/* =========================================================
+   DARK MODE SUBJECT ICON COLORS
+========================================================= */
+
+html[data-theme="dark"] .favorite-subject-icon.purple {
+  background: #3b1f50;
+}
+
+html[data-theme="dark"] .favorite-subject-icon.orange {
+  background: #4a2d12;
+}
+
+html[data-theme="dark"] .favorite-subject-icon.blue {
+  background: #172f52;
+}
+
+html[data-theme="dark"] .favorite-subject-icon.yellow {
+  background: #463d12;
+}
+
+html[data-theme="dark"] .favorite-subject-icon.red {
+  background: #4a1f22;
+}
+
+html[data-theme="dark"] .favorite-subject-icon.cyan {
+  background: #123d43;
+}
+
+html[data-theme="dark"] .favorite-subject-icon.green,
+html[data-theme="dark"] .favorite-subject-icon.emerald {
+  background: #123b29;
+}
+
+html[data-theme="dark"] .favorite-subject-icon.teal {
+  background: #123b38;
+}
+
+html[data-theme="dark"] .favorite-subject-icon.indigo {
+  background: #20264d;
+}
+
+
+/* =========================================================
+   SYSTEM DARK MODE
+========================================================= */
+
+@media (prefers-color-scheme: dark) {
+
+  html[data-theme="system"] .favorite-subject-icon.purple {
+    background: #3b1f50;
+  }
+
+  html[data-theme="system"] .favorite-subject-icon.orange {
+    background: #4a2d12;
+  }
+
+  html[data-theme="system"] .favorite-subject-icon.blue {
+    background: #172f52;
+  }
+
+  html[data-theme="system"] .favorite-subject-icon.yellow {
+    background: #463d12;
+  }
+
+  html[data-theme="system"] .favorite-subject-icon.red {
+    background: #4a1f22;
+  }
+
+  html[data-theme="system"] .favorite-subject-icon.cyan {
+    background: #123d43;
+  }
+
+  html[data-theme="system"] .favorite-subject-icon.green,
+  html[data-theme="system"] .favorite-subject-icon.emerald {
+    background: #123b29;
+  }
+
+  html[data-theme="system"] .favorite-subject-icon.teal {
+    background: #123b38;
+  }
+
+  html[data-theme="system"] .favorite-subject-icon.indigo {
+    background: #20264d;
+  }
+}
+
+
+/* =========================================================
+   CARD INFORMATION
+========================================================= */
+
+.favorite-card-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.favorite-subject {
+  display: block;
+
+  margin-bottom: 3px;
+
+  overflow: hidden;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+
+  color: var(--accent);
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.favorite-card-info h3 {
+  margin: 0 0 4px;
+
+  overflow: hidden;
+
+  font-size: 14px;
+  line-height: 1.35;
+
+  color: var(--text-primary);
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.favorite-card-info small {
+  display: block;
+
+  font-size: 10px;
+
+  color: var(--text-light);
+}
+
+
+/* =========================================================
+   ARROW
+========================================================= */
+
+.favorite-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  width: 20px;
+  height: 20px;
+
+  color: var(--text-light);
+
+  font-size: 28px;
+  line-height: 1;
+
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease;
+}
+
+
+/* =========================================================
+   REMOVE FAVORITE
+========================================================= */
+
+.remove-favorite {
+  width: 47px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  padding: 0;
+
+  border: none;
+  border-left: 1px solid var(--border-light);
+
+  background: var(--bg-secondary);
+
+  color: var(--danger);
+
+  font-size: 18px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.25s ease;
+}
+
+.remove-favorite:hover {
+  background: var(--danger-soft);
+}
+
+.remove-favorite:active {
+  background: var(--danger-soft);
+}
+
+
+/* =========================================================
+   CARD HOVER
+========================================================= */
+
+.favorite-card-main:hover .favorite-arrow {
+  color: var(--accent);
+
+  transform: translateX(3px);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.favorites-empty {
+  min-height: 360px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 35px 25px;
+
+  text-align: center;
+
+  border: 1px dashed var(--border-color);
+  border-radius: 20px;
+
+  background: var(--bg-secondary);
+
+  box-sizing: border-box;
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+/* =========================================================
+   EMPTY HEART
+========================================================= */
+
+.empty-heart {
+  width: 72px;
+  height: 72px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 16px;
+
+  border-radius: 22px;
+
+  background: var(--danger-soft);
+  color: var(--danger);
+
+  font-size: 38px;
+  line-height: 1;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+
+/* =========================================================
+   EMPTY TITLE
+========================================================= */
+
+.favorites-empty h2 {
+  margin: 0 0 8px;
+
+  font-size: 19px;
+  line-height: 1.3;
+
+  color: var(--text-primary);
+}
+
+
+/* =========================================================
+   EMPTY DESCRIPTION
+========================================================= */
+
+.favorites-empty p {
+  max-width: 330px;
+
+  margin: 0 0 20px;
+
+  font-size: 13px;
+  line-height: 1.55;
+
+  color: var(--text-muted);
+}
+
+
+/* =========================================================
+   BROWSE / CLEAR SEARCH BUTTON
+========================================================= */
+
+.favorites-empty button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 11px 17px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: var(--text-primary);
+  color: var(--bg-secondary);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.favorites-empty button:hover {
+  background: var(--text-secondary);
+}
+
+.favorites-empty button:active {
+  transform: scale(0.97);
+}
+
+
+/* =========================================================
+   BOOK ICON
+========================================================= */
+
+.empty-book-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 17px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   SEARCH EMPTY
+========================================================= */
+
+.search-empty {
+  min-height: 280px;
+}
+
+.search-empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 10px;
+
+  color: var(--text-light);
+
+  font-size: 32px;
+  line-height: 1;
+
+  transform: rotate(-20deg);
+}
+
+.search-empty h2 {
+  margin-bottom: 8px;
+}
+
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+========================================================= */
+
+.favorites-back-button:focus-visible,
+.clear-favorites:focus-visible,
+.favorites-search input:focus-visible,
+.clear-search:focus-visible,
+.favorite-card-main:focus-visible,
+.remove-favorite:focus-visible,
+.favorites-empty button:focus-visible {
+  outline: 3px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width: 600px) {
+
+  .favorites-content {
+    max-width: 850px;
+
+    margin: 0 auto;
+
+    padding: 28px 24px;
+  }
+
+  .favorites-header {
+    padding: 15px 24px;
+  }
+
+  .favorite-card-main {
+    padding: 15px;
+  }
+
+  .favorite-subject-icon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .favorite-card-info h3 {
+    font-size: 15px;
+  }
+
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 900px) {
+
+  .favorites-page {
+    padding-bottom: 30px;
+  }
+
+  .favorites-header {
+    padding: 15px 7%;
+  }
+
+  .favorites-content {
+    max-width: 950px;
+
+    padding: 35px 30px;
+  }
+
+  .favorite-card {
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      border-color 0.2s ease,
+      background-color 0.25s ease;
+  }
+
+  .favorite-card:hover {
+    transform: translateY(-2px);
+
+    border-color: var(--border-color);
+
+    box-shadow:
+      0 8px 25px var(--shadow-color);
+  }
+
+  .favorite-card-main {
+    padding: 16px;
+  }
+
+  .remove-favorite {
+    width: 52px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .favorites-header {
+    padding: 12px 14px;
+  }
+
+  .favorites-content {
+    padding: 18px 14px;
+  }
+
+  .favorites-header-title {
+    gap: 9px;
+  }
+
+  .favorites-heart {
+    width: 40px;
+    height: 40px;
+  }
+
+  .favorites-back-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .favorites-header-title h1 {
+    font-size: 18px;
+  }
+
+  .favorites-intro {
+    align-items: flex-start;
+  }
+
+  .favorites-intro h2 {
+    font-size: 21px;
+  }
+
+  .clear-favorites {
+    padding: 7px 8px;
+
+    font-size: 10px;
+  }
+
+  .favorite-card-main {
+    gap: 9px;
+
+    padding: 11px;
+  }
+
+  .favorite-subject-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 11px;
+
+    font-size: 18px;
+  }
+
+  .favorite-card-info h3 {
+    font-size: 13px;
+  }
+
+  .favorite-subject {
+    font-size: 9px;
+  }
+
+  .favorite-card-info small {
+    font-size: 9px;
+  }
+
+  .favorite-arrow {
+    width: 16px;
+
+    font-size: 25px;
+  }
+
+  .remove-favorite {
+    width: 43px;
+
+    font-size: 17px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .favorites-header {
+    gap: 8px;
+  }
+
+  .favorites-header-title {
+    gap: 7px;
+  }
+
+  .favorites-heart {
+    width: 38px;
+    height: 38px;
+  }
+
+  .favorites-back-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .favorites-intro {
+    gap: 8px;
+  }
+
+  .favorites-intro h2 {
+    font-size: 19px;
+  }
+
+  .favorites-intro p {
+    font-size: 11px;
+  }
+
+  .clear-favorites {
+    padding: 7px;
+
+    font-size: 9px;
+  }
+
+  .favorite-card-main {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .favorite-subject-icon {
+    width: 38px;
+    height: 38px;
+
+    font-size: 17px;
+  }
+
+  .favorite-card-info h3 {
+    font-size: 12px;
+  }
+
+  .favorite-arrow {
+    display: none;
+  }
+
+  .remove-favorite {
+    width: 40px;
+  }
+
+}
+
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+========================================================= */
+
+.favorites-back-button:focus-visible,
+.clear-favorites:focus-visible,
+.favorites-search input:focus-visible,
+.clear-search:focus-visible,
+.favorite-card-main:focus-visible,
+.remove-favorite:focus-visible,
+.favorites-empty button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .favorites-page,
+  .favorites-header,
+  .favorites-back-button,
+  .favorites-heart,
+  .clear-favorites,
+  .favorites-search,
+  .clear-search,
+  .favorite-card,
+  .favorite-arrow,
+  .remove-favorite,
+  .favorites-empty,
+  .empty-heart,
+  .favorites-empty button {
+    transition: none;
+  }
+}

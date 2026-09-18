@@ -1,0 +1,802 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center; font-size: 20px; font-weight: 700;
+    border: 2.5px solid #111; padding: 9px 18px;
+    margin-bottom: 5px; letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 13px; font-style: italic;
+  }
+  .page-title {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: #555; margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title {
+    font-weight: 700; font-size: 11.5px;
+    margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 11px; padding: 8px 12px;
+    margin: 6px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw  { color: #569cd6; }
+  .cm  { color: #6a9955; }
+  .st  { color: #ce9178; }
+  .cl  { color: #4ec9b0; }
+  .mt  { color: #dcdcaa; }
+  .nm  { color: #9cdcfe; }
+  .an  { color: #c586c0; }
+
+  .code-block {
+    background: #f5f5f5; border: 1px solid #ccc;
+    border-left: 3px solid #333;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px; padding: 7px 10px;
+    margin: 5px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.6;
+  }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  .flow-col {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 0;
+  }
+  .flow-box {
+    border: 1.5px solid #333; padding: 5px 16px;
+    font-size: 11.5px; font-weight: 600; text-align: center;
+    background: #fff; min-width: 160px;
+  }
+  .flow-arrow { font-size: 15px; color: #444; line-height: 1.3; text-align: center; }
+
+  .tag {
+    display: inline-block; background: #111; color: #fff;
+    font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px;
+    margin-right: 4px; vertical-align: middle;
+  }
+
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  .orm-table { width:100%; border-collapse: collapse; font-size: 12px; margin: 6px 0; }
+  .orm-table th { background: #333; color: #fff; padding: 5px 10px; text-align: center; }
+  .orm-table td { padding: 5px 10px; border: 1px solid #ccc; text-align: center; font-weight: 600; }
+  .orm-table tr:nth-child(even) td { background: #fafafa; }
+
+  .def-row {
+    display: flex; gap: 0; margin: 3px 0; border: 1px solid #ddd;
+  }
+  .def-term {
+    background: #f0f0f0; font-weight: 700;
+    font-size: 12px; padding: 4px 9px;
+    border-right: 1px solid #ccc; min-width: 38%;
+  }
+  .def-meaning { padding: 4px 9px; font-size: 12px; color: #333; flex: 1; }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  ol { padding-left: 17px; margin: 3px 0; }
+  ol li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — INTRO + DEFINITION + ORM ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">Hibernate — Introduction (Complete Notes)</div>
+  <div class="main-subtitle">Framework | ORM | Persistence Logic | JDBC vs Hibernate | Architecture</div>
+
+  <!-- Introduction -->
+  <div class="section">
+    <div class="section-header">📘 1. Introduction to Hibernate</div>
+    <div class="section-body">
+      <p>Hibernate is a <strong>framework</strong> that provides an <strong>abstraction layer</strong>.</p>
+      <p style="margin-top:4px;">That means: Programmer does not need to worry about internal implementation details.</p>
+
+      <div class="subsection-title" style="margin-top:7px;">🔹 Hibernate internally handles:</div>
+      <div class="two-col">
+        <ul>
+          <li>Establishing database connection</li>
+          <li>Writing SQL queries</li>
+          <li>Performing CRUD operations</li>
+        </ul>
+        <ul>
+          <li>Managing transactions</li>
+          <li>Mapping Java objects with database tables</li>
+          <li>Auto DDL operations (CREATE, ALTER, DROP)</li>
+        </ul>
+      </div>
+      <p style="margin-top:6px;">👉 So developer can focus mainly on <strong>business logic</strong>.</p>
+
+      <div class="interview-line">Hibernate is a Java ORM framework that provides an abstraction layer over JDBC. It internally handles DB connections, SQL generation, CRUD operations, transactions, and Java-to-table mapping — allowing developers to focus only on business logic.</div>
+    </div>
+  </div>
+
+  <!-- Simple Definition -->
+  <div class="section">
+    <div class="section-header">📘 2. Simple Definition of Hibernate</div>
+    <div class="section-body">
+      <p>Hibernate is a Java framework used to develop: <strong>Persistence Logic</strong></p>
+
+      <div class="subsection-title">🔹 What is Persistence Logic?</div>
+      <p><strong>Persistence</strong> means: Storing data permanently for long-term use.</p>
+      <p>Example:</p>
+      <ul>
+        <li>Saving employee details</li>
+        <li>Saving banking records</li>
+        <li>Saving student information</li>
+      </ul>
+      <p style="margin-top:4px;">Data is stored inside database for future use.</p>
+
+      <hr/>
+
+      <div class="subsection-title">🔹 Another Simple Definition — Hibernate is an:</div>
+      <div class="four-col" style="margin-top:6px;">
+        <div class="inline-box" style="text-align:center;">
+          <div class="inline-box-title">Open Source</div>
+          <p style="font-size:11.5px;">Source code freely available. No license fees. Can use, modify, improve.</p>
+        </div>
+        <div class="inline-box" style="text-align:center;">
+          <div class="inline-box-title">Lightweight</div>
+          <p style="font-size:11.5px;">Less memory. Less resources. Easy to integrate. Not heavy like enterprise servers.</p>
+        </div>
+        <div class="inline-box" style="text-align:center;">
+          <div class="inline-box-title">Non-Invasive</div>
+          <p style="font-size:11.5px;">Classes loosely coupled with Hibernate API. No need to extend/implement Hibernate classes.</p>
+        </div>
+        <div class="inline-box" style="text-align:center; border:2px solid #111;">
+          <div class="inline-box-title">ORM Framework</div>
+          <p style="font-size:11.5px;">Object Relational Mapping. Maps Java objects to DB tables automatically.</p>
+        </div>
+      </div>
+
+      <div class="interview-line">Hibernate is an Open Source, Lightweight, Non-Invasive ORM Framework for Java. Open Source = free to use/modify. Lightweight = low resource usage. Non-Invasive = POJO classes, no forced inheritance. ORM = maps Java classes to DB tables.</div>
+    </div>
+  </div>
+
+  <!-- ORM -->
+  <div class="section">
+    <div class="section-header">📘 3. ORM — Object Relational Mapping (Core Concept)</div>
+    <div class="section-body">
+      <p>ORM means: <strong>Object Relational Mapping</strong></p>
+      <p>Hibernate maps:</p>
+
+      <table class="orm-table" style="margin:7px 0;">
+        <tr>
+          <th>Java Side (Object)</th>
+          <th>Database Side (Relational)</th>
+        </tr>
+        <tr>
+          <td>Class</td>
+          <td>Table</td>
+        </tr>
+        <tr>
+          <td>Object (instance)</td>
+          <td>Row (record)</td>
+        </tr>
+        <tr>
+          <td>Variable (field)</td>
+          <td>Column</td>
+        </tr>
+        <tr>
+          <td>Data Type (int, String)</td>
+          <td>SQL Type (INT, VARCHAR)</td>
+        </tr>
+      </table>
+
+      <div class="subsection-title">🔹 Example — ORM in Action</div>
+      <div class="two-col">
+        <div>
+          <p style="font-size:12px; font-weight:700; margin-bottom:3px;">Java Object:</p>
+          <div class="code-block-dark"><span class="cl">Student</span> <span class="nm">s</span> = <span class="kw">new</span> <span class="cl">Student</span>();
+<span class="nm">s</span>.<span class="mt">setId</span>(1);
+<span class="nm">s</span>.<span class="mt">setName</span>(<span class="st">"Pravin"</span>);</div>
+        </div>
+        <div>
+          <p style="font-size:12px; font-weight:700; margin-bottom:3px;">Database Table (auto-mapped):</p>
+          <div style="border:1px solid #999; font-family:monospace; font-size:12px;">
+            <div style="background:#111; color:#fff; padding:3px 10px; display:grid; grid-template-columns:1fr 1fr;">
+              <span>id</span><span>name</span>
+            </div>
+            <div style="padding:3px 10px; display:grid; grid-template-columns:1fr 1fr;">
+              <span>1</span><span>Pravin</span>
+            </div>
+          </div>
+          <p style="font-size:12px; margin-top:5px;">👉 Hibernate automatically maps both. No manual SQL INSERT needed.</p>
+        </div>
+      </div>
+
+      <div class="interview-line">ORM (Object Relational Mapping) is the core concept of Hibernate. It maps Java Class → DB Table, Object → Row, Variable → Column. Hibernate automatically generates the SQL INSERT/SELECT/UPDATE/DELETE based on the Java object state — developer never writes SQL manually.</div>
+    </div>
+  </div>
+
+  <!-- Non-Invasive -->
+  <div class="section">
+    <div class="section-header">📘 4. Non-Invasive Nature of Hibernate</div>
+    <div class="section-body">
+      <p><strong>Non-invasive</strong> means: Hibernate classes are loosely coupled with Hibernate API.</p>
+      <p style="margin-top:4px;">That means:</p>
+      <ul>
+        <li>Our class does <strong>NOT</strong> need to implement Hibernate interfaces</li>
+        <li>Our class does <strong>NOT</strong> need to extend Hibernate classes</li>
+      </ul>
+      <p style="margin-top:5px;">We can create normal Java classes (POJO classes).</p>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <p style="font-size:12px; font-weight:700;">Simple POJO — becomes Hibernate Entity:</p>
+          <div class="code-block-dark"><span class="kw">public class</span> <span class="cl">Student</span> {
+    <span class="kw">private int</span> <span class="nm">id</span>;
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+    <span class="cm">// getters and setters</span>
+}</div>
+          <p style="font-size:12px; margin-top:4px;">This simple class can become Hibernate entity class. No need to extend Hibernate class. That is called: <strong>Non-Invasive Nature</strong></p>
+        </div>
+        <div>
+          <div class="inline-box" style="margin-top:2px;">
+            <div class="inline-box-title">POJO = Plain Old Java Object</div>
+            <ul style="font-size:12px;">
+              <li>Simple Java class</li>
+              <li>No extends (no parent framework class)</li>
+              <li>No implements (no framework interface)</li>
+              <li>Has private fields</li>
+              <li>Has public getters/setters</li>
+              <li>Optional: no-arg constructor</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="interview-line">Hibernate is non-invasive because entity classes are plain POJO classes — they don't need to extend HibernateEntity or implement any Hibernate interface. Hibernate uses annotations or XML to map the class to a table without polluting the class hierarchy.</div>
+    </div>
+  </div>
+
+  <!-- Who invented -->
+  <div class="section">
+    <div class="section-header">📘 5. Who Invented Hibernate?</div>
+    <div class="section-body">
+      <p>Hibernate was invented by: <strong>Gavin King in 2001.</strong></p>
+      <p style="margin-top:4px;">He also invented:</p>
+      <ul>
+        <li>JBoss Server</li>
+        <li>JPA (Java Persistence API)</li>
+      </ul>
+      <div class="note-box" style="margin-top:6px;">
+        <strong>📝 JPA vs Hibernate:</strong><br>
+        <strong>JPA</strong> (Java Persistence API) is a <strong>specification/standard</strong> defined by Java EE — it defines the rules and interfaces.<br>
+        <strong>Hibernate</strong> is an <strong>implementation</strong> of JPA — it provides the actual working code behind the JPA interfaces.<br>
+        👉 JPA = rules | Hibernate = implementation of those rules. Hibernate can also be used without JPA.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — FLOW + FUNCTIONALITIES ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Hibernate Notes | Page 2 — Hibernate Flow + 9 Functionalities</div>
+
+  <!-- Flow -->
+  <div class="section">
+    <div class="section-header">📘 6. Detailed Hibernate Flow</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="flow-col">
+            <div class="flow-box">Java Class / Object</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Hibernate Session</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Hibernate creates SQL internally</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">JDBC Driver</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="background:#e8f5e9;">PostgreSQL Database</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Flow Explanation:</div>
+          <div class="def-row">
+            <div class="def-term">Java Class / Object</div>
+            <div class="def-meaning">Developer creates/saves Java object (e.g. Student object)</div>
+          </div>
+          <div class="def-row">
+            <div class="def-term">Hibernate Session</div>
+            <div class="def-meaning">Session is the main interface to interact with Hibernate. Like Connection in JDBC. Used to save/get/delete objects.</div>
+          </div>
+          <div class="def-row">
+            <div class="def-term">Hibernate creates SQL</div>
+            <div class="def-meaning">Hibernate internally generates the correct SQL (INSERT/SELECT etc.) — developer never writes SQL.</div>
+          </div>
+          <div class="def-row">
+            <div class="def-term">JDBC Driver</div>
+            <div class="def-meaning">Hibernate uses JDBC internally to send SQL to DB. Developer never touches JDBC directly.</div>
+          </div>
+          <div class="def-row">
+            <div class="def-term">PostgreSQL Database</div>
+            <div class="def-meaning">Final destination — data stored/retrieved from DB.</div>
+          </div>
+          <div class="interview-line">Hibernate sits on top of JDBC. Developer uses Hibernate Session API → Hibernate generates SQL → passes to JDBC Driver → DB executes. Developer never writes SQL or manages connections manually.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Functionalities -->
+  <div class="section">
+    <div class="section-header">📘 7. Functionalities Supported by Hibernate (9 Features)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 1. Auto DDL Operations</div>
+      <p>DDL means: Data Definition Language. Commands: CREATE, ALTER, DROP</p>
+      <div class="two-col">
+        <div>
+          <p style="font-size:12px; font-weight:700;">In JDBC — Manual:</p>
+          <div class="code-block-dark"><span class="kw">create table</span> employee(
+   id <span class="kw">int</span>,
+   name <span class="kw">varchar</span>(30)
+);</div>
+        </div>
+        <div>
+          <p style="font-size:12px; font-weight:700;">In Hibernate — Automatic:</p>
+          <div class="code-block-dark"><span class="cm">// Just configure hbm2ddl.auto=create</span>
+<span class="cm">// Hibernate auto-creates table from class</span>
+<span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="cl">Employee</span> { ... }</div>
+          <p style="font-size:12px; margin-top:3px;">Hibernate automatically: create / drop / alter table internally.</p>
+        </div>
+      </div>
+      <p style="font-size:12px; margin-top:3px;"><strong>Real-Life:</strong> Without Hibernate → Developer manually creates furniture. With Hibernate → Machine automatically creates furniture.</p>
+
+      <hr/>
+
+      <div class="subsection-title">🔹 2. Auto Primary Key Generation</div>
+      <div class="two-col">
+        <div>
+          <p style="font-size:12px; font-weight:700;">In JDBC — Manual ID:</p>
+          <div class="code-block-dark"><span class="kw">insert into</span> employee
+<span class="kw">values</span>(101, <span class="st">'Pravin'</span>);</div>
+        </div>
+        <div>
+          <p style="font-size:12px; font-weight:700;">In Hibernate — Auto ID:</p>
+          <div class="code-block-dark"><span class="an">@GeneratedValue</span>
+<span class="kw">private int</span> <span class="nm">id</span>;</div>
+          <p style="font-size:12px; margin-top:3px;">Hibernate automatically generates: 1, 2, 3, 4 ... internally.</p>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="subsection-title">🔹 3. Database Independent</div>
+      <p>Hibernate supports: <strong>HQL (Hibernate Query Language)</strong> — database independent.</p>
+      <div class="two-col">
+        <div>
+          <div class="code-block-dark"><span class="cm">// HQL — works on all DBs</span>
+<span class="kw">from</span> Employee</div>
+          <p style="font-size:12px; margin-top:3px;">Works for: PostgreSQL, MySQL, Oracle. No need to change query.</p>
+        </div>
+        <div>
+          <div class="code-block-dark"><span class="cm">// SQL — DB specific</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> employee; <span class="cm">// MySQL</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> employee; <span class="cm">// PostgreSQL</span>
+<span class="cm">// May differ for Oracle etc.</span></div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="subsection-title">🔹 4. Exception Handling Not Mandatory</div>
+      <div class="two-col">
+        <div>
+          <p style="font-size:12px; font-weight:700;">JDBC — Mandatory try-catch:</p>
+          <div class="code-block-dark"><span class="kw">try</span> {
+    <span class="cm">// DB code</span>
+} <span class="kw">catch</span>(<span class="cl">SQLException</span> e) {
+    e.<span class="mt">printStackTrace</span>();
+}</div>
+        </div>
+        <div>
+          <p style="font-size:12px; font-weight:700;">Hibernate — Unchecked exceptions:</p>
+          <div class="code-block-dark"><span class="cm">// No mandatory try-catch</span>
+<span class="cm">// Hibernate uses Runtime/Unchecked</span>
+<span class="cm">// exceptions → code is cleaner</span>
+session.<span class="mt">save</span>(employee);</div>
+        </div>
+      </div>
+      <p style="font-size:12px; margin-top:4px;">👉 Hibernate mainly uses <strong>unchecked exceptions</strong> → code becomes cleaner.</p>
+
+      <hr/>
+
+      <div class="subsection-title">🔹 5. Hibernate Supports Cache Memory</div>
+      <p>Hibernate supports: <strong>Cache Memory</strong>. JDBC does not support caching directly.</p>
+      <div class="two-col">
+        <div>
+          <div class="subsection-title" style="font-size:12px;">What is Cache?</div>
+          <p>Cache stores frequently used data temporarily. So repeated database calls reduce.</p>
+          <ul>
+            <li>faster execution</li>
+            <li>better performance</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title" style="font-size:12px;">Real-Life Example:</div>
+          <p>Suppose you daily search same book in library. Instead of going library every time, you keep copy near you. That copy is: <strong>Cache</strong></p>
+          <p style="margin-top:4px; font-size:12px;">Hibernate has <strong>L1 Cache</strong> (Session level) and <strong>L2 Cache</strong> (SessionFactory level).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — REMAINING FEATURES + ARCHITECTURE ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Hibernate Notes | Page 3 — Features 6-9 + Architecture Flowchart</div>
+
+  <div class="section">
+    <div class="section-header">📘 7. Functionalities Supported by Hibernate (Continued)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 6. Hibernate Supports ORM</div>
+      <div class="two-col">
+        <div class="inline-box">
+          <div class="inline-box-title">JDBC works with:</div>
+          <ul>
+            <li>Primitive values</li>
+            <li>Rows and columns</li>
+            <li>ResultSet → manual data extraction</li>
+            <li>Developer maps column → variable manually</li>
+          </ul>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">Hibernate works with:</div>
+          <ul>
+            <li>Java objects (POJOs)</li>
+            <li>No ResultSet iteration needed</li>
+            <li>Auto mapping: column → field</li>
+            <li>Get complete object back from DB</li>
+          </ul>
+        </div>
+      </div>
+      <div class="code-block-dark"><span class="cm">// JDBC way — manual mapping</span>
+<span class="cl">ResultSet</span> <span class="nm">rs</span> = <span class="nm">stmt</span>.<span class="mt">executeQuery</span>(<span class="st">"SELECT * FROM student"</span>);
+<span class="cl">Student</span> <span class="nm">s</span> = <span class="kw">new</span> <span class="cl">Student</span>(); <span class="nm">s</span>.<span class="mt">setId</span>(<span class="nm">rs</span>.<span class="mt">getInt</span>(1)); <span class="nm">s</span>.<span class="mt">setName</span>(<span class="nm">rs</span>.<span class="mt">getString</span>(2));
+
+<span class="cm">// Hibernate way — auto mapping</span>
+<span class="cl">Student</span> <span class="nm">s</span> = session.<span class="mt">get</span>(<span class="cl">Student</span>.<span class="kw">class</span>, 1); <span class="cm">// complete object — auto mapped!</span></div>
+
+      <hr/>
+
+      <div class="subsection-title">🔹 7. Hibernate Supports Inheritance, Associations, Collections</div>
+      <div class="three-col">
+        <div class="inline-box">
+          <div class="inline-box-title">Inheritance</div>
+          <p>Hibernate maps Java inheritance hierarchy to DB tables automatically. Strategies: SINGLE_TABLE, TABLE_PER_CLASS, JOINED.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">Associations (Relationships)</div>
+          <ul>
+            <li>@OneToOne</li>
+            <li>@OneToMany</li>
+            <li>@ManyToOne</li>
+            <li>@ManyToMany</li>
+          </ul>
+          <p style="font-size:11.5px; margin-top:3px;">One student → Many courses<br>One customer → Many orders</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">Collections</div>
+          <p>Hibernate supports mapping Java collections (List, Set, Map) to DB tables automatically.</p>
+          <p style="font-size:11.5px; margin-top:3px;">E.g. List of phone numbers mapped to a separate table.</p>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="subsection-title">🔹 8. Hibernate Supports HQL (Hibernate Query Language)</div>
+      <p>Hibernate has its own query language: <strong>HQL (Hibernate Query Language)</strong></p>
+      <p>It is: database independent + object oriented</p>
+      <div class="two-col" style="margin-top:5px;">
+        <div>
+          <div class="code-block-dark"><span class="cm">// HQL — object oriented</span>
+<span class="kw">from</span> Employee <span class="kw">where</span> salary &gt; 50000
+
+<span class="cm">// Uses class name, not table name</span>
+<span class="cm">// Uses field name, not column name</span></div>
+        </div>
+        <div>
+          <div class="code-block-dark"><span class="cm">// SQL — table/column names</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> employee
+<span class="kw">WHERE</span> sal &gt; 50000</div>
+          <p style="font-size:12px; margin-top:4px;">HQL: <code>Employee</code> = Java class name<br>SQL: <code>employee</code> = table name<br>👉 HQL is closer to Java thinking.</p>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="subsection-title">🔹 9. Hibernate Supports Annotations</div>
+      <p>Apart from XML configuration, Hibernate supports <strong>annotations</strong>.</p>
+      <div class="code-block-dark"><span class="an">@Entity</span>                       <span class="cm">// marks class as Hibernate entity (maps to DB table)</span>
+<span class="an">@Table</span>(name=<span class="st">"employee"</span>)      <span class="cm">// specifies exact table name in DB</span>
+<span class="kw">public class</span> <span class="cl">Employee</span> {
+
+    <span class="an">@Id</span>                        <span class="cm">// marks this field as primary key</span>
+    <span class="an">@GeneratedValue</span>            <span class="cm">// auto-generates ID value (1, 2, 3...)</span>
+    <span class="kw">private int</span> <span class="nm">id</span>;
+
+    <span class="an">@Column</span>(name=<span class="st">"emp_name"</span>)  <span class="cm">// maps field to specific column name</span>
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+}</div>
+      <p>Annotations reduce XML configuration. Code and mapping in same file → easier to read and maintain.</p>
+      <div class="interview-line">Hibernate supports 9 key features: Auto DDL, Auto PK generation, DB independence via HQL, unchecked exceptions, L1/L2 cache, ORM, Inheritance/Associations/Collections, HQL, and Annotations. These make it far more powerful and developer-friendly than raw JDBC.</div>
+    </div>
+  </div>
+
+  <!-- Architecture -->
+  <div class="section">
+    <div class="section-header">📘 8. Final Hibernate Architecture Flowchart</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="flow-col">
+            <div class="flow-box">Java Application</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Hibernate API</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Configuration</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">SessionFactory</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Session</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Transaction</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">HQL / SQL</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">JDBC Driver</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="background:#e8f5e9;">PostgreSQL Database</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Architecture Components:</div>
+          <div class="def-row">
+            <div class="def-term">Configuration</div>
+            <div class="def-meaning">Reads hibernate.cfg.xml or annotations. Contains DB URL, username, password, dialect, entity classes.</div>
+          </div>
+          <div class="def-row">
+            <div class="def-term">SessionFactory</div>
+            <div class="def-meaning">Created ONCE from Configuration. Heavy object. Thread-safe. Used to create Session objects. Like DataSource/ConnectionPool in JDBC.</div>
+          </div>
+          <div class="def-row">
+            <div class="def-term">Session</div>
+            <div class="def-meaning">Main interface to interact with DB. Created per request (not thread-safe). Provides save(), get(), update(), delete(), createQuery(). Like Connection in JDBC.</div>
+          </div>
+          <div class="def-row">
+            <div class="def-term">Transaction</div>
+            <div class="def-meaning">Wraps DB operations. Begin → commit/rollback. Like setAutoCommit(false) + commit() in JDBC.</div>
+          </div>
+          <div class="def-row">
+            <div class="def-term">HQL / SQL</div>
+            <div class="def-meaning">Hibernate generates SQL from HQL or uses native SQL. Sent to DB via JDBC Driver.</div>
+          </div>
+          <div class="def-row">
+            <div class="def-term">JDBC Driver</div>
+            <div class="def-meaning">Hibernate uses JDBC internally. Developer never interacts with JDBC directly in Hibernate.</div>
+          </div>
+          <div class="interview-line">Hibernate Architecture: Configuration → SessionFactory (once) → Session (per request) → Transaction → HQL/SQL → JDBC → DB. SessionFactory = heavy, created once. Session = lightweight, created per operation. Transaction wraps DB changes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 4 — JDBC vs HIBERNATE + QUICK REVISION ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Hibernate Notes | Page 4 — JDBC vs Hibernate + Quick Revision</div>
+
+  <!-- Quick Revision Table -->
+  <div class="section">
+    <div class="section-header">📘 9. Quick Revision Table — JDBC vs Hibernate</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Feature</th>
+          <th>JDBC</th>
+          <th>Hibernate</th>
+        </tr>
+        <tr>
+          <td><strong>Database Independent</strong></td>
+          <td>❌ No — SQL is DB specific</td>
+          <td>✅ Yes — HQL works on all DBs</td>
+        </tr>
+        <tr>
+          <td><strong>ORM Support</strong></td>
+          <td>❌ No — manual row-column mapping</td>
+          <td>✅ Yes — auto Java object ↔ table mapping</td>
+        </tr>
+        <tr>
+          <td><strong>Cache Support</strong></td>
+          <td>❌ No — hits DB every time</td>
+          <td>✅ Yes — L1 (Session) + L2 (SessionFactory) cache</td>
+        </tr>
+        <tr>
+          <td><strong>Auto Table Creation</strong></td>
+          <td>❌ No — manual CREATE TABLE</td>
+          <td>✅ Yes — hbm2ddl.auto=create</td>
+        </tr>
+        <tr>
+          <td><strong>Auto ID Generation</strong></td>
+          <td>❌ No — developer manages IDs</td>
+          <td>✅ Yes — @GeneratedValue</td>
+        </tr>
+        <tr>
+          <td><strong>HQL Support</strong></td>
+          <td>❌ No</td>
+          <td>✅ Yes — object-oriented, DB-independent query language</td>
+        </tr>
+        <tr>
+          <td><strong>Relationships</strong></td>
+          <td>❌ Difficult — manual JOINs in SQL</td>
+          <td>✅ Easy — @OneToOne, @OneToMany, @ManyToMany</td>
+        </tr>
+        <tr>
+          <td><strong>Boilerplate Code</strong></td>
+          <td>❌ More — Class.forName, getConnection, createStatement, ResultSet, close...</td>
+          <td>✅ Less — session.save(obj) is enough</td>
+        </tr>
+        <tr>
+          <td><strong>Exception Handling</strong></td>
+          <td>❌ Mandatory — checked SQLException</td>
+          <td>✅ Optional — unchecked HibernateException</td>
+        </tr>
+        <tr>
+          <td><strong>Works with</strong></td>
+          <td>Primitive values, rows, columns</td>
+          <td>Java objects (POJOs)</td>
+        </tr>
+        <tr>
+          <td><strong>SQL Written by</strong></td>
+          <td>Developer (manually)</td>
+          <td>Hibernate (internally, auto-generated)</td>
+        </tr>
+        <tr>
+          <td><strong>Connection Management</strong></td>
+          <td>Developer manually (open/close)</td>
+          <td>Hibernate manages via SessionFactory</td>
+        </tr>
+        <tr>
+          <td><strong>Inheritance Mapping</strong></td>
+          <td>❌ Not supported</td>
+          <td>✅ Supported — multiple strategies</td>
+        </tr>
+        <tr>
+          <td><strong>Used for</strong></td>
+          <td>Simple, small applications</td>
+          <td>Enterprise, large-scale applications</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Key Terms Summary -->
+  <div class="section">
+    <div class="section-header">📘 10. Key Terms Summary</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="def-row"><div class="def-term">Hibernate</div><div class="def-meaning">Java ORM framework. Abstraction over JDBC. Auto-handles DB operations.</div></div>
+          <div class="def-row"><div class="def-term">Persistence</div><div class="def-meaning">Storing data permanently in DB for long-term use.</div></div>
+          <div class="def-row"><div class="def-term">ORM</div><div class="def-meaning">Object Relational Mapping — Class↔Table, Object↔Row, Variable↔Column.</div></div>
+          <div class="def-row"><div class="def-term">POJO</div><div class="def-meaning">Plain Old Java Object — simple class, no framework extends/implements.</div></div>
+          <div class="def-row"><div class="def-term">Non-Invasive</div><div class="def-meaning">Hibernate classes loosely coupled — no forced inheritance/implementation.</div></div>
+          <div class="def-row"><div class="def-term">HQL</div><div class="def-meaning">Hibernate Query Language — DB independent, object-oriented query language.</div></div>
+          <div class="def-row"><div class="def-term">Cache</div><div class="def-meaning">Temporary storage for frequently used data — reduces DB round trips.</div></div>
+        </div>
+        <div>
+          <div class="def-row"><div class="def-term">Configuration</div><div class="def-meaning">Reads hibernate.cfg.xml — DB URL, credentials, dialect, entity classes.</div></div>
+          <div class="def-row"><div class="def-term">SessionFactory</div><div class="def-meaning">Created once. Thread-safe. Factory for Session objects. Heavy object.</div></div>
+          <div class="def-row"><div class="def-term">Session</div><div class="def-meaning">Per request. Main Hibernate interface. save(), get(), update(), delete().</div></div>
+          <div class="def-row"><div class="def-term">Transaction</div><div class="def-meaning">Wraps DB operations. begin() → commit()/rollback().</div></div>
+          <div class="def-row"><div class="def-term">@Entity</div><div class="def-meaning">Marks class as Hibernate entity — maps to a DB table.</div></div>
+          <div class="def-row"><div class="def-term">@Id</div><div class="def-meaning">Marks field as primary key column.</div></div>
+          <div class="def-row"><div class="def-term">@GeneratedValue</div><div class="def-meaning">Auto-generates primary key values — no manual ID needed.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Common Annotations -->
+  <div class="section">
+    <div class="section-header">📘 11. Common Hibernate Annotations (Reference)</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Annotation</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr><td><code>@Entity</code></td><td>Marks class as Hibernate entity (maps to table)</td><td><code>@Entity public class Student {}</code></td></tr>
+        <tr><td><code>@Table</code></td><td>Specifies table name in DB</td><td><code>@Table(name="student")</code></td></tr>
+        <tr><td><code>@Id</code></td><td>Marks primary key field</td><td><code>@Id private int id;</code></td></tr>
+        <tr><td><code>@GeneratedValue</code></td><td>Auto-generates ID values</td><td><code>@GeneratedValue private int id;</code></td></tr>
+        <tr><td><code>@Column</code></td><td>Maps field to specific column name</td><td><code>@Column(name="stu_name")</code></td></tr>
+        <tr><td><code>@OneToOne</code></td><td>One-to-one relationship</td><td>Student ↔ Address</td></tr>
+        <tr><td><code>@OneToMany</code></td><td>One-to-many relationship</td><td>One Student → Many Courses</td></tr>
+        <tr><td><code>@ManyToMany</code></td><td>Many-to-many relationship</td><td>Students ↔ Courses</td></tr>
+      </table>
+      <div class="interview-line">Key Hibernate annotations: @Entity (class=table), @Id (primary key), @GeneratedValue (auto ID), @Column (column name), @OneToMany/@ManyToMany (relationships). SessionFactory is created once; Session is created per operation. Hibernate internally uses JDBC — developer never writes JDBC or SQL directly.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

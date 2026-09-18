@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ways to Create a Servlet — Notes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 18mm 15mm 20mm;
+    margin: 0 auto;
+    background: #fff;
+    page-break-after: always;
+    border-bottom: 2px dashed #bbb;
+  }
+
+  .page-header {
+    border-top: 3px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 5px 0;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-header .subject { font-size: 10.5px; font-weight: normal; letter-spacing: 1px; text-transform: uppercase; }
+  .page-header .topic-label { font-size: 10.5px; font-weight: bold; letter-spacing: 1px; }
+
+  .main-title {
+    font-size: 19px;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid #000;
+    padding: 9px 0;
+    margin-bottom: 16px;
+    background: #000;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-size: 13.5px;
+    font-weight: bold;
+    border-left: 5px solid #000;
+    padding-left: 10px;
+    margin: 14px 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .sub-title {
+    font-size: 12.5px;
+    font-weight: bold;
+    margin: 10px 0 5px 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+  }
+
+  /* NUMBERED WAY HEADER */
+  .way-header {
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 7px 14px;
+    margin: 14px 0 8px 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .def-box {
+    border: 2px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .def-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .interview-box {
+    border: 2px solid #000;
+    padding: 10px 13px;
+    margin: 10px 0;
+    background: #f5f5f5;
+  }
+  .interview-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 8px; padding-bottom: 3px;
+  }
+  .interview-box .q { font-weight: bold; margin-top: 9px; }
+  .interview-box .a { margin-left: 14px; margin-top: 3px; }
+
+  .memory-box {
+    border: 2px dashed #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .memory-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  .example-box {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: #fafafa;
+  }
+  .example-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .tip-box {
+    border: 2px solid #000;
+    border-left: 6px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .tip-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  /* ADVANTAGE / DISADVANTAGE */
+  .adv-dis {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 8px 0;
+  }
+  .adv-box { border: 2px solid #000; padding: 7px 10px; }
+  .adv-box .adv-label { font-size: 10px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #000; margin-bottom: 5px; padding-bottom: 2px; }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #f2f2f2;
+    border: 1px solid #000;
+    border-left: 4px solid #000;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    margin: 8px 0;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .code-block .comment { color: #555; font-style: italic; }
+
+  /* FLOW */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px auto;
+  }
+  .flow-box {
+    border: 2px solid #000;
+    padding: 6px 20px;
+    font-weight: bold;
+    font-size: 12px;
+    min-width: 180px;
+    text-align: center;
+    background: #fff;
+  }
+  .flow-box.dark { background: #000; color: #fff; }
+  .flow-arrow { font-size: 17px; font-weight: bold; color: #000; text-align: center; padding: 1px 0; }
+  .flow-label { font-size: 10px; color: #444; text-align: center; font-style: italic; }
+
+  /* HIERARCHY */
+  .hierarchy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin: 12px auto;
+  }
+  .hier-box {
+    border: 2px solid #000;
+    padding: 7px 30px;
+    font-weight: bold;
+    font-size: 12px;
+    min-width: 220px;
+    text-align: center;
+  }
+  .hier-box.dark { background: #000; color: #fff; }
+  .hier-arrow { font-size: 18px; font-weight: bold; text-align: center; line-height: 1.3; }
+  .hier-label { font-size: 10px; font-style: italic; text-align: center; color: #444; margin-bottom: 2px; }
+
+  /* STEP FLOW */
+  .step-grid {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 5px 10px;
+    margin: 10px 0;
+  }
+  .step-num {
+    background: #000; color: #fff; font-weight: bold;
+    font-size: 12px; text-align: center; padding: 5px 0;
+    height: fit-content; min-width: 30px;
+  }
+  .step-content { border: 1px solid #000; padding: 5px 10px; font-size: 12px; }
+  .step-content strong { display: block; margin-bottom: 2px; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+  th { background: #000; color: #fff; padding: 6px 9px; font-size: 12px; text-align: left; border: 1px solid #000; }
+  td { padding: 5px 9px; border: 1px solid #000; font-size: 12px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f6f6f6; }
+
+  ul.notes-list { list-style: none; margin: 5px 0 5px 10px; padding: 0; }
+  ul.notes-list li { padding: 2px 0 2px 16px; position: relative; }
+  ul.notes-list li::before { content: "▸"; position: absolute; left: 0; font-size: 11px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 8px 0; }
+
+  code {
+    font-family: 'Courier New', monospace; font-size: 11.5px;
+    background: #efefef; padding: 1px 5px; border: 1px solid #ccc;
+  }
+
+  p { margin: 5px 0; }
+
+  /* FILE LABEL */
+  .file-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: #000;
+    color: #fff;
+    padding: 2px 8px;
+    display: inline-block;
+    margin-bottom: 0;
+  }
+
+  /* PROJECT STRUCTURE */
+  .proj-struct {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    border: 1px solid #000;
+    background: #f8f8f8;
+    padding: 8px 14px;
+    margin: 8px 0;
+    line-height: 1.8;
+  }
+
+  @media print {
+    body { background: #fff; }
+    .page { border-bottom: none; margin: 0; page-break-after: always; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: OVERVIEW + SERVLET INTERFACE ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 5 : Ways to Create a Servlet</span>
+  </div>
+
+  <div class="main-title">5. Ways to Create a Servlet</div>
+
+  <p>A Servlet can be created in <strong>3 ways</strong>:</p>
+
+  <div class="three-col" style="margin: 10px 0;">
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">Way 1</div>
+      Implementing<br><strong>Servlet Interface</strong>
+    </div>
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">Way 2</div>
+      Extending<br><strong>GenericServlet</strong>
+    </div>
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">Way 3</div>
+      Extending<br><strong>HttpServlet</strong>
+    </div>
+  </div>
+
+  <!-- Evolution -->
+  <div class="section-title">Evolution / Hierarchy</div>
+  <p>As we move downward in the hierarchy, Java <strong>reduces our work</strong> and provides <strong>more features</strong>.</p>
+
+  <div class="hierarchy">
+    <div class="hier-box dark">«interface» Servlet Interface</div>
+    <div class="hier-label">5 methods — must implement all</div>
+    <div class="hier-arrow">↓ implements</div>
+    <div class="hier-box">GenericServlet (abstract class)</div>
+    <div class="hier-label">Protocol-independent — only override service()</div>
+    <div class="hier-arrow">↓ extends</div>
+    <div class="hier-box dark">HttpServlet (abstract class)</div>
+    <div class="hier-label">HTTP-specific — use doGet() / doPost()</div>
+    <div class="hier-arrow">↓ extends</div>
+    <div class="hier-box">Your Servlet Class</div>
+  </div>
+
+  <!-- WAY 1 -->
+  <div class="way-header">Way 1 — Implementing Servlet Interface</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 What is Servlet Interface?</div>
+    <p>Java needed a <strong>common set of rules</strong> that every servlet must follow. Therefore Java created the <strong>Servlet Interface</strong>.</p>
+    <p>This interface defines 5 methods that every servlet must implement:</p>
+    <div class="two-col" style="margin-top:6px;">
+      <ul class="notes-list">
+        <li><code>init()</code> — initialize servlet</li>
+        <li><code>service()</code> — handle requests</li>
+        <li><code>destroy()</code> — cleanup</li>
+      </ul>
+      <ul class="notes-list">
+        <li><code>getServletConfig()</code> — get config</li>
+        <li><code>getServletInfo()</code> — get info string</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="adv-dis">
+    <div class="adv-box">
+      <div class="adv-label">✅ Advantage</div>
+      <ul class="notes-list">
+        <li>Complete control over servlet behavior</li>
+        <li>Good for understanding internal working</li>
+      </ul>
+    </div>
+    <div class="adv-box">
+      <div class="adv-label">❌ Disadvantage</div>
+      <ul class="notes-list">
+        <li>Must implement <strong>all 5 methods</strong> — even unused ones</li>
+        <li>Lots of unnecessary boilerplate code</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="box-label">📍 Where Used?</div>
+    <p><strong>Rarely used</strong> in real projects. Mainly used to understand the internal working of servlets.</p>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 2: GENERICSERVLET ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 5 : Ways to Create a Servlet (continued)</span>
+  </div>
+
+  <!-- WAY 2 -->
+  <div class="way-header">Way 2 — Extending GenericServlet</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 What is GenericServlet?</div>
+    <p><strong>GenericServlet</strong> is an <strong>abstract class</strong> that already implements the Servlet Interface.</p>
+    <p>It provides ready-made implementations for: <code>init()</code>, <code>destroy()</code>, <code>getServletConfig()</code>, <code>getServletInfo()</code></p>
+    <p>You only need to override: <strong><code>service()</code></strong></p>
+  </div>
+
+  <p><strong>Why was GenericServlet introduced?</strong> Developers complained: <em>"Why should we write all 5 methods when we only need service()?"</em> → Java introduced GenericServlet to solve this.</p>
+
+  <div class="adv-dis">
+    <div class="adv-box">
+      <div class="adv-label">✅ Advantage</div>
+      <ul class="notes-list">
+        <li>Less coding — only override <code>service()</code></li>
+        <li>Protocol independent — can handle any protocol</li>
+      </ul>
+    </div>
+    <div class="adv-box">
+      <div class="adv-label">❌ Disadvantage</div>
+      <ul class="notes-list">
+        <li>Cannot distinguish GET, POST, PUT, DELETE</li>
+        <li>Everything goes through single <code>service()</code> method</li>
+        <li>Developer must manually check request type</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="box-label">📍 Where Used?</div>
+    <p>Used when <strong>protocol independence</strong> is required. Mostly for learning. Rarely used in modern web applications.</p>
+  </div>
+
+  <!-- Project Structure -->
+  <div class="sub-title">Project Structure — GenericServlet Example</div>
+  <div class="proj-struct">src/main/java/
+ └── com/ty/servlet/
+       └── RegistrationForm.java
+src/main/webapp/
+ ├── Registration.html
+ └── WEB-INF/
+       └── web.xml</div>
+
+  <!-- HTML File -->
+  <div class="sub-title">Registration.html — Why Needed?</div>
+  <p>HTML page collects data from the user and sends it to the servlet via form submission.</p>
+  <div class="file-label">Registration.html</div>
+  <div class="code-block">&lt;form action="register"&gt;
+
+  Name  : &lt;input type="text"  name="name"&gt;
+  Age   : &lt;input type="text"  name="age"&gt;
+  Email : &lt;input type="email" name="email"&gt;
+
+  &lt;input type="submit" value="Register"&gt;
+
+&lt;/form&gt;</div>
+
+  <!-- Servlet Class -->
+  <div class="sub-title">RegistrationForm.java — Why Needed?</div>
+  <p>Receives the request sent by HTML form and processes the data.</p>
+  <div class="file-label">RegistrationForm.java</div>
+  <div class="code-block">public class RegistrationForm extends GenericServlet {
+
+    @Override
+    public void service(ServletRequest req, ServletResponse res)
+            throws ServletException, IOException {
+
+        String name  = req.getParameter("name");
+        String age   = req.getParameter("age");
+        String email = req.getParameter("email");
+
+        System.out.println(name);  <span class="comment">// prints to server console</span>
+        System.out.println(age);
+        System.out.println(email);
+    }
+}</div>
+
+  <!-- web.xml -->
+  <div class="sub-title">web.xml — Why Needed?</div>
+  <p>Tomcat does not know which URL should execute which servlet. <code>web.xml</code> creates the URL-to-Servlet mapping.</p>
+  <div class="file-label">web.xml</div>
+  <div class="code-block">&lt;web-app&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;register&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;com.ty.servlet.RegistrationForm&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;register&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/register&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+&lt;/web-app&gt;</div>
+
+  <!-- Connection Flow -->
+  <div class="sub-title">Connection Between Files — Step by Step</div>
+  <div class="step-grid">
+    <div class="step-num">1</div>
+    <div class="step-content"><strong>User opens</strong> <code>Registration.html</code></div>
+    <div class="step-num">2</div>
+    <div class="step-content"><strong>User enters</strong> Name = Pravin, Age = 23, Email = abc@gmail.com and clicks Register</div>
+    <div class="step-num">3</div>
+    <div class="step-content"><strong>Form submits</strong> to <code>action="register"</code> → request goes to URL <code>/register</code></div>
+    <div class="step-num">4</div>
+    <div class="step-content"><strong>Tomcat checks</strong> <code>web.xml</code> for <code>&lt;url-pattern&gt;/register&lt;/url-pattern&gt;</code></div>
+    <div class="step-num">5</div>
+    <div class="step-content"><strong>Tomcat finds</strong> <code>RegistrationForm</code> servlet class mapped to that URL</div>
+    <div class="step-num">6</div>
+    <div class="step-content"><strong>Tomcat executes</strong> <code>service()</code> method of <code>RegistrationForm</code></div>
+    <div class="step-num">7</div>
+    <div class="step-content"><strong>Servlet reads</strong> data using <code>req.getParameter("name")</code>, etc.</div>
+    <div class="step-num">8</div>
+    <div class="step-content"><strong>Response generated</strong> and sent back to browser</div>
+  </div>
+
+  <!-- Flow Diagram -->
+  <div class="flow" style="margin-top:12px;">
+    <div class="flow-box">Registration.html</div>
+    <div class="flow-label">Form Submit (action="register")</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">/register (URL)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">web.xml — URL Mapping</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">RegistrationForm Servlet</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">service() → reads parameters</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Response sent to Browser</div>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 3: HTTPSERVLET ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 5 : Ways to Create a Servlet (continued)</span>
+  </div>
+
+  <!-- WAY 3 -->
+  <div class="way-header">Way 3 — Extending HttpServlet (Most Used ⭐)</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 What is HttpServlet?</div>
+    <p><strong>HttpServlet</strong> is an abstract class that <strong>extends GenericServlet</strong> and provides <strong>HTTP-specific methods</strong>.</p>
+    <p><strong>Why introduced?</strong> GenericServlet handles all requests through one <code>service()</code> method. But web applications mainly use HTTP — developers wanted GET, POST, PUT, DELETE to be <strong>handled separately</strong>.</p>
+  </div>
+
+  <div class="sub-title">HTTP Methods Supported</div>
+  <table>
+    <thead><tr><th>Method</th><th>Purpose</th><th>Real-World Use</th></tr></thead>
+    <tbody>
+      <tr><td><code>doGet()</code></td><td>Handle HTTP GET request</td><td>Fetch data, open page, search</td></tr>
+      <tr><td><code>doPost()</code></td><td>Handle HTTP POST request</td><td>Login form, register form, submit data</td></tr>
+      <tr><td><code>doPut()</code></td><td>Handle HTTP PUT request</td><td>Update existing record</td></tr>
+      <tr><td><code>doDelete()</code></td><td>Handle HTTP DELETE request</td><td>Delete a record</td></tr>
+    </tbody>
+  </table>
+
+  <div class="adv-dis">
+    <div class="adv-box">
+      <div class="adv-label">✅ Advantage</div>
+      <ul class="notes-list">
+        <li>Very powerful — separate methods for each request type</li>
+        <li>Least coding effort</li>
+        <li>Cleanly separates GET and POST logic</li>
+        <li>Used in all real-world projects</li>
+      </ul>
+    </div>
+    <div class="adv-box">
+      <div class="adv-label">❌ Disadvantage</div>
+      <ul class="notes-list">
+        <li>Works <strong>only with HTTP</strong> protocol</li>
+        <li>Not protocol-independent</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="box-label">📍 Where Used?</div>
+    <p><strong>Most commonly used</strong> servlet type. Used in: Banking Applications, E-Commerce, Hospital Management, College Portals, Employee Management — almost every real-world servlet application.</p>
+  </div>
+
+  <!-- Project Structure -->
+  <div class="sub-title">Project Structure — HttpServlet Example</div>
+  <div class="proj-struct">src/main/java/
+ └── com/ty/
+       └── PageA.java
+src/main/webapp/
+ ├── Student.html
+ └── WEB-INF/
+       └── web.xml</div>
+
+  <!-- HTML File -->
+  <div class="sub-title">Student.html</div>
+  <div class="file-label">Student.html</div>
+  <div class="code-block">&lt;form action="student"&gt;
+
+  Student Name : &lt;input type="text" name="studentname"&gt;
+
+  &lt;input type="submit"&gt;
+
+&lt;/form&gt;</div>
+
+  <!-- Servlet Class -->
+  <div class="sub-title">PageA.java — HttpServlet</div>
+  <div class="file-label">PageA.java</div>
+  <div class="code-block">public class PageA extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req,
+                         HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        PrintWriter p = resp.getWriter();   <span class="comment">// get output stream</span>
+
+        p.print("&lt;h1&gt;Student Name : "
+                + req.getParameter("studentname")   <span class="comment">// read form data</span>
+                + "&lt;/h1&gt;");
+    }
+}</div>
+
+  <!-- web.xml -->
+  <div class="sub-title">web.xml</div>
+  <div class="file-label">web.xml</div>
+  <div class="code-block">&lt;servlet&gt;
+    &lt;servlet-name&gt;student&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;com.ty.PageA&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;student&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/student&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</div>
+
+  <!-- Flow Diagram -->
+  <div class="sub-title">Connection Flow</div>
+  <div class="flow">
+    <div class="flow-box">Student.html</div>
+    <div class="flow-label">Form Submit (action="student") — GET request</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">/student (URL)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">web.xml — URL Mapping</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">PageA Servlet (HttpServlet)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">service() → detects GET → calls doGet()</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">doGet() → reads name → writes response</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Browser displays: Student Name : Pravin</div>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 4: COMPARISON + INTERVIEW Q&A ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 5 : Ways to Create a Servlet (continued)</span>
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="section-title">Comparison Table — All 3 Ways</div>
+  <table>
+    <thead>
+      <tr><th>Feature</th><th>Servlet Interface</th><th>GenericServlet</th><th>HttpServlet</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Type</strong></td><td>Interface</td><td>Abstract Class</td><td>Abstract Class</td></tr>
+      <tr><td><strong>Protocol</strong></td><td>Independent</td><td>Independent</td><td>HTTP Only</td></tr>
+      <tr><td><strong>Coding Effort</strong></td><td>High (5 methods)</td><td>Medium (1 method)</td><td>Low (override needed)</td></tr>
+      <tr><td><strong>Must Override</strong></td><td>All 5 methods</td><td><code>service()</code></td><td><code>doGet()</code> / <code>doPost()</code></td></tr>
+      <tr><td><strong>HTTP Support</strong></td><td>No</td><td>No</td><td>Yes ✅</td></tr>
+      <tr><td><strong>GET/POST Separation</strong></td><td>No</td><td>No</td><td>Yes ✅</td></tr>
+      <tr><td><strong>Real Project Usage</strong></td><td>Rare</td><td>Rare</td><td><strong>Very High ⭐</strong></td></tr>
+      <tr><td><strong>Introduced For</strong></td><td>Common rules</td><td>Reduce boilerplate</td><td>HTTP handling</td></tr>
+    </tbody>
+  </table>
+
+  <!-- When to Use Which -->
+  <div class="section-title">When to Use Which?</div>
+  <div class="three-col">
+    <div class="def-box">
+      <div class="box-label">Servlet Interface</div>
+      <ul class="notes-list">
+        <li>When studying internals</li>
+        <li>When complete control is needed</li>
+        <li>Almost never in real projects</li>
+      </ul>
+    </div>
+    <div class="def-box">
+      <div class="box-label">GenericServlet</div>
+      <ul class="notes-list">
+        <li>Protocol-independent apps</li>
+        <li>Non-HTTP protocols (FTP etc.)</li>
+        <li>Learning / academic purpose</li>
+      </ul>
+    </div>
+    <div class="def-box">
+      <div class="box-label">HttpServlet ⭐</div>
+      <ul class="notes-list">
+        <li>All HTTP web applications</li>
+        <li>Login, registration, data forms</li>
+        <li>Every real-world project</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- @WebServlet Annotation Note -->
+  <div class="tip-box">
+    <div class="box-label">⭐ Extra — @WebServlet Annotation (Modern Alternative to web.xml)</div>
+    <p>Instead of writing URL mapping in <code>web.xml</code>, modern Servlet 3.0+ projects use the <code>@WebServlet</code> annotation directly on the servlet class:</p>
+    <code>@WebServlet("/student")</code>
+    <p style="margin-top:4px;">This maps <code>/student</code> URL directly to the servlet without any <code>web.xml</code> entry. Both approaches produce the same result.</p>
+  </div>
+
+  <!-- Interview Q&A -->
+  <div class="interview-box">
+    <div class="box-label">🎯 Interview Q&amp;A</div>
+
+    <div class="q">Q1. What are the 3 ways to create a Servlet?</div>
+    <div class="a">1. Implementing <strong>Servlet Interface</strong> — must override all 5 methods. 2. Extending <strong>GenericServlet</strong> — override only <code>service()</code>. 3. Extending <strong>HttpServlet</strong> — override <code>doGet()</code>/<code>doPost()</code>. HttpServlet is the most used in real projects.</div>
+
+    <div class="q">Q2. Why is GenericServlet preferred over Servlet Interface?</div>
+    <div class="a">GenericServlet already implements all methods of the Servlet Interface except <code>service()</code>. Therefore developers only need to override <code>service()</code>, reducing coding effort significantly.</div>
+
+    <div class="q">Q3. Why is HttpServlet preferred over GenericServlet?</div>
+    <div class="a">HttpServlet provides HTTP-specific methods such as <code>doGet()</code>, <code>doPost()</code>, <code>doPut()</code>, and <code>doDelete()</code>, making it easier to handle different types of HTTP requests separately without manually checking request type inside <code>service()</code>.</div>
+
+    <div class="q">Q4. What is the role of web.xml in a Servlet application?</div>
+    <div class="a"><code>web.xml</code> (Deployment Descriptor) maps URLs to Servlet classes. Without it (or <code>@WebServlet</code>), Tomcat would not know which servlet to invoke for a given URL.</div>
+
+    <div class="q">Q5. What is the difference between GenericServlet and HttpServlet?</div>
+    <div class="a"><strong>GenericServlet</strong> — protocol-independent, overrides <code>service()</code>, cannot separately handle GET/POST. <strong>HttpServlet</strong> — HTTP-specific, provides <code>doGet()</code>/<code>doPost()</code> etc., used in all HTTP web applications.</div>
+
+    <div class="q">Q6. What is the alternative to web.xml for URL mapping?</div>
+    <div class="a"><code>@WebServlet("/url-pattern")</code> annotation introduced in Servlet 3.0. It maps the URL directly on the servlet class, eliminating the need for <code>web.xml</code> entries.</div>
+
+    <div class="q">Q7. Can you directly implement Servlet Interface in real projects?</div>
+    <div class="a">Technically yes, but it is <strong>not recommended</strong>. You must implement all 5 methods even if unused. GenericServlet and HttpServlet reduce this burden significantly. Servlet Interface is mainly used for understanding internals.</div>
+
+    <div class="q">Q8. What does <code>form action="register"</code> do in HTML?</div>
+    <div class="a">It tells the browser to send the form data to the URL <code>/register</code> when the form is submitted. Tomcat matches this URL in <code>web.xml</code> (or <code>@WebServlet</code>) and invokes the corresponding servlet.</div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — Evolution of Servlet Creation</div>
+    <p><strong>"Struggling Giants Help"</strong></p>
+    <p><strong>S</strong>ervlet Interface (Struggle — 5 methods) → <strong>G</strong>enericServlet (Generic — 1 method) → <strong>H</strong>ttpServlet (Help — best features)</p>
+    <p>Each step UP = <strong>Less code + More features</strong></p>
+  </div>
+
+</div>
+
+</body>
+</html>

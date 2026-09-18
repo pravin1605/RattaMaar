@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrintWriter in Servlets — Notes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 18mm 15mm 20mm;
+    margin: 0 auto;
+    background: #fff;
+    page-break-after: always;
+    border-bottom: 2px dashed #bbb;
+  }
+
+  .page-header {
+    border-top: 3px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 5px 0;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-header .subject { font-size: 10.5px; font-weight: normal; letter-spacing: 1px; text-transform: uppercase; }
+  .page-header .topic-label { font-size: 10.5px; font-weight: bold; letter-spacing: 1px; }
+
+  .main-title {
+    font-size: 19px;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid #000;
+    padding: 9px 0;
+    margin-bottom: 16px;
+    background: #000;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-size: 13.5px;
+    font-weight: bold;
+    border-left: 5px solid #000;
+    padding-left: 10px;
+    margin: 14px 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .sub-title {
+    font-size: 12.5px;
+    font-weight: bold;
+    margin: 10px 0 5px 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+  }
+
+  .def-box {
+    border: 2px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .def-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .interview-box {
+    border: 2px solid #000;
+    padding: 10px 13px;
+    margin: 10px 0;
+    background: #f5f5f5;
+  }
+  .interview-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 8px; padding-bottom: 3px;
+  }
+  .interview-box .q { font-weight: bold; margin-top: 9px; }
+  .interview-box .a { margin-left: 14px; margin-top: 3px; }
+
+  .memory-box {
+    border: 2px dashed #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .memory-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  .example-box {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: #fafafa;
+  }
+  .example-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .tip-box {
+    border: 2px solid #000;
+    border-left: 6px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .tip-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #f2f2f2;
+    border: 1px solid #000;
+    border-left: 4px solid #000;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.8;
+    margin: 8px 0;
+    white-space: pre;
+  }
+  .code-block .comment { color: #555; font-style: italic; }
+  .code-block .hl { font-weight: bold; }
+
+  .file-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1px;
+    text-transform: uppercase; background: #000; color: #fff;
+    padding: 2px 8px; display: inline-block; margin-bottom: 0;
+  }
+
+  /* FLOW */
+  .flow { display: flex; flex-direction: column; align-items: center; margin: 10px auto; }
+  .flow-box {
+    border: 2px solid #000; padding: 6px 20px; font-weight: bold;
+    font-size: 12px; min-width: 220px; text-align: center; background: #fff;
+  }
+  .flow-box.dark { background: #000; color: #fff; }
+  .flow-arrow { font-size: 17px; font-weight: bold; color: #000; text-align: center; padding: 1px 0; }
+  .flow-label { font-size: 10px; color: #444; text-align: center; font-style: italic; }
+
+  /* H-FLOW */
+  .h-flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 10px 0; justify-content: center; }
+  .h-flow-box { border: 2px solid #000; padding: 7px 10px; font-size: 11.5px; font-weight: bold; text-align: center; }
+  .h-flow-box.dark { background: #000; color: #fff; }
+  .h-flow-arrow { font-size: 15px; padding: 0 6px; font-weight: bold; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+  th { background: #000; color: #fff; padding: 6px 9px; font-size: 12px; text-align: left; border: 1px solid #000; }
+  td { padding: 5px 9px; border: 1px solid #000; font-size: 12px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f6f6f6; }
+
+  ul.notes-list { list-style: none; margin: 5px 0 5px 10px; padding: 0; }
+  ul.notes-list li { padding: 2px 0 2px 16px; position: relative; }
+  ul.notes-list li::before { content: "▸"; position: absolute; left: 0; font-size: 11px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 8px 0; }
+
+  code {
+    font-family: 'Courier New', monospace; font-size: 11.5px;
+    background: #efefef; padding: 1px 5px; border: 1px solid #ccc;
+  }
+
+  /* FORMULA BOX */
+  .formula-box {
+    border: 3px solid #000;
+    padding: 10px 16px;
+    margin: 10px 0;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+  .formula-box .f-label {
+    font-family: 'Times New Roman', serif;
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 8px; padding-bottom: 3px; text-align: left;
+  }
+
+  /* STEP FLOW */
+  .step-grid { display: grid; grid-template-columns: 30px 1fr; gap: 5px 10px; margin: 10px 0; }
+  .step-num {
+    background: #000; color: #fff; font-weight: bold;
+    font-size: 12px; text-align: center; padding: 5px 0;
+    height: fit-content; min-width: 30px;
+  }
+  .step-content { border: 1px solid #000; padding: 5px 10px; font-size: 12px; }
+  .step-content strong { display: block; margin-bottom: 2px; }
+
+  p { margin: 5px 0; }
+
+  @media print {
+    body { background: #fff; }
+    .page { border-bottom: none; margin: 0; page-break-after: always; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: WHAT IS PRINTWRITER + KEY METHODS ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 9 : PrintWriter in Servlets</span>
+  </div>
+
+  <div class="main-title">9. PrintWriter in Servlets</div>
+
+  <!-- What is PrintWriter -->
+  <div class="section-title">What is PrintWriter?</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Definition</div>
+    <p><strong>PrintWriter</strong> is a Java class used to write <strong>formatted text output</strong> to a stream — such as the browser, a file, or console.</p>
+    <p>In Servlets, it is used to <strong>send HTML, text, or JSON</strong> from the Servlet back to the client (browser).</p>
+  </div>
+
+  <table>
+    <thead><tr><th>Aspect</th><th>Information</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Package</strong></td><td><code>java.io.PrintWriter</code></td></tr>
+      <tr><td><strong>Type</strong></td><td>Class (not interface)</td></tr>
+      <tr><td><strong>Parent</strong></td><td>Extends <code>Writer</code> class</td></tr>
+      <tr><td><strong>Purpose</strong></td><td>Print formatted text to output stream</td></tr>
+      <tr><td><strong>Used For</strong></td><td>Writing HTML, JSON, plain text to browser</td></tr>
+      <tr><td><strong>Obtained From</strong></td><td><code>response.getWriter()</code> — from HttpServletResponse</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Key Methods -->
+  <div class="section-title">Key Methods in PrintWriter</div>
+
+  <table>
+    <thead><tr><th>Method</th><th>What It Does</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><code>print()</code></td><td>Prints data <strong>without</strong> new line</td><td><code>out.print("Hello")</code></td></tr>
+      <tr><td><code>println()</code></td><td>Prints data <strong>WITH</strong> new line (<code>\n</code>)</td><td><code>out.println("Hello")</code></td></tr>
+      <tr><td><code>write()</code></td><td>Writes string/characters to stream</td><td><code>out.write("&lt;h1&gt;Hi&lt;/h1&gt;")</code></td></tr>
+      <tr><td><code>printf()</code></td><td>Prints <strong>formatted</strong> string (like C printf)</td><td><code>out.printf("Age: %d", 25)</code></td></tr>
+      <tr><td><code>format()</code></td><td>Writes formatted string (same as printf)</td><td><code>out.format("Name: %s", "John")</code></td></tr>
+      <tr><td><code>flush()</code></td><td>Forces all buffered output to be written</td><td><code>out.flush()</code></td></tr>
+      <tr><td><code>close()</code></td><td>Closes the writer and releases resources</td><td><code>out.close()</code></td></tr>
+    </tbody>
+  </table>
+
+  <!-- What can PrintWriter print -->
+  <div class="section-title">What Data Types Can PrintWriter Print?</div>
+  <p>PrintWriter automatically converts <strong>any data type</strong> to text before writing:</p>
+
+  <div class="two-col">
+    <div class="code-block">PrintWriter out = response.getWriter();
+
+<span class="comment">// Integers</span>
+out.print(100);        <span class="comment">// → 100</span>
+out.println(200);      <span class="comment">// → 200\n</span>
+
+<span class="comment">// Double / Float</span>
+out.print(3.14);       <span class="comment">// → 3.14</span>
+out.println(2.5);      <span class="comment">// → 2.5\n</span>
+
+<span class="comment">// Boolean</span>
+out.print(true);       <span class="comment">// → true</span>
+out.println(false);    <span class="comment">// → false\n</span></div>
+    <div class="code-block"><span class="comment">// String</span>
+out.print("Hello");    <span class="comment">// → Hello</span>
+out.println("World");  <span class="comment">// → World\n</span>
+
+<span class="comment">// char</span>
+out.print('A');        <span class="comment">// → A</span>
+out.println('B');      <span class="comment">// → B\n</span>
+
+<span class="comment">// Object</span>
+out.print(obj);        <span class="comment">// → obj.toString()</span>
+out.println(obj);      <span class="comment">// → obj.toString()\n</span>
+
+<span class="comment">// Formatted</span>
+out.printf("Age=%d", 25); <span class="comment">// → Age=25</span></div>
+  </div>
+
+  <div class="tip-box">
+    <div class="box-label">⭐ Key Point</div>
+    <p>PrintWriter <strong>automatically converts everything to text (String)</strong> before sending. You never need to manually convert int, double, or boolean — just pass it directly to <code>print()</code> or <code>println()</code>.</p>
+  </div>
+
+  <!-- print vs println vs write -->
+  <div class="section-title">print() vs println() vs write()</div>
+
+  <table>
+    <thead><tr><th>Method</th><th>New Line?</th><th>Example</th><th>Output</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>print()</code></td>
+        <td>❌ No</td>
+        <td><code>out.print("Hi"); out.print("Hello");</code></td>
+        <td><code>HiHello</code> (same line)</td>
+      </tr>
+      <tr>
+        <td><code>println()</code></td>
+        <td>✅ Yes (<code>\n</code>)</td>
+        <td><code>out.println("Hi"); out.println("Hello");</code></td>
+        <td><code>Hi</code> then <code>Hello</code> (new lines)</td>
+      </tr>
+      <tr>
+        <td><code>write()</code></td>
+        <td>❌ No</td>
+        <td><code>out.write("Hi");</code></td>
+        <td><code>Hi</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — print vs println</div>
+    <p><strong>print</strong> = stays on same line (like writing in one breath)</p>
+    <p><strong>println</strong> = <strong>print</strong> + <strong>ln</strong> (line) = prints and moves to next line</p>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 2: WHERE USED + HOW TO GET PRINTWRITER ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 9 : PrintWriter in Servlets (continued)</span>
+  </div>
+
+  <!-- Where is PrintWriter used -->
+  <div class="section-title">Where is PrintWriter Used? Request or Response?</div>
+
+  <div class="two-col">
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">❌ HttpServletRequest</div>
+      <p>Has <strong>NO</strong> <code>getWriter()</code> method</p>
+      <p>Request is for <strong>reading</strong> client data</p>
+      <code>request.getParameter()</code> ✅
+    </div>
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">✅ HttpServletResponse</div>
+      <p>Has <code>getWriter()</code> method</p>
+      <p>Response is for <strong>writing</strong> back to client</p>
+      <code>response.getWriter()</code> ✅
+    </div>
+  </div>
+
+  <!-- The Key Formula -->
+  <div class="section-title">The Key Formula</div>
+
+  <div class="formula-box">
+    <div class="f-label">📌 PrintWriter Formula</div>
+    PrintWriter out = response.getWriter();
+  </div>
+
+  <table>
+    <thead><tr><th>Part</th><th>What It Means</th></tr></thead>
+    <tbody>
+      <tr><td><code>response</code></td><td><code>HttpServletResponse</code> object given by Tomcat Container</td></tr>
+      <tr><td><code>.getWriter()</code></td><td>Method that returns a <code>PrintWriter</code> object connected to the browser</td></tr>
+      <tr><td><code>out</code></td><td>Your PrintWriter reference — use it to write HTML/text</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Chain Diagram -->
+  <div class="section-title">Chain — How Data Reaches Browser</div>
+
+  <div class="h-flow">
+    <div class="h-flow-box dark">HttpServletResponse</div>
+    <div class="h-flow-arrow">→ getWriter()</div>
+    <div class="h-flow-box">PrintWriter (out)</div>
+    <div class="h-flow-arrow">→ print() / println()</div>
+    <div class="h-flow-box dark">Browser</div>
+  </div>
+
+  <!-- Why PrintWriter is needed -->
+  <div class="section-title">Why is PrintWriter Used in Servlets?</div>
+
+  <div class="example-box">
+    <div class="box-label">📘 The Problem Without PrintWriter</div>
+    <p>User sends request → Servlet receives request → Servlet needs to send HTML back to browser</p>
+    <p>But <strong>how?</strong> Java has no direct way to push text to a browser without an output stream.</p>
+    <p>→ <strong>Solution:</strong> Use PrintWriter obtained from <code>response.getWriter()</code></p>
+  </div>
+
+  <table>
+    <thead><tr><th>Reason</th><th>Why We Need It</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Send HTML to browser</strong></td><td>Writes HTML code that browser renders and displays</td></tr>
+      <tr><td><strong>Print any data type</strong></td><td>Converts int, double, boolean to text automatically</td></tr>
+      <tr><td><strong>Formatted output</strong></td><td>Use <code>printf()</code> for formatted text like <code>System.out</code></td></tr>
+      <tr><td><strong>Simple API</strong></td><td>Familiar <code>print()</code> and <code>println()</code> methods — same as console</td></tr>
+      <tr><td><strong>Text output stream</strong></td><td>Connected directly to the HTTP response body</td></tr>
+    </tbody>
+  </table>
+
+  <!-- PrintWriter vs System.out -->
+  <div class="section-title">PrintWriter vs System.out.println</div>
+
+  <table>
+    <thead><tr><th>Feature</th><th>System.out.println</th><th>PrintWriter.println()</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Output Goes To</strong></td><td>Server console (terminal)</td><td>User's browser</td></tr>
+      <tr><td><strong>Used For</strong></td><td>Debugging — developer sees it</td><td>Sending HTML/text to end user</td></tr>
+      <tr><td><strong>User Sees It?</strong></td><td>❌ No — only developer sees</td><td>✅ Yes — user sees in browser</td></tr>
+      <tr><td><strong>Connected To</strong></td><td>Standard output stream (console)</td><td>HTTP response output stream</td></tr>
+    </tbody>
+  </table>
+
+  <div class="example-box">
+    <div class="box-label">📘 When to Use Which?</div>
+    <div class="code-block"><span class="comment">// For DEBUGGING — shows in server console only</span>
+System.out.println("Debug: user = " + name);
+
+<span class="comment">// For USER — shows in browser</span>
+PrintWriter out = response.getWriter();
+out.println("&lt;h1&gt;Welcome " + name + "&lt;/h1&gt;");</div>
+  </div>
+
+  <!-- Real Example -->
+  <div class="section-title">Real Example — StudentServlet</div>
+
+  <div class="file-label">StudentServlet.java</div>
+  <div class="code-block">@WebServlet("/student")
+public class StudentServlet extends HttpServlet {
+
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
+            throws ServletException, IOException {
+
+        <span class="hl">response.setContentType("text/html");</span>    <span class="comment">// Step 1: Tell browser content type</span>
+
+        <span class="hl">PrintWriter out = response.getWriter();</span>  <span class="comment">// Step 2: Get PrintWriter ⭐</span>
+
+        out.println("&lt;html&gt;");                    <span class="comment">// Step 3: Write HTML</span>
+        out.println("&lt;body&gt;");
+        out.println("&lt;h1&gt;Welcome, Pravin!&lt;/h1&gt;");  <span class="comment">// String</span>
+        out.println("&lt;p&gt;Age: " + 25 + "&lt;/p&gt;");     <span class="comment">// int</span>
+        out.println("&lt;p&gt;Score: " + 95.5 + "&lt;/p&gt;"); <span class="comment">// double</span>
+        out.println("&lt;p&gt;Active: " + true + "&lt;/p&gt;"); <span class="comment">// boolean</span>
+
+        out.printf("&lt;p&gt;Formatted Age: %d&lt;/p&gt;", 25); <span class="comment">// printf</span>
+
+        out.println("&lt;/body&gt;&lt;/html&gt;");
+        out.close();                              <span class="comment">// Step 4: Close</span>
+    }
+}</div>
+
+</div>
+
+<!-- ==================== PAGE 3: COMPLETE FLOW + STEP BY STEP ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 9 : PrintWriter in Servlets (continued)</span>
+  </div>
+
+  <!-- Complete Flow -->
+  <div class="section-title">Complete Flow — How PrintWriter Works in Servlet</div>
+
+  <div class="step-grid">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <strong>User opens browser</strong> → types <code>http://localhost:8080/app/student</code> → browser sends HTTP GET request
+    </div>
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <strong>Tomcat receives</strong> request → creates <code>HttpServletRequest</code> and <code>HttpServletResponse</code> objects → calls <code>StudentServlet.doGet(request, response)</code>
+    </div>
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <strong>Servlet sets content type:</strong> <code>response.setContentType("text/html")</code> → tells browser "I'm sending HTML"
+    </div>
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <strong>Servlet gets PrintWriter:</strong> <code>PrintWriter out = response.getWriter()</code> → gets output stream connected to browser
+    </div>
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <strong>Servlet writes HTML:</strong> <code>out.println("&lt;h1&gt;Hello!&lt;/h1&gt;")</code> → data stored in response buffer
+    </div>
+    <div class="step-num">6</div>
+    <div class="step-content">
+      <strong>PrintWriter flushes</strong> → HTML text sent to <code>HttpServletResponse</code> object
+    </div>
+    <div class="step-num">7</div>
+    <div class="step-content">
+      <strong>Tomcat sends HTTP response</strong> → browser receives the HTML
+    </div>
+    <div class="step-num">8</div>
+    <div class="step-content">
+      <strong>Browser renders HTML</strong> → User sees: "Welcome, Pravin! | Age: 25 | Score: 95.5"
+    </div>
+  </div>
+
+  <!-- Visual Flow -->
+  <div class="section-title">Visual Flow Diagram</div>
+
+  <div class="flow">
+    <div class="flow-box">User Browser → HTTP GET /student</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Tomcat Container</div>
+    <div class="flow-label">Creates HttpServletRequest + HttpServletResponse</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">StudentServlet.doGet(request, response)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">response.setContentType("text/html")</div>
+    <div class="flow-label">Tell browser what type of data is coming</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">PrintWriter out = response.getWriter()</div>
+    <div class="flow-label">Get the output stream → connected to browser</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">out.println("&lt;h1&gt;Welcome Pravin!&lt;/h1&gt;")</div>
+    <div class="flow-label">Write HTML into the output stream</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">PrintWriter → HttpServletResponse (HTML buffer)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Tomcat sends HTTP Response to Browser</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Browser renders HTML → User sees output ✅</div>
+  </div>
+
+  <!-- setContentType importance -->
+  <div class="section-title">Why setContentType() is Important?</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 response.setContentType("text/html")</div>
+    <p>This tells the browser <strong>how to interpret</strong> the data being sent. Without it, the browser may display raw HTML tags as plain text instead of rendering them as a page.</p>
+  </div>
+
+  <table>
+    <thead><tr><th>Content Type Value</th><th>What It Means</th><th>When to Use</th></tr></thead>
+    <tbody>
+      <tr><td><code>"text/html"</code></td><td>Send HTML — browser renders it as webpage</td><td>Most servlet responses</td></tr>
+      <tr><td><code>"text/plain"</code></td><td>Send plain text — browser shows as-is</td><td>Simple text responses</td></tr>
+      <tr><td><code>"application/json"</code></td><td>Send JSON data</td><td>REST API responses</td></tr>
+      <tr><td><code>"text/xml"</code></td><td>Send XML data</td><td>XML responses</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip-box">
+    <div class="box-label">⚠️ Best Practice — Order Matters</div>
+    <p>Always call <code>setContentType()</code> <strong>BEFORE</strong> calling <code>getWriter()</code>. Once PrintWriter is obtained, the content type cannot be changed.</p>
+    <div class="code-block"><span class="comment">// ✅ Correct order</span>
+response.setContentType("text/html");   <span class="comment">// FIRST</span>
+PrintWriter out = response.getWriter(); <span class="comment">// SECOND</span>
+
+<span class="comment">// ❌ Wrong order — content type may not be applied</span>
+PrintWriter out = response.getWriter(); <span class="comment">// FIRST — wrong!</span>
+response.setContentType("text/html");   <span class="comment">// SECOND — too late!</span></div>
+  </div>
+
+  <!-- Real Life Analogy -->
+  <div class="section-title">Real-Life Analogy — Chef's Plate</div>
+
+  <div class="example-box">
+    <div class="box-label">📘 PrintWriter = Chef's Plate</div>
+    <table style="margin:0;">
+      <thead><tr><th>Restaurant Part</th><th>Servlet Part</th></tr></thead>
+      <tbody>
+        <tr><td>Chef (cooking)</td><td>Servlet (writing HTML)</td></tr>
+        <tr><td>Plate</td><td>PrintWriter (holds the food/HTML)</td></tr>
+        <tr><td>Getting a plate</td><td><code>response.getWriter()</code></td></tr>
+        <tr><td>Putting food on plate</td><td><code>out.println("&lt;h1&gt;Food&lt;/h1&gt;")</code></td></tr>
+        <tr><td>Waiter delivers plate</td><td>Tomcat sends HTTP response</td></tr>
+        <tr><td>Customer eats</td><td>Browser renders and displays HTML</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:6px;"><em>Without a plate (PrintWriter), the chef has no way to carry food (HTML) to the customer (browser).</em></p>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 4: SUMMARY + INTERVIEW Q&A ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 9 : PrintWriter in Servlets (continued)</span>
+  </div>
+
+  <!-- Complete Summary -->
+  <div class="section-title">Complete Summary Table</div>
+
+  <table>
+    <thead><tr><th>Question</th><th>Answer</th></tr></thead>
+    <tbody>
+      <tr><td><strong>What is PrintWriter?</strong></td><td>Java class for writing formatted text to an output stream</td></tr>
+      <tr><td><strong>Class or Interface?</strong></td><td>Class — extends <code>Writer</code></td></tr>
+      <tr><td><strong>Package?</strong></td><td><code>java.io</code></td></tr>
+      <tr><td><strong>How to get it?</strong></td><td><code>PrintWriter out = response.getWriter()</code></td></tr>
+      <tr><td><strong>From Request or Response?</strong></td><td>From <strong>Response</strong> — <code>HttpServletResponse.getWriter()</code></td></tr>
+      <tr><td><strong>Request has getWriter()?</strong></td><td>❌ No — Request is for reading, not writing</td></tr>
+      <tr><td><strong>Main methods?</strong></td><td><code>print()</code>, <code>println()</code>, <code>write()</code>, <code>printf()</code>, <code>flush()</code>, <code>close()</code></td></tr>
+      <tr><td><strong>What can print?</strong></td><td>int, double, boolean, String, char, Object — all auto-converted to text</td></tr>
+      <tr><td><strong>Output goes to?</strong></td><td>User's browser (not server console)</td></tr>
+      <tr><td><strong>What is setContentType for?</strong></td><td>Tells browser how to interpret the response (HTML, JSON, text)</td></tr>
+      <tr><td><strong>When to call setContentType?</strong></td><td>Always BEFORE calling <code>getWriter()</code></td></tr>
+      <tr><td><strong>Difference from System.out?</strong></td><td>System.out → server console | PrintWriter → browser</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 4-Step Recipe Box -->
+  <div class="section-title">4-Step Recipe to Use PrintWriter in Any Servlet</div>
+  <div class="step-grid">
+    <div class="step-num">1</div>
+    <div class="step-content"><strong>Set content type FIRST</strong> → <code>response.setContentType("text/html");</code></div>
+    <div class="step-num">2</div>
+    <div class="step-content"><strong>Get PrintWriter from response</strong> → <code>PrintWriter out = response.getWriter();</code></div>
+    <div class="step-num">3</div>
+    <div class="step-content"><strong>Write HTML / data</strong> → <code>out.println("&lt;h1&gt;Hello&lt;/h1&gt;");</code> — use print(), println(), printf()</div>
+    <div class="step-num">4</div>
+    <div class="step-content"><strong>Close the writer</strong> → <code>out.close();</code> — releases resources</div>
+  </div>
+
+  <!-- Interview Q&A -->
+  <div class="interview-box">
+    <div class="box-label">🎯 Interview Q&amp;A</div>
+
+    <div class="q">Q1. What is PrintWriter in Servlet?</div>
+    <div class="a">PrintWriter is a Java class from <code>java.io</code> package used to write formatted text output to a stream. In servlets, it is used to send HTML or text data from the servlet back to the client browser. It is obtained via <code>response.getWriter()</code>.</div>
+
+    <div class="q">Q2. Is PrintWriter a class or interface?</div>
+    <div class="a">PrintWriter is a <strong>Class</strong> — not an interface. It extends the <code>Writer</code> abstract class and belongs to the <code>java.io</code> package.</div>
+
+    <div class="q">Q3. How do you get a PrintWriter in a Servlet?</div>
+    <div class="a"><code>PrintWriter out = response.getWriter();</code> — it is obtained from the <code>HttpServletResponse</code> object. The request object does NOT have a <code>getWriter()</code> method.</div>
+
+    <div class="q">Q4. What is the difference between print() and println()?</div>
+    <div class="a"><code>print()</code> — writes data without a new line. Next output continues on the same line. <code>println()</code> — writes data and then adds a newline character (<code>\n</code>). Next output starts on a new line.</div>
+
+    <div class="q">Q5. What is the difference between PrintWriter and System.out.println()?</div>
+    <div class="a"><strong>System.out.println()</strong> sends output to the server console — only the developer sees it (used for debugging). <strong>PrintWriter.println()</strong> sends output to the client browser — the user sees it.</div>
+
+    <div class="q">Q6. Why is setContentType() called before getWriter()?</div>
+    <div class="a"><code>setContentType("text/html")</code> must be called before <code>getWriter()</code> because once the writer is obtained, the response headers (including content type) may already be committed. Calling it after may have no effect or cause errors.</div>
+
+    <div class="q">Q7. Can PrintWriter print integer, double, and boolean values?</div>
+    <div class="a">Yes. PrintWriter automatically converts any data type — int, double, boolean, char, Object — to its String representation before writing. No manual conversion is needed.</div>
+
+    <div class="q">Q8. What does response.getWriter() return?</div>
+    <div class="a">It returns a <code>PrintWriter</code> object that is connected to the HTTP response output stream. Anything written to this PrintWriter is sent as the HTTP response body to the client browser.</div>
+
+    <div class="q">Q9. What is the use of out.close() at the end?</div>
+    <div class="a"><code>out.close()</code> flushes any remaining buffered output and closes the PrintWriter, releasing associated resources. It is a good practice to call it after writing all response content.</div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — PrintWriter in 1 Line</div>
+    <p><strong>PrintWriter = Pen to write HTML on the Browser's Page</strong></p>
+    <p><code>response</code> = notebook | <code>getWriter()</code> = picking up the pen | <code>out.println()</code> = writing on the page</p>
+    <p><strong>Formula to remember:</strong> <code>setContentType</code> → <code>getWriter()</code> → <code>print()/println()</code> → <code>close()</code></p>
+  </div>
+
+</div>
+
+</body>
+</html>

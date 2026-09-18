@@ -1,0 +1,211 @@
+/* =========================================================
+   BOTTOM NAVIGATION
+========================================================= */
+
+.bottom-navigation {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 68px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  padding: 6px 8px;
+
+  background: color-mix(
+    in srgb,
+    var(--bg-secondary) 97%,
+    transparent
+  );
+
+  border-top: 1px solid var(--border-color);
+
+  z-index: 5000;
+
+  box-shadow:
+    0 -5px 20px var(--shadow-color);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+/* =========================================================
+   NAV ITEM
+========================================================= */
+
+.bottom-nav-item {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 3px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  border-radius: 10px;
+
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.bottom-nav-icon {
+  width: 23px;
+  height: 23px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 20px;
+  line-height: 1;
+
+  color: currentColor;
+
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+
+/* =========================================================
+   ACTIVE
+========================================================= */
+
+.bottom-nav-item.active {
+  color: var(--text-primary);
+
+  font-weight: 750;
+
+  background: var(--bg-tertiary);
+}
+
+.bottom-nav-item.active .bottom-nav-icon {
+  transform: translateY(-1px) scale(1.05);
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.bottom-nav-item:hover {
+  color: var(--text-primary);
+
+  background: var(--bg-tertiary);
+}
+
+
+/* =========================================================
+   PRESS
+========================================================= */
+
+.bottom-nav-item:active {
+  transform: scale(0.94);
+}
+
+
+/* =========================================================
+   KEYBOARD ACCESSIBILITY
+========================================================= */
+
+.bottom-nav-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+
+/* =========================================================
+   DARK MODE
+   Extra contrast for bottom navigation
+========================================================= */
+
+html[data-theme="dark"] .bottom-navigation {
+  background: color-mix(
+    in srgb,
+    var(--bg-secondary) 96%,
+    transparent
+  );
+
+  box-shadow:
+    0 -5px 20px var(--shadow-color);
+}
+
+
+/* =========================================================
+   SYSTEM DARK MODE
+========================================================= */
+
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] .bottom-navigation {
+    background: color-mix(
+      in srgb,
+      var(--bg-secondary) 96%,
+      transparent
+    );
+
+    box-shadow:
+      0 -5px 20px var(--shadow-color);
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .bottom-navigation,
+  .bottom-nav-item,
+  .bottom-nav-icon {
+    transition: none;
+  }
+
+  .bottom-nav-item.active .bottom-nav-icon {
+    transform: none;
+  }
+
+  .bottom-nav-item:active {
+    transform: none;
+  }
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 768px) {
+  .bottom-navigation {
+    display: none;
+  }
+}

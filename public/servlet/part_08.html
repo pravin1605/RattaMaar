@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>load-on-startup & Servlet Loading — Notes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 18mm 15mm 20mm;
+    margin: 0 auto;
+    background: #fff;
+    page-break-after: always;
+    border-bottom: 2px dashed #bbb;
+  }
+
+  .page-header {
+    border-top: 3px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 5px 0;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-header .subject { font-size: 10.5px; font-weight: normal; letter-spacing: 1px; text-transform: uppercase; }
+  .page-header .topic-label { font-size: 10.5px; font-weight: bold; letter-spacing: 1px; }
+
+  .main-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid #000;
+    padding: 9px 0;
+    margin-bottom: 16px;
+    background: #000;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-size: 13.5px;
+    font-weight: bold;
+    border-left: 5px solid #000;
+    padding-left: 10px;
+    margin: 14px 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .sub-title {
+    font-size: 12.5px;
+    font-weight: bold;
+    margin: 10px 0 5px 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+  }
+
+  .file-header {
+    background: #000;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 7px 14px;
+    margin: 14px 0 8px 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .def-box {
+    border: 2px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .def-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .interview-box {
+    border: 2px solid #000;
+    padding: 10px 13px;
+    margin: 10px 0;
+    background: #f5f5f5;
+  }
+  .interview-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 8px; padding-bottom: 3px;
+  }
+  .interview-box .q { font-weight: bold; margin-top: 9px; }
+  .interview-box .a { margin-left: 14px; margin-top: 3px; }
+
+  .memory-box {
+    border: 2px dashed #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .memory-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  .example-box {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: #fafafa;
+  }
+  .example-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .tip-box {
+    border: 2px solid #000;
+    border-left: 6px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .tip-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #f2f2f2;
+    border: 1px solid #000;
+    border-left: 4px solid #000;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.75;
+    margin: 8px 0;
+    white-space: pre;
+  }
+  .code-block .comment { color: #555; font-style: italic; }
+  .code-block .highlight { font-weight: bold; }
+
+  .file-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1px;
+    text-transform: uppercase; background: #000; color: #fff;
+    padding: 2px 8px; display: inline-block; margin-bottom: 0;
+  }
+
+  /* FLOW */
+  .flow { display: flex; flex-direction: column; align-items: center; margin: 10px auto; }
+  .flow-box {
+    border: 2px solid #000; padding: 6px 20px; font-weight: bold;
+    font-size: 12px; min-width: 200px; text-align: center; background: #fff;
+  }
+  .flow-box.dark { background: #000; color: #fff; }
+  .flow-arrow { font-size: 17px; font-weight: bold; color: #000; text-align: center; padding: 1px 0; }
+  .flow-label { font-size: 10px; color: #444; text-align: center; font-style: italic; }
+
+  /* STEP FLOW */
+  .step-grid { display: grid; grid-template-columns: 30px 1fr; gap: 5px 10px; margin: 10px 0; }
+  .step-num {
+    background: #000; color: #fff; font-weight: bold;
+    font-size: 12px; text-align: center; padding: 5px 0;
+    height: fit-content; min-width: 30px;
+  }
+  .step-content { border: 1px solid #000; padding: 5px 10px; font-size: 12px; }
+  .step-content strong { display: block; margin-bottom: 2px; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+  th { background: #000; color: #fff; padding: 6px 9px; font-size: 12px; text-align: left; border: 1px solid #000; }
+  td { padding: 5px 9px; border: 1px solid #000; font-size: 12px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f6f6f6; }
+
+  ul.notes-list { list-style: none; margin: 5px 0 5px 10px; padding: 0; }
+  ul.notes-list li { padding: 2px 0 2px 16px; position: relative; }
+  ul.notes-list li::before { content: "▸"; position: absolute; left: 0; font-size: 11px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 8px 0; }
+
+  code {
+    font-family: 'Courier New', monospace; font-size: 11.5px;
+    background: #efefef; padding: 1px 5px; border: 1px solid #ccc;
+  }
+
+  /* LAZY vs EAGER */
+  .compare-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 2px solid #000;
+    margin: 10px 0;
+  }
+  .compare-col { padding: 10px 12px; }
+  .compare-col:first-child { border-right: 2px solid #000; }
+  .compare-col .col-title { font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #000; padding-bottom: 4px; margin-bottom: 7px; }
+  .compare-col.dark { background: #000; color: #fff; }
+  .compare-col.dark .col-title { border-bottom: 1px solid #fff; }
+
+  /* PRIORITY RANKING VISUAL */
+  .rank-grid {
+    display: grid;
+    grid-template-columns: 60px 1fr 1fr;
+    gap: 0;
+    border: 2px solid #000;
+    margin: 10px 0;
+  }
+  .rank-grid .rg-header {
+    background: #000; color: #fff; font-weight: bold;
+    font-size: 11px; text-align: center; padding: 6px 5px;
+    border-right: 1px solid #fff; border-bottom: 1px solid #fff;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .rank-grid .rg-header:last-child { border-right: none; }
+  .rank-grid .rg-cell {
+    padding: 7px 10px; border-right: 1px solid #000;
+    border-bottom: 1px solid #000; font-size: 12px; text-align: center;
+  }
+  .rank-grid .rg-cell:last-child { border-right: none; }
+  .rank-grid .rg-cell.wins { background: #000; color: #fff; font-weight: bold; }
+
+  /* CONSOLE OUTPUT */
+  .console-box {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    border: 2px solid #000;
+    line-height: 1.9;
+  }
+  .console-box .console-label {
+    color: #aaa;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #555;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+  }
+  .console-box .con-out { color: #fff; font-weight: bold; }
+
+  /* PROJECT STRUCT */
+  .proj-struct {
+    font-family: 'Courier New', monospace; font-size: 11px;
+    border: 1px solid #000; background: #f8f8f8;
+    padding: 8px 14px; margin: 8px 0; line-height: 1.8;
+  }
+
+  p { margin: 5px 0; }
+
+  @media print {
+    body { background: #fff; }
+    .page { border-bottom: none; margin: 0; page-break-after: always; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: CONCEPT + LAZY vs EAGER ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 8 : load-on-startup &amp; Servlet Loading</span>
+  </div>
+
+  <div class="main-title">8. load-on-startup &amp; Servlet Loading</div>
+
+  <div class="tip-box">
+    <div class="box-label">🎯 What You Learn in This Project</div>
+    <div class="two-col" style="margin-top:5px;">
+      <ul class="notes-list">
+        <li>How Tomcat loads Servlet classes</li>
+        <li>What is Lazy Loading (default)</li>
+        <li>What is Eager Loading (load-on-startup)</li>
+      </ul>
+      <ul class="notes-list">
+        <li>Servlet Constructor execution order</li>
+        <li>How to control loading priority</li>
+        <li>When to use load-on-startup in real apps</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Default Behavior: Lazy Loading -->
+  <div class="section-title">Default Behavior — Lazy Loading</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 What is Lazy Loading?</div>
+    <p>By default, Tomcat follows <strong>Lazy Loading</strong> — the Servlet object is <strong>NOT created</strong> when the server starts. It is created only when the <strong>first request arrives</strong> for that servlet.</p>
+  </div>
+
+  <div class="flow">
+    <div class="flow-box">Server Starts</div>
+    <div class="flow-label">Servlet objects NOT created yet</div>
+    <div class="flow-arrow">↓ (time passes...)</div>
+    <div class="flow-box dark">First Request Arrives → /pagea</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Tomcat NOW creates: <code>new PageA()</code></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">init() → service() → Response</div>
+    <div class="flow-label">First user experiences delay!</div>
+  </div>
+
+  <!-- Problem with Lazy Loading -->
+  <div class="section-title">Problem with Lazy Loading</div>
+  <p>In critical applications, some servlets must be <strong>ready before any user arrives</strong>:</p>
+
+  <div class="three-col">
+    <div class="example-box" style="text-align:center;">
+      <div class="box-label">Bank Application</div>
+      <p>DB Connection Servlet must be ready before first transaction</p>
+    </div>
+    <div class="example-box" style="text-align:center;">
+      <div class="box-label">Hospital System</div>
+      <p>Authentication Servlet must be ready before first login</p>
+    </div>
+    <div class="example-box" style="text-align:center;">
+      <div class="box-label">E-Commerce</div>
+      <p>Configuration Servlet must be ready before first purchase</p>
+    </div>
+  </div>
+
+  <p>With lazy loading, the <strong>first user waits</strong> while the servlet loads. This is unacceptable for critical applications.</p>
+
+  <!-- Solution: load-on-startup -->
+  <div class="section-title">Solution — load-on-startup (Eager Loading)</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Definition</div>
+    <p><code>&lt;load-on-startup&gt;</code> is an element in <code>web.xml</code> that tells the web container to <strong>load and initialize a servlet during server startup</strong> instead of waiting for the first request.</p>
+    <p>This is called <strong>Eager Loading</strong> — servlet is created eagerly at startup, not lazily on demand.</p>
+  </div>
+
+  <!-- Lazy vs Eager Comparison -->
+  <div class="section-title">Lazy Loading vs Eager Loading (load-on-startup)</div>
+
+  <div class="compare-box">
+    <div class="compare-col">
+      <div class="col-title">❌ Lazy Loading (Default)</div>
+      <ul class="notes-list">
+        <li>Servlet created on <strong>first request</strong></li>
+        <li>First user experiences <strong>delay</strong></li>
+        <li>No <code>&lt;load-on-startup&gt;</code> in web.xml</li>
+        <li>Saves memory at startup</li>
+        <li>Fine for low-priority servlets</li>
+      </ul>
+    </div>
+    <div class="compare-col">
+      <div class="col-title">✅ Eager Loading (load-on-startup)</div>
+      <ul class="notes-list">
+        <li>Servlet created when <strong>server starts</strong></li>
+        <li>First user gets <strong>instant response</strong></li>
+        <li><code>&lt;load-on-startup&gt;n&lt;/load-on-startup&gt;</code> in web.xml</li>
+        <li>Uses memory at startup</li>
+        <li>Used for critical / high-priority servlets</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Syntax -->
+  <div class="section-title">Syntax — load-on-startup</div>
+
+  <div class="file-label">web.xml</div>
+  <div class="code-block">&lt;servlet&gt;
+    &lt;servlet-name&gt;pagea&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;com.ty.PageA&lt;/servlet-class&gt;
+    <span class="highlight">&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</span>   <span class="comment">&lt;!-- Priority rank --&gt;</span>
+&lt;/servlet&gt;</div>
+
+  <div class="tip-box">
+    <div class="box-label">⚠️ Important Rules for load-on-startup Value</div>
+    <ul class="notes-list">
+      <li><strong>Positive value (1, 2, 3...)</strong> → Servlet loaded at startup in ascending order</li>
+      <li><strong>Smaller number = Higher priority</strong> → loaded first</li>
+      <li><strong>Negative value or absent</strong> → Treated as lazy loading (default behavior)</li>
+      <li><strong>Same value</strong> → Tomcat decides the order (implementation-specific)</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 2: PROJECT FILES ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 8 : load-on-startup &amp; Servlet Loading (continued)</span>
+  </div>
+
+  <!-- Project Structure -->
+  <div class="section-title">Project Structure</div>
+  <div class="proj-struct">servletthirdday_b/
+ ├── src/main/java/
+ │     ├── PageA.java    ← load-on-startup rank 3
+ │     ├── PageB.java    ← load-on-startup rank 1 (loads FIRST)
+ │     └── PageC.java    ← load-on-startup rank 2
+ ├── src/main/webapp/
+ │     ├── index.jsp     ← Default welcome page (auto-created by Maven)
+ │     └── WEB-INF/
+ │           └── web.xml ← Most Important File — controls loading order
+ └── pom.xml</div>
+
+  <!-- Servlet Files -->
+  <div class="file-header">Files 1, 2, 3 — PageA.java, PageB.java, PageC.java</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Why Constructor is Used Here?</div>
+    <p>Each servlet class has a <strong>constructor</strong> with a print statement. This is used to <strong>confirm when Tomcat creates the servlet object</strong>.</p>
+    <p>When Tomcat executes <code>new PageA()</code>, the constructor runs → message prints to console.</p>
+    <p>This lets us verify the <strong>order of servlet creation</strong> based on load-on-startup rank.</p>
+  </div>
+
+  <div class="three-col">
+    <div>
+      <div class="file-label">PageA.java</div>
+      <div class="code-block">package com.ty;
+
+import javax.servlet.http
+       .HttpServlet;
+
+public class PageA
+    extends HttpServlet {
+
+  public PageA() {
+    System.out.println(
+      "im from pag a");
+  }
+}</div>
+    </div>
+    <div>
+      <div class="file-label">PageB.java</div>
+      <div class="code-block">package com.ty;
+
+import javax.servlet.http
+       .HttpServlet;
+
+public class PageB
+    extends HttpServlet {
+
+  public PageB() {
+    System.out.println(
+      "im from page b");
+  }
+}</div>
+    </div>
+    <div>
+      <div class="file-label">PageC.java</div>
+      <div class="code-block">package com.ty;
+
+import javax.servlet.http
+       .HttpServlet;
+
+public class PageC
+    extends HttpServlet {
+
+  public PageC() {
+    System.out.println(
+      "im from pag c");
+  }
+}</div>
+    </div>
+  </div>
+
+  <!-- web.xml — Most Important -->
+  <div class="file-header">File 4 — web.xml ⭐ Most Important</div>
+
+  <div class="file-label">web.xml</div>
+  <div class="code-block">&lt;web-app&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;pagea&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;com.ty.PageA&lt;/servlet-class&gt;
+        <span class="highlight">&lt;load-on-startup&gt;3&lt;/load-on-startup&gt;</span>   <span class="comment">&lt;!-- Loads THIRD --&gt;</span>
+    &lt;/servlet&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;pageb&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;com.ty.PageB&lt;/servlet-class&gt;
+        <span class="highlight">&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</span>   <span class="comment">&lt;!-- Loads FIRST --&gt;</span>
+    &lt;/servlet&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;pagec&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;com.ty.PageC&lt;/servlet-class&gt;
+        <span class="highlight">&lt;load-on-startup&gt;2&lt;/load-on-startup&gt;</span>   <span class="comment">&lt;!-- Loads SECOND --&gt;</span>
+    &lt;/servlet&gt;
+
+&lt;/web-app&gt;</div>
+
+  <!-- Priority Ranking -->
+  <div class="section-title">Understanding the Priority Ranking</div>
+
+  <div class="rank-grid">
+    <div class="rg-header">Rank Value</div>
+    <div class="rg-header">Servlet Class</div>
+    <div class="rg-header">Load Order</div>
+    <div class="rg-cell wins">1 ← Smallest</div>
+    <div class="rg-cell wins">PageB</div>
+    <div class="rg-cell wins">FIRST ⭐</div>
+    <div class="rg-cell">2</div>
+    <div class="rg-cell">PageC</div>
+    <div class="rg-cell">SECOND</div>
+    <div class="rg-cell">3 ← Largest</div>
+    <div class="rg-cell">PageA</div>
+    <div class="rg-cell">THIRD</div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — Ranking Rule</div>
+    <p><strong>Smaller Number = Higher Priority = Loads First</strong></p>
+    <p>Think: <em>"Race position 1 wins first, position 3 comes last"</em></p>
+    <p>Rank 1 → Medal 🥇 → Loads first | Rank 3 → Bronze 🥉 → Loads last</p>
+  </div>
+
+  <!-- Console Output -->
+  <div class="section-title">Console Output When Server Starts</div>
+
+  <div class="console-box">
+    <div class="console-label">Tomcat Server Console — Output at Startup</div>
+    <div class="con-out">im from page b</div>   <span style="color:#888; font-size:10px;">← PageB loaded first (rank 1)</span>
+    <div class="con-out">im from pag c</div>    <span style="color:#888; font-size:10px;">← PageC loaded second (rank 2)</span>
+    <div class="con-out">im from pag a</div>    <span style="color:#888; font-size:10px;">← PageA loaded third (rank 3)</span>
+  </div>
+
+  <div class="tip-box">
+    <div class="box-label">⭐ Key Observation</div>
+    <p>This output appears <strong>even if no user sends a request</strong>. That is the proof that <code>&lt;load-on-startup&gt;</code> creates servlet objects at server startup — not on demand.</p>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 3: INTERNAL WORKING + CONSTRUCTOR vs INIT() ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 8 : load-on-startup &amp; Servlet Loading (continued)</span>
+  </div>
+
+  <!-- Internal Working -->
+  <div class="section-title">What Happens Internally When Tomcat Starts?</div>
+
+  <div class="step-grid">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <strong>Tomcat reads web.xml</strong> → scans all <code>&lt;servlet&gt;</code> entries
+    </div>
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <strong>Tomcat finds</strong> all servlets having <code>&lt;load-on-startup&gt;</code> element
+    </div>
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <strong>Tomcat sorts</strong> them by value in <strong>ascending order</strong>: 1 → 2 → 3
+    </div>
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <strong>Tomcat loads class</strong> for rank 1 → <code>com.ty.PageB</code> loaded into JVM
+    </div>
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <strong>Tomcat creates object</strong> → <code>new PageB()</code> → Constructor runs → prints: <code>im from page b</code>
+    </div>
+    <div class="step-num">6</div>
+    <div class="step-content">
+      <strong>Tomcat calls</strong> <code>init()</code> on PageB → Servlet fully initialized and ready
+    </div>
+    <div class="step-num">7</div>
+    <div class="step-content">
+      <strong>Repeat for rank 2</strong> → <code>new PageC()</code> → prints: <code>im from pag c</code> → <code>init()</code> called
+    </div>
+    <div class="step-num">8</div>
+    <div class="step-content">
+      <strong>Repeat for rank 3</strong> → <code>new PageA()</code> → prints: <code>im from pag a</code> → <code>init()</code> called
+    </div>
+    <div class="step-num">9</div>
+    <div class="step-content">
+      <strong>All servlets ready</strong> → Server fully started → waiting for requests
+    </div>
+  </div>
+
+  <!-- Visual Flow Diagram -->
+  <div class="section-title">Complete Flow Diagram</div>
+
+  <div class="flow">
+    <div class="flow-box dark">Tomcat Starts</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Read web.xml → Find all &lt;load-on-startup&gt;</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Sort by ascending rank: 1 → 2 → 3</div>
+    <div class="flow-arrow">↓ Rank 1</div>
+    <div class="flow-box">Load PageB class → new PageB() → init()</div>
+    <div class="flow-label">Console: "im from page b"</div>
+    <div class="flow-arrow">↓ Rank 2</div>
+    <div class="flow-box">Load PageC class → new PageC() → init()</div>
+    <div class="flow-label">Console: "im from pag c"</div>
+    <div class="flow-arrow">↓ Rank 3</div>
+    <div class="flow-box">Load PageA class → new PageA() → init()</div>
+    <div class="flow-label">Console: "im from pag a"</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">All Servlets Ready — Server Startup Complete</div>
+    <div class="flow-label">No user request needed — all done at startup!</div>
+  </div>
+
+  <!-- Constructor vs init() -->
+  <div class="section-title">Best Practice — Constructor vs init()</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Why is Constructor used in this project?</div>
+    <p>The constructor is used <strong>only for demonstration</strong> — to observe when Tomcat creates the object. In real projects, initialization logic should <strong>NOT</strong> be placed in the constructor.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="example-box">
+      <div class="box-label">❌ Not Recommended — Constructor</div>
+      <div class="code-block" style="font-size:10.5px;">public class PageA
+    extends HttpServlet {
+
+  <span class="comment">// Only for learning/demo</span>
+  public PageA() {
+    System.out.println(
+      "im from pag a");
+  }
+}</div>
+      <p style="font-size:11px; margin-top:5px;">Constructor may run before servlet infrastructure is ready. Cannot throw <code>ServletException</code>. Not the correct lifecycle point for initialization.</p>
+    </div>
+    <div class="example-box">
+      <div class="box-label">✅ Recommended — init() method</div>
+      <div class="code-block" style="font-size:10.5px;">public class PageA
+    extends HttpServlet {
+
+  <span class="comment">// Correct lifecycle method</span>
+  @Override
+  public void init()
+      throws ServletException {
+    System.out.println(
+      "Servlet Initialized");
+    <span class="comment">// DB connect, config load etc.</span>
+  }
+}</div>
+      <p style="font-size:11px; margin-top:5px;"><code>init()</code> is the proper servlet lifecycle method for initialization. Can throw <code>ServletException</code>. Has access to <code>ServletConfig</code>.</p>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>Aspect</th><th>Constructor</th><th>init() Method</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Servlet Lifecycle?</strong></td><td>No — Java language feature</td><td>Yes — official Servlet lifecycle method</td></tr>
+      <tr><td><strong>Can throw ServletException?</strong></td><td>No</td><td>Yes ✅</td></tr>
+      <tr><td><strong>Access to ServletConfig?</strong></td><td>No</td><td>Yes ✅</td></tr>
+      <tr><td><strong>Called by?</strong></td><td>JVM (on new)</td><td>Servlet Container (after new)</td></tr>
+      <tr><td><strong>Recommended for init logic?</strong></td><td>❌ No</td><td>✅ Yes</td></tr>
+      <tr><td><strong>Used in this project for?</strong></td><td>Demo / learning only</td><td>Real initialization logic</td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<!-- ==================== PAGE 4: SUMMARY + INTERVIEW Q&A ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 8 : load-on-startup &amp; Servlet Loading (continued)</span>
+  </div>
+
+  <!-- Summary Table -->
+  <div class="section-title">Complete Summary Table</div>
+
+  <table>
+    <thead><tr><th>Concept</th><th>Explanation</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Lazy Loading</strong></td><td>Default behavior — servlet created only on first request. First user may experience delay.</td></tr>
+      <tr><td><strong>Eager Loading</strong></td><td>Servlet created at server startup using <code>&lt;load-on-startup&gt;</code>. No delay for first user.</td></tr>
+      <tr><td><strong>load-on-startup</strong></td><td>web.xml element that enables eager loading. Value = priority rank (positive integer).</td></tr>
+      <tr><td><strong>Smaller rank = ?</strong></td><td>Higher priority — loaded first. Rank 1 loads before rank 2, rank 2 before rank 3.</td></tr>
+      <tr><td><strong>Negative / absent</strong></td><td>Treated as lazy loading — servlet not created at startup.</td></tr>
+      <tr><td><strong>Constructor use</strong></td><td>Used here only to observe object creation order. In real projects, use <code>init()</code> instead.</td></tr>
+      <tr><td><strong>Console output</strong></td><td>Appears at server startup — no request needed. Proves eager loading.</td></tr>
+      <tr><td><strong>Real use cases</strong></td><td>DB connection servlet, Authentication servlet, Configuration servlet, Logging servlet.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- When to use load-on-startup -->
+  <div class="section-title">When to Use load-on-startup in Real Projects?</div>
+
+  <table>
+    <thead><tr><th>Servlet Type</th><th>Why load-on-startup?</th><th>Suggested Rank</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Database Connection Servlet</strong></td><td>DB pool must be ready before any request</td><td>1</td></tr>
+      <tr><td><strong>Authentication Servlet</strong></td><td>Auth service must be ready before first login</td><td>2</td></tr>
+      <tr><td><strong>Configuration Loader Servlet</strong></td><td>App config must load before other servlets run</td><td>1</td></tr>
+      <tr><td><strong>Logging/Monitoring Servlet</strong></td><td>Should start logging from server startup</td><td>1</td></tr>
+      <tr><td><strong>Cache Warming Servlet</strong></td><td>Pre-load cache data before users arrive</td><td>2 or 3</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Interview Q&A -->
+  <div class="interview-box">
+    <div class="box-label">🎯 Interview Q&amp;A</div>
+
+    <div class="q">Q1. What is load-on-startup in Servlet?</div>
+    <div class="a"><code>load-on-startup</code> is an element in <code>web.xml</code> that tells the servlet container to load and initialize a servlet during <strong>server startup</strong> instead of waiting for the first client request. It enables eager loading of servlets.</div>
+
+    <div class="q">Q2. What is the difference between Lazy Loading and Eager Loading?</div>
+    <div class="a"><strong>Lazy Loading (default)</strong> — servlet created only when first request arrives. First user experiences delay. No <code>load-on-startup</code> in web.xml. <strong>Eager Loading</strong> — servlet created at server startup. All users get instant response. Configured using <code>load-on-startup</code>.</div>
+
+    <div class="q">Q3. Which servlet loads first if values are 1, 2, and 3?</div>
+    <div class="a">The servlet with <strong>value 1 loads first</strong>, then 2, then 3. Smaller positive value = higher priority = loads earlier. Tomcat sorts by ascending order and loads accordingly.</div>
+
+    <div class="q">Q4. What happens if load-on-startup value is negative?</div>
+    <div class="a">A negative value (or absent element) means the servlet is <strong>not loaded at startup</strong>. Tomcat treats it as lazy loading — the servlet is created only when a request arrives for it.</div>
+
+    <div class="q">Q5. Why do we use load-on-startup?</div>
+    <div class="a">To improve response time for critical servlets by initializing them at server startup. Important servlets like Database Connection, Authentication, and Configuration loaders should be ready before any user request arrives.</div>
+
+    <div class="q">Q6. What is the difference between Servlet Constructor and init()?</div>
+    <div class="a"><strong>Constructor</strong> — Java language feature, called by JVM when <code>new</code> is executed. Cannot throw <code>ServletException</code>, has no access to <code>ServletConfig</code>. <strong>init()</strong> — Servlet lifecycle method, called by Container after object creation. Can throw <code>ServletException</code>, has access to <code>ServletConfig</code>. Always use <code>init()</code> for servlet initialization logic.</div>
+
+    <div class="q">Q7. What is the output if PageB has rank 1, PageC has rank 2, PageA has rank 3?</div>
+    <div class="a">Console output at startup: <code>im from page b</code> → <code>im from pag c</code> → <code>im from pag a</code>. This output appears even without any user request because load-on-startup creates objects at server startup.</div>
+
+    <div class="q">Q8. Can two servlets have the same load-on-startup value?</div>
+    <div class="a">Yes, it is allowed. But if two servlets have the same value, the order of loading between them is <strong>implementation-specific</strong> — Tomcat decides. To ensure a fixed order, always use unique values.</div>
+
+    <div class="q">Q9. Can load-on-startup be used with @WebServlet annotation?</div>
+    <div class="a">Yes. In <code>@WebServlet</code>, use: <code>@WebServlet(urlPatterns="/pagea", loadOnStartup=1)</code>. This achieves the same result as <code>&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</code> in web.xml — without needing the XML file.</div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — load-on-startup</div>
+    <p><strong>"Load Early, Serve Fast"</strong></p>
+    <p>Lazy = <strong>L</strong>ate creation (on request) | Eager = <strong>E</strong>arly creation (at startup)</p>
+    <p><strong>Rank rule</strong>: Think of it as a <strong>queue number</strong> — token 1 gets served first, token 3 waits.</p>
+  </div>
+
+</div>
+
+</body>
+</html>

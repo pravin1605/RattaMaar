@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>useEffect Hook — React Notes</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2333;
+      --border: #30363d;
+      --accent:  #58a6ff;
+      --accent2: #3fb950;
+      --accent3: #f78166;
+      --accent4: #d2a8ff;
+      --accent5: #ffa657;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --text-dim: #6e7681;
+      --code-bg: #010409;
+      /* case colors */
+      --c1: #3fb950;   /* empty [] - once */
+      --c2: #ffa657;   /* no array - every render */
+      --c3: #58a6ff;   /* [dep] - on change */
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.7; padding: 0 1rem; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 3.5rem 1rem 2.5rem; }
+    .hero-badge { display: inline-block; background: #1a1430; border: 1px solid var(--accent4); color: var(--accent4); font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: .35rem .9rem; border-radius: 2rem; margin-bottom: 1.4rem; }
+    .hero h1 { font-size: clamp(2rem, 6vw, 3.2rem); font-weight: 800; background: linear-gradient(135deg, var(--c1) 0%, var(--c3) 50%, var(--c2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.15; margin-bottom: .9rem; }
+    .hero p { color: var(--text-muted); font-size: 1rem; max-width: 560px; margin: 0 auto 1.8rem; }
+    .hero-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+    .hero-tag { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); font-size: .76rem; font-weight: 600; padding: .3rem .75rem; border-radius: .4rem; }
+
+    /* TOC */
+    .toc { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent4); border-radius: .6rem; padding: 1.4rem 1.6rem; max-width: 700px; margin: 0 auto 2.5rem; }
+    .toc h3 { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent4); margin-bottom: .9rem; }
+    .toc ol { padding-left: 1.2rem; }
+    .toc li { margin-bottom: .35rem; }
+    .toc a { color: var(--text-muted); text-decoration: none; font-size: .9rem; transition: color .2s; }
+    .toc a:hover { color: var(--accent4); }
+
+    .container { max-width: 860px; margin: 0 auto; }
+
+    /* SECTION */
+    .section { background: var(--surface); border: 1px solid var(--border); border-radius: .8rem; margin-bottom: 2rem; overflow: hidden; }
+    .section-header { display: flex; align-items: center; gap: .85rem; padding: 1.2rem 1.6rem; border-bottom: 1px solid var(--border); background: var(--surface2); }
+    .section-num { background: var(--accent4); color: #0d1117; font-size: .78rem; font-weight: 800; width: 1.8rem; height: 1.8rem; border-radius: .4rem; display: grid; place-items: center; flex-shrink: 0; }
+    .section-header h2 { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+    .section-body { padding: 1.4rem 1.6rem; }
+
+    /* DEF BOX */
+    .def-box { background: #1a1430; border: 1px solid var(--accent4); border-radius: .6rem; padding: 1rem 1.2rem; margin: 1rem 0; font-size: .9rem; color: var(--text); }
+    .def-box::before { content: '📌 Definition'; display: block; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent4); margin-bottom: .5rem; }
+
+    /* CALLOUTS */
+    .note { background: #1a2640; border-left: 3px solid var(--accent); border-radius: 0 .5rem .5rem 0; padding: .8rem 1.1rem; font-size: .88rem; color: var(--text-muted); margin: .8rem 0; }
+    .note strong { color: var(--accent); }
+    .tip  { background: #0d2a1a; border-left: 3px solid var(--c1); border-radius: 0 .5rem .5rem 0; padding: .8rem 1.1rem; font-size: .88rem; color: var(--text-muted); margin: .8rem 0; }
+    .tip strong { color: var(--c1); }
+    .warn { background: #2a1a0a; border-left: 3px solid var(--accent5); border-radius: 0 .5rem .5rem 0; padding: .8rem 1.1rem; font-size: .88rem; color: var(--text-muted); margin: .8rem 0; }
+    .warn strong { color: var(--accent5); }
+
+    /* CODE */
+    .code-wrap { background: var(--code-bg); border: 1px solid var(--border); border-radius: .6rem; margin: .8rem 0; overflow: hidden; }
+    .code-label { display: flex; align-items: center; justify-content: space-between; background: var(--surface2); border-bottom: 1px solid var(--border); padding: .45rem 1rem; }
+    .code-label span { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); }
+    .code-dots { display: flex; gap: .35rem; }
+    .code-dot { width: .55rem; height: .55rem; border-radius: 50%; }
+    .code-dot.r { background: #f78166; } .code-dot.y { background: #e3b341; } .code-dot.g { background: #3fb950; }
+    pre { padding: 1rem 1.2rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: .83rem; line-height: 1.65; color: #e6edf3; }
+    .kw { color: #ff7b72; } .fn { color: #d2a8ff; } .str { color: #a5d6ff; }
+    .cm { color: #6e7681; font-style: italic; } .tg { color: #7ee787; }
+    .at { color: #ffa657; } .nb { color: #79c0ff; } .hk { color: #58a6ff; }
+
+    /* OUTPUT BOX */
+    .out { background: #0a1a0a; border: 1px solid var(--c1); border-radius: .5rem; padding: .65rem 1.1rem; margin: .4rem 0 .9rem; font-family: 'JetBrains Mono', monospace; font-size: .83rem; color: var(--c1); }
+    .out::before { content: '▶ Output / Console'; display: block; font-size: .68rem; color: var(--text-dim); margin-bottom: .35rem; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+
+    /* ── BIG DEPENDENCY CARDS ── */
+    .dep-cards { display: flex; flex-direction: column; gap: 1.2rem; margin: 1rem 0; }
+    .dep-card { border-radius: .8rem; overflow: hidden; border: 1px solid var(--border); }
+    .dep-card-head { display: flex; align-items: center; gap: .9rem; padding: .9rem 1.2rem; }
+    .dep-badge { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; padding: .3rem .8rem; border-radius: 2rem; flex-shrink: 0; }
+    .dep-card-head h3 { font-size: .98rem; font-weight: 700; margin: 0; }
+    .dep-card-body { padding: .9rem 1.2rem; border-top: 1px solid var(--border); }
+
+    /* case 1 */
+    .dc1 .dep-card-head { background: #0a1e10; }
+    .dc1 .dep-badge { background: #0d3a1a; color: var(--c1); border: 1px solid var(--c1); }
+    .dc1 .dep-card-head h3 { color: var(--c1); }
+    .dc1 .dep-card-body { background: #080e09; }
+    .dc1 { border-color: var(--c1) !important; }
+    /* case 2 */
+    .dc2 .dep-card-head { background: #1e1200; }
+    .dc2 .dep-badge { background: #3d2200; color: var(--c2); border: 1px solid var(--c2); }
+    .dc2 .dep-card-head h3 { color: var(--c2); }
+    .dc2 .dep-card-body { background: #0e0900; }
+    .dc2 { border-color: var(--c2) !important; }
+    /* case 3 */
+    .dc3 .dep-card-head { background: #0d1a2a; }
+    .dc3 .dep-badge { background: #0d2a4a; color: var(--c3); border: 1px solid var(--c3); }
+    .dc3 .dep-card-head h3 { color: var(--c3); }
+    .dc3 .dep-card-body { background: #06101a; }
+    .dc3 { border-color: var(--c3) !important; }
+
+    /* SIDE-BY-SIDE */
+    .sbs { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: .8rem 0; }
+    .sbs-box { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; overflow: hidden; }
+    .sbs-head { padding: .45rem .9rem; font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+    .sbs-head.old { background: #2d1a1a; color: var(--accent3); }
+    .sbs-head.new { background: #0d2a1a; color: var(--c1); }
+    .sbs-head.plain { background: var(--surface); color: var(--text-muted); }
+
+    /* FLOW */
+    .flow { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 1rem 0; }
+    .flow-box { border: 1px solid var(--border); border-radius: .5rem; padding: .45rem 1.6rem; font-size: .84rem; font-weight: 600; text-align: center; min-width: 230px; background: var(--surface2); color: var(--text); }
+    .flow-box.c1 { border-color: var(--c1); color: var(--c1); }
+    .flow-box.c2 { border-color: var(--c2); color: var(--c2); }
+    .flow-box.c3 { border-color: var(--c3); color: var(--c3); }
+    .flow-box.pu { border-color: var(--accent4); color: var(--accent4); }
+    .flow-arr { color: var(--text-dim); font-size: 1.1rem; line-height: 1.4; }
+
+    /* SYNTAX BREAKDOWN */
+    .syntax-break { background: var(--code-bg); border: 1px solid var(--border); border-radius: .6rem; overflow: hidden; margin: 1rem 0; }
+    .sb-code { padding: 1rem 1.2rem; font-family: 'JetBrains Mono', monospace; font-size: .9rem; text-align: center; border-bottom: 1px solid var(--border); }
+    .sb-parts { display: grid; grid-template-columns: 1fr 1fr; }
+    .sb-part { padding: .8rem 1rem; }
+    .sb-part:first-child { border-right: 1px solid var(--border); }
+    .sb-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; margin-bottom: .4rem; }
+    .sb-desc { font-size: .83rem; color: var(--text-muted); }
+
+    /* COMMON USES GRID */
+    .uses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: .7rem; margin: 1rem 0; }
+    .use-card { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; overflow: hidden; }
+    .use-card-head { padding: .45rem .85rem; font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; background: #1a1430; color: var(--accent4); }
+    .use-card pre { font-size: .78rem; padding: .7rem .85rem; }
+
+    /* CLEANUP SPLIT */
+    .cleanup { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin: 1rem 0; }
+    .cl-box { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; overflow: hidden; }
+    .cl-head { padding: .45rem .85rem; font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+    .cl-head.setup { background: #0d2a1a; color: var(--c1); }
+    .cl-head.clean { background: #2a1a1a; color: var(--accent3); }
+
+    /* TRICK CARD */
+    .trick { background: linear-gradient(135deg, #0a1e10, #0a0d1e, #1e1200); border: 1px solid var(--accent4); border-radius: .8rem; padding: 1.3rem 1.5rem; margin: 1rem 0; }
+    .trick h3 { color: var(--accent4); font-size: .9rem; margin-bottom: .9rem; }
+    .trick-row { display: flex; align-items: center; gap: .8rem; padding: .5rem 0; border-bottom: 1px solid var(--border); }
+    .trick-row:last-child { border-bottom: none; }
+    .trick-code { font-family: 'JetBrains Mono', monospace; font-size: .85rem; padding: .25rem .7rem; border-radius: .35rem; min-width: 110px; text-align: center; font-weight: 700; }
+    .tc1 { background: #0d3a1a; color: var(--c1); border: 1px solid var(--c1); }
+    .tc2 { background: #3d2200; color: var(--c2); border: 1px solid var(--c2); }
+    .tc3 { background: #0d2a4a; color: var(--c3); border: 1px solid var(--c3); }
+    .trick-arr { color: var(--text-dim); font-size: 1.1rem; }
+    .trick-desc { font-size: .88rem; color: var(--text-muted); }
+    .trick-desc strong { color: var(--text); }
+
+    /* CMP TABLE */
+    .cmp-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .86rem; }
+    .cmp-table th { background: var(--surface2); color: var(--accent4); font-weight: 700; text-align: left; padding: .6rem .9rem; font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; }
+    .cmp-table td { padding: .65rem .9rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+    .cmp-table tr:last-child td { border-bottom: none; }
+    .cmp-table td:first-child { font-family: 'JetBrains Mono', monospace; color: var(--accent4); font-size: .82rem; }
+    .cmp-table td:last-child  { font-family: 'JetBrains Mono', monospace; color: var(--c1); font-size: .82rem; }
+
+    /* QA */
+    .qa-list { display: flex; flex-direction: column; gap: .8rem; margin: 1rem 0; }
+    .qa-item { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; overflow: hidden; }
+    .qa-q { background: #1a1430; padding: .65rem 1rem; font-size: .88rem; font-weight: 700; color: var(--accent4); }
+    .qa-q::before { content: 'Q: '; color: var(--text-dim); }
+    .qa-a { padding: .7rem 1rem; font-size: .87rem; color: var(--text-muted); }
+    .qa-a strong { color: var(--text); }
+    .qa-a code { font-family: 'JetBrains Mono', monospace; font-size: .82em; background: var(--surface); border: 1px solid var(--border); color: var(--accent4); padding: .1em .4em; border-radius: .3rem; }
+
+    p { font-size: .92rem; color: var(--text-muted); margin-bottom: .5rem; }
+    h3 { font-size: .95rem; font-weight: 700; color: var(--text); margin: 1.1rem 0 .5rem; }
+    code { background: var(--surface2); border: 1px solid var(--border); color: var(--accent4); font-family: 'JetBrains Mono', monospace; font-size: .82em; padding: .1em .4em; border-radius: .3rem; }
+    footer { text-align: center; padding: 2.5rem 1rem; color: var(--text-dim); font-size: .8rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+
+    @media (max-width: 540px) {
+      .sbs, .cleanup, .sb-parts { grid-template-columns: 1fr; }
+      .sbs-box:first-child, .cl-box:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+      .sb-part:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">React Hooks — Side Effects</div>
+  <h1>useEffect Hook</h1>
+  <p>API calls, timers, event listeners — all side effects handled cleanly with the 3 dependency array cases.</p>
+  <div class="hero-tags">
+    <span class="hero-tag" style="color:var(--c1)">[] — Run Once</span>
+    <span class="hero-tag" style="color:var(--c2)">No Array — Every Render</span>
+    <span class="hero-tag" style="color:var(--c3)">[dep] — On Change</span>
+    <span class="hero-tag">Side Effects</span>
+    <span class="hero-tag">Cleanup Function</span>
+    <span class="hero-tag">Lifecycle Replacement</span>
+  </div>
+</div>
+
+<div class="container">
+
+ 
+
+
+  <!-- S1 — WHAT IS -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>What is useEffect?</h2>
+    </div>
+    <div class="section-body">
+    
+      <div class="def-box">
+        <code>useEffect</code> is built-in a React Hook used to perform <strong>side effects</strong> such as API calls, timers, event listeners, DOM manipulation, and data fetching in Function Components.
+      </div>
+
+      <h3>What is a Side Effect?</h3>
+      <p>A side effect is <strong>any operation that affects something outside the component</strong> — the network, the browser, a timer, or external storage.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem;margin:.8rem 0">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem">🌐 <strong style="color:var(--text)">API Calls</strong><br><span style="color:var(--text-muted)">Fetch data from server</span></div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem">⏱️ <strong style="color:var(--text)">Timers</strong><br><span style="color:var(--text-muted)">setInterval / setTimeout</span></div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem">👂 <strong style="color:var(--text)">Event Listeners</strong><br><span style="color:var(--text-muted)">Add/remove safely</span></div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem">🖥️ <strong style="color:var(--text)">DOM Manipulation</strong><br><span style="color:var(--text-muted)">Browser title, scroll</span></div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem">💾 <strong style="color:var(--text)">Local Storage</strong><br><span style="color:var(--text-muted)">Save / read data</span></div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem">🗄️ <strong style="color:var(--text)">Database Requests</strong><br><span style="color:var(--text-muted)">Load / sync data</span></div>
+      </div>
+
+      <h3>Why Was useEffect Introduced?</h3>
+      <div class="sbs">
+        <div class="sbs-box">
+          <div class="sbs-head old">❌ Before — Class Components</div>
+          <pre style="font-size:.8rem;padding:.8rem"><span class="kw">class</span> User <span class="kw">extends</span> Component {
+  <span class="fn">componentDidMount</span>(){
+    <span class="cm">// API Call</span>
+  }
+  <span class="fn">componentDidUpdate</span>(){
+    <span class="cm">// Update Logic</span>
+  }
+  <span class="fn">componentWillUnmount</span>(){
+    <span class="cm">// Cleanup</span>
+  }
+}
+<span class="cm">// 3 separate methods 😓</span></pre>
+        </div>
+        <div class="sbs-box">
+          <div class="sbs-head new">✅ Now — useEffect</div>
+          <pre style="font-size:.8rem;padding:.8rem"><span class="kw">function</span> <span class="fn">User</span>() {
+  <span class="hk">useEffect</span>(() => {
+    <span class="cm">// API Call + Cleanup</span>
+    <span class="cm">// All in ONE place ✅</span>
+    <span class="kw">return</span> () => {
+      <span class="cm">// cleanup</span>
+    };
+  }, []);
+}
+<span class="cm">// 1 hook does it all 🎉</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- S2 — SYNTAX -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>Syntax Breakdown</h2>
+    </div>
+    <div class="section-body">
+
+      <h3>Import</h3>
+      <div class="code-wrap">
+        <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Import</span></div>
+        <pre><span class="kw">import</span> { <span class="hk">useEffect</span> } <span class="kw">from</span> <span class="str">"react"</span>;</pre>
+      </div>
+
+      <h3>Full Syntax</h3>
+      <div class="syntax-break">
+        <div class="sb-code">
+          <span class="hk" style="font-size:1rem">useEffect</span><span style="color:var(--text-dim)">(</span><span style="color:var(--accent4)">callbackFunction</span><span style="color:var(--text-dim)">,</span> <span style="color:var(--c3)">dependencyArray</span><span style="color:var(--text-dim)">)</span>
+        </div>
+        <div class="sb-parts">
+          <div class="sb-part">
+            <div class="sb-label" style="color:var(--accent4)">() =&gt; { } — Callback Function</div>
+            <div class="sb-desc">Contains your side effect code. Runs after render. Can optionally return a cleanup function.</div>
+          </div>
+          <div class="sb-part">
+            <div class="sb-label" style="color:var(--c3)">[dependencies] — Dependency Array</div>
+            <div class="sb-desc">Controls <em>when</em> the effect re-runs. React watches these values and re-runs only when they change.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>How It Works</h3>
+      <div class="flow">
+        <div class="flow-box">Component Renders</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box pu">useEffect Executes</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box c1">Side Effect Performed ✓</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- S3 — 3 CASES -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>Dependency Array — The 3 Cases ⭐</h2>
+    </div>
+    <div class="section-body">
+      <p>The dependency array is the <strong>most important part</strong> of useEffect — it controls exactly <em>when</em> the effect runs.</p>
+
+      <div class="dep-cards">
+
+        <!-- CASE 1 -->
+        <div class="dep-card dc1">
+          <div class="dep-card-head">
+            <span class="dep-badge">Case 1</span>
+            <h3>Empty Array [ ] → Runs Once Only</h3>
+          </div>
+          <div class="dep-card-body">
+            <p>Effect runs <strong>only once</strong> — after the first render. Never runs again. Equivalent to <code>componentDidMount()</code>.</p>
+            <div class="code-wrap">
+              <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Syntax</span></div>
+              <pre><span class="hk">useEffect</span>(() => {
+  console.<span class="fn">log</span>(<span class="str">"Runs ONCE on mount"</span>);
+}, []);   <span class="cm">// Empty array → run once</span></pre>
+            </div>
+            <div class="out">Executed   <span style="color:var(--text-dim);font-size:.8rem">← only once on first render</span></div>
+            <div class="flow" style="margin:.5rem 0">
+              <div class="flow-box c1">First Render</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box c1">useEffect Runs ✅</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box" style="color:var(--text-dim)">Never runs again</div>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Practical Example — Load on mount</span></div>
+              <pre><span class="kw">import</span> { <span class="hk">useEffect</span> } <span class="kw">from</span> <span class="str">'react'</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="hk">useEffect</span>(() => {
+    <span class="fn">fetch</span>(<span class="str">"https://api.example.com/users"</span>)
+      .<span class="fn">then</span>(res => res.<span class="fn">json</span>())
+      .<span class="fn">then</span>(data => console.<span class="fn">log</span>(data));
+  }, []);   <span class="cm">// Fetch only once when component loads</span>
+
+  <span class="kw">return</span> <span class="tg">&lt;h1&gt;</span>Hello React<span class="tg">&lt;/h1&gt;</span>;
+}</pre>
+            </div>
+            <div class="tip"><strong>Use this for:</strong> API calls on page load, initializing timers, adding event listeners once.</div>
+          </div>
+        </div>
+
+        <!-- CASE 2 -->
+        <div class="dep-card dc2">
+          <div class="dep-card-head">
+            <span class="dep-badge">Case 2</span>
+            <h3>No Array → Runs After Every Render</h3>
+          </div>
+          <div class="dep-card-body">
+            <p>Effect runs <strong>after every single render</strong>. Whenever any state or prop changes and the component re-renders, the effect fires again.</p>
+            <div class="code-wrap">
+              <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Syntax</span></div>
+              <pre><span class="hk">useEffect</span>(() => {
+  console.<span class="fn">log</span>(<span class="str">"Runs after EVERY render"</span>);
+});   <span class="cm">// No array = always runs</span></pre>
+            </div>
+            <div class="out" style="border-color:var(--c2)">
+              <span style="color:var(--c2)">Render 1 → Executed<br>Render 2 → Executed<br>Render 3 → Executed</span>
+            </div>
+            <div class="flow" style="margin:.5rem 0">
+              <div class="flow-box c2">Render</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box c2">useEffect Runs</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box c2">Re-render → Runs Again</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box c2">Re-render → Runs Again ...</div>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Practical Example</span></div>
+              <pre><span class="kw">import</span> { <span class="hk">useState</span>, <span class="hk">useEffect</span> } <span class="kw">from</span> <span class="str">'react'</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="nb">0</span>);
+
+  <span class="hk">useEffect</span>(() => {
+    console.<span class="fn">log</span>(<span class="str">"Component rendered!"</span>);
+  });   <span class="cm">// No array — runs on every re-render</span>
+
+  <span class="kw">return</span> (
+    <span class="tg">&lt;&gt;</span>
+      <span class="tg">&lt;h1&gt;</span>{count}<span class="tg">&lt;/h1&gt;</span>
+      <span class="tg">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">setCount</span>(count + <span class="nb">1</span>)}<span class="tg">&gt;</span>Increment<span class="tg">&lt;/button&gt;</span>
+    <span class="tg">&lt;/&gt;</span>
+  );
+}</pre>
+            </div>
+            <div class="warn"><strong>⚠️ Use sparingly!</strong> Running effects on every render can cause performance issues in large apps. Usually you want Case 1 or Case 3 instead.</div>
+          </div>
+        </div>
+
+        <!-- CASE 3 -->
+        <div class="dep-card dc3">
+          <div class="dep-card-head">
+            <span class="dep-badge">Case 3</span>
+            <h3>[dep] → Runs When Dependency Changes</h3>
+          </div>
+          <div class="dep-card-body">
+            <p>Effect runs <strong>once on mount, then again whenever the dependency value changes</strong>. React compares old vs new value — if different, effect re-runs.</p>
+            <div class="code-wrap">
+              <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Syntax</span></div>
+              <pre><span class="hk">useEffect</span>(() => {
+  console.<span class="fn">log</span>(<span class="str">"Count changed!"</span>);
+}, [count]);   <span class="cm">// Only runs when count changes</span></pre>
+            </div>
+            <div class="out" style="border-color:var(--c3)">
+              <span style="color:var(--c3)">count = 0 → Executed (initial)<br>count = 1 → Executed<br>count = 2 → Executed</span>
+            </div>
+            <div class="flow" style="margin:.5rem 0">
+              <div class="flow-box c3">count changes</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box c3">Old value ≠ New value</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box c3">useEffect Runs ✅</div>
+            </div>
+            <div class="code-wrap">
+              <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Practical Example</span></div>
+              <pre><span class="kw">import</span> { <span class="hk">useState</span>, <span class="hk">useEffect</span> } <span class="kw">from</span> <span class="str">'react'</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="nb">0</span>);
+
+  <span class="hk">useEffect</span>(() => {
+    document.title = <span class="str">`Count: ${count}`</span>;   <span class="cm">// Update title on change</span>
+  }, [count]);
+
+  <span class="kw">return</span> (
+    <span class="tg">&lt;&gt;</span>
+      <span class="tg">&lt;h1&gt;</span>{count}<span class="tg">&lt;/h1&gt;</span>
+      <span class="tg">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">setCount</span>(count + <span class="nb">1</span>)}<span class="tg">&gt;</span>Increment<span class="tg">&lt;/button&gt;</span>
+    <span class="tg">&lt;/&gt;</span>
+  );
+}</pre>
+            </div>
+
+            <h3>Multiple Dependencies</h3>
+            <div class="code-wrap">
+              <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Multiple deps</span></div>
+              <pre><span class="hk">useEffect</span>(() => {
+  console.<span class="fn">log</span>(<span class="str">"count or name changed"</span>);
+}, [count, name]);   <span class="cm">// Runs when count OR name changes</span></pre>
+            </div>
+            <div class="tip"><strong>Most commonly used case!</strong> Perfect for re-fetching data when a route param or filter changes.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- S4 — CLEANUP -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>Cleanup Function</h2>
+    </div>
+    <div class="section-body">
+      <p>useEffect can <strong>return a cleanup function</strong> that runs when the component unmounts or before the effect re-runs. Prevents memory leaks.</p>
+
+      <div class="code-wrap">
+        <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Cleanup Syntax</span></div>
+        <pre><span class="hk">useEffect</span>(() => {
+  <span class="cm">// Setup: your side effect here</span>
+
+  <span class="kw">return</span> () => {
+    <span class="cm">// Cleanup: runs on unmount or before re-run</span>
+  };
+}, []);</pre>
+      </div>
+
+      <h3>Timer — Setup & Cleanup</h3>
+      <div class="cleanup">
+        <div class="cl-box">
+          <div class="cl-head setup">componentDidMount equivalent</div>
+          <pre style="font-size:.8rem;padding:.85rem"><span class="hk">useEffect</span>(() => {
+  <span class="kw">const</span> timer = <span class="fn">setInterval</span>(
+    () => console.<span class="fn">log</span>(<span class="str">"tick"</span>),
+    <span class="nb">1000</span>
+  );
+
+  <span class="cm">// Return cleanup function</span>
+  <span class="kw">return</span> () => {
+    <span class="fn">clearInterval</span>(timer);
+  };
+}, []);</pre>
+        </div>
+        <div class="cl-box">
+          <div class="cl-head clean">componentWillUnmount equivalent</div>
+          <pre style="font-size:.8rem;padding:.85rem"><span class="cm">// The return () =&gt; {} block
+// is the cleanup function.</span>
+
+<span class="cm">// It automatically runs:</span>
+<span class="cm">// 1. When component unmounts</span>
+<span class="cm">// 2. Before effect re-runs</span>
+
+<span class="cm">// Without cleanup:
+// ❌ Timer keeps running
+// ❌ Memory leak!</span></pre>
+        </div>
+      </div>
+
+      <h3>Event Listener — Setup & Cleanup</h3>
+      <div class="code-wrap">
+        <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Event Listener with Cleanup</span></div>
+        <pre><span class="hk">useEffect</span>(() => {
+  <span class="kw">const</span> <span class="fn">handleResize</span> = () => console.<span class="fn">log</span>(<span class="str">"resized"</span>);
+
+  window.<span class="fn">addEventListener</span>(<span class="str">"resize"</span>, handleResize);   <span class="cm">// Add</span>
+
+  <span class="kw">return</span> () => {
+    window.<span class="fn">removeEventListener</span>(<span class="str">"resize"</span>, handleResize);  <span class="cm">// Remove</span>
+  };
+}, []);</pre>
+      </div>
+      <div class="warn"><strong>⚠️ Always clean up:</strong> Timers, event listeners, WebSocket connections and API subscriptions must always have a corresponding cleanup or you'll get memory leaks and bugs on unmounted components.</div>
+    </div>
+  </div>
+
+
+  <!-- S5 — COMMON USES -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>Common Uses of useEffect</h2>
+    </div>
+    <div class="section-body">
+      <div class="uses-grid">
+        <div class="use-card">
+          <div class="use-card-head">🌐 API Call</div>
+          <pre style="font-size:.78rem;padding:.8rem"><span class="hk">useEffect</span>(() => {
+  <span class="fn">fetch</span>(<span class="str">"users"</span>);
+}, []);</pre>
+        </div>
+        <div class="use-card">
+          <div class="use-card-head">👂 Event Listener</div>
+          <pre style="font-size:.78rem;padding:.8rem"><span class="hk">useEffect</span>(() => {
+  window.<span class="fn">addEventListener</span>(
+    <span class="str">"resize"</span>, handler);
+}, []);</pre>
+        </div>
+        <div class="use-card">
+          <div class="use-card-head">⏱️ Timer</div>
+          <pre style="font-size:.78rem;padding:.8rem"><span class="hk">useEffect</span>(() => {
+  <span class="fn">setInterval</span>(() => {
+  }, <span class="nb">1000</span>);
+}, []);</pre>
+        </div>
+        <div class="use-card">
+          <div class="use-card-head">💾 Local Storage</div>
+          <pre style="font-size:.78rem;padding:.8rem"><span class="hk">useEffect</span>(() => {
+  localStorage.<span class="fn">setItem</span>(
+    <span class="str">"name"</span>, <span class="str">"Pravin"</span>);
+}, []);</pre>
+        </div>
+        <div class="use-card">
+          <div class="use-card-head">🖥️ Document Title</div>
+          <pre style="font-size:.78rem;padding:.8rem"><span class="hk">useEffect</span>(() => {
+  document.title =
+    <span class="str">"Home Page"</span>;
+}, []);</pre>
+        </div>
+        <div class="use-card">
+          <div class="use-card-head">🔄 Re-fetch on Change</div>
+          <pre style="font-size:.78rem;padding:.8rem"><span class="hk">useEffect</span>(() => {
+  <span class="fn">fetch</span>(<span class="str">`/user/${id}`</span>);
+}, [id]);</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- S6 — VS LIFECYCLE -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <h2>useEffect vs Lifecycle Methods</h2>
+    </div>
+    <div class="section-body">
+      <table class="cmp-table">
+        <tr><th>useEffect (Functional)</th><th>Lifecycle Method (Class)</th></tr>
+        <tr><td>useEffect(() =&gt; {}, [])</td><td>componentDidMount()</td></tr>
+        <tr><td>useEffect(() =&gt; {})</td><td>componentDidUpdate()</td></tr>
+        <tr><td>useEffect(() =&gt; { return cleanup })</td><td>componentWillUnmount()</td></tr>
+        <tr><td>useEffect(() =&gt; {}, [count])</td><td>Run when count changes</td></tr>
+      </table>
+      <div class="note"><strong>Modern React prefers useEffect</strong> — one hook replaces three separate lifecycle methods and keeps related logic together in one place.</div>
+    </div>
+  </div>
+
+
+  <!-- S7 — INTERVIEW -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <h2>Interview Questions 🎯</h2>
+    </div>
+    <div class="section-body">
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q">What is useEffect?</div>
+          <div class="qa-a"><strong>useEffect</strong> is a React Hook used to perform <strong>side effects</strong> such as API calls, event listeners, timers, and DOM manipulation inside Function Components. It runs after the component renders.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What is a Dependency Array?</div>
+          <div class="qa-a">The <strong>dependency array</strong> is the second argument to useEffect. It controls <em>when</em> the effect should re-run. React watches the values in this array and re-executes the effect when any of them change.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What happens when the dependency array is empty [ ]?</div>
+          <div class="qa-a">The effect runs <strong>only once</strong> after the initial render and never again. Equivalent to <code>componentDidMount()</code>. Perfect for initial API calls.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What happens when no dependency array is provided?</div>
+          <div class="qa-a">The effect runs <strong>after every render</strong> — whenever any state or prop changes and causes a re-render. Equivalent to <code>componentDidUpdate()</code> running on all changes.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What happens when state is in the dependency array [count]?</div>
+          <div class="qa-a">The effect runs <strong>once on mount</strong>, then <strong>again whenever count changes</strong>. React compares old vs new value — if different, the effect fires.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What is the cleanup function in useEffect?</div>
+          <div class="qa-a">The function returned from useEffect. It runs <strong>before the component unmounts</strong> or before the effect re-runs. Used to clear timers, remove event listeners, cancel API calls — prevents memory leaks.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- S8 — QUICK REVISION -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <h2>Quick Revision & Memory Trick ⚡</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="trick">
+        <h3>🧠 Easy Memory Trick — The 3 Cases</h3>
+        <div class="trick-row">
+          <span class="trick-code tc1">[ ]</span>
+          <span class="trick-arr">→</span>
+          <span class="trick-desc"><strong>One Time</strong> — runs only on first render (mount)</span>
+        </div>
+        <div class="trick-row">
+          <span class="trick-code tc2">No [ ]</span>
+          <span class="trick-arr">→</span>
+          <span class="trick-desc"><strong>Every Time</strong> — runs after every render</span>
+        </div>
+        <div class="trick-row">
+          <span class="trick-code tc3">[count]</span>
+          <span class="trick-arr">→</span>
+          <span class="trick-desc"><strong>When Count Changes</strong> — runs on mount + whenever count updates</span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.6rem;padding:1rem">
+          <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--accent4);margin-bottom:.6rem">📋 At a Glance</p>
+          <p style="font-size:.84rem;margin-bottom:.3rem">Used for → <strong style="color:var(--text)">Side Effects</strong></p>
+          <p style="font-size:.84rem;margin-bottom:.3rem">Replaces → <strong style="color:var(--text)">3 lifecycle methods</strong></p>
+          <p style="font-size:.84rem;margin-bottom:.3rem">Returns → <strong style="color:var(--text)">Cleanup function</strong></p>
+          <p style="font-size:.84rem;margin:0">Runs → <strong style="color:var(--text)">After render</strong></p>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.6rem;padding:1rem">
+          <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--accent4);margin-bottom:.6rem">✅ Common Uses</p>
+          <p style="font-size:.84rem;margin-bottom:.25rem">🌐 API Calls</p>
+          <p style="font-size:.84rem;margin-bottom:.25rem">⏱️ Timers</p>
+          <p style="font-size:.84rem;margin-bottom:.25rem">👂 Event Listeners</p>
+          <p style="font-size:.84rem;margin-bottom:.25rem">💾 Local Storage</p>
+          <p style="font-size:.84rem;margin:0">🖥️ DOM Manipulation</p>
+        </div>
+      </div>
+
+      <div class="tip"><strong>⭐ Most asked in interviews:</strong> The 3 dependency array cases + what the cleanup function does. Memorize the trick above and you'll ace it!</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  React.js Notes — useEffect Hook &nbsp;·&nbsp; Side Effects & Dependency Array &nbsp;·&nbsp; Made with ❤️
+</footer>
+
+</body>
+</html>

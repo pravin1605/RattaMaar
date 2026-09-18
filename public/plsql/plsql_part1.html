@@ -1,0 +1,344 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700}
+.opt{background:#d0f0e0;color:#1b5e20}
+.mand{background:#fce4ec;color:#880e4f}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:3px}
+.mini-card p{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.tag{background:#eef0ff;color:#1a1a6e;font-size:12px;padding:3px 10px;border-radius:12px;border:1px solid #b0bfff}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.point-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:7px}
+.point-num{background:#1a1a6e;color:#fff;font-size:11px;font-weight:700;min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.point-text{font-size:13px;color:#111}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+.mono{background:#f0f0f0;border:1px solid #ddd;border-radius:4px;padding:8px 12px;font-family:'Courier New',monospace;font-size:13px;color:#111;margin:8px 0}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">PL/SQL — Part 1: Introduction</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; Interview-Ready Notes &nbsp;|&nbsp; Orange tag = Extra added content</div>
+</div>
+
+<div class="sec-label">1. What is PL/SQL?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>SQL is a language used to perform operations on database objects such as tables, views, and indexes.</p>
+    <p>PL/SQL is Oracle's procedural extension of SQL that combines SQL statements with programming constructs like variables, loops, conditions, cursors, and exception handling.</p>
+  </div>
+  <ul>
+    <li>PL/SQL stands for Procedural Language / Structured Query Language</li>
+    <li>Developed by Oracle Corporation</li>
+    <li>Introduced in Oracle Version 6 around 1991</li>
+    <li>Extends SQL by adding programming capabilities</li>
+    <li>Allows developers to write complete programs inside the Oracle database</li>
+  </ul>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>PL/SQL = SQL + Procedural Language</p>
+    <p>SQL = Ask the database &nbsp;|&nbsp; PL/SQL = Tell the database what to do step by step</p>
+  </div>
+</div>
+
+<div class="sec-label">2. SQL vs PL/SQL</div>
+<div class="card">
+  <table>
+    <tr><th>Feature</th><th>SQL</th><th>PL/SQL</th></tr>
+    <tr><td>Full Form</td><td>Structured Query Language</td><td>Procedural Language / SQL</td></tr>
+    <tr><td>Purpose</td><td>Interact with database</td><td>Create programs using SQL</td></tr>
+    <tr><td>Execution</td><td>One statement at a time</td><td>Block of statements together</td></tr>
+    <tr><td>Language Type</td><td>Declarative</td><td>Procedural</td></tr>
+    <tr><td>Variables / Loops / Conditions</td><td>Not supported</td><td>Supported</td></tr>
+    <tr><td>Cursors / Exceptions</td><td>Not supported</td><td>Supported</td></tr>
+    <tr><td>Stored in DB</td><td>No</td><td>Yes (Named blocks)</td></tr>
+    <tr><td>Network Traffic</td><td>Higher — each stmt = 1 round trip</td><td>Lower — entire block = 1 round trip</td></tr>
+    <tr><td>Used for</td><td>Data manipulation</td><td>Business logic and DB programming</td></tr>
+  </table>
+</div>
+
+<div class="sec-label">3. Why PL/SQL? (Limitations of SQL)</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:8px">SQL can retrieve and manipulate data, but it <strong>cannot</strong>:</p>
+  <ul>
+    <li>Store temporary values</li>
+    <li>Make decisions</li>
+    <li>Execute repetitive tasks</li>
+    <li>Handle runtime errors</li>
+  </ul>
+  <p style="font-size:13px;color:#111;margin:10px 0 8px">PL/SQL solves these by providing:</p>
+  <div class="two-col">
+    <div class="mini-card"><div class="mct">Variables</div><p>Used to store temporary data</p></div>
+    <div class="mini-card"><div class="mct">Conditions</div><p>Used to make decisions (IF / ELSIF / ELSE)</p></div>
+    <div class="mini-card"><div class="mct">Loops</div><p>Used to repeat statements</p></div>
+    <div class="mini-card"><div class="mct">Exception Handling</div><p>Used to handle runtime errors</p></div>
+    <div class="mini-card"><div class="mct">Cursors</div><p>Used to process multiple rows</p></div>
+    <div class="mini-card"><div class="mct">Modular Code</div><p>Procedures, Functions, Triggers, Packages</p></div>
+  </div>
+</div>
+
+<div class="sec-label">4. Features of PL/SQL</div>
+<div class="card">
+  <div class="tag-row">
+    <span class="tag">Block Structured Language</span>
+    <span class="tag">Tight Integration with SQL</span>
+    <span class="tag">Exception Handling</span>
+    <span class="tag">Modular Programming</span>
+    <span class="tag">Better Performance</span>
+    <span class="tag">Reusable Code</span>
+    <span class="tag">Supports Variables</span>
+    <span class="tag">Supports Loops</span>
+    <span class="tag">Supports Conditions</span>
+    <span class="tag">Supports Cursors</span>
+  </div>
+  <div class="tip-box">
+    <div class="lbl">Extra — Important</div>
+    <p>PL/SQL is compiled before execution. Oracle compiles and stores PL/SQL blocks in the database, making repeated execution faster than SQL. The compiled version is called P-code (pseudocode).</p>
+  </div>
+</div>
+
+<div class="sec-label">5. PL/SQL = SQL + Procedural Language</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">SQL Statements used in PL/SQL</div>
+      <ul style="margin-top:4px"><li>SELECT</li><li>INSERT</li><li>UPDATE</li><li>DELETE</li><li>MERGE</li></ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct">Procedural Language Features</div>
+      <ul style="margin-top:4px"><li>Variables</li><li>IF Statements</li><li>Loops</li><li>Cursors</li><li>Exception Handling</li></ul>
+    </div>
+  </div>
+  <p style="font-size:13px;color:#555;margin-top:8px">PL/SQL allows us to control the flow of execution and manipulate data in a single program.</p>
+</div>
+
+<div class="sec-label">6. Structure of PL/SQL Block</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:10px">PL/SQL is a Block Structured Language. Every PL/SQL program consists of blocks.</p>
+  <table>
+    <tr><th>Section</th><th>Keyword</th><th>Mandatory?</th><th>Purpose</th></tr>
+    <tr><td>Declare</td><td>DECLARE</td><td><span class="badge opt">Optional</span></td><td>Declare variables, constants, cursors, exceptions</td></tr>
+    <tr><td>Begin</td><td>BEGIN</td><td><span class="badge mand">Mandatory</span></td><td>All executable statements go here</td></tr>
+    <tr><td>Exception</td><td>EXCEPTION</td><td><span class="badge opt">Optional</span></td><td>Handle runtime errors</td></tr>
+    <tr><td>End</td><td>END;</td><td><span class="badge mand">Mandatory</span></td><td>Marks the end of the block</td></tr>
+  </table>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>D-B-E-E → DECLARE → BEGIN → EXCEPTION → END</p>
+    <p>"Database Block Execution Ends" — only BEGIN and END are mandatory</p>
+  </div>
+</div>
+
+<div class="sec-label">6a. DECLARE Section</div>
+<div class="card">
+  <ul>
+    <li>Used to declare Variables, Constants, Cursors, User-defined Exceptions</li>
+    <li>All declarations end with a semicolon ( ; )</li>
+    <li>Variables hold temporary data used in the block</li>
+    <li>Constants are declared using the CONSTANT keyword and cannot be changed</li>
+    <li>Assignment operator in PL/SQL is := (not = )</li>
+  </ul>
+  <div class="tip-box">
+    <div class="lbl">Extra — %TYPE Anchored Data Type</div>
+    <p>EMP.ENAME%TYPE allows a variable to automatically inherit the data type of a database column. Best practice to avoid type mismatch errors if the column type changes in future.</p>
+  </div>
+</div>
+
+<div class="sec-label">6b. BEGIN Section</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:6px">Contains all executable statements. The only mandatory section along with END.</p>
+  <ul>
+    <li>SELECT INTO, INSERT, UPDATE, DELETE</li>
+    <li>DDL Statements and TCL Statements</li>
+    <li>IF Conditions and Loops</li>
+    <li>Procedure / Function calls</li>
+  </ul>
+</div>
+
+<div class="sec-label">6c. EXCEPTION Section</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:8px">Used to handle runtime errors gracefully.</p>
+  <table>
+    <tr><th>Exception Name</th><th>Triggered When</th></tr>
+    <tr><td>NO_DATA_FOUND</td><td>SELECT INTO returns no rows</td></tr>
+    <tr><td>TOO_MANY_ROWS</td><td>SELECT INTO returns more than one row</td></tr>
+    <tr><td>ZERO_DIVIDE</td><td>Division by zero</td></tr>
+    <tr><td>WHEN OTHERS <span class="extra">Extra</span></td><td>Catch-all — handles any unhandled exception; must always be placed last</td></tr>
+  </table>
+</div>
+
+<div class="sec-label">7. Types of PL/SQL Blocks</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">Anonymous Block</div>
+      <ul style="margin-top:4px">
+        <li>No Name</li>
+        <li>Temporary — not stored in DB</li>
+        <li>Used only once</li>
+        <li>Cannot be called again</li>
+        <li>Used for testing / small programs</li>
+      </ul>
+      <p style="font-size:11px;color:#555;margin-top:6px">Real life: Writing on paper and throwing it away</p>
+    </div>
+    <div class="mini-card">
+      <div class="mct">Named Block</div>
+      <ul style="margin-top:4px">
+        <li>Has a Name</li>
+        <li>Stored permanently in Oracle DB</li>
+        <li>Reusable — called multiple times</li>
+        <li>Improves performance</li>
+        <li>Used in large applications</li>
+      </ul>
+      <p style="font-size:11px;color:#555;margin-top:6px">Real life: Saving a contact and calling whenever needed</p>
+    </div>
+  </div>
+</div>
+
+<div class="sec-label">8. Types of Named Blocks</div>
+<div class="card">
+  <table>
+    <tr><th>Type</th><th>Returns Value?</th><th>Execution</th><th>Purpose</th></tr>
+    <tr><td>Procedure</td><td>Optional (via OUT params)</td><td>Manual — EXEC / call</td><td>Performs a specific task</td></tr>
+    <tr><td>Function</td><td>Always returns one value</td><td>Manual — SELECT / call</td><td>Computes and returns a value</td></tr>
+    <tr><td>Trigger</td><td>No</td><td>Auto — on DML event</td><td>Auto-executes on INSERT / UPDATE / DELETE</td></tr>
+    <tr><td>Package</td><td>Contains all above</td><td>Manual — call</td><td>Groups related procedures, functions, variables, cursors</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — Procedure vs Function</div>
+    <p>A Procedure may or may not return a value. A Function always returns exactly one value using RETURN. Functions can be used inside SQL queries (SELECT ... FROM DUAL), but Procedures cannot be called directly in SQL.</p>
+  </div>
+  <div class="tip-box" style="margin-top:8px">
+    <div class="lbl">Extra — Package Structure</div>
+    <p>A Package has two parts: Package Specification (public interface / declaration) and Package Body (actual implementation / logic). Think of Spec as a header file and Body as an implementation file.</p>
+  </div>
+</div>
+
+<div class="sec-label">9. SELECT INTO Statement</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:8px">Used to fetch data from the database into PL/SQL variables.</p>
+  <p style="font-size:13px;font-weight:700;color:#111;margin-bottom:4px">Syntax:</p>
+  <div class="mono">SELECT column_name INTO variable_name FROM table_name WHERE condition;</div>
+  <div class="tip-box">
+    <div class="lbl">Extra — Important Rules</div>
+    <p>SELECT INTO must return exactly one row:</p>
+    <ul style="margin-top:4px">
+      <li>No rows returned → raises NO_DATA_FOUND exception</li>
+      <li>Multiple rows returned → raises TOO_MANY_ROWS exception</li>
+    </ul>
+  </div>
+</div>
+
+<div class="sec-label">10. Advantages of PL/SQL</div>
+<div class="card">
+  <div class="point-row"><div class="point-num">1</div><div class="point-text">Faster Execution — compiled and stored in DB</div></div>
+  <div class="point-row"><div class="point-num">2</div><div class="point-text">Better Performance — entire block sent in one trip to DB server</div></div>
+  <div class="point-row"><div class="point-num">3</div><div class="point-text">Reduced Network Traffic — less round trips between app and DB</div></div>
+  <div class="point-row"><div class="point-num">4</div><div class="point-text">Exception Handling Support</div></div>
+  <div class="point-row"><div class="point-num">5</div><div class="point-text">Reusable Code — named blocks can be called multiple times</div></div>
+  <div class="point-row"><div class="point-num">6</div><div class="point-text">Modular Programming — Procedures, Functions, Packages</div></div>
+  <div class="point-row"><div class="point-num">7</div><div class="point-text">Easy Maintenance</div></div>
+  <div class="point-row"><div class="point-num">8</div><div class="point-text">Better Security — business logic hidden inside DB</div></div>
+  <div class="point-row"><div class="point-num">9</div><div class="point-text">Tight Integration with Oracle Database</div></div>
+</div>
+
+<div class="sec-label">11. Important Rules to Remember</div>
+<div class="card">
+  <ul>
+    <li>SET SERVEROUTPUT ON must be run before using DBMS_OUTPUT.PUT_LINE</li>
+    <li>Every PL/SQL block must end with END; followed by / (forward slash to execute)</li>
+    <li>:= is the assignment operator — used to assign values to variables</li>
+    <li>= is the comparison operator — used only in conditions (WHERE / IF)</li>
+    <li>String concatenation uses the || operator</li>
+    <li>PL/SQL keywords are case-insensitive but conventionally written in UPPERCASE</li>
+    <li>DBMS_OUTPUT is a built-in Oracle package used to display output</li>
+    <li>DUAL is a special one-row dummy table in Oracle used to call functions in SELECT</li>
+  </ul>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>:= for assignment, = for comparison — different from most other languages!</p>
+    <p>DUAL = Dummy table to test or call functions without a real table</p>
+  </div>
+</div>
+
+<div class="sec-label">12. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What is PL/SQL?</div>
+  <div class="qa-a">PL/SQL is Oracle's procedural extension of SQL that combines SQL statements with programming constructs such as variables, loops, conditions, cursors, and exception handling.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. Why was PL/SQL introduced?</div>
+  <div class="qa-a">PL/SQL was introduced to overcome the limitations of SQL by providing programming capabilities such as decision making, looping, and error handling inside the Oracle database.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. What are the sections of a PL/SQL block?</div>
+  <div class="qa-a">1. DECLARE (Optional) — variable declaration &nbsp; 2. BEGIN (Mandatory) — executable statements &nbsp; 3. EXCEPTION (Optional) — error handling &nbsp; 4. END (Mandatory) — end of block</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. What is an Anonymous Block?</div>
+  <div class="qa-a">An Anonymous Block is a temporary PL/SQL block without a name. It is not stored in the database and is used only once. Mainly used for testing or one-time execution.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. What is a Named Block?</div>
+  <div class="qa-a">A Named Block is stored permanently in the Oracle database and can be reused multiple times. Examples: Procedure, Function, Trigger, Package.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. Difference between Procedure and Function? <span class="extra">Extra</span></div>
+  <div class="qa-a">A Procedure may or may not return a value. A Function always returns exactly one value using the RETURN statement. Functions can be called inside SQL queries, but Procedures cannot be called directly in SQL.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q7. What is %TYPE in PL/SQL? <span class="extra">Extra</span></div>
+  <div class="qa-a">%TYPE is an anchored data type that allows a PL/SQL variable to automatically inherit the data type of a database column. Example: V_NAME EMP.ENAME%TYPE. Best practice to avoid type mismatch errors.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q8. What is WHEN OTHERS in exception handling? <span class="extra">Extra</span></div>
+  <div class="qa-a">WHEN OTHERS is a catch-all exception handler that catches any exception not handled by a specific WHEN clause. It must always be placed as the last WHEN clause in the EXCEPTION section.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q9. What is the DUAL table in Oracle? <span class="extra">Extra</span></div>
+  <div class="qa-a">DUAL is a special one-row, one-column dummy table in Oracle used to evaluate expressions or call functions in a SELECT statement. Example: SELECT GET_SQUARE(5) FROM DUAL;</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q10. What is the difference between := and = in PL/SQL? <span class="extra">Extra</span></div>
+  <div class="qa-a">:= is the assignment operator used to assign values to variables. = is the comparison operator used in conditions. Using = for assignment causes a compilation error in PL/SQL.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q11. What happens if SELECT INTO returns no rows or multiple rows? <span class="extra">Extra</span></div>
+  <div class="qa-a">No rows → raises NO_DATA_FOUND exception. Multiple rows → raises TOO_MANY_ROWS exception. SELECT INTO must always return exactly one row.</div>
+</div>
+
+<div class="divider"></div>
+<footer>PL/SQL Part 1 — Introduction &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>

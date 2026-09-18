@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center; font-size: 20px; font-weight: 700;
+    border: 2.5px solid #111; padding: 9px 18px;
+    margin-bottom: 5px; letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 13px; font-style: italic;
+  }
+  .page-title {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: #555; margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title {
+    font-weight: 700; font-size: 11.5px;
+    margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 10.8px; padding: 8px 12px;
+    margin: 6px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw { color: #569cd6; }
+  .cm { color: #6a9955; }
+  .st { color: #ce9178; }
+  .cl { color: #4ec9b0; }
+  .mt { color: #dcdcaa; }
+  .nm { color: #9cdcfe; }
+  .an { color: #c586c0; }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  .interview-answer {
+    background: #fff; border: 2px solid #111;
+    padding: 8px 12px; margin: 7px 0; font-size: 12.5px;
+  }
+  .interview-answer-title {
+    font-weight: 700; font-size: 12px;
+    margin-bottom: 5px; color: #111;
+    border-bottom: 1px solid #ccc; padding-bottom: 3px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  .def-row { display: flex; gap: 0; margin: 3px 0; border: 1px solid #ddd; }
+  .def-term {
+    background: #f0f0f0; font-weight: 700;
+    font-size: 12px; padding: 4px 9px;
+    border-right: 1px solid #ccc; min-width: 36%;
+  }
+  .def-meaning { padding: 4px 9px; font-size: 12px; color: #333; flex: 1; }
+
+  /* Rule card */
+  .rule-card {
+    border: 1.5px solid #333;
+    margin-bottom: 9px;
+    background: #fff;
+  }
+  .rule-header {
+    background: #333; color: #fff;
+    padding: 4px 10px; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .rule-num {
+    background: #fff; color: #111;
+    font-size: 11px; font-weight: 700;
+    padding: 1px 7px; border-radius: 2px;
+  }
+  .rule-body { padding: 8px 10px; }
+
+  .correct-wrong {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 5px 0;
+  }
+  .correct-box {
+    border: 1.5px solid #2e7d32; padding: 6px 8px; background: #f1f8f1;
+  }
+  .wrong-box {
+    border: 1.5px solid #b71c1c; padding: 6px 8px; background: #fff5f5;
+  }
+  .correct-label { font-size: 11px; font-weight: 700; color: #2e7d32; margin-bottom: 3px; }
+  .wrong-label   { font-size: 11px; font-weight: 700; color: #b71c1c; margin-bottom: 3px; }
+
+  /* Steps flow */
+  .steps-flow {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+  }
+  .step-box {
+    border: 1.5px solid #333; padding: 5px 18px;
+    font-size: 11.5px; font-weight: 600; text-align: center;
+    background: #fff; min-width: 200px;
+  }
+  .step-box-sub { font-size: 10px; font-weight: 400; color: #666; }
+  .step-arrow { font-size: 15px; color: #444; line-height: 1.4; text-align: center; }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  ol { padding-left: 17px; margin: 3px 0; }
+  ol li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — STEPS + ENTITY CLASS INTRO + RULES 1–3 ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">Creating a Hibernate Application — Entity Class (Complete Notes)</div>
+  <div class="main-subtitle">5 Steps | Entity Class Rules | 6 Rules | Annotations | Complete Example | Interview Answer</div>
+
+  <!-- 5 Steps -->
+  <div class="section">
+    <div class="section-header">📘 Steps to Create a Hibernate (JPA + Hibernate) Application</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="steps-flow">
+            <div class="step-box" style="background:#e3f2fd; border-color:#1565c0;">
+              Step 1 — Create Entity Class
+              <div class="step-box-sub">Java class mapped to DB table</div>
+            </div>
+            <div class="step-arrow">↓</div>
+            <div class="step-box">
+              Step 2 — Map Entity with Annotations
+              <div class="step-box-sub">@Entity, @Table, @Id, @Column</div>
+            </div>
+            <div class="step-arrow">↓</div>
+            <div class="step-box">
+              Step 3 — Create persistence.xml
+              <div class="step-box-sub">DB config in META-INF/</div>
+            </div>
+            <div class="step-arrow">↓</div>
+            <div class="step-box">
+              Step 4 — Create DB Operation Class
+              <div class="step-box-sub">EntityManager CRUD operations</div>
+            </div>
+            <div class="step-arrow">↓</div>
+            <div class="step-box" style="background:#e8f5e9; border-color:#2e7d32;">
+              Step 5 — Run the Application ✅
+              <div class="step-box-sub">Hibernate generates SQL, connects to DB</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">📘 What is an Entity Class?</div>
+          <p>A Java class whose objects are stored permanently in a database table is called an <strong>Entity Class</strong> or <strong>Persistent Class</strong>.</p>
+
+          <div class="subsection-title">🔹 Definition</div>
+          <p>An <strong>Entity Class</strong> is a Java class that <strong>represents a table in a database</strong>.</p>
+
+          <div class="subsection-title" style="margin-top:8px;">🔹 Example:</div>
+          <div style="border:1px solid #999; font-family:monospace; font-size:12px; margin:5px 0;">
+            <div style="background:#111;color:#fff;padding:3px 10px;display:grid;grid-template-columns:1fr 1fr 1fr;font-weight:700;">
+              <span>id</span><span>name</span><span>city</span>
+            </div>
+            <div style="padding:3px 10px;display:grid;grid-template-columns:1fr 1fr 1fr;">
+              <span>101</span><span>Pravin</span><span>Mumbai</span>
+            </div>
+          </div>
+          <p style="font-size:12px;">Equivalent Entity Class:</p>
+          <div class="code-block-dark"><span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="cl">Student</span> {
+    <span class="an">@Id</span>
+    <span class="kw">private int</span> <span class="nm">id</span>;
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">city</span>;
+}</div>
+
+          <div class="note-box" style="margin-top:6px;">
+            <strong>📝 Note:</strong> These 6 rules for Entity Class is one of the most important Hibernate interview questions. Learn all 6 thoroughly.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rule 1 -->
+  <div class="rule-card">
+    <div class="rule-header"><span class="rule-num">Rule 1</span> Class Must Be Public</div>
+    <div class="rule-body">
+      <div class="two-col">
+        <div>
+          <div class="correct-wrong">
+            <div class="correct-box">
+              <div class="correct-label">✅ Correct</div>
+              <div class="code-block-dark" style="font-size:10.5px;"><span class="kw">public class</span> <span class="cl">Student</span> {
+}</div>
+            </div>
+            <div class="wrong-box">
+              <div class="wrong-label">❌ Wrong</div>
+              <div class="code-block-dark" style="font-size:10.5px;"><span class="kw">class</span> <span class="cl">Student</span> {
+}<span class="cm">// not public</span></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p><strong>Why?</strong> Hibernate internally creates and manages objects. If class is not public, Hibernate may not access it properly from other packages. Public access ensures Hibernate can instantiate and manage the class.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rule 2 -->
+  <div class="rule-card">
+    <div class="rule-header"><span class="rule-num">Rule 2</span> Variables Must Be Private</div>
+    <div class="rule-body">
+      <div class="two-col">
+        <div>
+          <div class="correct-wrong">
+            <div class="correct-box">
+              <div class="correct-label">✅ Correct</div>
+              <div class="code-block-dark" style="font-size:10.5px;"><span class="kw">private int</span> <span class="nm">id</span>;
+<span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;</div>
+            </div>
+            <div class="wrong-box">
+              <div class="wrong-label">❌ Wrong</div>
+              <div class="code-block-dark" style="font-size:10.5px;"><span class="kw">public int</span> <span class="nm">id</span>;
+<span class="kw">public</span> <span class="cl">String</span> <span class="nm">name</span>;</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p><strong>Why?</strong> Hibernate follows <strong>Encapsulation</strong>. Benefits:</p>
+          <ul>
+            <li>Data Security</li>
+            <li>Controlled Access (only via getters/setters)</li>
+            <li>Better Maintainability</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rule 3 -->
+  <div class="rule-card">
+    <div class="rule-header"><span class="rule-num">Rule 3</span> Generate Getter and Setter Methods</div>
+    <div class="rule-body">
+      <div class="two-col">
+        <div>
+          <div class="code-block-dark"><span class="kw">public int</span> <span class="mt">getId</span>() {
+    <span class="kw">return</span> <span class="nm">id</span>;
+}
+<span class="kw">public void</span> <span class="mt">setId</span>(<span class="kw">int</span> <span class="nm">id</span>) {
+    <span class="kw">this</span>.<span class="nm">id</span> = <span class="nm">id</span>;
+}</div>
+        </div>
+        <div>
+          <p><strong>Why Needed?</strong> Hibernate uses getters and setters to:</p>
+          <ul>
+            <li>Read data from object</li>
+            <li>Write data to object</li>
+            <li>Perform Column ↔ Field mapping</li>
+          </ul>
+          <p style="margin-top:5px; font-size:12px;">Without getters and setters: ❌ Hibernate may fail to access attributes properly.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — RULES 4–6 ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Entity Class Notes | Page 2 — Rules 4, 5, 6 + Execution Flow</div>
+
+  <!-- Rule 4 -->
+  <div class="rule-card">
+    <div class="rule-header"><span class="rule-num">Rule 4</span> Must Have No-Argument Constructor (Default Constructor)</div>
+    <div class="rule-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">✅ Correct — with only default constructor:</div>
+          <div class="code-block-dark"><span class="kw">public</span> <span class="cl">Student</span>() {
+    <span class="cm">// no-arg constructor</span>
+}</div>
+
+          <div class="subsection-title" style="margin-top:7px;">✅ Correct — both constructors:</div>
+          <div class="code-block-dark"><span class="kw">public</span> <span class="cl">Student</span>() {
+    <span class="cm">// default — mandatory!</span>
+}
+<span class="kw">public</span> <span class="cl">Student</span>(<span class="kw">int</span> <span class="nm">id</span>, <span class="cl">String</span> <span class="nm">name</span>) {
+    <span class="kw">this</span>.<span class="nm">id</span> = <span class="nm">id</span>;
+    <span class="kw">this</span>.<span class="nm">name</span> = <span class="nm">name</span>;
+}</div>
+        </div>
+        <div>
+          <p><strong>Why Needed?</strong></p>
+          <p>Hibernate creates objects internally using <strong>Java Reflection API</strong>. Internally Hibernate does:</p>
+          <div class="code-block-dark"><span class="cm">// Hibernate internally does:</span>
+<span class="cl">Student</span> <span class="nm">s</span> = <span class="kw">new</span> <span class="cl">Student</span>();
+<span class="cm">// Then sets values using setters</span></div>
+          <p style="margin-top:5px; font-size:12px;">Therefore a <strong>no-argument constructor is mandatory</strong>.</p>
+          <div class="note-box" style="margin-top:6px;">
+            <strong>⚠️ Important:</strong> If you define only a parameterized constructor, Java does NOT auto-generate a default constructor. You must explicitly write the no-arg constructor. If you define no constructor at all, Java auto-generates a default one.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rule 5 -->
+  <div class="rule-card">
+    <div class="rule-header"><span class="rule-num">Rule 5</span> Class Must Be Annotated with @Entity</div>
+    <div class="rule-body">
+      <div class="two-col">
+        <div>
+          <div class="correct-wrong">
+            <div class="correct-box">
+              <div class="correct-label">✅ Correct</div>
+              <div class="code-block-dark" style="font-size:10.5px;"><span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="cl">Student</span> {
+}</div>
+            </div>
+            <div class="wrong-box">
+              <div class="wrong-label">❌ Wrong</div>
+              <div class="code-block-dark" style="font-size:10.5px;"><span class="cm">// No @Entity</span>
+<span class="kw">public class</span> <span class="cl">Student</span> {
+}</div>
+            </div>
+          </div>
+          <div class="def-row" style="margin-top:6px;"><div class="def-term">Package</div><div class="def-meaning"><code>jakarta.persistence.Entity</code></div></div>
+          <div class="def-row"><div class="def-term">Type</div><div class="def-meaning">Annotation (class-level)</div></div>
+        </div>
+        <div>
+          <p><strong>Why Needed?</strong></p>
+          <p><code>@Entity</code> tells Hibernate:</p>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;margin:6px 0;">
+            <div style="border:1.5px solid #333;padding:3px 14px;font-size:11.5px;font-weight:700;background:#e3f2fd;">This Java Class</div>
+            <div style="font-size:13px;color:#555;">↓ represents</div>
+            <div style="border:1.5px solid #333;padding:3px 14px;font-size:11.5px;font-weight:700;background:#e8f5e9;">Database Table</div>
+          </div>
+          <p style="font-size:12px;">Without <code>@Entity</code>: ❌ Hibernate will not treat the class as a DB table. It remains a regular Java class.</p>
+          <div class="note-box" style="margin-top:5px;">
+            <strong>📝 By default:</strong> Table name = Class name. To specify a different table name use <code>@Table(name="custom_name")</code>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rule 6 -->
+  <div class="rule-card">
+    <div class="rule-header"><span class="rule-num">Rule 6</span> Define Primary Key Using @Id</div>
+    <div class="rule-body">
+      <div class="two-col">
+        <div>
+          <div class="code-block-dark"><span class="an">@Id</span>
+<span class="kw">private int</span> <span class="nm">id</span>;</div>
+          <div class="def-row" style="margin-top:6px;"><div class="def-term">Package</div><div class="def-meaning"><code>jakarta.persistence.Id</code></div></div>
+          <div class="def-row"><div class="def-term">Type</div><div class="def-meaning">Annotation (field-level)</div></div>
+          <div class="def-row"><div class="def-term">Required</div><div class="def-meaning">Mandatory in every Entity class</div></div>
+        </div>
+        <div>
+          <p><strong>Why Needed?</strong> Primary Key <strong>uniquely identifies</strong> each record in the table.</p>
+          <div style="border:1px solid #999;font-family:monospace;font-size:12px;margin:6px 0;">
+            <div style="background:#111;color:#fff;padding:3px 10px;display:grid;grid-template-columns:1fr 1fr;font-weight:700;">
+              <span>id</span><span>name</span>
+            </div>
+            <div style="padding:3px 10px;display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #ddd;">
+              <span>101</span><span>Pravin</span>
+            </div>
+            <div style="padding:3px 10px;display:grid;grid-template-columns:1fr 1fr;">
+              <span>102</span><span>Amit</span>
+            </div>
+          </div>
+          <p style="font-size:12px;">Here <code>id</code> uniquely identifies each row. Without <code>@Id</code> → Hibernate throws <code>AnnotationException</code>.</p>
+          <div class="note-box" style="margin-top:5px;">
+            <strong>📝 Auto ID:</strong> Combine with <code>@GeneratedValue</code> → Hibernate auto-generates IDs (1, 2, 3...):<br>
+            <code>@Id @GeneratedValue private int id;</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Execution Flow -->
+  <div class="section">
+    <div class="section-header">📘 Execution Flow — Entity Class to Database</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1px;">
+            <div style="border:1.5px solid #333;padding:4px 16px;font-size:11.5px;font-weight:700;text-align:center;min-width:180px;background:#e3f2fd;">Create Student Object</div>
+            <div style="font-size:13px;color:#555;text-align:center;">↓</div>
+            <div style="border:1.5px solid #333;padding:4px 16px;font-size:11.5px;font-weight:700;text-align:center;min-width:180px;">Hibernate Checks @Entity</div>
+            <div style="font-size:13px;color:#555;text-align:center;">↓</div>
+            <div style="border:1.5px solid #333;padding:4px 16px;font-size:11.5px;font-weight:700;text-align:center;min-width:180px;">Hibernate Checks @Id</div>
+            <div style="font-size:13px;color:#555;text-align:center;">↓</div>
+            <div style="border:1.5px solid #333;padding:4px 16px;font-size:11.5px;font-weight:700;text-align:center;min-width:180px;">Maps Class → Table</div>
+            <div style="font-size:13px;color:#555;text-align:center;">↓</div>
+            <div style="border:1.5px solid #333;padding:4px 16px;font-size:11.5px;font-weight:700;text-align:center;min-width:180px;">Maps Variables → Columns</div>
+            <div style="font-size:13px;color:#555;text-align:center;">↓</div>
+            <div style="border:1.5px solid #333;padding:4px 16px;font-size:11.5px;font-weight:700;text-align:center;min-width:180px;background:#e8f5e9;">Stores Data in Database ✅</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Entity Class Architecture:</div>
+          <div style="border:1.5px solid #333;padding:10px;background:#fafafa;margin-top:5px;text-align:center;font-family:monospace;font-size:12px;">
+            <div style="font-weight:700; margin-bottom:6px;">@Entity</div>
+            <div style="font-weight:700; border:1px solid #333; display:inline-block; padding:4px 20px; background:#fff; margin-bottom:8px;">Student Class</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:4px;">
+              <div style="border:1px solid #555;padding:4px;background:#fff;">
+                <div style="font-size:10px;color:#666;">@Id</div>
+                <div style="font-weight:700;">id</div>
+                <div style="font-size:10px;color:#c586c0;">Primary Key</div>
+              </div>
+              <div style="border:1px solid #555;padding:4px;background:#fff;">
+                <div style="font-size:10px;color:#666;"> </div>
+                <div style="font-weight:700;">name</div>
+                <div style="font-size:10px;color:#666;">Column</div>
+              </div>
+              <div style="border:1px solid #555;padding:4px;background:#fff;">
+                <div style="font-size:10px;color:#666;"> </div>
+                <div style="font-weight:700;">city</div>
+                <div style="font-size:10px;color:#666;">Column</div>
+              </div>
+            </div>
+          </div>
+          <div class="interview-line">Entity class maps to DB table via @Entity. @Id marks primary key. Hibernate reads these annotations at startup, generates DDL (if configured), and uses the mapping for all CRUD operations automatically.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — COMPLETE ENTITY CLASS + REVISION + INTERVIEW ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Entity Class Notes | Page 3 — Complete Entity Class + Revision Table + Interview Answer</div>
+
+  <!-- Complete Entity Class -->
+  <div class="section">
+    <div class="section-header">📘 Complete Entity Class Example — Student.java</div>
+    <div class="section-body">
+      <div class="code-block-dark"><span class="kw">import</span> <span class="nm">jakarta.persistence.Entity</span>;
+<span class="kw">import</span> <span class="nm">jakarta.persistence.Id</span>;
+
+<span class="an">@Entity</span>                        <span class="cm">// Rule 5: marks class as Entity (maps to DB table)</span>
+<span class="kw">public class</span> <span class="cl">Student</span> {        <span class="cm">// Rule 1: class must be public</span>
+
+    <span class="an">@Id</span>                        <span class="cm">// Rule 6: marks id as primary key</span>
+    <span class="kw">private int</span> <span class="nm">id</span>;             <span class="cm">// Rule 2: variable must be private</span>
+
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;        <span class="cm">// Rule 2: variable must be private</span>
+
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">city</span>;        <span class="cm">// Rule 2: variable must be private</span>
+
+    <span class="cm">// Rule 4: no-argument constructor — mandatory for Hibernate reflection</span>
+    <span class="kw">public</span> <span class="cl">Student</span>() {
+    }
+
+    <span class="cm">// Parameterized constructor — optional but useful</span>
+    <span class="kw">public</span> <span class="cl">Student</span>(<span class="kw">int</span> <span class="nm">id</span>, <span class="cl">String</span> <span class="nm">name</span>, <span class="cl">String</span> <span class="nm">city</span>) {
+        <span class="kw">this</span>.<span class="nm">id</span> = <span class="nm">id</span>;
+        <span class="kw">this</span>.<span class="nm">name</span> = <span class="nm">name</span>;
+        <span class="kw">this</span>.<span class="nm">city</span> = <span class="nm">city</span>;
+    }
+
+    <span class="cm">// Rule 3: Getter and Setter methods</span>
+    <span class="kw">public int</span> <span class="mt">getId</span>()           { <span class="kw">return</span> <span class="nm">id</span>; }
+    <span class="kw">public void</span> <span class="mt">setId</span>(<span class="kw">int</span> <span class="nm">id</span>)   { <span class="kw">this</span>.<span class="nm">id</span> = <span class="nm">id</span>; }
+
+    <span class="kw">public</span> <span class="cl">String</span> <span class="mt">getName</span>()             { <span class="kw">return</span> <span class="nm">name</span>; }
+    <span class="kw">public void</span> <span class="mt">setName</span>(<span class="cl">String</span> <span class="nm">name</span>)   { <span class="kw">this</span>.<span class="nm">name</span> = <span class="nm">name</span>; }
+
+    <span class="kw">public</span> <span class="cl">String</span> <span class="mt">getCity</span>()             { <span class="kw">return</span> <span class="nm">city</span>; }
+    <span class="kw">public void</span> <span class="mt">setCity</span>(<span class="cl">String</span> <span class="nm">city</span>)   { <span class="kw">this</span>.<span class="nm">city</span> = <span class="nm">city</span>; }
+}</div>
+
+      <div class="note-box" style="margin-top:7px;">
+        <strong>📝 Import Note:</strong><br>
+        Use <code>jakarta.persistence.Entity</code> and <code>jakarta.persistence.Id</code> for Hibernate 6.x (Jakarta EE).<br>
+        Older Hibernate 5.x uses <code>javax.persistence.Entity</code> and <code>javax.persistence.Id</code>.<br>
+        Your project uses Hibernate 5.6.15 → use <code>javax.persistence.*</code>.
+      </div>
+    </div>
+  </div>
+
+  <!-- How Entity maps -->
+  <div class="section">
+    <div class="section-header">📘 Entity Class ↔ Database Table Mapping</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">Java Side:</div>
+          <table class="comp-table">
+            <tr><th>Java</th><th>DB</th><th>Annotation</th></tr>
+            <tr><td><code>Student</code> (class)</td><td>student (table)</td><td>@Entity</td></tr>
+            <tr><td><code>id</code> (field)</td><td>id (column)</td><td>@Id</td></tr>
+            <tr><td><code>name</code> (field)</td><td>name (column)</td><td>—</td></tr>
+            <tr><td><code>city</code> (field)</td><td>city (column)</td><td>—</td></tr>
+            <tr><td>Student object</td><td>One row in table</td><td>—</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">DB Table auto-created:</div>
+          <div style="border:1px solid #999;font-family:monospace;font-size:12px;margin-top:5px;">
+            <div style="background:#111;color:#fff;padding:3px 10px;display:grid;grid-template-columns:1fr 1fr 1fr;font-weight:700;">
+              <span>id</span><span>name</span><span>city</span>
+            </div>
+            <div style="padding:3px 10px;display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid #ddd;">
+              <span>101</span><span>Pravin</span><span>Mumbai</span>
+            </div>
+          </div>
+          <p style="font-size:12px;margin-top:5px;">👉 With <code>hbm2ddl.auto=update</code> in persistence.xml — Hibernate <strong>auto-creates</strong> this table from Student entity class. Developer writes zero DDL SQL.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Revision Table -->
+  <div class="section">
+    <div class="section-header">📘 Quick Revision Table — All 6 Rules</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Rule #</th>
+          <th>Requirement</th>
+          <th>Why</th>
+          <th>Annotation / Keyword</th>
+        </tr>
+        <tr>
+          <td><strong>Rule 1</strong></td>
+          <td>Class must be <code>public</code></td>
+          <td>Hibernate accesses class from outside packages</td>
+          <td><code>public class Student</code></td>
+        </tr>
+        <tr>
+          <td><strong>Rule 2</strong></td>
+          <td>Variables must be <code>private</code></td>
+          <td>Encapsulation — data security and controlled access</td>
+          <td><code>private int id;</code></td>
+        </tr>
+        <tr>
+          <td><strong>Rule 3</strong></td>
+          <td>Generate getter and setter methods</td>
+          <td>Hibernate reads/writes data and performs mapping via getters/setters</td>
+          <td><code>getId() / setId()</code></td>
+        </tr>
+        <tr>
+          <td><strong>Rule 4</strong></td>
+          <td>No-argument (default) constructor</td>
+          <td>Hibernate uses Reflection API to instantiate object: <code>new Student()</code></td>
+          <td><code>public Student() {}</code></td>
+        </tr>
+        <tr>
+          <td><strong>Rule 5</strong></td>
+          <td>Annotate with <code>@Entity</code></td>
+          <td>Tells Hibernate: this class represents a DB table</td>
+          <td><code>@Entity</code> (jakarta/javax.persistence)</td>
+        </tr>
+        <tr>
+          <td><strong>Rule 6</strong></td>
+          <td>Define primary key with <code>@Id</code></td>
+          <td>Every table needs a unique identifier. Without @Id → AnnotationException</td>
+          <td><code>@Id private int id;</code></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Interview Answer -->
+  <div class="section">
+    <div class="section-header">🎯 Interview Answer</div>
+    <div class="section-body">
+      <div class="interview-answer">
+        <div class="interview-answer-title">✅ Q: What are the rules for creating an Entity Class in Hibernate?</div>
+        <p>An Entity Class must follow <strong>6 rules</strong>:</p>
+        <ol style="margin-top:5px;">
+          <li style="margin-bottom:4px;"><strong>Be declared as public</strong> — Hibernate must be able to access the class from any package.</li>
+          <li style="margin-bottom:4px;"><strong>Have private instance variables</strong> — follows Encapsulation for data security and controlled access.</li>
+          <li style="margin-bottom:4px;"><strong>Provide getter and setter methods</strong> — Hibernate reads and writes field values through these methods for mapping.</li>
+          <li style="margin-bottom:4px;"><strong>Contain a no-argument constructor</strong> — Hibernate uses Java Reflection API to create objects internally using <code>new Student()</code>.</li>
+          <li style="margin-bottom:4px;"><strong>Be annotated with <code>@Entity</code></strong> — tells Hibernate that this class represents a database table.</li>
+          <li><strong>Have a primary key annotated with <code>@Id</code></strong> — uniquely identifies each record. Without @Id, Hibernate throws an AnnotationException.</li>
+        </ol>
+        <p style="margin-top:6px;">These rules allow Hibernate to properly <strong>create, manage, and persist objects</strong> into database tables automatically.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

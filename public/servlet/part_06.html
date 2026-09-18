@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>web.xml & @WebServlet — Notes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 18mm 15mm 20mm;
+    margin: 0 auto;
+    background: #fff;
+    page-break-after: always;
+    border-bottom: 2px dashed #bbb;
+  }
+
+  .page-header {
+    border-top: 3px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 5px 0;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-header .subject { font-size: 10.5px; font-weight: normal; letter-spacing: 1px; text-transform: uppercase; }
+  .page-header .topic-label { font-size: 10.5px; font-weight: bold; letter-spacing: 1px; }
+
+  .main-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid #000;
+    padding: 9px 0;
+    margin-bottom: 16px;
+    background: #000;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-size: 13.5px;
+    font-weight: bold;
+    border-left: 5px solid #000;
+    padding-left: 10px;
+    margin: 14px 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .sub-title {
+    font-size: 12.5px;
+    font-weight: bold;
+    margin: 10px 0 5px 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+  }
+
+  /* PART HEADER — like WAY 1/2 */
+  .part-header {
+    background: #000;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 7px 14px;
+    margin: 14px 0 8px 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .def-box {
+    border: 2px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .def-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .interview-box {
+    border: 2px solid #000;
+    padding: 10px 13px;
+    margin: 10px 0;
+    background: #f5f5f5;
+  }
+  .interview-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 8px; padding-bottom: 3px;
+  }
+  .interview-box .q { font-weight: bold; margin-top: 9px; }
+  .interview-box .a { margin-left: 14px; margin-top: 3px; }
+
+  .memory-box {
+    border: 2px dashed #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .memory-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  .example-box {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: #fafafa;
+  }
+  .example-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .tip-box {
+    border: 2px solid #000;
+    border-left: 6px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .tip-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #f2f2f2;
+    border: 1px solid #000;
+    border-left: 4px solid #000;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.75;
+    margin: 8px 0;
+    white-space: pre;
+  }
+  .code-block .comment { color: #555; font-style: italic; }
+
+  .file-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1px;
+    text-transform: uppercase; background: #000; color: #fff;
+    padding: 2px 8px; display: inline-block; margin-bottom: 0;
+  }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+  th { background: #000; color: #fff; padding: 6px 9px; font-size: 12px; text-align: left; border: 1px solid #000; }
+  td { padding: 5px 9px; border: 1px solid #000; font-size: 12px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f6f6f6; }
+
+  /* FLOW */
+  .flow { display: flex; flex-direction: column; align-items: center; margin: 10px auto; }
+  .flow-box {
+    border: 2px solid #000; padding: 6px 20px; font-weight: bold;
+    font-size: 12px; min-width: 200px; text-align: center; background: #fff;
+  }
+  .flow-box.dark { background: #000; color: #fff; }
+  .flow-arrow { font-size: 17px; font-weight: bold; color: #000; text-align: center; padding: 1px 0; }
+  .flow-label { font-size: 10px; color: #444; text-align: center; font-style: italic; }
+
+  /* STEP FLOW */
+  .step-grid { display: grid; grid-template-columns: 30px 1fr; gap: 5px 10px; margin: 10px 0; }
+  .step-num {
+    background: #000; color: #fff; font-weight: bold;
+    font-size: 12px; text-align: center; padding: 5px 0;
+    height: fit-content; min-width: 30px;
+  }
+  .step-content { border: 1px solid #000; padding: 5px 10px; font-size: 12px; }
+  .step-content strong { display: block; margin-bottom: 2px; }
+
+  ul.notes-list { list-style: none; margin: 5px 0 5px 10px; padding: 0; }
+  ul.notes-list li { padding: 2px 0 2px 16px; position: relative; }
+  ul.notes-list li::before { content: "▸"; position: absolute; left: 0; font-size: 11px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 8px 0; }
+
+  code {
+    font-family: 'Courier New', monospace; font-size: 11.5px;
+    background: #efefef; padding: 1px 5px; border: 1px solid #ccc;
+  }
+
+  p { margin: 5px 0; }
+
+  /* XML TAG EXPLANATION TABLE */
+  .tag-table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+  .tag-table th { background: #000; color: #fff; padding: 6px 9px; font-size: 12px; border: 1px solid #000; }
+  .tag-table td { padding: 6px 9px; border: 1px solid #000; font-size: 12px; vertical-align: top; }
+  .tag-table td:first-child { font-family: 'Courier New', monospace; font-size: 11px; background: #f2f2f2; white-space: nowrap; }
+  .tag-table tr:nth-child(even) td { background: #f6f6f6; }
+  .tag-table tr:nth-child(even) td:first-child { background: #eaeaea; }
+
+  @media print {
+    body { background: #fff; }
+    .page { border-bottom: none; margin: 0; page-break-after: always; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: web.xml EXPLAINED ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 6 : web.xml &amp; @WebServlet</span>
+  </div>
+
+  <div class="main-title">6. web.xml &amp; @WebServlet</div>
+
+  <div class="part-header">Part A — web.xml (Deployment Descriptor)</div>
+
+  <!-- What is web.xml -->
+  <div class="section-title">What is web.xml?</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Definition</div>
+    <p><code>web.xml</code> is the <strong>Deployment Descriptor</strong> of a Java web application. It is a configuration file that tells the Servlet Container (Tomcat):</p>
+    <ul class="notes-list">
+      <li>Which servlet classes exist in the application</li>
+      <li>What URL should invoke which servlet</li>
+      <li>Other application-level settings (welcome files, error pages, filters, etc.)</li>
+    </ul>
+    <p style="margin-top:5px;">Think of it as the <strong>"instruction manual / phone directory"</strong> for Tomcat.</p>
+  </div>
+
+  <!-- Why Needed -->
+  <div class="section-title">Why is web.xml Needed?</div>
+
+  <div class="two-col">
+    <div class="example-box">
+      <div class="box-label">❌ Without web.xml</div>
+      <ul class="notes-list">
+        <li>Tomcat doesn't know <code>PageA.java</code> is a servlet</li>
+        <li>No URL to access it from browser</li>
+        <li>Server doesn't know when to run it</li>
+      </ul>
+    </div>
+    <div class="example-box">
+      <div class="box-label">✅ With web.xml</div>
+      <ul class="notes-list">
+        <li>You tell server: "This is a servlet, its name is pagea"</li>
+        <li>You tell server: "When user visits /pagea, run it"</li>
+        <li>Server knows exactly what to do</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Tags Explained -->
+  <div class="section-title">XML Tags in web.xml — Explained</div>
+
+  <table class="tag-table">
+    <thead><tr><th>Tag</th><th>Meaning</th><th>What It Does</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>&lt;servlet&gt;</td>
+        <td>"Register this servlet"</td>
+        <td>Tells the server: "This servlet exists in my app"</td>
+      </tr>
+      <tr>
+        <td>&lt;servlet-name&gt;</td>
+        <td>"Give it a nickname"</td>
+        <td>Creates a unique name / ID for your servlet (used to link the two blocks)</td>
+      </tr>
+      <tr>
+        <td>&lt;servlet-class&gt;</td>
+        <td>"Where is the code?"</td>
+        <td>Fully qualified class name of the servlet e.g. <code>com.ty.PageA</code></td>
+      </tr>
+      <tr>
+        <td>&lt;servlet-mapping&gt;</td>
+        <td>"Connect name to URL"</td>
+        <td>Tells server: "When someone visits this URL, run this servlet"</td>
+      </tr>
+      <tr>
+        <td>&lt;url-pattern&gt;</td>
+        <td>"This is the URL"</td>
+        <td>The URL path users type in browser (e.g. <code>/pagea</code>)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- web.xml Code -->
+  <div class="section-title">web.xml Structure</div>
+
+  <div class="file-label">web.xml</div>
+  <div class="code-block">&lt;web-app&gt;
+
+    <span class="comment">&lt;!-- STEP 1: REGISTER THE SERVLET --&gt;</span>
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;pagea&lt;/servlet-name&gt;           <span class="comment">&lt;!-- Nickname/ID --&gt;</span>
+        &lt;servlet-class&gt;com.ty.PageA&lt;/servlet-class&gt;  <span class="comment">&lt;!-- Actual Java class --&gt;</span>
+    &lt;/servlet&gt;
+
+    <span class="comment">&lt;!-- STEP 2: CONNECT NAME TO URL --&gt;</span>
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;pagea&lt;/servlet-name&gt;           <span class="comment">&lt;!-- Same nickname (must match!) --&gt;</span>
+        &lt;url-pattern&gt;/pagea&lt;/url-pattern&gt;            <span class="comment">&lt;!-- URL user types in browser --&gt;</span>
+    &lt;/servlet-mapping&gt;
+
+&lt;/web-app&gt;</div>
+
+  <div class="tip-box">
+    <div class="box-label">⚠️ Key Rule</div>
+    <p><code>&lt;servlet-name&gt;</code> must be <strong>exactly the same</strong> in both <code>&lt;servlet&gt;</code> and <code>&lt;servlet-mapping&gt;</code> blocks. This is how Tomcat connects the class name to the URL. It acts like a <strong>handshake</strong> between the two sections.</p>
+  </div>
+
+  <!-- How it works step by step -->
+  <div class="section-title">How web.xml Works — Step by Step</div>
+
+  <div class="step-grid">
+    <div class="step-num">1</div>
+    <div class="step-content"><strong>User types URL in browser</strong> → <code>http://localhost:8080/myapp/pagea</code></div>
+    <div class="step-num">2</div>
+    <div class="step-content"><strong>Tomcat receives the request</strong> → opens and reads <code>web.xml</code></div>
+    <div class="step-num">3</div>
+    <div class="step-content"><strong>Tomcat looks for</strong> <code>&lt;url-pattern&gt;/pagea&lt;/url-pattern&gt;</code> → found!</div>
+    <div class="step-num">4</div>
+    <div class="step-content"><strong>Tomcat reads the servlet-name</strong> → <code>pagea</code></div>
+    <div class="step-num">5</div>
+    <div class="step-content"><strong>Tomcat finds the class</strong> → <code>&lt;servlet-class&gt;com.ty.PageA&lt;/servlet-class&gt;</code></div>
+    <div class="step-num">6</div>
+    <div class="step-content"><strong>Tomcat loads &amp; runs</strong> <code>com.ty.PageA</code> → servlet processes request → response sent</div>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 2: web.xml EXAMPLES + MULTIPLE MAPPINGS ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 6 : web.xml &amp; @WebServlet (continued)</span>
+  </div>
+
+  <!-- Multiple Servlets Example -->
+  <div class="section-title">Multiple Servlets in web.xml — Real Example</div>
+  <p>In real applications, multiple servlets are registered in a single <code>web.xml</code> file.</p>
+
+  <div class="file-label">web.xml — Online Shopping App</div>
+  <div class="code-block">&lt;web-app&gt;
+
+    <span class="comment">&lt;!-- Login Servlet --&gt;</span>
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;login&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;com.shop.LoginServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;login&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/login&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    <span class="comment">&lt;!-- Product Servlet --&gt;</span>
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;products&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;com.shop.ProductServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;products&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/products&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+&lt;/web-app&gt;</div>
+
+  <table>
+    <thead><tr><th>User Types URL</th><th>Servlet That Runs</th><th>What Happens</th></tr></thead>
+    <tbody>
+      <tr><td><code>/login</code></td><td><code>LoginServlet</code></td><td>Checks username/password against database</td></tr>
+      <tr><td><code>/products</code></td><td><code>ProductServlet</code></td><td>Fetches and displays all products</td></tr>
+    </tbody>
+  </table>
+
+  <!-- One Servlet Multiple URLs -->
+  <div class="section-title">Extra — One Servlet Mapped to Multiple URLs</div>
+  <p>A single servlet can be mapped to <strong>more than one URL</strong>:</p>
+
+  <div class="code-block"><span class="comment">&lt;!-- Same servlet handles both URLs --&gt;</span>
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;pagea&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/pagea&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;pagea&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/view/pagea&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</div>
+  <p>Both <code>/pagea</code> and <code>/view/pagea</code> will run the same <code>com.ty.PageA</code> servlet class.</p>
+
+  <!-- Flow Diagram -->
+  <div class="section-title">Complete web.xml Flow Diagram</div>
+
+  <div class="flow">
+    <div class="flow-box">Browser → <code>http://localhost:8080/app/pagea</code></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Tomcat receives request</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Reads web.xml — looks for <code>/pagea</code> in &lt;url-pattern&gt;</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Finds → servlet-name = <code>pagea</code></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Matches → servlet-class = <code>com.ty.PageA</code></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Loads class → Creates object → Calls service()</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Response sent back to Browser</div>
+  </div>
+
+  <!-- Restaurant Analogy -->
+  <div class="section-title">Real-Life Analogy — Restaurant</div>
+  <table>
+    <thead><tr><th>Restaurant Part</th><th>web.xml Part</th><th>Your Code</th></tr></thead>
+    <tbody>
+      <tr><td>Chef</td><td><code>&lt;servlet-class&gt;</code></td><td><code>com.ty.PageA</code> (Java file)</td></tr>
+      <tr><td>Chef's Name Tag</td><td><code>&lt;servlet-name&gt;</code></td><td><code>pagea</code> (your nickname)</td></tr>
+      <tr><td>Customer Order Code</td><td><code>&lt;url-pattern&gt;</code></td><td><code>/pagea</code> (URL user types)</td></tr>
+      <tr><td>Menu / Phone Book</td><td><code>web.xml</code> file</td><td>Instruction book for Tomcat</td></tr>
+    </tbody>
+  </table>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — web.xml Tags</div>
+    <p><strong>"Name the Chef, then Set the Table"</strong></p>
+    <p><code>&lt;servlet&gt;</code> = Name the chef (register) → <code>&lt;servlet-mapping&gt;</code> = Set the table (map URL)</p>
+    <p><code>&lt;servlet-name&gt;</code> must match in <strong>both</strong> blocks — it is the <strong>bridge</strong> between registration and URL mapping.</p>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 3: @WebServlet ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 6 : web.xml &amp; @WebServlet (continued)</span>
+  </div>
+
+  <div class="part-header">Part B — @WebServlet Annotation (Modern Approach)</div>
+
+  <!-- What is @WebServlet -->
+  <div class="section-title">What is @WebServlet?</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Definition</div>
+    <p><code>@WebServlet</code> is an <strong>annotation</strong> introduced in <strong>Servlet 3.0 (2009)</strong> that replaces <code>web.xml</code> configuration for URL mapping.</p>
+    <p>It is written directly on the servlet class — configuration and code are in the <strong>same file</strong>.</p>
+    <p><strong>Requires:</strong> Tomcat 7+ or any Servlet 3.0+ container.</p>
+  </div>
+
+  <!-- Problem with web.xml -->
+  <div class="section-title">Problem with web.xml</div>
+
+  <table>
+    <thead><tr><th>Problem</th><th>Why It's Bad</th></tr></thead>
+    <tbody>
+      <tr><td>Large XML files</td><td>One big web.xml with 50+ servlets becomes huge and unmanageable</td></tr>
+      <tr><td>Hard to read</td><td>Too many tags — hard to find what you need</td></tr>
+      <tr><td>Separation of concerns</td><td>Java code in one file, config in another — hard to track</td></tr>
+      <tr><td>Error-prone</td><td>A typo like <code>&lt;servlet-nam&gt;</code> instead of <code>&lt;servlet-name&gt;</code> breaks the app</td></tr>
+      <tr><td>Too much typing</td><td>Need 6–7 lines of XML just for one servlet</td></tr>
+      <tr><td>Hard to maintain</td><td>Rename a class → must update both Java file AND web.xml</td></tr>
+    </tbody>
+  </table>
+
+  <!-- @WebServlet Syntax -->
+  <div class="section-title">@WebServlet — Syntax</div>
+
+  <div class="file-label">PageA.java — using @WebServlet</div>
+  <div class="code-block"><span class="comment">// 1 line replaces entire web.xml entry</span>
+@WebServlet("/pagea")
+public class PageA extends HttpServlet {
+
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
+            throws ServletException, IOException {
+
+        <span class="comment">// Your business logic here</span>
+        response.getWriter().print("&lt;h1&gt;Hello from PageA!&lt;/h1&gt;");
+    }
+}</div>
+
+  <!-- How @WebServlet works -->
+  <div class="section-title">How @WebServlet Works</div>
+
+  <table>
+    <thead><tr><th>Part</th><th>What It Means</th></tr></thead>
+    <tbody>
+      <tr><td><code>@WebServlet</code></td><td>"This class is a servlet" — marks the class for Tomcat</td></tr>
+      <tr><td><code>("/pagea")</code></td><td>"When user visits <code>/pagea</code>, run this servlet" — URL mapping</td></tr>
+      <tr><td><code>extends HttpServlet</code></td><td>The actual Java servlet code</td></tr>
+    </tbody>
+  </table>
+
+  <div class="example-box">
+    <div class="box-label">📘 What Tomcat Does Automatically</div>
+    <ol style="margin-left:18px; padding-top:4px;">
+      <li>Scans all classes for <code>@WebServlet</code> annotation at startup</li>
+      <li>Reads the URL pattern from the annotation</li>
+      <li>Creates internal mapping (no web.xml needed)</li>
+      <li>Invokes the correct servlet when URL is accessed</li>
+    </ol>
+  </div>
+
+  <!-- Side by Side Comparison -->
+  <div class="section-title">Side by Side — web.xml vs @WebServlet</div>
+
+  <div class="two-col">
+    <div>
+      <div class="file-label">OLD — web.xml (6-7 lines per servlet)</div>
+      <div class="code-block" style="font-size:10.5px;">&lt;servlet&gt;
+  &lt;servlet-name&gt;pagea&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;
+      com.ty.PageA
+  &lt;/servlet-class&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;pagea&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;/pagea&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+
+<span class="comment">// For 2 servlets = 14-16 lines</span></div>
+    </div>
+    <div>
+      <div class="file-label">NEW — @WebServlet (1 line per servlet)</div>
+      <div class="code-block" style="font-size:10.5px;">@WebServlet("/pagea")
+public class PageA
+    extends HttpServlet { }
+
+@WebServlet("/login")
+public class LoginServlet
+    extends HttpServlet { }
+
+<span class="comment">// For 2 servlets = 2 lines</span></div>
+    </div>
+  </div>
+
+  <!-- Multiple URL Patterns -->
+  <div class="sub-title">Extra — Multiple URL Patterns with @WebServlet</div>
+  <p>A single servlet can handle multiple URLs using array syntax:</p>
+  <div class="code-block"><span class="comment">// Servlet handles both /pagea and /view/pagea</span>
+@WebServlet(urlPatterns = {"/pagea", "/view/pagea"})
+public class PageA extends HttpServlet { }</div>
+
+  <!-- Advantage Comparison -->
+  <div class="section-title">Advantages of @WebServlet over web.xml</div>
+  <table>
+    <thead><tr><th>Advantage</th><th>Explanation</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Less code</strong></td><td>1 line instead of 6–7 lines of XML</td></tr>
+      <tr><td><strong>Easy to understand</strong></td><td>Configuration is right next to the code — in same file</td></tr>
+      <tr><td><strong>Cleaner</strong></td><td>No separate XML file needed</td></tr>
+      <tr><td><strong>Faster development</strong></td><td>Write less, build faster</td></tr>
+      <tr><td><strong>No typo errors</strong></td><td>No XML tags to mistype — Java compiler checks</td></tr>
+      <tr><td><strong>Easy maintenance</strong></td><td>Rename class → only update the Java file, not two files</td></tr>
+      <tr><td><strong>Modern approach</strong></td><td>Most new projects use annotations</td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<!-- ==================== PAGE 4: WHEN TO USE + INTERVIEW Q&A ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 6 : web.xml &amp; @WebServlet (continued)</span>
+  </div>
+
+  <!-- When to Use Which -->
+  <div class="section-title">When to Use Which?</div>
+
+  <div class="two-col">
+    <div class="def-box">
+      <div class="box-label">Use web.xml When</div>
+      <ul class="notes-list">
+        <li>Enterprise apps with complex configuration</li>
+        <li>All mappings need to be in one central file</li>
+        <li>Team prefers XML-based configuration</li>
+        <li>Very old legacy systems (pre-Servlet 3.0)</li>
+        <li>Environment-specific configs without recompiling</li>
+      </ul>
+    </div>
+    <div class="def-box">
+      <div class="box-label">Use @WebServlet When</div>
+      <ul class="notes-list">
+        <li>Simple or medium-sized web apps</li>
+        <li>Want cleaner, readable code</li>
+        <li>Modern projects (Tomcat 7+, Servlet 3.0+)</li>
+        <li>Faster development required</li>
+        <li>Most new real-world projects use this</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="box-label">⭐ Modern Standard</div>
+    <p>Most new Java web projects use <code>@WebServlet</code> instead of <code>web.xml</code>. However, <strong>both approaches produce the same result</strong> — Tomcat handles them identically at runtime. You can even use both together in the same project if needed.</p>
+  </div>
+
+  <!-- Summary Comparison Table -->
+  <div class="section-title">Complete Summary — web.xml vs @WebServlet</div>
+
+  <table>
+    <thead><tr><th>Feature</th><th>web.xml</th><th>@WebServlet</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Introduced In</strong></td><td>Early Servlets (before 3.0)</td><td>Servlet 3.0 (2009)</td></tr>
+      <tr><td><strong>File Required</strong></td><td>Separate <code>web.xml</code> file</td><td>No separate file — in Java class</td></tr>
+      <tr><td><strong>Lines per Servlet</strong></td><td>6–7 lines XML</td><td>1 line annotation</td></tr>
+      <tr><td><strong>Configuration Location</strong></td><td>Separate from code</td><td>Right with the code</td></tr>
+      <tr><td><strong>Error Prone</strong></td><td>Yes (XML typos)</td><td>No (Java compiler checks)</td></tr>
+      <tr><td><strong>Readability</strong></td><td>Hard with many servlets</td><td>Clean and simple</td></tr>
+      <tr><td><strong>Maintenance</strong></td><td>Update both files on rename</td><td>Only update Java file</td></tr>
+      <tr><td><strong>Real Project Usage</strong></td><td>Legacy / Enterprise</td><td>Modern / Most new projects ⭐</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Phone Book Analogy -->
+  <div class="section-title">Final Analogy — Phone Book vs Name Tag</div>
+
+  <div class="two-col">
+    <div class="example-box">
+      <div class="box-label">web.xml = Phone Book (Separate File)</div>
+      <ul class="notes-list">
+        <li>Separate directory listing</li>
+        <li>Manager must look it up every time</li>
+        <li>Gets huge with many entries</li>
+        <li>Easy to have wrong entries</li>
+      </ul>
+    </div>
+    <div class="example-box">
+      <div class="box-label">@WebServlet = Name Tag on Person</div>
+      <ul class="notes-list">
+        <li>Info is on the person (class) itself</li>
+        <li>Manager sees immediately</li>
+        <li>Always accurate — can't be mismatched</li>
+        <li>Easy to find and maintain</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Interview Q&A -->
+  <div class="interview-box">
+    <div class="box-label">🎯 Interview Q&amp;A</div>
+
+    <div class="q">Q1. What is web.xml in a Servlet application?</div>
+    <div class="a"><code>web.xml</code> (Deployment Descriptor) is an XML configuration file that registers servlet classes with the container and maps URLs to servlets. It tells Tomcat: "This class exists, and this URL should invoke it."</div>
+
+    <div class="q">Q2. What is the role of &lt;servlet-name&gt; in web.xml?</div>
+    <div class="a"><code>&lt;servlet-name&gt;</code> is a unique ID (nickname) used to link the <code>&lt;servlet&gt;</code> block (which declares the class) with the <code>&lt;servlet-mapping&gt;</code> block (which declares the URL). Both blocks must use the exact same name — it acts as the bridge between them.</div>
+
+    <div class="q">Q3. What is @WebServlet annotation?</div>
+    <div class="a"><code>@WebServlet</code> is an annotation introduced in Servlet 3.0 that maps a URL directly to a servlet class, replacing the need for web.xml configuration. Example: <code>@WebServlet("/login")</code> written on the servlet class tells Tomcat to invoke it when <code>/login</code> is accessed.</div>
+
+    <div class="q">Q4. What is the difference between web.xml and @WebServlet?</div>
+    <div class="a"><strong>web.xml</strong> — separate XML file, 6–7 lines per servlet, error-prone, legacy approach. <strong>@WebServlet</strong> — annotation in the Java class itself, 1 line per servlet, cleaner, modern approach. Both achieve the same URL-to-servlet mapping.</div>
+
+    <div class="q">Q5. Which Servlet version introduced @WebServlet?</div>
+    <div class="a">Servlet 3.0, released in 2009. Requires Tomcat 7 or higher.</div>
+
+    <div class="q">Q6. Can we use both web.xml and @WebServlet together?</div>
+    <div class="a">Yes. Both can coexist in the same project. However, care must be taken to avoid duplicate URL mappings, which would cause conflicts.</div>
+
+    <div class="q">Q7. What happens if &lt;servlet-name&gt; doesn't match in web.xml?</div>
+    <div class="a">The mapping will fail. Tomcat will not be able to connect the servlet class to the URL. The <code>&lt;servlet-name&gt;</code> in <code>&lt;servlet&gt;</code> and <code>&lt;servlet-mapping&gt;</code> must be <strong>identical</strong>.</div>
+
+    <div class="q">Q8. Why was @WebServlet introduced?</div>
+    <div class="a">To solve the problems of web.xml — large XML files, code-configuration separation, error-prone tags, and high maintenance cost. Annotations keep configuration with the code, making it cleaner, faster, and easier to maintain.</div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — web.xml vs @WebServlet</div>
+    <p><strong>web.xml</strong> = <strong>W</strong>rite eXtra ML (old, verbose, separate file)</p>
+    <p><strong>@WebServlet</strong> = <strong>@</strong>nnotation (new, clean, same file)</p>
+    <p>Think: <em>"Phone Book (web.xml) vs Name Tag (@WebServlet) — modern people wear name tags!"</em></p>
+  </div>
+
+</div>
+
+</body>
+</html>

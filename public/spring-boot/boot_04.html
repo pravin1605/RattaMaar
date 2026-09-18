@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>JpaRepository & JSON — Study Notes</title>
+<style>
+  :root {
+    --primary: #4f46e5;
+    --primary-light: #eef2ff;
+    --accent: #06b6d4;
+    --accent2: #f59e0b;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --card-bg: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px;
+    background: #f8fafc;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .page { max-width: 980px; margin: 0 auto; }
+  h1.title { text-align: center; font-size: 28px; color: var(--primary); margin-bottom: 4px; }
+  .subtitle { text-align: center; color: var(--muted); margin-bottom: 28px; font-size: 14px; }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 6px solid var(--primary);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .card.accent { border-left-color: var(--accent); }
+  .card.warn { border-left-color: var(--accent2); }
+  h2.section-title { font-size: 20px; color: var(--primary); margin-top: 0; display: flex; align-items: center; gap: 8px; }
+  h3 { color: #111827; font-size: 16px; margin-bottom: 6px; border-bottom: 2px solid var(--primary-light); padding-bottom: 4px; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px;
+    border-radius: 999px; color: #fff; background: var(--accent2); margin-left: 6px; vertical-align: middle;
+  }
+  .badge.extra { background: var(--success); }
+  .flow {
+    background: #0f172a; color: #e2e8f0; font-family: 'Consolas','Courier New',monospace;
+    font-size: 13.5px; padding: 16px 18px; border-radius: 8px; overflow-x: auto;
+    white-space: pre; margin: 12px 0; line-height: 1.5;
+  }
+  pre.code {
+    background: #1e1e2f; color: #dcdcdc; padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; font-family: 'Consolas','Courier New',monospace; font-size: 13.5px;
+    margin: 12px 0; white-space: pre-wrap; word-break: break-word;
+  }
+  pre.code .kw { color: #569cd6; }
+  pre.code .str { color: #ce9178; }
+  pre.code .ann { color: #dcdcaa; }
+  pre.code .cls { color: #4ec9b0; }
+  pre.code .com { color: #6a9955; }
+  pre.code .num { color: #b5cea8; }
+  pre.code .lit { color: #569cd6; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th, td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; }
+  th { background: var(--primary-light); color: var(--primary); font-weight: 700; }
+  tr:nth-child(even) { background: #fafafa; }
+  .qa { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .qa .q { font-weight: 700; color: #15803d; }
+  .qa .a { margin-top: 4px; color: #1f2937; }
+  .trick { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .trick .label { font-weight: 700; color: #b45309; }
+  .analogy { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .analogy .label { font-weight: 700; color: #1d4ed8; }
+  .warn-box { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .warn-box .label { font-weight: 700; color: #b91c1c; }
+  .toc { background: var(--primary-light); border-radius: 10px; padding: 16px 22px; margin-bottom: 24px; }
+  .toc a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  .toc li { margin-bottom: 4px; }
+  .footer-note { text-align: center; color: var(--muted); font-size: 12px; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1 class="title">JpaRepository & JSON</h1>
+  <p class="subtitle">Database Persistence vs Data Exchange — Interview-Ready Notes</p>
+
+  <div class="toc">
+    <strong>Contents</strong>
+    <ol>
+      <li><a href="#s1">What is JpaRepository?</a></li>
+      <li><a href="#s2">JPA vs Hibernate vs Spring Data JPA vs JpaRepository</a></li>
+      <li><a href="#s3">JpaRepository Methods</a></li>
+      <li><a href="#s4">Custom Query Methods</a></li>
+      <li><a href="#s5">What is JSON?</a></li>
+      <li><a href="#s6">JSON Structure & Data Types</a></li>
+      <li><a href="#s7">JSON in Spring Boot — Serialization/Deserialization</a></li>
+      <li><a href="#s8">JSON vs XML</a></li>
+      <li><a href="#s9">Complete SocietyHub Example</a></li>
+      <li><a href="#s10">⭐ Interview Answers to Memorize</a></li>
+      <li><a href="#s11">Interview Q&A Bank</a> <span class="badge extra">Added</span></li>
+      <li><a href="#s12">Memory Tricks</a> <span class="badge extra">Added</span></li>
+      <li><a href="#s13">Common Bugs / Gotchas</a> <span class="badge extra">Added</span></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="card" id="s1">
+    <h2 class="section-title">1. What is JpaRepository?</h2>
+    <p>One of the most important Spring Data JPA interview questions. First understand the problem JpaRepository solves.</p>
+    <p>Suppose your project has a Resident table:</p>
+    <table>
+      <tr><th>id</th><th>name</th><th>flat</th><th>mobile</th></tr>
+      <tr><td>1</td><td>Rahul</td><td>A101</td><td>9876543210</td></tr>
+      <tr><td>2</td><td>Amit</td><td>A102</td><td>9988776655</td></tr>
+    </table>
+    <p>Your Spring Boot app needs to: Create resident, Read resident, Update resident, Delete resident, Search resident. Normally you'd write database-related code yourself — but Spring Data JPA gives us <strong>JpaRepository</strong>.</p>
+
+    <h3>What is JpaRepository?</h3>
+    <p>A Spring Data JPA interface that provides predefined methods for performing common database operations.</p>
+    <pre class="code"><span class="kw">public interface</span> <span class="cls">ResidentRepository</span>
+        <span class="kw">extends</span> JpaRepository&lt;Resident, Long&gt; {}</pre>
+    <p><code>Resident</code> → Entity class. <code>Long</code> → Type of primary key.</p>
+    <div class="qa">
+      <div class="q">JpaRepository&lt;Resident, Long&gt; means:</div>
+      <div class="a">"This repository is used to perform database operations on the Resident entity, whose primary key is of type Long."</div>
+    </div>
+
+    <h3>Why do we use JpaRepository?</h3>
+    <p>Because we don't need to manually write basic CRUD operations. CRUD = <strong>C</strong>reate, <strong>R</strong>ead, <strong>U</strong>pdate, <strong>D</strong>elete.</p>
+    <pre class="code">residentRepository.save(resident);
+residentRepository.findById(id);
+residentRepository.findAll();
+residentRepository.deleteById(id);</pre>
+
+    <h3>Without JpaRepository</h3>
+    <div class="flow">Open database connection
+    ↓
+Create SQL query
+    ↓
+Execute query
+    ↓
+Handle result
+    ↓
+Close connection</div>
+    <pre class="code"><span class="kw">INSERT INTO</span> residents(name, flat, mobile)
+<span class="kw">VALUES</span>(<span class="str">'Rahul'</span>, <span class="str">'A101'</span>, <span class="str">'9876543210'</span>);</pre>
+    <p>You would need to manage a lot of database-related code.</p>
+
+    <h3>With JpaRepository</h3>
+    <pre class="code">residentRepository.save(resident);</pre>
+    <p>Spring Data JPA and Hibernate handle the underlying persistence work.</p>
+    <div class="flow">Java Object
+    ↓
+Repository
+    ↓
+JPA
+    ↓
+Hibernate
+    ↓
+SQL
+    ↓
+Database</div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="card accent" id="s2">
+    <h2 class="section-title">2. Important: JPA vs Hibernate vs JpaRepository</h2>
+    <p>A very common interview confusion.</p>
+    <h3>JPA</h3>
+    <p>JPA = Java Persistence API. A specification/standard for object-relational persistence. It defines concepts and APIs for mapping Java objects to database tables.</p>
+    <h3>Hibernate</h3>
+    <p>Hibernate is a popular implementation of JPA.</p>
+    <div class="flow">JPA
+    ↓
+Rules / Specification
+
+Hibernate
+    ↓
+Implementation of those rules</div>
+    <h3>Spring Data JPA</h3>
+    <p>Spring Data JPA provides an abstraction that makes working with JPA repositories easier.</p>
+    <div class="flow">Spring Data JPA
+       ↓
+     JPA
+       ↓
+   Hibernate
+       ↓
+   Database</div>
+    <h3>JpaRepository</h3>
+    <p>An interface provided by Spring Data JPA.</p>
+    <div class="flow">JpaRepository
+      ↓
+Spring Data JPA
+      ↓
+JPA
+      ↓
+Hibernate
+      ↓
+Database</div>
+    <p>This distinction is very useful in interviews.</p>
+
+    <h3>Example from Your Project</h3>
+    <pre class="code"><span class="ann">@Entity</span>
+<span class="ann">@Table</span>(name = <span class="str">"residents"</span>)
+<span class="kw">public class</span> <span class="cls">Resident</span> {
+
+    <span class="ann">@Id</span>
+    <span class="ann">@GeneratedValue</span>(strategy = GenerationType.<span class="lit">IDENTITY</span>)
+    <span class="kw">private</span> Long id;
+
+    <span class="kw">private</span> String name;
+    <span class="kw">private</span> String flatNumber;
+    <span class="kw">private</span> String mobile;
+}</pre>
+    <pre class="code"><span class="kw">public interface</span> <span class="cls">ResidentRepository</span>
+        <span class="kw">extends</span> JpaRepository&lt;Resident, Long&gt; {
+}</pre>
+    <p>That's enough for basic CRUD operations — you don't have to implement the interface yourself.</p>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="card" id="s3">
+    <h2 class="section-title">3. What Methods Does JpaRepository Give Us?</h2>
+
+    <h3>save()</h3>
+    <p>Used to save an entity.</p>
+    <pre class="code">residentRepository.save(resident);</pre>
+    <p>It can be used for creating and, depending on entity state/ID, updating entities.</p>
+
+    <h3>findById()</h3>
+    <p>Find a record by primary key. Usually returns <code>Optional&lt;Resident&gt;</code>.</p>
+    <pre class="code">residentRepository.findById(101L);</pre>
+    <p>So we commonly write:</p>
+    <pre class="code">Resident resident =
+    residentRepository.findById(101L)
+        .orElseThrow(() ->
+            <span class="kw">new</span> ResidentNotFoundException(
+                <span class="str">"Resident not found"</span>
+            )
+        );</pre>
+
+    <h3>findAll()</h3>
+    <p>Get all records.</p>
+    <pre class="code">List&lt;Resident&gt; residents =
+        residentRepository.findAll();</pre>
+
+    <h3>deleteById()</h3>
+    <p>Delete by primary key.</p>
+    <pre class="code">residentRepository.deleteById(101L);</pre>
+
+    <h3>existsById()</h3>
+    <p>Check whether a record exists.</p>
+    <pre class="code">boolean exists =
+        residentRepository.existsById(101L);</pre>
+
+    <h3>count()</h3>
+    <p>Get the number of records.</p>
+    <pre class="code">long total =
+        residentRepository.count();</pre>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="card" id="s4">
+    <h2 class="section-title">4. Custom Query Methods</h2>
+    <p>One of the powerful features of Spring Data JPA is that you can create methods based on the method name — Spring Data derives the query automatically.</p>
+    <pre class="code">Optional&lt;Resident&gt; findByEmail(String email);
+
+List&lt;Resident&gt; findByBuilding(String building);
+
+List&lt;Resident&gt; findByResidentType(String residentType);
+
+List&lt;Resident&gt; findByBuildingAndFlatNumber(
+        String building,
+        String flatNumber);</pre>
+    <p>Instead of manually writing SQL for many simple queries, Spring Data can generate the query based on the method name.</p>
+
+    <div class="analogy">
+      <div class="label">📚 Library Analogy</div>
+      <div>
+        Without JpaRepository: You need a book → Go to storage → Find shelf → Search manually → Bring book.<br><br>
+        With a repository: You: "Give me book ID 101." Library System: "Here it is."<br><br>
+        Similarly: <code>residentRepository.findById(101L);</code> — you tell the repository what you need, and the framework handles much of the underlying database interaction.
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Interview Answer — JpaRepository</div>
+      <div class="a">"JpaRepository is an interface provided by Spring Data JPA that provides predefined methods for performing database operations on JPA entities. It supports common CRUD operations such as save, findById, findAll and deleteById, and it also provides features like pagination, sorting and query-method derivation. We don't have to implement these basic methods manually." Then: "For example, in my SocietyHub project, I can create ResidentRepository extends JpaRepository&lt;Resident, Long&gt;. Here Resident is the entity and Long is its primary-key type. I can then use methods such as save(), findById(), findAll() and deleteById() to interact with the resident data."</div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="card accent" id="s5">
+    <h2 class="section-title">5. What is JSON?</h2>
+    <p>JSON stands for <strong>JavaScript Object Notation</strong>. It is a lightweight text-based format commonly used to exchange data between applications, especially between frontend and backend.</p>
+
+    <h3>Why Do We Need JSON?</h3>
+    <p>Suppose your React frontend wants resident information from Spring Boot. The backend has a Java object <code>Resident resident</code>, but React doesn't directly receive a Java object — the backend needs to send the data in a commonly understood format. JSON is one of the most common formats.</p>
+    <div class="flow">Java Object
+    ↓
+JSON
+    ↓
+React</div>
+
+    <h3>Example</h3>
+    <pre class="code">Resident resident = <span class="kw">new</span> Resident();
+resident.setName(<span class="str">"Rahul"</span>);
+resident.setFlatNumber(<span class="str">"A-101"</span>);
+resident.setMobile(<span class="str">"9876543210"</span>);</pre>
+    <p>The API can return:</p>
+    <pre class="code">{
+  "name": "Rahul",
+  "flatNumber": "A-101",
+  "mobile": "9876543210"
+}</pre>
+    <p>The frontend can easily understand this structure.</p>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="card accent" id="s6">
+    <h2 class="section-title">6. JSON Structure & Data Types</h2>
+    <p>JSON mainly consists of key-value pairs.</p>
+    <pre class="code">{
+  "name": "Rahul",
+  "age": 22,
+  "city": "Mumbai"
+}</pre>
+    <p><code>"name"</code> → key, <code>"Rahul"</code> → value. Same pattern for <code>age</code>/22 and <code>city</code>/"Mumbai".</p>
+
+    <h3>JSON Data Types</h3>
+    <table>
+      <tr><th>Type</th><th>Example</th></tr>
+      <tr><td>String</td><td><code>{ "name": "Rahul" }</code></td></tr>
+      <tr><td>Number</td><td><code>{ "age": 22 }</code></td></tr>
+      <tr><td>Boolean</td><td><code>{ "active": true }</code></td></tr>
+      <tr><td>Array</td><td><code>{ "skills": ["Java", "Spring Boot", "SQL"] }</code></td></tr>
+      <tr><td>Object</td><td><code>{ "address": { "city": "Mumbai", "pincode": "400001" } }</code></td></tr>
+      <tr><td>Null</td><td><code>{ "middleName": null }</code></td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="card warn" id="s7">
+    <h2 class="section-title">7. JSON in Your Spring Boot Project</h2>
+    <p>Suppose React wants to create a resident. React sends:</p>
+    <div class="flow">POST /api/residents</div>
+    <pre class="code">{
+  "name": "Rahul",
+  "flatNumber": "A-101",
+  "mobile": "9876543210"
+}</pre>
+    <p>Spring Boot controller:</p>
+    <pre class="code"><span class="ann">@PostMapping</span>
+<span class="kw">public</span> Resident createResident(
+        <span class="ann">@RequestBody</span> ResidentRequest request) {
+    <span class="kw">return</span> residentService.createResident(request);
+}</pre>
+    <div class="flow">JSON
+    ↓
+@RequestBody
+    ↓
+ResidentRequest Java object</div>
+    <p>Spring Boot converts the JSON request into a Java object. This process is commonly associated with <strong>deserialization</strong>.</p>
+
+    <h3>What Happens in the Response?</h3>
+    <pre class="code"><span class="kw">return</span> residentResponse;</pre>
+    <p>The frontend might receive:</p>
+    <pre class="code">{
+  "id": 101,
+  "name": "Rahul",
+  "flatNumber": "A-101",
+  "mobile": "9876543210"
+}</pre>
+    <p>Spring Boot converts the Java object into JSON. This process is commonly called <strong>serialization</strong>.</p>
+    <div class="flow">Request:
+JSON → Java Object → Deserialization
+
+Response:
+Java Object → JSON → Serialization</div>
+
+    <div class="analogy">
+      <div class="label">🌐 Common Language Analogy</div>
+      <div>
+        React Developer ↔ JSON ↔ Spring Boot Developer.<br>
+        React understands JavaScript objects. Spring Boot works with Java objects. JSON acts as a common data representation.<br><br>
+        React says: <code>{ "name": "Rahul", "flat": "A-101" }</code> — Spring Boot receives the information and converts it into a Java object.
+      </div>
+    </div>
+
+    <h3>JSON vs Java Object</h3>
+    <table>
+      <tr><th>Java Object</th><th>JSON</th></tr>
+      <tr><td>Exists inside the Java application (application memory)</td><td>Text-based data representation used for communication</td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="card" id="s8">
+    <h2 class="section-title">8. JSON vs XML</h2>
+    <p>Sometimes an interviewer may ask: "Why JSON instead of XML?" Both can be used for data exchange.</p>
+    <p><strong>JSON:</strong></p>
+    <pre class="code">{
+  "name": "Rahul",
+  "age": 22
+}</pre>
+    <p><strong>XML:</strong></p>
+    <pre class="code">&lt;student&gt;
+    &lt;name&gt;Rahul&lt;/name&gt;
+    &lt;age&gt;22&lt;/age&gt;
+&lt;/student&gt;</pre>
+    <p>JSON is often preferred for modern REST APIs because it is:</p>
+    <ul>
+      <li>Lightweight</li>
+      <li>Easy to read</li>
+      <li>Easy to parse</li>
+      <li>Convenient for JavaScript/React applications</li>
+      <li>Less verbose than XML for many common API payloads</li>
+    </ul>
+    <div class="warn-box">
+      <div class="label">⚠️ Don't say</div>
+      <div>"JSON is always better than XML."</div>
+    </div>
+    <div class="qa">
+      <div class="q">Instead say</div>
+      <div class="a">"JSON is commonly preferred for modern REST APIs because it is lightweight and convenient for frontend applications, although XML is still used in many systems."</div>
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="card warn" id="s9">
+    <h2 class="section-title">9. Complete SocietyHub Example</h2>
+    <p>Let's connect JSON + REST API + JpaRepository. Suppose Chairman adds a resident.</p>
+
+    <h3>React sends JSON</h3>
+    <pre class="code">{
+  "name": "Rahul",
+  "flatNumber": "A-101",
+  "mobile": "9876543210"
+}</pre>
+
+    <h3>Controller receives it</h3>
+    <pre class="code"><span class="ann">@PostMapping</span>
+<span class="kw">public</span> ResidentResponse createResident(
+        <span class="ann">@RequestBody</span> ResidentRequest request) {
+    <span class="kw">return</span> residentService.createResident(request);
+}</pre>
+
+    <h3>Service processes business logic</h3>
+    <pre class="code">Resident resident = <span class="kw">new</span> Resident();
+resident.setName(request.getName());
+resident.setFlatNumber(request.getFlatNumber());
+resident.setMobile(request.getMobile());</pre>
+
+    <h3>Repository saves it</h3>
+    <pre class="code">residentRepository.save(resident);</pre>
+
+    <h3>JPA/Hibernate communicates with DB</h3>
+    <div class="flow">Java Entity
+    ↓
+Hibernate
+    ↓
+SQL
+    ↓
+Database</div>
+
+    <h3>Backend sends response</h3>
+    <pre class="code">{
+  "success": true,
+  "message": "Resident created successfully",
+  "data": {
+    "id": 101,
+    "name": "Rahul",
+    "flatNumber": "A-101"
+  }
+}</pre>
+
+    <h3>React receives JSON</h3>
+    <div class="flow">Spring Boot
+    ↓
+JSON Response
+    ↓
+React
+    ↓
+Residents page updates</div>
+  </div>
+
+  <!-- SECTION 10 -->
+  <div class="card" id="s10">
+    <h2 class="section-title">10. ⭐ Interview Answers to Memorize</h2>
+    <div class="qa">
+      <div class="q">JpaRepository</div>
+      <div class="a">"JpaRepository is a Spring Data JPA interface that provides predefined database operations for JPA entities. It provides methods such as save(), findById(), findAll(), deleteById(), and existsById(), so we don't have to write basic CRUD operations manually. For example, in my project, ResidentRepository extends JpaRepository&lt;Resident, Long&gt; allows me to perform database operations on the Resident entity."</div>
+    </div>
+    <div class="qa">
+      <div class="q">JSON</div>
+      <div class="a">"JSON stands for JavaScript Object Notation. It is a lightweight, text-based format commonly used for exchanging data between frontend and backend applications. In my Spring Boot project, the frontend sends JSON in the request body, Spring converts it into Java objects using @RequestBody, and the backend returns Java objects that are converted into JSON responses."</div>
+    </div>
+
+    <h3>⭐ Two Diagrams You Should Remember</h3>
+    <p><strong>JpaRepository</strong></p>
+    <div class="flow">Controller
+    ↓
+Service
+    ↓
+Repository
+    ↓
+JpaRepository
+    ↓
+JPA
+    ↓
+Hibernate
+    ↓
+Database</div>
+    <p><strong>JSON</strong></p>
+    <div class="flow">React
+  │
+  │ JSON Request
+  ▼
+Spring Boot
+  │
+  │ @RequestBody
+  ▼
+Java Object
+  │
+  ▼
+Business Logic
+  │
+  ▼
+Database
+
+Database
+  ↑
+Java Object
+  ↑
+Spring Boot
+  │
+  │ JSON Response
+  ▼
+React</div>
+    <p>The key thing to understand: JpaRepository is about database persistence, while JSON is about representing/exchanging data between applications.</p>
+  </div>
+
+  <!-- SECTION 11 - EXTRA -->
+  <div class="card accent" id="s11">
+    <h2 class="section-title">11. Interview Q&A Bank <span class="badge extra">Added</span></h2>
+    <div class="qa"><div class="q">Q: What's the difference between CrudRepository, PagingAndSortingRepository, and JpaRepository?</div><div class="a">CrudRepository provides basic CRUD methods. PagingAndSortingRepository extends it, adding pagination and sorting. JpaRepository extends PagingAndSortingRepository and adds JPA-specific features like batch operations (saveAll, flush) — it's the most feature-complete of the three.</div></div>
+    <div class="qa"><div class="q">Q: How does Spring Data JPA generate queries from method names?</div><div class="a">It parses the method name against a defined keyword grammar (findBy, And, Or, OrderBy, etc.) and matches property names on the entity to build a JPQL query automatically at startup — no manual SQL/JPQL needed for simple queries.</div></div>
+    <div class="qa"><div class="q">Q: What does save() do if the entity already has an ID?</div><div class="a">Depending on the ID generation strategy and whether Hibernate considers the entity "new" or "detached," save() may perform an INSERT or a merge/UPDATE — this is a common source of confusion and bugs.</div></div>
+    <div class="qa"><div class="q">Q: Why does findById() return Optional instead of the entity directly?</div><div class="a">To force the caller to explicitly handle the "not found" case (via orElseThrow, orElse, isPresent, etc.) rather than risking a NullPointerException.</div></div>
+    <div class="qa"><div class="q">Q: What is the default content type for @RequestBody / @ResponseBody in Spring Boot?</div><div class="a">application/json — Spring Boot auto-configures a Jackson-based HttpMessageConverter by default when spring-boot-starter-web is on the classpath.</div></div>
+    <div class="qa"><div class="q">Q: What is the difference between serialization and deserialization?</div><div class="a">Serialization converts a Java object into a transferable format (like JSON) for a response. Deserialization converts an incoming format (like JSON) back into a Java object, typically for a request body.</div></div>
+  </div>
+
+  <!-- SECTION 12 - EXTRA -->
+  <div class="card warn" id="s12">
+    <h2 class="section-title">12. Memory Tricks <span class="badge extra">Added</span></h2>
+    <div class="trick"><div class="label">🧠 JPA/Hibernate/Spring Data JPA stack</div><div>"Spring Data JPA <strong>simplifies</strong> JPA, JPA is the <strong>rulebook</strong>, Hibernate <strong>follows</strong> the rulebook." Remember top-down: Spring Data JPA → JPA → Hibernate → Database.</div></div>
+    <div class="trick"><div class="label">🧠 Serialization direction</div><div>"S for Sending → Serialize. Coming iN → Deserialize (turning iNto a Java object)."</div></div>
+    <div class="trick"><div class="label">🧠 JpaRepository&lt;Entity, IdType&gt;</div><div>Read the generic types like a sentence: "Repository of &lt;Entity&gt;, keyed by &lt;IdType&gt;."</div></div>
+    <div class="trick"><div class="label">🧠 JSON vs XML pick</div><div>"JSON = JS's Own Notation" — light, native to JavaScript, so a natural fit for a React frontend talking to any backend.</div></div>
+  </div>
+
+  <!-- SECTION 13 - EXTRA -->
+  <div class="card" id="s13">
+    <h2 class="section-title">13. Common Bugs / Gotchas <span class="badge extra">Added</span></h2>
+    <div class="qa"><div class="q">⚠️ Calling .get() on Optional without checking</div><div class="a">residentRepository.findById(id).get() throws NoSuchElementException if absent, with a poor error message. Always use orElseThrow() with a meaningful custom exception instead.</div></div>
+    <div class="qa"><div class="q">⚠️ Forgetting the entity needs @Id</div><div class="a">JpaRepository requires the entity class to have a field annotated @Id — without it, Spring Boot fails at startup with a mapping exception, not a runtime error.</div></div>
+    <div class="qa"><div class="q">⚠️ Sending the Entity directly instead of a DTO</div><div class="a">Returning the JPA @Entity directly from a controller (instead of a Response DTO) can leak internal fields, cause lazy-loading serialization errors, or expose more data than intended in the JSON response.</div></div>
+    <div class="qa"><div class="q">⚠️ Mismatched JSON field names and Java field names</div><div class="a">If the incoming JSON key doesn't match the Java field name (and no @JsonProperty is used), Jackson silently leaves that field null instead of throwing an error — a common source of "why is this always null" bugs.</div></div>
+    <div class="qa"><div class="q">⚠️ Overusing derived query method names</div><div class="a">Very long method names like findByBuildingAndFlatNumberAndResidentTypeAndMobile become hard to read and maintain — beyond 2-3 conditions, a @Query with JPQL/native SQL is often clearer.</div></div>
+  </div>
+
+  <p class="footer-note">Study Notes — JpaRepository & JSON · SocietyHub Project Reference</p>
+</div>
+</body>
+</html>

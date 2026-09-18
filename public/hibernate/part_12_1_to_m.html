@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hibernate Mapping (One-to-Many)</title>
+<style>
+  @page { size: A4; margin: 18mm 14mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    color: #1a1a1a;
+    background: #ffffff;
+    line-height: 1.6;
+    margin: 0;
+    padding: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 26px;
+    border-bottom: 3px solid #2563eb;
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+    color: #111827;
+  }
+  .subtitle { color: #4b5563; font-size: 14px; margin-bottom: 26px; }
+  h2 {
+    font-size: 19px;
+    margin-top: 34px;
+    color: #1e3a8a;
+    border-left: 5px solid #2563eb;
+    padding-left: 10px;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 15.5px;
+    margin-top: 18px;
+    color: #b45309;
+    page-break-after: avoid;
+  }
+  .card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin: 14px 0;
+    background: #f9fafb;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    page-break-inside: avoid;
+  }
+  .card.extra { border-left: 5px solid #f59e0b; background: #fffbeb; }
+  .card.theory { border-left: 5px solid #2563eb; background: #eff6ff; }
+  .card.bug { border-left: 5px solid #dc2626; background: #fef2f2; }
+  .card.missing { border-left: 5px solid #6b7280; background: #f9fafb; }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    letter-spacing: 0.4px;
+  }
+  .tag-orig { background: #dbeafe; color: #1e40af; }
+  .tag-extra { background: #fef3c7; color: #92400e; }
+  .tag-qa { background: #dcfce7; color: #166534; }
+  .tag-theory { background: #dbeafe; color: #1e3a8a; }
+  .tag-bug { background: #fee2e2; color: #991b1b; }
+  .tag-missing { background: #e5e7eb; color: #374151; }
+  pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 14px 16px;
+    border-radius: 8px;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    margin: 10px 0;
+  }
+  .kw { color: #cba6f7; }
+  .type { color: #89dceb; }
+  .str { color: #a6e3a1; }
+  .cmt { color: #6c7086; font-style: italic; }
+  .method { color: #f9e2af; }
+  code.inline {
+    background: #eef2ff;
+    color: #3730a3;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13.5px;
+  }
+  th, td {
+    border: 1px solid #d1d5db;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th { background: #2563eb; color: white; }
+  tr:nth-child(even) { background: #f3f4f6; }
+  .flow {
+    background: #eff6ff;
+    border: 1px dashed #93c5fd;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+    color: #1e3a8a;
+    white-space: pre;
+    margin: 10px 0;
+    text-align: center;
+  }
+  .qa-item {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 10px 0;
+  }
+  .qa-item:last-child { border-bottom: none; }
+  .q { font-weight: 700; color: #111827; }
+  .a { color: #374151; margin-top: 4px; }
+  .memory-trick {
+    background: #fdf4ff;
+    border: 1px solid #e9d5ff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 13.5px;
+    color: #6b21a8;
+  }
+  .memory-trick b { color: #581c87; }
+  ul { margin: 6px 0; padding-left: 22px; }
+  li { margin: 3px 0; }
+  .toc {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+  }
+  .toc a { color: #2563eb; text-decoration: none; font-size: 13.5px; }
+  .toc ol { margin: 6px 0; }
+  .page-break { page-break-before: always; }
+  .footer-note {
+    margin-top: 40px;
+    padding-top: 14px;
+    border-top: 1px solid #e5e7eb;
+    color: #6b7280;
+    font-size: 12px;
+    text-align: center;
+  }
+  .box {
+    display: block;
+    background: #2563eb;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
+    margin: 4px auto;
+    max-width: 260px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .arrow-down { text-align: center; color: #93c5fd; font-size: 18px; margin: 0; }
+</style>
+</head>
+<body>
+
+<h1>Chapter 17: Hibernate Mapping — One-to-Many</h1>
+<div class="subtitle">Company ↔ Employees Example — Packages: <code class="inline">com.DTO</code>, <code class="inline">com.DAO</code>, <code class="inline">com.Controller</code></div>
+
+<div class="toc">
+  <b>Contents</b>
+  <ol>
+    <li><a href="#what">What is One-to-Many Mapping?</a></li>
+    <li><a href="#annotations">Key Annotations Used</a></li>
+    <li><a href="#joincolumn">Why @JoinColumn Matters (Join Table vs Foreign Key)</a></li>
+    <li><a href="#architecture">Mapping Architecture</a></li>
+    <li><a href="#code">Code — Employee, Company, Driver</a></li>
+    <li><a href="#missing">CompanyDao — Referenced but Not Provided</a></li>
+    <li><a href="#comparison">One-to-Many vs Many-to-One vs One-to-One</a></li>
+    <li><a href="#qa">Interview Q&amp;A</a></li>
+    <li><a href="#tricks">Memory Tricks</a></li>
+  </ol>
+</div>
+
+<h2 id="what">1. What is One-to-Many Mapping?</h2>
+<div class="card theory">
+  <span class="tag tag-theory">THEORY</span>
+  <p>A <b>One-to-Many</b> relationship means one record in a table is associated with <b>multiple</b> records in another table. In this example, one <code class="inline">Company</code> can have many <code class="inline">Employee</code>s.</p>
+  <p>From the other direction, this same relationship is called <b>Many-to-One</b> — many Employees belong to one Company. One-to-Many and Many-to-One are two sides of the same relationship, just modeled from opposite entities.</p>
+  <div class="flow">Company
+   │
+   ├── Employee 1 (Pravin)
+   ├── Employee 2 (Mayuresh)
+   └── Employee 3 (Rahul)</div>
+</div>
+
+<h2 id="annotations">2. Key Annotations Used</h2>
+<div class="card theory">
+  <span class="tag tag-theory">THEORY</span>
+  <table>
+    <tr><th>Annotation</th><th>Used On</th><th>Purpose</th></tr>
+    <tr><td><code class="inline">@Entity</code></td><td>Employee, Company</td><td>Marks the class as a Hibernate entity — a table is created with the same name.</td></tr>
+    <tr><td><code class="inline">@Id</code></td><td><code class="inline">eid</code>, <code class="inline">cid</code></td><td>Marks the primary key field of each entity.</td></tr>
+    <tr><td><code class="inline">@GeneratedValue(strategy = GenerationType.SEQUENCE)</code></td><td><code class="inline">eid</code>, <code class="inline">cid</code></td><td>Auto-generates the primary key using a database sequence, instead of relying on the table's own identity column.</td></tr>
+    <tr><td><code class="inline">@OneToMany</code></td><td><code class="inline">employees</code> field in Company</td><td>Declares that one Company maps to a list of many Employees.</td></tr>
+    <tr><td><code class="inline">@JoinColumn(name = "company_id")</code></td><td><code class="inline">employees</code> field in Company</td><td>Tells Hibernate to put the foreign key directly in the Employee table, avoiding a separate join table.</td></tr>
+  </table>
+</div>
+
+<h2 id="joincolumn">3. Why @JoinColumn Matters (Join Table vs Foreign Key)</h2>
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Explanation</span>
+  <ul>
+    <li>By default, a plain <code class="inline">@OneToMany</code> (with no <code class="inline">@JoinColumn</code> and no <code class="inline">mappedBy</code>) makes Hibernate create a <b>separate join table</b> — e.g. <code class="inline">Company_Employee</code> — with two foreign key columns, one pointing to Company and one to Employee. This is wasteful for a simple one-to-many relationship where each Employee only ever belongs to one Company.</li>
+    <li>Adding <code class="inline">@JoinColumn(name = "company_id")</code> tells Hibernate: "don't create a join table — instead, add a <code class="inline">company_id</code> foreign key column directly inside the <b>Employee</b> table." This is the simpler, more common real-world approach.</li>
+    <li>An alternative (not used here) is a <b>bidirectional</b> mapping: adding a <code class="inline">@ManyToOne</code> field for <code class="inline">Company</code> inside the <code class="inline">Employee</code> entity, and using <code class="inline">mappedBy</code> on the Company side. That approach lets you navigate from Employee back to its Company too — this code only supports navigating Company → Employees, not the reverse.</li>
+    <li>Because <code class="inline">Company</code> owns the <code class="inline">@JoinColumn</code>, Company is the "owning side" of this relationship even though logically the foreign key column physically lives in the Employee table.</li>
+  </ul>
+</div>
+
+<h2 id="architecture">4. Mapping Architecture</h2>
+<div class="flow">
+<span class="box">Company Object</span>
+<div class="arrow-down">↓ has many</div>
+<span class="box">List&lt;Employee&gt;</span>
+<div class="arrow-down">↓</div>
+<span class="box">Hibernate ORM</span>
+<div class="arrow-down">↓</div>
+<span class="box">PostgreSQL Database</span>
+<div class="arrow-down">↓</div>
+<span class="box">Company Table</span>
+<div class="arrow-down">↓ company_id (FK)</div>
+<span class="box">Employee Table</span>
+</div>
+
+<h2 id="code" class="page-break">5. Code — Employee, Company, Driver</h2>
+
+<h3>5.1 Entity — <code class="inline">Employee.java</code> (com.DTO)</h3>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.DTO;
+
+<span class="kw">import</span> javax.persistence.Entity;
+<span class="kw">import</span> javax.persistence.GeneratedValue;
+<span class="kw">import</span> javax.persistence.GenerationType;
+<span class="kw">import</span> javax.persistence.Id;
+
+<span class="cmt">/*
+ * @Entity
+ * Marks this class as an Entity.
+ * Hibernate will create a table named Employee.
+ */</span>
+@Entity
+<span class="kw">public class</span> <span class="type">Employee</span> {
+
+	<span class="cmt">/*
+	 * @Id
+	 * Specifies the Primary Key of the table.
+	 */</span>
+	@Id
+
+	<span class="cmt">/*
+	 * @GeneratedValue
+	 * Automatically generates the primary key.
+	 *
+	 * GenerationType.SEQUENCE
+	 * Uses a database sequence to generate unique IDs.
+	 */</span>
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	<span class="kw">private</span> <span class="type">int</span> eid;
+
+	<span class="cmt">// Employee Name</span>
+	<span class="kw">private</span> <span class="type">String</span> ename;
+
+	<span class="cmt">// Employee Salary</span>
+	<span class="kw">private</span> <span class="type">double</span> esal;
+
+	<span class="cmt">/*
+	 * Default Constructor
+	 *
+	 * Hibernate requires a no-argument constructor
+	 * to create objects internally.
+	 */</span>
+	<span class="kw">public</span> <span class="method">Employee</span>() {
+
+	}
+
+	<span class="cmt">// Getter for Employee ID</span>
+	<span class="kw">public</span> <span class="type">int</span> <span class="method">getEid</span>() {
+		<span class="kw">return</span> eid;
+	}
+
+	<span class="cmt">// Setter for Employee ID</span>
+	<span class="kw">public void</span> <span class="method">setEid</span>(<span class="type">int</span> eid) {
+		<span class="kw">this</span>.eid = eid;
+	}
+
+	<span class="cmt">// Getter for Employee Name</span>
+	<span class="kw">public</span> <span class="type">String</span> <span class="method">getEname</span>() {
+		<span class="kw">return</span> ename;
+	}
+
+	<span class="cmt">// Setter for Employee Name</span>
+	<span class="kw">public void</span> <span class="method">setEname</span>(<span class="type">String</span> ename) {
+		<span class="kw">this</span>.ename = ename;
+	}
+
+	<span class="cmt">// Getter for Employee Salary</span>
+	<span class="kw">public</span> <span class="type">double</span> <span class="method">getEsal</span>() {
+		<span class="kw">return</span> esal;
+	}
+
+	<span class="cmt">// Setter for Employee Salary</span>
+	<span class="kw">public void</span> <span class="method">setEsal</span>(<span class="type">double</span> esal) {
+		<span class="kw">this</span>.esal = esal;
+	}
+
+	<span class="cmt">/*
+	 * toString()
+	 *
+	 * Prints Employee object in readable format.
+	 */</span>
+	@Override
+	<span class="kw">public</span> <span class="type">String</span> <span class="method">toString</span>() {
+		<span class="kw">return</span> <span class="str">"Employee [eid="</span> + eid +
+				<span class="str">", ename="</span> + ename +
+				<span class="str">", esal="</span> + esal + <span class="str">"]"</span>;
+	}
+
+}   </pre>
+</div>
+
+<h3>5.2 Entity — <code class="inline">Company.java</code> (com.DTO)</h3>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.DTO;
+
+<span class="kw">import</span> java.util.List;
+
+<span class="kw">import</span> javax.persistence.Entity;
+<span class="kw">import</span> javax.persistence.GeneratedValue;
+<span class="kw">import</span> javax.persistence.GenerationType;
+<span class="kw">import</span> javax.persistence.Id;
+<span class="kw">import</span> javax.persistence.JoinColumn;
+<span class="kw">import</span> javax.persistence.OneToMany;
+
+<span class="cmt">/*
+ * @Entity
+ * Marks this class as an Entity.
+ * Hibernate creates a table named Company.
+ */</span>
+@Entity
+<span class="kw">public class</span> <span class="type">Company</span> {
+
+	<span class="cmt">/*
+	 * @Id
+	 * Primary Key of Company table.
+	 */</span>
+	@Id
+
+	<span class="cmt">/*
+	 * Automatically generates Company ID.
+	 */</span>
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	<span class="kw">private</span> <span class="type">int</span> cid;
+
+	<span class="cmt">// Company Name</span>
+	<span class="kw">private</span> <span class="type">String</span> cname;
+
+	<span class="cmt">/*
+	 * One Company can have Multiple Employees.
+	 *
+	 * @OneToMany
+	 * Defines One-to-Many relationship.
+	 *
+	 * @JoinColumn
+	 * Creates a Foreign Key (company_id)
+	 * inside Employee table.
+	 *
+	 * Without @JoinColumn,
+	 * Hibernate creates an unnecessary Join Table.
+	 */</span>
+	@OneToMany
+	@JoinColumn(name = "company_id")
+	<span class="kw">private</span> List&lt;Employee&gt; employees;
+
+	<span class="cmt">/*
+	 * Default Constructor
+	 * Required by Hibernate.
+	 */</span>
+	<span class="kw">public</span> <span class="method">Company</span>() {
+
+	}
+
+	<span class="cmt">// Getter for Company ID</span>
+	<span class="kw">public</span> <span class="type">int</span> <span class="method">getCid</span>() {
+		<span class="kw">return</span> cid;
+	}
+
+	<span class="cmt">// Setter for Company ID</span>
+	<span class="kw">public void</span> <span class="method">setCid</span>(<span class="type">int</span> cid) {
+		<span class="kw">this</span>.cid = cid;
+	}
+
+	<span class="cmt">// Getter for Company Name</span>
+	<span class="kw">public</span> <span class="type">String</span> <span class="method">getCname</span>() {
+		<span class="kw">return</span> cname;
+	}
+
+	<span class="cmt">// Setter for Company Name</span>
+	<span class="kw">public void</span> <span class="method">setCname</span>(<span class="type">String</span> cname) {
+		<span class="kw">this</span>.cname = cname;
+	}
+
+	<span class="cmt">// Getter for Employee List</span>
+	<span class="kw">public</span> List&lt;Employee&gt; <span class="method">getEmployees</span>() {
+		<span class="kw">return</span> employees;
+	}
+
+	<span class="cmt">// Setter for Employee List</span>
+	<span class="kw">public void</span> <span class="method">setEmployees</span>(List&lt;Employee&gt; employees) {
+		<span class="kw">this</span>.employees = employees;
+	}
+
+	<span class="cmt">/*
+	 * toString()
+	 * Prints Company object.
+	 */</span>
+	@Override
+	<span class="kw">public</span> <span class="type">String</span> <span class="method">toString</span>() {
+		<span class="kw">return</span> <span class="str">"Company [cid="</span> + cid +
+				<span class="str">", cname="</span> + cname + <span class="str">"]"</span>;
+	}
+
+}     </pre>
+</div>
+
+<h3>5.3 Driver — <code class="inline">Driver.java</code> (com.Controller)</h3>
+<div class="card">
+  <span class="tag tag-orig">ORIGINAL CODE</span>
+<pre><span class="kw">package</span> com.Controller;
+
+<span class="kw">import</span> java.util.ArrayList;
+<span class="kw">import</span> java.util.List;
+
+<span class="kw">import</span> com.DAO.CompanyDao;
+<span class="kw">import</span> com.DTO.Company;
+<span class="kw">import</span> com.DTO.Employee;
+
+<span class="kw">public class</span> <span class="type">Driver</span> {
+
+	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+
+		<span class="cmt">/*
+		 * Create Company Object
+		 */</span>
+		Company company = <span class="kw">new</span> <span class="method">Company</span>();
+		company.<span class="method">setCname</span>(<span class="str">"Google"</span>);
+
+		<span class="cmt">/*
+		 * Create Employee Objects
+		 */</span>
+		Employee e1 = <span class="kw">new</span> <span class="method">Employee</span>();
+		e1.<span class="method">setEname</span>(<span class="str">"Pravin"</span>);
+		e1.<span class="method">setEsal</span>(50000);
+
+		Employee e2 = <span class="kw">new</span> <span class="method">Employee</span>();
+		e2.<span class="method">setEname</span>(<span class="str">"Mayuresh"</span>);
+		e2.<span class="method">setEsal</span>(60000);
+
+		Employee e3 = <span class="kw">new</span> <span class="method">Employee</span>();
+		e3.<span class="method">setEname</span>(<span class="str">"Rahul"</span>);
+		e3.<span class="method">setEsal</span>(70000);
+
+		<span class="cmt">/*
+		 * Store Employees inside List
+		 */</span>
+		List&lt;Employee&gt; employees = <span class="kw">new</span> <span class="method">ArrayList</span>&lt;&gt;();
+
+		employees.<span class="method">add</span>(e1);
+		employees.<span class="method">add</span>(e2);
+		employees.<span class="method">add</span>(e3);
+
+		<span class="cmt">/*
+		 * Associate Employees with Company
+		 */</span>
+		company.<span class="method">setEmployees</span>(employees);
+
+		<span class="cmt">/*
+		 * Create DAO Object
+		 */</span>
+		CompanyDao dao = <span class="kw">new</span> <span class="method">CompanyDao</span>();
+
+		<span class="cmt">// ================= INSERT =================</span>
+
+<span class="cmt">//		dao.insertCompany(company);</span>
+
+		<span class="cmt">// ================= FETCH BY ID =================</span>
+
+<span class="cmt">//		dao.fetchById(1);</span>
+
+		<span class="cmt">// ================= FETCH ALL =================</span>
+
+<span class="cmt">//		dao.fetchAll();</span>
+
+		<span class="cmt">// ================= UPDATE =================</span>
+
+<span class="cmt">//		dao.updateCompanyAndEmployee(
+//				1,
+//				2,
+//				"Microsoft",
+//				"Amit",
+//				85000);</span>
+
+		<span class="cmt">// ================= DELETE COMPANY =================</span>
+
+<span class="cmt">//		dao.deleteCompany(1);</span>
+
+		<span class="cmt">// ================= DELETE COMPANY WITH EMPLOYEES =================</span>
+
+<span class="cmt">//		dao.deleteCompanyWithEmployees(1);</span>
+
+		<span class="cmt">// ================= DELETE SINGLE EMPLOYEE =================</span>
+
+<span class="cmt">//		dao.deleteEmployee(1,2);</span>
+
+	}
+
+}</pre>
+</div>
+
+<div class="card extra">
+  <span class="tag tag-extra">EXTRA — Explanation</span>
+  <ul>
+    <li>This <code class="inline">Driver</code> only <b>builds the object graph in memory</b> — one <code class="inline">Company</code> with three <code class="inline">Employee</code>s attached via <code class="inline">company.setEmployees(employees)</code> — and every actual DAO call is commented out, so running this class as-is does nothing to the database. It reads like a checklist for manually testing each CRUD method one at a time.</li>
+    <li>Employee salaries are set as <code class="inline">int</code> literals (<code class="inline">50000</code>, <code class="inline">60000</code>, <code class="inline">70000</code>) but auto-widen fine to the entity's <code class="inline">double esal</code> field — no compile error, just an implicit widening conversion.</li>
+    <li>The commented method signatures reveal the intended DAO API even though the DAO source itself wasn't included — see the section below.</li>
+  </ul>
+</div>
+
+<h2 id="missing" class="page-break">6. CompanyDao — Referenced but Not Provided</h2>
+<div class="card missing">
+  <span class="tag tag-missing">NOTE — SOURCE NOT INCLUDED</span>
+  <p><code class="inline">CompanyDao.java</code> (package <code class="inline">com.DAO</code>) is imported and used by <code class="inline">Driver.java</code>, but its source code wasn't included in what you pasted — only the commented-out call sites in <code class="inline">main()</code>. Paste it whenever you have it and these notes can be extended with its code + explanations, same as the earlier <code class="inline">LaptopDao</code> / <code class="inline">carDao</code> notes.</p>
+  <p>Based on the call sites in <code class="inline">Driver.java</code>, the expected method signatures are:</p>
+  <table>
+    <tr><th>Method (inferred from Driver.java)</th><th>Purpose (inferred)</th></tr>
+    <tr><td><code class="inline">insertCompany(Company company)</code></td><td>Persist a Company along with its associated Employees.</td></tr>
+    <tr><td><code class="inline">fetchById(int cid)</code></td><td>Fetch a single Company (and presumably print its Employees) by ID.</td></tr>
+    <tr><td><code class="inline">fetchAll()</code></td><td>Fetch and print all Companies with their Employees.</td></tr>
+    <tr><td><code class="inline">updateCompanyAndEmployee(int cid, int eid, String newCname, String newEname, double newEsal)</code></td><td>Update a Company's name and one of its Employee's name/salary together.</td></tr>
+    <tr><td><code class="inline">deleteCompany(int cid)</code></td><td>Delete a Company (behavior re: its Employees is unclear without cascade info).</td></tr>
+    <tr><td><code class="inline">deleteCompanyWithEmployees(int cid)</code></td><td>Explicitly delete a Company and all its Employees together — suggests no cascade is configured, same pattern as the manual two-step deletes seen in the Car/Engine DAO.</td></tr>
+    <tr><td><code class="inline">deleteEmployee(int cid, int eid)</code></td><td>Delete a single Employee from a specific Company without removing the Company itself.</td></tr>
+  </table>
+</div>
+
+<h2 id="comparison">7. One-to-Many vs Many-to-One vs One-to-One</h2>
+<table>
+<tr><th>Mapping</th><th>Meaning</th><th>Annotation Used</th><th>Example (from these chapters)</th></tr>
+<tr><td>One-to-One</td><td>One record ↔ exactly one record</td><td><code class="inline">@OneToOne</code></td><td>Car ↔ Engine</td></tr>
+<tr><td>One-to-Many</td><td>One record → many records</td><td><code class="inline">@OneToMany</code> + <code class="inline">@JoinColumn</code></td><td>Company → Employees</td></tr>
+<tr><td>Many-to-One</td><td>Many records → one record (reverse view of One-to-Many)</td><td><code class="inline">@ManyToOne</code></td><td>Employees → Company (not implemented in this code, since Employee has no back-reference to Company)</td></tr>
+</table>
+
+<h2 id="qa">8. Interview Q&amp;A</h2>
+<div class="card">
+  <span class="tag tag-qa">INTERVIEW PREP</span>
+
+  <div class="qa-item">
+    <div class="q">Q1. What does <code class="inline">@OneToMany</code> mean, and where is it used here?</div>
+    <div class="a">It declares that one entity instance is associated with a collection of many instances of another entity. Here, it's placed on the <code class="inline">List&lt;Employee&gt; employees</code> field inside <code class="inline">Company</code>, meaning one Company has many Employees.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q2. What does <code class="inline">@JoinColumn(name = "company_id")</code> do, and why is it needed?</div>
+    <div class="a">It tells Hibernate to add a <code class="inline">company_id</code> foreign key column directly inside the Employee table, pointing back to the owning Company. Without it, Hibernate would default to creating a separate join table to represent the relationship, which is unnecessary overhead for this simple case.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q3. What's the difference between <code class="inline">GenerationType.SEQUENCE</code> and <code class="inline">GenerationType.IDENTITY</code>?</div>
+    <div class="a"><code class="inline">SEQUENCE</code> uses a database sequence object to pre-allocate unique IDs (supports batching, and the ID can be known before insert). <code class="inline">IDENTITY</code> relies on the table's own auto-increment column and only knows the ID after the row is actually inserted, which disables insert batching.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q4. Is this a unidirectional or bidirectional mapping? How can you tell?</div>
+    <div class="a">Unidirectional — Company holds a reference to its list of Employees, but Employee has no <code class="inline">@ManyToOne Company</code> field pointing back. You can navigate Company → Employees but not Employee → Company.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q5. How would you make this relationship bidirectional?</div>
+    <div class="a">Add a <code class="inline">@ManyToOne</code> field of type <code class="inline">Company</code> inside the <code class="inline">Employee</code> entity, and change the Company side to use <code class="inline">@OneToMany(mappedBy = "company")</code> instead of <code class="inline">@JoinColumn</code>, so the Employee side becomes the owning side of the foreign key.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q6. Why might <code class="inline">deleteCompanyWithEmployees()</code> exist as a separate method from <code class="inline">deleteCompany()</code>?</div>
+    <div class="a">Because there's no <code class="inline">cascade</code> attribute on <code class="inline">@OneToMany</code> in this entity, deleting a Company alone would not automatically delete its Employees. A separate method is likely needed to explicitly remove the Employees first (or the foreign key reference), then the Company — following the same manual two-step pattern seen in the Car/Engine example.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="q">Q7. One-to-Many vs Many-to-One — are they two different relationships or the same one?</div>
+    <div class="a">The same relationship, viewed from opposite sides. Company → Employees is One-to-Many; Employees → Company is Many-to-One. Only one side needs to be the "owning side" that holds the foreign key mapping.</div>
+  </div>
+</div>
+
+<h2 id="tricks">9. Memory Tricks</h2>
+<div class="memory-trick">
+  <b>@JoinColumn vs Join Table:</b> "JoinColumn = FK lives in the child table (Employee)." No JoinColumn/mappedBy = Hibernate builds an extra middle table you probably didn't want.
+</div>
+<div class="memory-trick">
+  <b>One-to-Many ↔ Many-to-One:</b> Same relationship, different lens. "Company sees many Employees (One-to-Many). Each Employee sees one Company (Many-to-One)."
+</div>
+<div class="memory-trick">
+  <b>SEQUENCE vs IDENTITY:</b> SEQUENCE = "the database hands you a numbered ticket before you're served" (ID known pre-insert). IDENTITY = "you only get your number after checkout" (ID known post-insert).
+</div>
+
+<div class="footer-note">Hibernate One-to-Many Mapping Notes — Employee/Company (com.DTO), Driver (com.Controller) — Original code preserved exactly; theory, explanations, and Q&amp;A added as supplementary study material. CompanyDao source pending.</div>
+
+</body>
+</html>

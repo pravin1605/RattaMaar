@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spring Framework – Part 1</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #e8eaf0;
+    color: #1a1a2e;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* ── A4 PAGE ── */
+  .page {
+    width: 794px;
+    min-height: 1123px;
+    background: #ffffff;
+    margin: 32px auto;
+    padding: 36px 40px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+    page-break-after: always;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #1565c0;
+    padding-bottom: 10px;
+    margin-bottom: 22px;
+  }
+  .page-header .subject { font-size: 11px; font-weight: 600; color: #1565c0; letter-spacing: 1.5px; text-transform: uppercase; }
+  .page-header .topic { font-size: 20px; font-weight: 800; color: #0d1b4b; }
+  .page-header .badge {
+    background: #1565c0; color: #fff;
+    font-size: 10px; font-weight: 700;
+    padding: 4px 12px; border-radius: 20px; letter-spacing: 1px;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: #1565c0;
+    margin: 20px 0 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: #dde3f0; }
+
+  /* ── CARDS ── */
+  .card {
+    border: 1.5px solid #e2e8f5;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    background: #f8faff;
+  }
+  .card-title {
+    font-size: 12px; font-weight: 700; color: #0d1b4b;
+    margin-bottom: 6px; display: flex; align-items: center; gap-6px;
+  }
+  .card-title .icon { margin-right: 6px; }
+  .card p { font-size: 12.5px; color: #2d3748; margin-bottom: 5px; }
+
+  /* ── DEFINITION BOX ── */
+  .def-box {
+    background: #e3edf9;
+    border-left: 4px solid #1565c0;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+  .def-box .def-label { font-size: 10px; font-weight: 700; color: #1565c0; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .def-box p { font-size: 12.5px; color: #1a2a4a; line-height: 1.65; }
+
+  /* ── INTERVIEW BOX ── */
+  .interview-box {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+  .interview-box .int-label { font-size: 10px; font-weight: 700; color: #e65100; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .interview-box p { font-size: 12.5px; color: #3e2700; line-height: 1.65; }
+
+  /* ── MEMORY TRICK ── */
+  .trick-box {
+    background: #fffde7;
+    border: 1.5px dashed #fbc02d;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+  }
+  .trick-box .trick-label { font-size: 10px; font-weight: 700; color: #f57f17; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .trick-box p { font-size: 12px; color: #4a3900; }
+
+  /* ── TIP BOX ── */
+  .tip-box {
+    background: #e8f5e9;
+    border-left: 4px solid #388e3c;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+  }
+  .tip-box .tip-label { font-size: 10px; font-weight: 700; color: #1b5e20; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .tip-box p { font-size: 12px; color: #1b3a1e; }
+
+  /* ── WARNING BOX ── */
+  .warn-box {
+    background: #fce4ec;
+    border-left: 4px solid #c62828;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+  }
+  .warn-box .warn-label { font-size: 10px; font-weight: 700; color: #b71c1c; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .warn-box p { font-size: 12px; color: #4a0000; }
+
+  /* ── COMPARISON TABLE ── */
+  .cmp-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 12px; }
+  .cmp-table thead th { background: #1565c0; color: #fff; padding: 8px 10px; text-align: left; font-weight: 700; }
+  .cmp-table tbody tr:nth-child(even) { background: #f0f5ff; }
+  .cmp-table tbody td { padding: 7px 10px; border-bottom: 1px solid #dde3f0; color: #1a2a4a; vertical-align: top; }
+
+  /* ── TIMELINE ── */
+  .timeline { margin-bottom: 12px; }
+  .tl-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+  .tl-year { min-width: 52px; background: #1565c0; color: #fff; border-radius: 6px; text-align: center; padding: 4px 6px; font-size: 11px; font-weight: 700; }
+  .tl-text { font-size: 12.5px; color: #1a2a4a; padding-top: 3px; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #0d1b2e;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .code-block pre {
+    font-family: 'Fira Code', monospace;
+    font-size: 11.5px;
+    color: #e2e8f0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .kw  { color: #82aaff; } /* keyword */
+  .an  { color: #c3e88d; } /* annotation */
+  .cm  { color: #546e7a; font-style: italic; } /* comment */
+
+  /* ── PROS GRID ── */
+  .pros-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .pro-chip { background: #e8f5e9; border: 1px solid #a5d6a7; color: #1b5e20; border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 600; }
+  .con-chip { background: #fce4ec; border: 1px solid #ef9a9a; color: #b71c1c; border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 600; }
+
+  /* ── TWO COLUMN ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+  /* ── HIGHLIGHT PILL ── */
+  .pill { display: inline-block; background: #1565c0; color: #fff; border-radius: 4px; padding: 1px 8px; font-size: 11px; font-weight: 700; margin: 2px 2px; }
+  .pill-green { background: #388e3c; }
+  .pill-orange { background: #e65100; }
+
+  /* ── EXAMPLE CARD ── */
+  .example-card {
+    background: #f3f0ff;
+    border: 1.5px solid #c5b3f5;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .example-card .ex-label { font-size: 10px; font-weight: 700; color: #6200ea; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 1 — What is Spring? + History
+════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Introduction &amp; History</div>
+    </div>
+    <div class="badge">PART 1</div>
+  </div>
+
+  <!-- What is Spring -->
+  <div class="section-label">What is Spring Framework?</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 Definition</div>
+    <p>Spring Framework is an <strong>open-source Java framework</strong> developed to simplify enterprise application development. It provides infrastructure support and helps developers write clean, modular, scalable, and maintainable code.</p>
+  </div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Interview Answer</div>
+    <p>Spring Framework is a <strong>lightweight, open-source Java framework</strong> used to develop enterprise-level applications. It provides features like <strong>Dependency Injection (DI)</strong>, <strong>Inversion of Control (IoC)</strong>, <strong>AOP</strong>, transaction management, security, and database integration — making development easier and faster.</p>
+  </div>
+
+  <!-- Key Features Pills -->
+  <div style="margin-bottom:14px;">
+    <span class="pill">Dependency Injection (DI)</span>
+    <span class="pill">Inversion of Control (IoC)</span>
+    <span class="pill">AOP</span>
+    <span class="pill">Transaction Management</span>
+    <span class="pill">Security</span>
+    <span class="pill">DB Integration</span>
+  </div>
+
+  <!-- History — Before Spring -->
+  <div class="section-label">History — Before Spring</div>
+
+  <div class="card">
+    <div class="card-title">🕰️ Technologies Used Before Spring</div>
+    <div class="pros-grid">
+      <span class="pill pill-orange">Java Servlets</span>
+      <span class="pill pill-orange">JSP</span>
+      <span class="pill pill-orange">EJB (Enterprise Java Beans)</span>
+    </div>
+  </div>
+
+  <div class="warn-box">
+    <div class="warn-label">❌ Problems with EJB</div>
+    <p>Complex Configuration &nbsp;|&nbsp; Heavyweight Architecture &nbsp;|&nbsp; Difficult Deployment &nbsp;|&nbsp; High Development Cost &nbsp;|&nbsp; Tight Coupling</p>
+    <p style="margin-top:5px;">Developers needed a <strong>simpler solution</strong>. That's where Spring came in.</p>
+  </div>
+
+  <!-- Birth of Spring -->
+  <div class="section-label">Birth of Spring</div>
+
+  <div class="def-box">
+    <div class="def-label">👨‍💻 Creator</div>
+    <p><strong>Rod Johnson</strong> — In <strong>2002</strong>, he published a book: <em>"Expert One-on-One J2EE Design and Development"</em>, demonstrating that enterprise applications could be built <strong>without complex EJBs</strong>. This idea became the foundation of Spring.</p>
+  </div>
+
+  <!-- Timeline -->
+  <div class="section-label">Timeline</div>
+  <div class="timeline">
+    <div class="tl-row"><div class="tl-year">2002</div><div class="tl-text">Spring Concept Introduced by Rod Johnson</div></div>
+    <div class="tl-row"><div class="tl-year">2003</div><div class="tl-text">Spring Development Started</div></div>
+    <div class="tl-row"><div class="tl-year">2004</div><div class="tl-text">Spring Framework 1.0 Released</div></div>
+    <div class="tl-row"><div class="tl-year">2014</div><div class="tl-text">Spring Boot Introduced</div></div>
+    <div class="tl-row"><div class="tl-year">Now</div><div class="tl-text">Most Popular Java Framework for enterprise development</div></div>
+  </div>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 Memory Trick</div>
+    <p><strong>R</strong>od Johnson → <strong>R</strong>emoved EJB pain → <strong>R</strong>eleased Spring 2004 → <strong>R</strong>evolutionary framework!</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 2 — Why Spring? + Advantages 1 & 2
+════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Why Spring? &amp; Advantages</div>
+    </div>
+    <div class="badge">PART 2</div>
+  </div>
+
+  <div class="section-label">Why Spring Framework?</div>
+
+  <div class="example-card">
+    <div class="ex-label">🏥 Example — Hospital Management System</div>
+    <p style="margin-bottom:8px;font-size:12.5px;color:#2d3748;"><strong>Without Spring</strong> — You manually create every object:</p>
+    <div class="code-block">
+      <pre><span class="kw">Doctor</span> d = <span class="kw">new</span> Doctor();
+<span class="kw">Patient</span> p = <span class="kw">new</span> Patient();
+<span class="kw">Appointment</span> a = <span class="kw">new</span> Appointment();
+<span class="cm">// As project grows → more classes → more dependencies → chaos!</span></pre>
+    </div>
+    <p style="margin-bottom:8px;font-size:12.5px;color:#2d3748;"><strong>With Spring</strong> — Spring manages objects automatically:</p>
+    <div class="code-block">
+      <pre><span class="an">@Autowired</span>
+<span class="kw">Doctor</span> doctor;
+<span class="cm">// Spring creates and injects the object for you!</span></pre>
+    </div>
+  </div>
+
+  <div class="def-box">
+    <div class="def-label">💡 Core Concepts</div>
+    <p><strong>Dependency Injection (DI)</strong> — Spring provides (injects) the required objects instead of you creating them.<br/>
+    <strong>Inversion of Control (IoC)</strong> — Control of object creation is transferred from developer → to Spring Container.</p>
+  </div>
+
+  <!-- Advantage 1 -->
+  <div class="section-label">Advantage 1 — Lightweight</div>
+
+  <div class="two-col">
+    <div class="warn-box" style="margin-bottom:0">
+      <div class="warn-label">❌ Without Spring (EJB)</div>
+      <p>Heavy server &nbsp;|&nbsp; More memory usage &nbsp;|&nbsp; Slow startup</p>
+    </div>
+    <div class="tip-box" style="margin-bottom:0">
+      <div class="tip-label">✅ With Spring</div>
+      <p>Small JAR files &nbsp;|&nbsp; Fast startup &nbsp;|&nbsp; Less memory</p>
+    </div>
+  </div>
+
+  <div style="margin-top:10px;" class="example-card">
+    <div class="ex-label">🎒 Real-Life Analogy</div>
+    <p style="font-size:12.5px;color:#2d3748;">Heavyweight = Carrying <strong>5 suitcases</strong> for a 2-day trip &nbsp;&nbsp;|&nbsp;&nbsp; Lightweight = Carrying just a <strong>backpack</strong>. Spring = Backpack ✅</p>
+  </div>
+
+  <div class="pros-grid">
+    <span class="pro-chip">✅ Faster Execution</span>
+    <span class="pro-chip">✅ Better Performance</span>
+    <span class="pro-chip">✅ Easy Deployment</span>
+    <span class="pro-chip">✅ Less Hardware Needed</span>
+  </div>
+
+  <!-- Advantage 2 -->
+  <div class="section-label">Advantage 2 — Loosely Coupled</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 What is Coupling?</div>
+    <p><strong>Coupling</strong> = dependency between classes. Spring helps achieve <strong>Loose Coupling</strong> using Dependency Injection.</p>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="warn-box">
+        <div class="warn-label">❌ Tight Coupling</div>
+        <div class="code-block" style="margin-bottom:0;">
+          <pre><span class="kw">class</span> Employee {
+  Department d = <span class="kw">new</span> Department();
+  <span class="cm">// Employee directly creates Department</span>
+  <span class="cm">// If Department changes → Employee breaks!</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="tip-box">
+        <div class="tip-label">✅ Loosely Coupled (Spring)</div>
+        <div class="code-block" style="margin-bottom:0;">
+          <pre><span class="an">@Component</span>
+<span class="kw">class</span> Department {}
+
+<span class="an">@Component</span>
+<span class="kw">class</span> Employee {
+  <span class="an">@Autowired</span>
+  Department dept;
+  <span class="cm">// Spring injects it!</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-label">🔌 Real-Life Analogy</div>
+    <p style="font-size:12.5px;color:#2d3748;">A <strong>Mobile Charger Port</strong> — Same charger works for Samsung, Vivo, Oppo. Devices are <strong>loosely coupled</strong> to the charger. Spring does the same for your classes!</p>
+  </div>
+
+  <div class="pros-grid">
+    <span class="pro-chip">✅ Easy Maintenance</span>
+    <span class="pro-chip">✅ Easy Testing</span>
+    <span class="pro-chip">✅ Reusable Code</span>
+    <span class="pro-chip">✅ Flexible Architecture</span>
+    <span class="pro-chip">✅ Better Scalability</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 3 — Advantages 3, 4 + More Features
+════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Advantages (Continued) &amp; Key Features</div>
+    </div>
+    <div class="badge">PART 3</div>
+  </div>
+
+  <!-- Advantage 3 -->
+  <div class="section-label">Advantage 3 — Cost Friendly</div>
+
+  <div class="def-box">
+    <div class="def-label">💰 Why Cost Friendly?</div>
+    <p>Spring Framework is <strong>Open Source</strong> — No license fee, no subscription, no purchase cost. Cost = <strong>₹0</strong></p>
+  </div>
+
+  <div class="two-col">
+    <div class="warn-box" style="margin-bottom:0;">
+      <div class="warn-label">❌ Traditional Enterprise Platforms</div>
+      <p>Server License &nbsp;|&nbsp; Middleware License &nbsp;|&nbsp; Support Cost<br/>Can cost <strong>Thousands or Lakhs of Rupees</strong></p>
+    </div>
+    <div class="tip-box" style="margin-bottom:0;">
+      <div class="tip-label">✅ Spring — Anyone Can</div>
+      <p>Download for free &nbsp;|&nbsp; Learn for free &nbsp;|&nbsp; Develop for free &nbsp;|&nbsp; Deploy for free</p>
+    </div>
+  </div>
+
+  <div style="margin-top:10px;" class="pros-grid">
+    <span class="pro-chip">✅ Free Framework</span>
+    <span class="pro-chip">✅ Lower Dev Cost</span>
+    <span class="pro-chip">✅ Lower Maintenance Cost</span>
+    <span class="pro-chip">✅ Huge Community</span>
+    <span class="pro-chip">✅ Large Documentation</span>
+  </div>
+
+  <!-- Advantage 4 -->
+  <div class="section-label">Advantage 4 — Easy to Setup</div>
+
+  <div class="cmp-table-wrapper" style="margin-bottom:12px;">
+    <table class="cmp-table">
+      <thead><tr><th>Without Spring</th><th>With Spring Annotations</th><th>With Spring Boot</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>100s of lines of XML config<br/>(Servlet, DB, Security, Logging)</td>
+          <td><code>@Component</code>&nbsp; <code>@Service</code><br/><code>@Repository</code>&nbsp; <code>@Controller</code></td>
+          <td>Add dependency + one <code>@SpringBootApplication</code> class → Server starts automatically!</td>
+        </tr>
+        <tr>
+          <td style="color:#c62828;">❌ Time-consuming &amp; Error-prone</td>
+          <td style="color:#388e3c;">✅ Auto-detects classes</td>
+          <td style="color:#388e3c;">✅ Zero Manual Config</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-label">🏠 Real-Life Analogy</div>
+    <p style="font-size:12.5px;color:#2d3748;">Without Spring = Building a house <strong>brick by brick manually</strong>.<br/>With Spring = Buying a <strong>ready-to-move-in apartment</strong>. Much faster &amp; easier! 🏠</p>
+  </div>
+
+  <div class="pros-grid">
+    <span class="pro-chip">✅ Less Configuration</span>
+    <span class="pro-chip">✅ Faster Development</span>
+    <span class="pro-chip">✅ Quick Project Setup</span>
+    <span class="pro-chip">✅ Reduced Errors</span>
+    <span class="pro-chip">✅ Better Productivity</span>
+  </div>
+
+  <!-- AOP -->
+  <div class="section-label">Advantage 5 — AOP (Aspect-Oriented Programming)</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 What is AOP?</div>
+    <p>Used for <strong>cross-cutting concerns</strong> — common functionalities that need to be applied across the application without repeating code in every method.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔧 AOP Use Cases</div>
+    <div class="pros-grid">
+      <span class="pill">Logging</span>
+      <span class="pill">Security</span>
+      <span class="pill">Transaction Management</span>
+      <span class="pill">Exception Handling</span>
+    </div>
+    <p style="margin-top:8px;font-size:12.5px;color:#2d3748;">Instead of writing logging code in <strong>every method</strong>, Spring handles it <strong>centrally</strong> using AOP.</p>
+  </div>
+
+  <div class="pros-grid">
+    <span class="pro-chip">✅ Cleaner Code</span>
+    <span class="pro-chip">✅ Better Maintenance</span>
+  </div>
+
+  <!-- Transaction -->
+  <div class="section-label">Advantage 6 — Transaction Management</div>
+
+  <div class="example-card">
+    <div class="ex-label">💸 Example — Money Transfer</div>
+    <p style="font-size:12.5px;color:#2d3748;"><strong>Account A → Debit ₹1000 &nbsp;&nbsp;|&nbsp;&nbsp; Account B → Credit ₹1000</strong><br/>If one operation fails → Spring does <strong>Rollback</strong> automatically. Data remains consistent!</p>
+  </div>
+
+  <div class="pros-grid">
+    <span class="pro-chip">✅ Data Integrity</span>
+    <span class="pro-chip">✅ Reliability</span>
+  </div>
+
+  <!-- Integration -->
+  <div class="section-label">Advantage 7 — Integration Support</div>
+
+  <div class="card">
+    <div class="card-title">🔗 Spring Integrates With:</div>
+    <div class="pros-grid">
+      <span class="pill">Hibernate</span>
+      <span class="pill">JPA</span>
+      <span class="pill">JDBC</span>
+      <span class="pill">MySQL</span>
+      <span class="pill">Oracle</span>
+      <span class="pill">MongoDB</span>
+      <span class="pill">REST APIs</span>
+    </div>
+  </div>
+
+  <!-- Security -->
+  <div class="section-label">Advantage 8 — Security Support</div>
+
+  <div class="card">
+    <div class="card-title">🔒 Spring Security Features:</div>
+    <div class="pros-grid">
+      <span class="pill">Authentication</span>
+      <span class="pill">Authorization</span>
+      <span class="pill">JWT</span>
+      <span class="pill">OAuth2</span>
+    </div>
+  </div>
+
+  <!-- Final Interview Answer -->
+  <div class="section-label">Final Interview Answer (2–3 Minutes)</div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Complete Interview Answer</div>
+    <p>Spring Framework is an <strong>open-source, lightweight Java framework</strong> developed by <strong>Rod Johnson</strong> to simplify enterprise application development. It follows <strong>IoC</strong> and <strong>Dependency Injection</strong> principles to create loosely coupled applications. Spring provides modules such as <strong>Spring Core</strong>, <strong>Spring MVC</strong>, <strong>Spring Data JPA</strong>, <strong>Spring Security</strong>, and <strong>Spring Boot</strong>. Its major advantages are: <em>lightweight architecture, loose coupling, easy setup, cost-effectiveness, transaction management, AOP support, security features, and easy integration</em> with databases and other technologies. Due to these advantages, Spring has become the <strong>most widely used Java framework</strong> for enterprise application development.</p>
+  </div>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 Remember All Advantages — Mnemonic</div>
+    <p><strong>L</strong>ightweight &nbsp;|&nbsp; <strong>L</strong>oosely Coupled &nbsp;|&nbsp; <strong>C</strong>ost Friendly &nbsp;|&nbsp; <strong>E</strong>asy Setup &nbsp;|&nbsp; <strong>A</strong>OP &nbsp;|&nbsp; <strong>T</strong>ransaction &nbsp;|&nbsp; <strong>I</strong>ntegration &nbsp;|&nbsp; <strong>S</strong>ecurity</p>
+    <p style="margin-top:4px;">👉 <strong>"LLCEATIS"</strong> — <em>"Light Loose Code Easily And Truly Integrates Securely"</em></p>
+  </div>
+</div>
+
+</body>
+</html>

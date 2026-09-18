@@ -1,0 +1,743 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center; font-size: 20px; font-weight: 700;
+    border: 2.5px solid #111; padding: 9px 18px;
+    margin-bottom: 5px; letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 13px; font-style: italic;
+  }
+  .page-title {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: #555; margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title {
+    font-weight: 700; font-size: 11.5px;
+    margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 11px; padding: 8px 12px;
+    margin: 6px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw { color: #569cd6; }
+  .cm { color: #6a9955; }
+  .st { color: #ce9178; }
+  .cl { color: #4ec9b0; }
+  .mt { color: #dcdcaa; }
+  .nm { color: #9cdcfe; }
+  .an { color: #c586c0; }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  .flow-col {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+  }
+  .flow-box {
+    border: 1.5px solid #333; padding: 4px 14px;
+    font-size: 11.5px; font-weight: 600; text-align: center;
+    background: #fff; min-width: 175px;
+  }
+  .flow-box-sub {
+    font-size: 10px; font-weight: 400; color: #666;
+    font-style: italic;
+  }
+  .flow-arrow { font-size: 15px; color: #444; line-height: 1.4; text-align: center; }
+  .flow-label { font-size: 10.5px; color: #555; font-style: italic; text-align: center; }
+
+  .def-row { display: flex; gap: 0; margin: 3px 0; border: 1px solid #ddd; }
+  .def-term {
+    background: #f0f0f0; font-weight: 700;
+    font-size: 12px; padding: 4px 9px;
+    border-right: 1px solid #ccc; min-width: 36%;
+  }
+  .def-meaning { padding: 4px 9px; font-size: 12px; color: #333; flex: 1; }
+
+  .method-card {
+    border: 1px solid #ccc; padding: 7px 9px;
+    background: #fafafa; margin: 4px 0;
+  }
+  .method-card-title {
+    font-family: 'Courier New', monospace;
+    font-size: 12px; font-weight: 700;
+    color: #111; margin-bottom: 3px;
+  }
+  .method-card-code {
+    font-family: 'Courier New', monospace;
+    font-size: 11px; background: #1e1e1e;
+    color: #dcdcaa; padding: 2px 6px;
+    display: inline-block; margin-bottom: 3px;
+  }
+
+  .tag {
+    display: inline-block; background: #111; color: #fff;
+    font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px;
+    margin-right: 4px; vertical-align: middle;
+  }
+  .tag-white {
+    display: inline-block; border: 1px solid #333; color: #111;
+    font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px;
+    margin-right: 4px; vertical-align: middle;
+  }
+
+  .step-row { display: flex; align-items: flex-start; gap: 9px; margin: 5px 0; }
+  .step-num {
+    min-width: 22px; height: 22px;
+    background: #111; color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — WHAT IS JPA + WHY + ARCHITECTURE ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">JPA (Java Persistence API) — Complete Architecture Notes</div>
+  <div class="main-subtitle">Specification | Architecture | EntityManagerFactory | EntityManager | EntityTransaction | Query</div>
+
+  <!-- What is JPA -->
+  <div class="section">
+    <div class="section-header">📘 1. What is JPA?</div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>JPA (Java Persistence API) is a <strong>Java Specification</strong> that provides a standard set of rules and APIs for performing <strong>persistence operations</strong> and <strong>ORM (Object Relational Mapping)</strong> in Java applications.</p>
+
+      <div class="subsection-title">🔹 Simple Definition</div>
+      <p>JPA defines <strong>HOW</strong> Java objects should be stored and retrieved from a relational database, but it does <strong>NOT provide implementation</strong>.</p>
+
+      <div class="subsection-title">🔹 Important Point — What JPA IS and IS NOT:</div>
+      <div class="two-col" style="margin-top:5px;">
+        <div class="inline-box">
+          <div class="inline-box-title">❌ JPA is NOT:</div>
+          <ul>
+            <li>❌ Not a Framework</li>
+            <li>❌ Not an ORM Tool</li>
+            <li>❌ Not an Implementation</li>
+            <li>❌ Does not write SQL</li>
+            <li>❌ Does not connect to DB</li>
+          </ul>
+        </div>
+        <div class="inline-box" style="border: 2px solid #111;">
+          <div class="inline-box-title">✅ JPA IS:</div>
+          <ul>
+            <li>✅ A Specification</li>
+            <li>✅ A Collection of Interfaces</li>
+            <li>✅ A Collection of Classes</li>
+            <li>✅ A Collection of Annotations</li>
+            <li>✅ A Set of Rules</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subsection-title" style="margin-top:8px;">🔹 Real-Life Example</div>
+      <div class="two-col">
+        <div class="inline-box">
+          <div class="inline-box-title">Government = JPA (Rules only)</div>
+          <p>Government creates traffic rules. Government only <strong>defines</strong> rules. It does NOT enforce them directly.</p>
+          <p style="margin-top:4px;"><strong>JPA = Rules (Specification)</strong></p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">Police = Hibernate (Implementation)</div>
+          <p>Police officers <strong>implement</strong> the traffic rules on the ground. They do the actual work.</p>
+          <p style="margin-top:4px;"><strong>Hibernate = Implementation</strong></p>
+        </div>
+      </div>
+      <div class="interview-line">JPA (Java Persistence API) is a specification — not a framework or implementation. It defines rules and standard interfaces for ORM in Java. Hibernate is the most popular implementation of JPA. JPA = rules; Hibernate = implementation of those rules.</div>
+    </div>
+  </div>
+
+  <!-- Why JPA -->
+  <div class="section">
+    <div class="section-header">📘 2. Why JPA was Introduced?</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">❌ Before JPA (Problem):</div>
+          <ul>
+            <li>Different ORM frameworks had <strong>different APIs</strong></li>
+            <li>Hibernate had its own API</li>
+            <li>TopLink had its own API</li>
+            <li>OpenJPA had its own API</li>
+            <li>Developers had to learn different APIs for each framework</li>
+            <li>Code written for Hibernate → couldn't switch to TopLink easily</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">✅ After JPA (Solution):</div>
+          <ul>
+            <li>Java introduced JPA as a <strong>standard specification</strong></li>
+            <li>Now every ORM framework <strong>follows the same standard</strong></li>
+            <li>Developer writes code using JPA interfaces</li>
+            <li>Can switch ORM (Hibernate → EclipseLink) without code change</li>
+            <li>One standard → many implementations</li>
+          </ul>
+          <div class="subsection-title" style="margin-top:7px;">🔹 Popular JPA Implementations:</div>
+          <table class="comp-table" style="margin-top:4px;">
+            <tr><th>Specification</th><th>Implementation</th></tr>
+            <tr><td>JPA</td><td>Hibernate <span class="tag" style="font-size:9px;">Most Used</span></td></tr>
+            <tr><td>JPA</td><td>EclipseLink</td></tr>
+            <tr><td>JPA</td><td>OpenJPA</td></tr>
+            <tr><td>JPA</td><td>TopLink</td></tr>
+          </table>
+          <p style="font-size:12px; margin-top:4px;">Most companies use: <strong>JPA + Hibernate</strong></p>
+        </div>
+      </div>
+      <div class="interview-line">JPA was introduced because different ORM frameworks had different APIs — developers had to learn each separately. JPA standardized the interfaces so any JPA implementation (Hibernate, EclipseLink, OpenJPA) can be used with the same code.</div>
+    </div>
+  </div>
+
+  <!-- Architecture Overview -->
+  <div class="section">
+    <div class="section-header">📘 3. Complete JPA Architecture — Overview</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="flow-col">
+            <div class="flow-box">persistence.xml<div class="flow-box-sub">Configuration File</div></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Persistence<div class="flow-box-sub">Class (javax.persistence)</div></div>
+            <div class="flow-arrow">↓ <span style="font-size:10px;">createEntityManagerFactory()</span></div>
+            <div class="flow-box">EntityManagerFactory<div class="flow-box-sub">Interface — created once</div></div>
+            <div class="flow-arrow">↓ <span style="font-size:10px;">createEntityManager()</span></div>
+            <div class="flow-box">EntityManager<div class="flow-box-sub">Interface — CRUD operations</div></div>
+            <div class="flow-arrow">↓ <span style="font-size:10px;">getTransaction()</span></div>
+            <div class="flow-box">EntityTransaction<div class="flow-box-sub">Interface — begin/commit/rollback</div></div>
+            <div class="flow-arrow">↓ <span style="font-size:10px;">createQuery()</span></div>
+            <div class="flow-box">Query<div class="flow-box-sub">Interface — JPQL/native SQL</div></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="background:#e8f5e9;">PostgreSQL Database</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Execution Flow (8 Steps):</div>
+          <div class="step-row"><div class="step-num">1</div><div>Read <code>persistence.xml</code> — DB config</div></div>
+          <div class="step-row" style="margin-top:5px;"><div class="step-num">2</div><div>Create <code>EntityManagerFactory</code> using Persistence class</div></div>
+          <div class="step-row" style="margin-top:5px;"><div class="step-num">3</div><div>Create <code>EntityManager</code> from factory</div></div>
+          <div class="step-row" style="margin-top:5px;"><div class="step-num">4</div><div>Begin Transaction — <code>et.begin()</code></div></div>
+          <div class="step-row" style="margin-top:5px;"><div class="step-num">5</div><div>Perform CRUD — persist / find / merge / remove</div></div>
+          <div class="step-row" style="margin-top:5px;"><div class="step-num">6</div><div>Commit Transaction — <code>et.commit()</code></div></div>
+          <div class="step-row" style="margin-top:5px;"><div class="step-num">7</div><div>Close <code>EntityManager</code></div></div>
+          <div class="step-row" style="margin-top:5px;"><div class="step-num">8</div><div>Close <code>EntityManagerFactory</code></div></div>
+
+          <div class="note-box" style="margin-top:8px;">
+            <strong>📝 JPA vs JDBC Analogy:</strong><br>
+            <code>EntityManagerFactory</code> ≈ Connection Pool / DataSource<br>
+            <code>EntityManager</code> ≈ Connection<br>
+            <code>EntityTransaction</code> ≈ setAutoCommit(false) + commit()<br>
+            <code>Query</code> ≈ PreparedStatement / Statement
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — PERSISTENCE CLASS + EMF ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">JPA Notes | Page 2 — 1. Persistence Class &amp; 2. EntityManagerFactory</div>
+
+  <!-- Persistence Class -->
+  <div class="section">
+    <div class="section-header">📘 4. Persistence Class</div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>Persistence is a <strong>utility class</strong> used to <strong>bootstrap the JPA application</strong> and create an EntityManagerFactory object.</p>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="def-row"><div class="def-term">Type</div><div class="def-meaning">Class (not interface)</div></div>
+          <div class="def-row"><div class="def-term">Package</div><div class="def-meaning"><code>javax.persistence.Persistence</code></div></div>
+          <div class="def-row"><div class="def-term">Constructor</div><div class="def-meaning">Private — object creation not allowed</div></div>
+          <div class="def-row"><div class="def-term">Method Type</div><div class="def-meaning">Static Method (called on class, not object)</div></div>
+          <div class="def-row"><div class="def-term">Key Method</div><div class="def-meaning"><code>createEntityManagerFactory(unitName)</code></div></div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Example:</div>
+          <div class="code-block-dark"><span class="cl">EntityManagerFactory</span> <span class="nm">emf</span> =
+  <span class="cl">Persistence</span>.<span class="mt">createEntityManagerFactory</span>(
+    <span class="st">"pravin"</span>);
+<span class="cm">// "pravin" = persistence-unit name</span>
+<span class="cm">// defined in META-INF/persistence.xml</span></div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Why Needed?</div>
+          <ul>
+            <li>Without Persistence class → EntityManagerFactory cannot be created</li>
+            <li>JPA cannot read persistence.xml without it</li>
+            <li>It is the <strong>starting point</strong> of every JPA application</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subsection-title">🔹 Important Points:</div>
+      <div class="two-col">
+        <ul>
+          <li>Reads: <code>META-INF/persistence.xml</code></li>
+          <li>Loads database configuration (URL, user, password, dialect)</li>
+        </ul>
+        <ul>
+          <li>Creates EntityManagerFactory from config</li>
+          <li>Starting point of JPA application</li>
+        </ul>
+      </div>
+
+      <div class="subsection-title">🔹 What is persistence.xml?</div>
+      <div class="code-block-dark"><span class="cm">&lt;!-- META-INF/persistence.xml --&gt;</span>
+&lt;<span class="kw">persistence-unit</span> name=<span class="st">"pravin"</span>&gt;
+  &lt;<span class="kw">properties</span>&gt;
+    &lt;<span class="kw">property</span> name=<span class="st">"javax.persistence.jdbc.url"</span>
+              value=<span class="st">"jdbc:postgresql://localhost:5433/mydb"</span>/&gt;
+    &lt;<span class="kw">property</span> name=<span class="st">"javax.persistence.jdbc.user"</span> value=<span class="st">"postgres"</span>/&gt;
+    &lt;<span class="kw">property</span> name=<span class="st">"javax.persistence.jdbc.password"</span> value=<span class="st">"root"</span>/&gt;
+    &lt;<span class="kw">property</span> name=<span class="st">"hibernate.hbm2ddl.auto"</span> value=<span class="st">"create"</span>/&gt;
+  &lt;/<span class="kw">properties</span>&gt;
+&lt;/<span class="kw">persistence-unit</span>&gt;</div>
+      <p style="font-size:12px; margin-top:3px;">👉 <code>"pravin"</code> = persistence-unit name passed to <code>createEntityManagerFactory("pravin")</code></p>
+
+      <div class="interview-line">Persistence is a utility class in javax.persistence with a private constructor — no object creation allowed. Its static method createEntityManagerFactory(unitName) reads persistence.xml and creates the EntityManagerFactory. It is the entry point of every JPA application.</div>
+    </div>
+  </div>
+
+  <!-- EntityManagerFactory -->
+  <div class="section">
+    <div class="section-header">📘 5. EntityManagerFactory</div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>EntityManagerFactory is a <strong>factory interface</strong> used to <strong>create EntityManager objects</strong>.</p>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="def-row"><div class="def-term">Type</div><div class="def-meaning">Interface (javax.persistence)</div></div>
+          <div class="def-row"><div class="def-term">Implementation</div><div class="def-meaning">Provided internally by Hibernate</div></div>
+          <div class="def-row"><div class="def-term">Nature</div><div class="def-meaning">Heavy Weight Object</div></div>
+          <div class="def-row"><div class="def-term">Method Type</div><div class="def-meaning">Non-static methods</div></div>
+          <div class="def-row"><div class="def-term">Design Pattern</div><div class="def-meaning">Factory Design Pattern</div></div>
+          <div class="def-row"><div class="def-term">Key Methods</div><div class="def-meaning"><code>createEntityManager()</code> | <code>close()</code></div></div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Example:</div>
+          <div class="code-block-dark"><span class="cl">EntityManagerFactory</span> <span class="nm">emf</span> =
+  <span class="cl">Persistence</span>.<span class="mt">createEntityManagerFactory</span>(
+    <span class="st">"pravin"</span>);</div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Why Needed?</div>
+          <ul>
+            <li>EntityManager cannot be created directly</li>
+            <li>EntityManagerFactory creates EntityManager objects</li>
+            <li>Like a factory that produces workers (EntityManagers)</li>
+          </ul>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Factory Design Pattern</div>
+          <p>EntityManagerFactory follows <strong>Factory Design Pattern</strong> because it creates EntityManager objects without exposing creation logic.</p>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Important Points:</div>
+          <ul>
+            <li><strong>Created only once</strong> per application (expensive!)</li>
+            <li><strong>Thread Safe</strong> — shared across threads</li>
+            <li><strong>Heavy object</strong> — creating it is costly</li>
+            <li>Responsible for creating EntityManagers</li>
+            <li>Must be closed at application shutdown: <code>emf.close()</code></li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">EntityManagerFactory is a heavy-weight, thread-safe interface created once per application. It follows Factory Design Pattern to create EntityManager objects. Since creating it is expensive, it is shared and reused. Hibernate provides its implementation internally.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — ENTITY MANAGER + ENTITY TRANSACTION ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">JPA Notes | Page 3 — 3. EntityManager &amp; 4. EntityTransaction</div>
+
+  <!-- EntityManager -->
+  <div class="section">
+    <div class="section-header">📘 6. EntityManager <span class="tag" style="font-size:9px; margin-left:4px;">Most Important</span></div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>EntityManager is the <strong>central interface of JPA</strong> used to <strong>perform CRUD operations</strong> and <strong>manage entity objects</strong>.</p>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="def-row"><div class="def-term">Type</div><div class="def-meaning">Interface (javax.persistence)</div></div>
+          <div class="def-row"><div class="def-term">Nature</div><div class="def-meaning">Light Weight Object</div></div>
+          <div class="def-row"><div class="def-term">Created By</div><div class="def-meaning"><code>emf.createEntityManager()</code></div></div>
+          <div class="def-row"><div class="def-term">JDBC Equivalent</div><div class="def-meaning">Connection object</div></div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Example:</div>
+          <div class="code-block-dark"><span class="cl">EntityManager</span> <span class="nm">em</span> =
+  <span class="nm">emf</span>.<span class="mt">createEntityManager</span>();</div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Why Needed?</div>
+          <p>Actual database operations happen through EntityManager. Without EntityManager:</p>
+          <ul>
+            <li>❌ Insert impossible</li>
+            <li>❌ Update impossible</li>
+            <li>❌ Delete impossible</li>
+            <li>❌ Fetch impossible</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Important Points:</div>
+          <ul>
+            <li>Most important JPA interface</li>
+            <li>Performs CRUD operations</li>
+            <li>Communicates with database</li>
+            <li>Manages entity lifecycle</li>
+            <li>Not thread-safe — create per request</li>
+            <li>Must close after use: <code>em.close()</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subsection-title" style="margin-top:8px;">🔹 Important CRUD Methods of EntityManager:</div>
+      <div class="two-col">
+        <div>
+          <div class="method-card">
+            <div class="method-card-title">persist(object) — INSERT</div>
+            <div class="method-card-code">em.persist(obj);</div>
+            <p style="font-size:12px;">Used to <strong>store (insert)</strong> an entity object into the database. Hibernate generates INSERT SQL internally.</p>
+          </div>
+          <div class="method-card">
+            <div class="method-card-title">find(class, primaryKey) — SELECT</div>
+            <div class="method-card-code">em.find(Student.class, 101);</div>
+            <p style="font-size:12px;">Used to <strong>find/search</strong> for object based on primary key. Returns the entity object or null if not found.</p>
+          </div>
+          <div class="method-card">
+            <div class="method-card-title">merge(object) — UPDATE</div>
+            <div class="method-card-code">em.merge(obj);</div>
+            <p style="font-size:12px;">Used to <strong>update</strong> the existing object in DB by merging the states of given entity object. Updates all changed fields.</p>
+          </div>
+        </div>
+        <div>
+          <div class="method-card">
+            <div class="method-card-title">remove(object) — DELETE</div>
+            <div class="method-card-code">em.remove(obj);</div>
+            <p style="font-size:12px;">Used to <strong>remove</strong> an entity object from the database. Hibernate generates DELETE SQL internally.</p>
+          </div>
+          <div class="method-card">
+            <div class="method-card-title">getTransaction() — TRANSACTION</div>
+            <div class="method-card-code">em.getTransaction();</div>
+            <p style="font-size:12px;">Creates and returns an object of <strong>EntityTransaction</strong>. Used to begin/commit/rollback transactions.</p>
+          </div>
+          <div class="method-card">
+            <div class="method-card-title">createQuery(String jpql) — QUERY</div>
+            <div class="method-card-code">em.createQuery("from Student");</div>
+            <p style="font-size:12px;">Accepts a JPQL query as input and creates a <strong>Query</strong> object for executing JPQL statements.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-table" style="margin-top:7px;">
+        <table class="comp-table">
+          <tr><th>EM Method</th><th>Operation</th><th>SQL Generated</th><th>Returns</th></tr>
+          <tr><td><code>em.persist(obj)</code></td><td>INSERT</td><td>INSERT INTO table VALUES(...)</td><td>void</td></tr>
+          <tr><td><code>em.find(Class, id)</code></td><td>SELECT</td><td>SELECT * FROM table WHERE id=?</td><td>Entity object / null</td></tr>
+          <tr><td><code>em.merge(obj)</code></td><td>UPDATE</td><td>UPDATE table SET ... WHERE id=?</td><td>Entity object</td></tr>
+          <tr><td><code>em.remove(obj)</code></td><td>DELETE</td><td>DELETE FROM table WHERE id=?</td><td>void</td></tr>
+          <tr><td><code>em.getTransaction()</code></td><td>—</td><td>—</td><td>EntityTransaction</td></tr>
+          <tr><td><code>em.createQuery(jpql)</code></td><td>QUERY</td><td>SELECT/UPDATE/DELETE...</td><td>Query object</td></tr>
+        </table>
+      </div>
+      <div class="interview-line">EntityManager is the most important JPA interface — the central point for all CRUD operations. persist() inserts, find() selects by PK, merge() updates, remove() deletes. It is lightweight, not thread-safe, must be created per request, and is the JPA equivalent of JDBC's Connection object.</div>
+    </div>
+  </div>
+
+  <!-- EntityTransaction -->
+  <div class="section">
+    <div class="section-header">📘 7. EntityTransaction</div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>EntityTransaction is an <strong>interface</strong> used to <strong>manage transactions</strong> in JPA.</p>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="def-row"><div class="def-term">Type</div><div class="def-meaning">Interface (javax.persistence)</div></div>
+          <div class="def-row"><div class="def-term">Created By</div><div class="def-meaning"><code>em.getTransaction()</code></div></div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Example:</div>
+          <div class="code-block-dark"><span class="cl">EntityTransaction</span> <span class="nm">et</span> =
+  <span class="nm">em</span>.<span class="mt">getTransaction</span>();</div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Why Needed?</div>
+          <ul>
+            <li>Database consistency</li>
+            <li>Without transaction → data may become inconsistent</li>
+            <li>Maintains ACID properties</li>
+          </ul>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Transaction Flow:</div>
+          <div class="flow-col">
+            <div class="flow-box" style="min-width:130px;">et.begin()</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="min-width:130px;">CRUD Operation</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="min-width:130px; background:#e8f5e9;">et.commit()</div>
+            <div style="font-size:11px; color:#555; margin-top:3px; text-align:center;">or et.rollback() on error</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Important Methods:</div>
+          <div class="method-card">
+            <div class="method-card-title">begin() — Start Transaction</div>
+            <div class="method-card-code">et.begin();</div>
+            <p style="font-size:12px;">Starts the transaction. All DB operations after this are part of the transaction.</p>
+          </div>
+          <div class="method-card">
+            <div class="method-card-title">commit() — Save Permanently</div>
+            <div class="method-card-code">et.commit();</div>
+            <p style="font-size:12px;">Saves all operations to DB permanently. Changes become visible to other users.</p>
+          </div>
+          <div class="method-card">
+            <div class="method-card-title">rollback() — Undo Changes</div>
+            <div class="method-card-code">et.rollback();</div>
+            <p style="font-size:12px;">Undoes all operations since begin(). Used when an error occurs — data returns to previous state.</p>
+          </div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Important Points:</div>
+          <ul>
+            <li>Maintains <strong>ACID</strong> properties</li>
+            <li>Controls database transactions</li>
+            <li>Ensures data consistency</li>
+            <li>Supports rollback on failure</li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">EntityTransaction manages database transactions in JPA. et.begin() starts the transaction, et.commit() saves changes permanently, et.rollback() undoes all changes on error. It maintains ACID properties — ensures data consistency even when errors occur.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 4 — QUERY + COMPLETE DIAGRAM + REVISION ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">JPA Notes | Page 4 — 5. Query Interface + Complete Architecture Diagram + Quick Revision</div>
+
+  <!-- Query -->
+  <div class="section">
+    <div class="section-header">📘 8. Query Interface</div>
+    <div class="section-body">
+      <div class="subsection-title" style="margin-top:0;">🔹 Definition</div>
+      <p>Query is an <strong>interface</strong> used to execute <strong>JPQL</strong> (Java Persistence Query Language) and <strong>Native SQL</strong> queries in JPA.</p>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="def-row"><div class="def-term">Type</div><div class="def-meaning">Interface (javax.persistence)</div></div>
+          <div class="def-row"><div class="def-term">Created By</div><div class="def-meaning"><code>em.createQuery(jpqlString)</code></div></div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Example:</div>
+          <div class="code-block-dark"><span class="cl">Query</span> <span class="nm">q</span> =
+  <span class="nm">em</span>.<span class="mt">createQuery</span>(<span class="st">"from Student"</span>);
+<span class="cm">// "from Student" = JPQL</span>
+<span class="cm">// "Student" = Java class name (not table)</span></div>
+
+          <div class="subsection-title" style="margin-top:7px;">🔹 Important Points:</div>
+          <ul>
+            <li>Supports <strong>JPQL</strong> (object-oriented queries)</li>
+            <li>Supports <strong>Native SQL</strong> (raw SQL)</li>
+            <li>Used for complex retrieval</li>
+            <li><strong>Database independent</strong></li>
+            <li>Used when retrieving <strong>multiple records</strong></li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Important Methods:</div>
+          <div class="method-card">
+            <div class="method-card-title">getResultList() — Multiple Records</div>
+            <div class="method-card-code">q.getResultList();</div>
+            <p style="font-size:12px;">Returns <strong>List</strong> of all matching entity objects. Used when SELECT returns multiple rows.</p>
+          </div>
+          <div class="method-card">
+            <div class="method-card-title">getSingleResult() — One Record</div>
+            <div class="method-card-code">q.getSingleResult();</div>
+            <p style="font-size:12px;">Returns <strong>single</strong> entity object. Throws exception if no result or multiple results found.</p>
+          </div>
+          <div class="method-card">
+            <div class="method-card-title">executeUpdate() — Update/Delete</div>
+            <div class="method-card-code">q.executeUpdate();</div>
+            <p style="font-size:12px;">Performs <strong>bulk update or delete</strong> using JPQL. Returns int (rows affected).</p>
+          </div>
+
+          <div class="note-box" style="margin-top:6px;">
+            <strong>📝 JPQL vs SQL:</strong><br>
+            JPQL: <code>from Student where sid &gt; 100</code> — uses Java class/field names<br>
+            SQL: <code>SELECT * FROM student WHERE sid &gt; 100</code> — uses table/column names<br>
+            JPQL is translated to SQL by Hibernate automatically.
+          </div>
+        </div>
+      </div>
+      <div class="interview-line">Query interface executes JPQL and Native SQL. getResultList() returns List of objects. getSingleResult() returns one object. executeUpdate() for bulk DML. JPQL uses Java class names (not table names) — making it object-oriented and database-independent.</div>
+    </div>
+  </div>
+
+  <!-- Complete Architecture Diagram -->
+  <div class="section">
+    <div class="section-header">📘 9. Complete JPA Architecture Diagram (Interview)</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="flow-col">
+            <div class="flow-box">persistence.xml<div class="flow-box-sub">Configuration file in META-INF/</div></div>
+            <div class="flow-arrow">↓ read by</div>
+            <div class="flow-box">Persistence Class<div class="flow-box-sub">Static Method Call</div></div>
+            <div class="flow-arrow">↓ createEntityManagerFactory()</div>
+            <div class="flow-box">EntityManagerFactory<div class="flow-box-sub">Interface — Heavy — Thread Safe</div></div>
+            <div class="flow-arrow">↓ createEntityManager()</div>
+            <div class="flow-box">EntityManager<div class="flow-box-sub">Interface — Light — per request</div></div>
+            <div class="flow-arrow">↓ getTransaction()</div>
+            <div class="flow-box">EntityTransaction<div class="flow-box-sub">Interface — begin/commit/rollback</div></div>
+            <div class="flow-arrow">↓ createQuery()</div>
+            <div class="flow-box">Query<div class="flow-box-sub">Interface — JPQL / Native SQL</div></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Hibernate ORM<div class="flow-box-sub">JPA Implementation</div></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">JDBC Driver</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="background:#e8f5e9;">PostgreSQL Database</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 One-Line Revision Table:</div>
+          <table class="comp-table">
+            <tr><th>Component</th><th>Type</th><th>Purpose</th></tr>
+            <tr><td><strong>persistence.xml</strong></td><td>Config File</td><td>DB URL, user, password, dialect</td></tr>
+            <tr><td><strong>Persistence</strong></td><td>Class</td><td>Creates EntityManagerFactory</td></tr>
+            <tr><td><strong>EntityManagerFactory</strong></td><td>Interface</td><td>Creates EntityManager objects</td></tr>
+            <tr><td><strong>EntityManager</strong></td><td>Interface</td><td>CRUD operations on entities</td></tr>
+            <tr><td><strong>EntityTransaction</strong></td><td>Interface</td><td>Transaction management</td></tr>
+            <tr><td><strong>Query</strong></td><td>Interface</td><td>Execute JPQL / Native SQL</td></tr>
+          </table>
+
+          <div class="subsection-title" style="margin-top:8px;">🔹 Heavy vs Light:</div>
+          <table class="comp-table">
+            <tr><th>Object</th><th>Weight</th><th>Created</th><th>Thread Safe</th></tr>
+            <tr><td><strong>EntityManagerFactory</strong></td><td>Heavy ⚠️</td><td>Once per app</td><td>✅ Yes</td></tr>
+            <tr><td><strong>EntityManager</strong></td><td>Light ✅</td><td>Per request</td><td>❌ No</td></tr>
+          </table>
+
+          <div class="note-box" style="margin-top:7px;">
+            <strong>📝 ACID Properties (EntityTransaction):</strong><br>
+            <strong>A</strong>tomicity — all or nothing<br>
+            <strong>C</strong>onsistency — DB remains consistent<br>
+            <strong>I</strong>solation — transactions don't interfere<br>
+            <strong>D</strong>urability — committed data is permanent
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Revision -->
+  <div class="section">
+    <div class="section-header">🗂️ Quick Revision — All Key Points</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <ul>
+            <li><strong>JPA</strong> = Specification (not framework, not implementation)</li>
+            <li>JPA = Collection of Interfaces + Classes + Annotations + Rules</li>
+            <li>JPA introduced to standardize ORM APIs</li>
+            <li>JPA implemented by: Hibernate (most popular), EclipseLink, OpenJPA</li>
+            <li><strong>Persistence</strong> = Class | Static method | Reads persistence.xml</li>
+            <li><strong>EMF</strong> = Interface | Heavy | Created once | Thread-safe</li>
+            <li><strong>EM</strong> = Interface | Light | Per request | Not thread-safe</li>
+            <li><strong>ET</strong> = Interface | begin → CRUD → commit/rollback</li>
+            <li><strong>Query</strong> = Interface | JPQL / Native SQL | getResultList()</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>EM methods: persist(INSERT) | find(SELECT) | merge(UPDATE) | remove(DELETE)</li>
+            <li>ET methods: begin() | commit() | rollback()</li>
+            <li>Query methods: getResultList() | getSingleResult() | executeUpdate()</li>
+            <li>JPQL uses <strong>class names</strong>, SQL uses <strong>table names</strong></li>
+            <li>persistence.xml lives in <strong>META-INF/</strong> folder</li>
+            <li>EMF ≈ Connection Pool in JDBC</li>
+            <li>EM ≈ Connection in JDBC</li>
+            <li>ET ≈ setAutoCommit(false) + commit() in JDBC</li>
+            <li>Query ≈ PreparedStatement in JDBC</li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">JPA is a specification, not a framework. It standardizes ORM through interfaces: EntityManagerFactory (heavy, once), EntityManager (light, per request), EntityTransaction (begin/commit/rollback), Query (JPQL). Hibernate is JPA's most popular implementation.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

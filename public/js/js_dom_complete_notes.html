@@ -1,0 +1,613 @@
+
+<style>
+  .w{padding:1rem 0;font-family:var(--font-sans);}
+  .hero{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.5rem;margin-bottom:1.25rem;border:0.5px solid var(--color-border-tertiary);}
+  .hero-title{font-size:22px;font-weight:500;color:var(--color-text-primary);margin:0 0 6px;}
+  .hero-def{font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin:0 0 14px;}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+  .mbox{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;}
+  .ml{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px;}
+  .mv{font-size:13px;color:var(--color-text-primary);line-height:1.55;margin:0;}
+  .sh{font-size:12px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.07em;margin:1.75rem 0 .75rem;border-bottom:.5px solid var(--color-border-tertiary);padding-bottom:6px;}
+  .card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.1rem 1.4rem;margin-bottom:1rem;}
+  .ctag{display:inline-block;font-size:11px;font-weight:500;padding:2px 9px;border-radius:var(--border-radius-md);margin-bottom:8px;}
+  .ctitle{font-size:16px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px;}
+  .cdef{font-size:13px;color:var(--color-text-secondary);line-height:1.65;margin:0 0 10px;}
+  .cl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px;}
+  pre{background:var(--color-background-tertiary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 13px;font-family:var(--font-mono);font-size:12.5px;line-height:1.6;margin:0 0 8px;color:var(--color-text-primary);white-space:pre-wrap;word-break:break-word;}
+  .out{background:var(--color-background-secondary);border-left:3px solid;border-radius:0;padding:7px 13px;font-family:var(--font-mono);font-size:12.5px;color:var(--color-text-primary);white-space:pre-wrap;word-break:break-word;margin-bottom:4px;}
+  .pts{margin:0;padding:0;list-style:none;}
+  .pts li{font-size:13px;color:var(--color-text-secondary);line-height:1.6;padding:3px 0 3px 18px;position:relative;border-bottom:.5px solid var(--color-border-tertiary);}
+  .pts li:last-child{border-bottom:none;}
+  .pts li::before{content:"→";position:absolute;left:0;color:var(--color-text-tertiary);font-size:11px;top:5px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md);margin-left:6px;font-weight:500;vertical-align:middle;}
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .quote{background:var(--color-background-tertiary);border-left:3px solid var(--color-border-secondary);padding:9px 13px;font-size:13px;color:var(--color-text-secondary);line-height:1.65;margin:0 0 10px;font-style:italic;border-radius:0;}
+  .html-tag{color:#C2410C;}
+  .attr-name{color:#0369A1;}
+  .attr-val{color:#166534;}
+  .js-kw{color:#6D28D9;}
+  .js-str{color:#166534;}
+  .js-fn{color:#0369A1;}
+  .comment{color:#6B7280;font-style:italic;}
+  .section-intro{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem;border:.5px solid var(--color-border-tertiary);}
+</style>
+
+<div class="w">
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-title">DOM — Document Object Model</p>
+    <p class="hero-def">When a browser loads an HTML page, it converts the entire HTML document into a <strong style="font-weight:500">tree of objects</strong> called the DOM. JavaScript uses this tree to access, read, modify, create, and delete elements on the page — all without reloading.</p>
+    <div class="mgrid">
+      <div class="mbox">
+        <p class="ml">Full form</p>
+        <p class="mv"><strong style="font-weight:500">D</strong>ocument <strong style="font-weight:500">O</strong>bject <strong style="font-weight:500">M</strong>odel</p>
+      </div>
+      <div class="mbox">
+        <p class="ml">Easy definition</p>
+        <p class="mv">"DOM is a bridge between HTML and JavaScript." HTML gives the structure. DOM lets JS talk to it.</p>
+      </div>
+      <div class="mbox">
+        <p class="ml">Interview definition</p>
+        <p class="mv">"DOM is a programming interface that represents an HTML document as a tree of objects, allowing JS to dynamically access, modify, create, and delete elements."</p>
+      </div>
+      <div class="mbox">
+        <p class="ml">Why needed</p>
+        <p class="mv">Without DOM, JavaScript cannot interact with HTML. DOM is what makes web pages interactive and dynamic.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOM TREE -->
+  <p class="sh">DOM tree structure — how browser sees HTML</p>
+  <div class="card">
+    <p class="ctitle">HTML → DOM Tree</p>
+    <p class="cdef">The browser reads HTML and builds a tree. Every tag becomes a <strong style="font-weight:500">node</strong>. The entire document is the root. JavaScript walks this tree to find and change elements.</p>
+    <div class="two">
+      <div>
+        <p class="cl">HTML code</p>
+        <pre>&lt;html&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello&lt;/h1&gt;
+    &lt;p&gt;Welcome&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+      <div>
+        <p class="cl">Browser converts it to a tree</p>
+        <pre>Document
+└── html
+    └── body
+         ├── h1
+         │    └── "Hello"
+         └── p
+              └── "Welcome"</pre>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin:4px 0 0;">Every HTML element is a <strong style="font-weight:500">node</strong> in this tree. Parent → Child → Text — all connected. JS can reach any node using DOM methods.</p>
+  </div>
+
+  <!-- DOM FEATURES -->
+  <p class="sh">Features of DOM — what JS can do with it</p>
+  <div class="two">
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">Feature 1</span>
+      <p class="ctitle">Dynamic Content Manipulation</p>
+      <p class="cdef">Change text or HTML content on the page without reloading.</p>
+      <p class="cl">Example</p>
+      <pre>document.getElementById("demo").innerHTML = "Hello Pravin";</pre>
+      <p class="cl">Output — on screen</p>
+      <div class="out" style="border-color:#1D9E75;">Hello Pravin  ← content changes instantly on page</div>
+    </div>
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">Feature 2</span>
+      <p class="ctitle">Dynamic Style Manipulation</p>
+      <p class="cdef">Change CSS properties of any element directly using JavaScript.</p>
+      <p class="cl">Example</p>
+      <pre>document.getElementById("demo").style.color = "red";</pre>
+      <p class="cl">Output — on screen</p>
+      <div class="out" style="border-color:#7F77DD;">Text turns RED on the page</div>
+    </div>
+    <div class="card">
+      <span class="ctag" style="background:#FAECE7;color:#993C1D;">Feature 3</span>
+      <p class="ctitle">Event Handling</p>
+      <p class="cdef">Respond to user actions like clicks, keypresses, mouse movements.</p>
+      <p class="cl">Example</p>
+      <pre>button.onclick = function() {
+  alert("Button Clicked");
+};</pre>
+      <p class="cl">Output — on click</p>
+      <div class="out" style="border-color:#D85A30;">Browser alert popup: "Button Clicked"</div>
+    </div>
+    <div class="card">
+      <span class="ctag" style="background:#EAF3DE;color:#3B6D11;">Feature 4</span>
+      <p class="ctitle">Create &amp; Delete Elements</p>
+      <p class="cdef">Add new HTML elements or remove existing ones dynamically at runtime.</p>
+      <p class="cl">Example</p>
+      <pre>let h1 = document.createElement("h1");  // create
+document.body.appendChild(h1);           // add
+document.getElementById("title").remove(); // delete</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#639922;">New h1 appears on page / existing element disappears</div>
+    </div>
+    <div class="card">
+      <span class="ctag" style="background:#FAEEDA;color:#633806;">Feature 5</span>
+      <p class="ctitle">Platform Independent</p>
+      <p class="cdef">DOM works on all browsers — Chrome, Firefox, Safari, Edge. Write once, works everywhere.</p>
+      <ul class="pts">
+        <li>Supported natively in every modern browser.</li>
+        <li>No extra library or installation needed.</li>
+        <li>Same DOM API works across all operating systems.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- DOM SELECTORS -->
+  <p class="sh">DOM selector methods — how to find elements</p>
+  <div class="section-intro">
+    <p style="font-size:13px;color:var(--color-text-secondary);margin:0;">Selector methods are used to <strong style="font-weight:500">grab HTML elements</strong> from the DOM so JavaScript can work with them. Think of them as different ways to search for an element — by ID, by class, by tag, or by CSS selector.</p>
+  </div>
+
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">01</span>
+      <p class="ctitle"><code>getElementById("id")</code></p>
+      <p class="cdef">Selects a <strong style="font-weight:500">single element</strong> by its unique <code>id</code> attribute. Returns the element directly (not a list). Since IDs are unique, this always returns one element or null.</p>
+      <div class="quote">"getElementById() returns the HTML element whose id matches the specified value."</div>
+      <ul class="pts">
+        <li>Returns a single element — not a collection.</li>
+        <li>Returns <code>null</code> if no element with that ID exists.</li>
+        <li>Fastest DOM selector — IDs are indexed by the browser.</li>
+        <li>Memory tip: "ID = unique name tag — only one person wears it."</li>
+      </ul>
+      <p class="cl">HTML</p>
+      <pre>&lt;h1 id="title"&gt;Hello&lt;/h1&gt;</pre>
+      <p class="cl">JavaScript</p>
+      <pre>let element = document.getElementById("title");
+console.log(element);
+console.log(element.innerText);</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#7F77DD;">&lt;h1 id="title"&gt;Hello&lt;/h1&gt;
+Hello</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">02</span>
+      <p class="ctitle"><code>getElementsByClassName("class")</code></p>
+      <p class="cdef">Returns <strong style="font-weight:500">all elements</strong> that share the given class name. Returns an <code>HTMLCollection</code> — like an array but not exactly an array.</p>
+      <div class="quote">"getElementsByClassName() returns a live HTMLCollection of all elements with the specified class name."</div>
+      <ul class="pts">
+        <li>Returns an <strong style="font-weight:500">HTMLCollection</strong> — not a regular array.</li>
+        <li>Use index to access individual items: <code>element[0]</code>.</li>
+        <li>Live collection — updates automatically if DOM changes.</li>
+        <li>Memory tip: "class = uniform — many students wear the same uniform."</li>
+      </ul>
+      <p class="cl">HTML</p>
+      <pre>&lt;p class="demo"&gt;HTML&lt;/p&gt;
+&lt;p class="demo"&gt;CSS&lt;/p&gt;
+&lt;p class="demo"&gt;JavaScript&lt;/p&gt;</pre>
+      <p class="cl">JavaScript</p>
+      <pre>let elements = document.getElementsByClassName("demo");
+console.log(elements);
+console.log(elements[0].innerText);
+console.log(elements.length);</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#1D9E75;">HTMLCollection(3) [p.demo, p.demo, p.demo]
+HTML
+3</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAECE7;color:#993C1D;">03</span>
+      <p class="ctitle"><code>getElementsByTagName("tag")</code></p>
+      <p class="cdef">Returns <strong style="font-weight:500">all elements</strong> with the given HTML tag name. Useful when you want all headings, all paragraphs, or all list items at once.</p>
+      <div class="quote">"getElementsByTagName() returns a live HTMLCollection of all elements with the specified tag name."</div>
+      <ul class="pts">
+        <li>Returns an <strong style="font-weight:500">HTMLCollection</strong>.</li>
+        <li>Use <code>"*"</code> to select every element on the page.</li>
+        <li>Live collection — updates if DOM changes.</li>
+        <li>Memory tip: "tag = type label — get everything of that type."</li>
+      </ul>
+      <p class="cl">HTML</p>
+      <pre>&lt;h1&gt;Hello&lt;/h1&gt;
+&lt;h1&gt;World&lt;/h1&gt;</pre>
+      <p class="cl">JavaScript</p>
+      <pre>let elements = document.getElementsByTagName("h1");
+console.log(elements);
+console.log(elements[0].innerText);
+console.log(elements.length);</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#D85A30;">HTMLCollection(2) [h1, h1]
+Hello
+2</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E6F1FB;color:#0C447C;">04</span>
+      <p class="ctitle"><code>querySelector("CSS selector")</code></p>
+      <p class="cdef">Returns the <strong style="font-weight:500">first element</strong> that matches any CSS selector. Uses the same syntax as CSS — dot for class, hash for ID, tag name directly.</p>
+      <div class="quote">"querySelector() returns the first element that matches the specified CSS selector."</div>
+      <ul class="pts">
+        <li>Returns only the FIRST matching element.</li>
+        <li>Use <code>"#id"</code> for ID, <code>".class"</code> for class, <code>"tag"</code> for tag.</li>
+        <li>Most flexible selector — supports all CSS selectors.</li>
+        <li>Returns <code>null</code> if no match found.</li>
+        <li>Memory tip: "querySelector = Ctrl+F in a document — finds the first match."</li>
+      </ul>
+      <p class="cl">HTML</p>
+      <pre>&lt;p class="demo"&gt;HTML&lt;/p&gt;
+&lt;p class="demo"&gt;CSS&lt;/p&gt;
+&lt;p id="special"&gt;JavaScript&lt;/p&gt;</pre>
+      <p class="cl">JavaScript</p>
+      <pre>let byClass = document.querySelector(".demo");
+let byId    = document.querySelector("#special");
+let byTag   = document.querySelector("p");
+
+console.log(byClass.innerText);
+console.log(byId.innerText);
+console.log(byTag.innerText);</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#378ADD;">HTML          ← first .demo element
+JavaScript    ← #special element
+HTML          ← first p tag</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EAF3DE;color:#3B6D11;">05</span>
+      <p class="ctitle"><code>querySelectorAll("CSS selector")</code></p>
+      <p class="cdef">Returns <strong style="font-weight:500">all elements</strong> that match the given CSS selector. Returns a <code>NodeList</code> — similar to an array, supports <code>forEach()</code>.</p>
+      <div class="quote">"querySelectorAll() returns a static NodeList of all elements matching the specified CSS selector."</div>
+      <ul class="pts">
+        <li>Returns a <strong style="font-weight:500">NodeList</strong> — not a live collection (static snapshot).</li>
+        <li>Supports <code>.forEach()</code> directly — unlike HTMLCollection.</li>
+        <li>Static — does not update automatically if DOM changes.</li>
+        <li>Memory tip: "querySelectorAll = Ctrl+F find ALL matches."</li>
+      </ul>
+      <p class="cl">HTML</p>
+      <pre>&lt;p class="demo"&gt;HTML&lt;/p&gt;
+&lt;p class="demo"&gt;CSS&lt;/p&gt;
+&lt;p class="demo"&gt;JavaScript&lt;/p&gt;</pre>
+      <p class="cl">JavaScript</p>
+      <pre>let elements = document.querySelectorAll(".demo");
+console.log(elements);
+console.log(elements.length);
+
+elements.forEach((el) => {
+  console.log(el.innerText);
+});</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#639922;">NodeList(3) [p.demo, p.demo, p.demo]
+3
+HTML
+CSS
+JavaScript</div>
+    </div>
+
+  </div>
+
+  <!-- SELECTOR COMPARISON -->
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem;border:.5px solid var(--color-border-tertiary);">
+    <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;">Quick comparison — all 5 selectors</p>
+    <table style="width:100%;font-size:12.5px;border-collapse:collapse;">
+      <thead><tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+        <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Method</th>
+        <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Selects by</th>
+        <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Returns</th>
+        <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Count</th>
+      </tr></thead>
+      <tbody>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);font-size:11.5px;color:var(--color-text-primary);">getElementById()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">ID attribute</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Single element</td><td style="padding:5px 8px;color:var(--color-text-secondary);">1 only</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);font-size:11.5px;color:var(--color-text-primary);">getElementsByClassName()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Class name</td><td style="padding:5px 8px;color:var(--color-text-secondary);">HTMLCollection (live)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Many</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);font-size:11.5px;color:var(--color-text-primary);">getElementsByTagName()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Tag name</td><td style="padding:5px 8px;color:var(--color-text-secondary);">HTMLCollection (live)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Many</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);font-size:11.5px;color:var(--color-text-primary);">querySelector()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Any CSS selector</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Single element</td><td style="padding:5px 8px;color:var(--color-text-secondary);">First only</td></tr>
+        <tr><td style="padding:5px 8px;font-family:var(--font-mono);font-size:11.5px;color:var(--color-text-primary);">querySelectorAll()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Any CSS selector</td><td style="padding:5px 8px;color:var(--color-text-secondary);">NodeList (static)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">All matches</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CONTENT METHODS -->
+  <p class="sh">DOM content methods — reading and changing text</p>
+  <div class="section-intro">
+    <p style="font-size:13px;color:var(--color-text-secondary);margin:0;">Content methods let you <strong style="font-weight:500">read or change what is inside</strong> an HTML element. Three options — each behaves differently with HTML tags and hidden content.</p>
+  </div>
+
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">01</span>
+      <p class="ctitle"><code>innerHTML</code> <span class="badge" style="background:#EEEDFE;color:#3C3489;">reads &amp; writes HTML</span></p>
+      <p class="cdef">Gets or sets the <strong style="font-weight:500">complete HTML content</strong> inside an element, including HTML tags. Use it when you want to inject actual HTML markup.</p>
+      <ul class="pts">
+        <li>Can read and write HTML tags.</li>
+        <li>Setting innerHTML replaces all existing content.</li>
+        <li>Security risk — never inject user input directly (XSS attacks).</li>
+        <li>Memory tip: "innerHTML = whatever HTML is INSIDE the tag."</li>
+      </ul>
+      <p class="cl">HTML</p>
+      <pre>&lt;h1 id="title"&gt;Hello&lt;/h1&gt;</pre>
+      <p class="cl">JavaScript — read</p>
+      <pre>let t = document.getElementById("title");
+console.log(t.innerHTML);</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#7F77DD;">Hello</div>
+      <p class="cl">JavaScript — write with HTML tag</p>
+      <pre>t.innerHTML = "&lt;i&gt;Welcome&lt;/i&gt;";</pre>
+      <p class="cl">Output — on screen</p>
+      <div class="out" style="border-color:#7F77DD;font-style:italic;">Welcome  ← appears as italic text on page</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">02</span>
+      <p class="ctitle"><code>innerText</code> <span class="badge" style="background:#E1F5EE;color:#085041;">visible text only</span></p>
+      <p class="cdef">Gets or sets only the <strong style="font-weight:500">visible text</strong> content of an element. Ignores HTML tags and hidden elements. What you see on screen is what you get.</p>
+      <ul class="pts">
+        <li>Strips all HTML tags — returns plain text only.</li>
+        <li>Ignores hidden elements (<code>display:none</code>).</li>
+        <li>Safer than innerHTML when handling user input.</li>
+        <li>Memory tip: "innerText = what the user actually sees on the page."</li>
+      </ul>
+      <p class="cl">HTML</p>
+      <pre>&lt;h1 id="title"&gt;Hello&lt;/h1&gt;</pre>
+      <p class="cl">JavaScript — read</p>
+      <pre>let t = document.getElementById("title");
+console.log(t.innerText);</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#1D9E75;">Hello</div>
+      <p class="cl">JavaScript — write</p>
+      <pre>t.innerText = "Welcome";</pre>
+      <p class="cl">Output — on screen</p>
+      <div class="out" style="border-color:#1D9E75;">Welcome  ← plain text, no formatting</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAECE7;color:#993C1D;">03</span>
+      <p class="ctitle"><code>textContent</code> <span class="badge" style="background:#FAECE7;color:#993C1D;">all text including hidden</span></p>
+      <p class="cdef">Returns <strong style="font-weight:500">all text content</strong> — both visible and hidden. Unlike <code>innerText</code>, it includes text inside elements with <code>display:none</code>.</p>
+      <ul class="pts">
+        <li>Returns text from hidden elements too.</li>
+        <li>Does not parse HTML tags — returns them as plain text.</li>
+        <li>Faster than innerText — does not trigger layout recalculation.</li>
+        <li>Memory tip: "textContent = ALL text including what is hiding behind the curtain."</li>
+      </ul>
+      <p class="cl">HTML</p>
+      <pre>&lt;div id="demo"&gt;
+  Hello
+  &lt;span style="display:none"&gt;Hidden&lt;/span&gt;
+&lt;/div&gt;</pre>
+      <p class="cl">JavaScript</p>
+      <pre>let d = document.getElementById("demo");
+console.log(d.innerText);
+console.log(d.textContent);</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#D85A30;">Hello              ← innerText (hidden span ignored)
+Hello Hidden       ← textContent (hidden span included)</div>
+    </div>
+
+  </div>
+
+  <!-- innerHTML vs innerText vs textContent TABLE -->
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem;border:.5px solid var(--color-border-tertiary);">
+    <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;">Most asked interview — innerHTML vs innerText vs textContent</p>
+    <table style="width:100%;font-size:12.5px;border-collapse:collapse;">
+      <thead><tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+        <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Feature</th>
+        <th style="text-align:center;padding:5px 8px;font-weight:500;color:#3C3489;">innerHTML</th>
+        <th style="text-align:center;padding:5px 8px;font-weight:500;color:#085041;">innerText</th>
+        <th style="text-align:center;padding:5px 8px;font-weight:500;color:#993C1D;">textContent</th>
+      </tr></thead>
+      <tbody>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;color:var(--color-text-secondary);">Returns HTML tags</td><td style="padding:5px 8px;text-align:center;">✅</td><td style="padding:5px 8px;text-align:center;">❌</td><td style="padding:5px 8px;text-align:center;">❌</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;color:var(--color-text-secondary);">Returns visible text</td><td style="padding:5px 8px;text-align:center;">✅</td><td style="padding:5px 8px;text-align:center;">✅</td><td style="padding:5px 8px;text-align:center;">✅</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;color:var(--color-text-secondary);">Returns hidden text</td><td style="padding:5px 8px;text-align:center;">✅</td><td style="padding:5px 8px;text-align:center;">❌</td><td style="padding:5px 8px;text-align:center;">✅</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;color:var(--color-text-secondary);">Can write HTML markup</td><td style="padding:5px 8px;text-align:center;">✅</td><td style="padding:5px 8px;text-align:center;">❌</td><td style="padding:5px 8px;text-align:center;">❌</td></tr>
+        <tr><td style="padding:5px 8px;color:var(--color-text-secondary);">XSS risk on user input</td><td style="padding:5px 8px;text-align:center;color:#A32D2D;">⚠️ Yes</td><td style="padding:5px 8px;text-align:center;color:#3B6D11;">Safe</td><td style="padding:5px 8px;text-align:center;color:#3B6D11;">Safe</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ATTRIBUTE METHODS -->
+  <p class="sh">DOM attribute methods — reading and changing attributes</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#E6F1FB;color:#0C447C;">01</span>
+      <p class="ctitle"><code>getAttribute("attr")</code></p>
+      <p class="cdef">Reads the value of a specified HTML attribute from an element. Works on any attribute — <code>href</code>, <code>src</code>, <code>class</code>, <code>id</code>, custom data attributes.</p>
+      <ul class="pts">
+        <li>Returns the attribute value as a string.</li>
+        <li>Returns <code>null</code> if the attribute does not exist.</li>
+        <li>Memory tip: "getAttribute = read the label on the package."</li>
+      </ul>
+      <p class="cl">HTML</p>
+      <pre>&lt;a id="link" href="https://google.com"&gt;Google&lt;/a&gt;</pre>
+      <p class="cl">JavaScript</p>
+      <pre>let value = document.getElementById("link")
+            .getAttribute("href");
+console.log(value);</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#378ADD;">https://google.com</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EAF3DE;color:#3B6D11;">02</span>
+      <p class="ctitle"><code>setAttribute("attr", "value")</code></p>
+      <p class="cdef">Sets or updates the value of an HTML attribute. If the attribute doesn't exist, it creates it. If it exists, it overwrites it.</p>
+      <ul class="pts">
+        <li>Takes two arguments — attribute name and new value.</li>
+        <li>Creates the attribute if it does not already exist.</li>
+        <li>Common uses: change <code>href</code>, update <code>src</code>, add <code>class</code>.</li>
+        <li>Memory tip: "setAttribute = change the label on the package."</li>
+      </ul>
+      <p class="cl">HTML</p>
+      <pre>&lt;a id="link" href="https://google.com"&gt;Google&lt;/a&gt;</pre>
+      <p class="cl">JavaScript</p>
+      <pre>document.getElementById("link")
+  .setAttribute("href", "https://youtube.com");
+
+// Verify the change
+let newVal = document.getElementById("link")
+             .getAttribute("href");
+console.log(newVal);</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#639922;">https://youtube.com  ← link now points to YouTube</div>
+    </div>
+
+  </div>
+
+  <!-- STYLE METHODS -->
+  <p class="sh">DOM style methods — changing CSS with JavaScript</p>
+  <div class="card">
+    <p class="ctitle"><code>element.style.property = "value"</code></p>
+    <p class="cdef">Access and modify inline CSS of any element using <code>element.style.propertyName</code>. CSS property names with hyphens become camelCase in JS — <code>background-color</code> → <code>backgroundColor</code>.</p>
+    <ul class="pts">
+      <li>Only sets inline styles — overrides external or internal CSS.</li>
+      <li>CSS hyphen properties become camelCase: <code>font-size</code> → <code>fontSize</code>, <code>border-radius</code> → <code>borderRadius</code>.</li>
+      <li>To read current style (including stylesheet), use <code>getComputedStyle()</code> instead.</li>
+      <li>Memory tip: "element.style = the style tag written directly on the element."</li>
+    </ul>
+    <div class="two">
+      <div>
+        <p class="cl">HTML</p>
+        <pre>&lt;h1 id="title"&gt;Hello&lt;/h1&gt;</pre>
+        <p class="cl">JavaScript</p>
+        <pre>let title = document.getElementById("title");
+
+title.style.color           = "red";
+title.style.backgroundColor = "yellow";
+title.style.fontSize        = "32px";
+title.style.padding         = "10px";
+title.style.borderRadius    = "8px";</pre>
+      </div>
+      <div>
+        <p class="cl">Output — on screen</p>
+        <div class="out" style="border-color:#EF9F27;padding:10px 14px;">
+          <span style="color:red;background:yellow;font-size:20px;padding:4px 8px;border-radius:4px;display:inline-block;">Hello</span>
+          <br><br>
+          <span style="font-size:12px;color:var(--color-text-secondary);">Text is red, background yellow, font bigger, padded, with rounded corners</span>
+        </div>
+        <p class="cl">CSS property → JS camelCase</p>
+        <div class="out" style="border-color:#EF9F27;">background-color → backgroundColor
+font-size        → fontSize
+border-radius    → borderRadius
+text-align       → textAlign</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE ELEMENT METHODS -->
+  <p class="sh">DOM create element methods — adding new elements</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#FAEEDA;color:#633806;">01</span>
+      <p class="ctitle"><code>document.createElement("tag")</code></p>
+      <p class="cdef">Creates a new HTML element in memory. The element is NOT yet visible on the page — it needs to be added using <code>appendChild()</code> or similar.</p>
+      <ul class="pts">
+        <li>Creates element in memory only — not on page yet.</li>
+        <li>You can set its content and styles before adding to the page.</li>
+        <li>Memory tip: "createElement = manufacture the part in the factory — not installed yet."</li>
+      </ul>
+      <p class="cl">JavaScript</p>
+      <pre>let h1 = document.createElement("h1");
+h1.innerText = "Welcome Pravin";
+h1.style.color = "blue";
+console.log(h1);</pre>
+      <p class="cl">Output — in console</p>
+      <div class="out" style="border-color:#EF9F27;">&lt;h1 style="color: blue;"&gt;Welcome Pravin&lt;/h1&gt;
+← element exists in memory but NOT on page yet</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FBEAF0;color:#72243E;">02</span>
+      <p class="ctitle"><code>element.appendChild(newElement)</code></p>
+      <p class="cdef">Adds a newly created element as the <strong style="font-weight:500">last child</strong> of the specified parent element. This is how you make the element actually appear on the page.</p>
+      <ul class="pts">
+        <li>Adds as the LAST child of the parent.</li>
+        <li>Use <code>document.body.appendChild()</code> to add directly to the page body.</li>
+        <li>Memory tip: "appendChild = install the manufactured part onto the car."</li>
+      </ul>
+      <p class="cl">JavaScript</p>
+      <pre>let h1 = document.createElement("h1");
+h1.innerText = "Welcome Pravin";
+document.body.appendChild(h1);
+console.log("Element added to page!");</pre>
+      <p class="cl">Output — console</p>
+      <div class="out" style="border-color:#D4537E;">Element added to page!</div>
+      <p class="cl">Output — on screen</p>
+      <div class="out" style="border-color:#D4537E;">Welcome Pravin  ← new h1 appears on the page</div>
+    </div>
+
+  </div>
+
+  <!-- COMPLETE CREATE EXAMPLE -->
+  <div class="card">
+    <span class="ctag" style="background:#EAF3DE;color:#3B6D11;">Complete create example</span>
+    <p class="ctitle">Create → Style → Add to page</p>
+    <p class="cdef">The full 3-step pattern for dynamically adding a new element: create it, set its content and style, then add it to the page.</p>
+    <p class="cl">JavaScript</p>
+    <pre>// Step 1: create
+let card = document.createElement("div");
+
+// Step 2: set content and style
+card.innerText          = "I was created by JavaScript!";
+card.style.background   = "#EEEDFE";
+card.style.padding      = "12px";
+card.style.borderRadius = "8px";
+card.style.color        = "#3C3489";
+
+// Step 3: add to page
+document.body.appendChild(card);</pre>
+    <p class="cl">Output — on screen</p>
+    <div class="out" style="border-color:#639922;">
+      <div style="background:#EEEDFE;padding:10px 12px;border-radius:6px;color:#3C3489;font-size:13px;font-family:var(--font-sans);">I was created by JavaScript!</div>
+    </div>
+  </div>
+
+  <!-- REMOVE METHOD -->
+  <p class="sh">DOM remove method — deleting elements</p>
+  <div class="card">
+    <span class="ctag" style="background:#FCEBEB;color:#A32D2D;">remove()</span>
+    <p class="ctitle"><code>element.remove()</code></p>
+    <p class="cdef">Removes the element from the DOM completely. The element disappears from the page instantly. No parent reference needed — you call it directly on the element.</p>
+    <ul class="pts">
+      <li>Called directly on the element to remove — no arguments needed.</li>
+      <li>Removes the element AND all its children from the page.</li>
+      <li>The element still exists in memory (JS variable) but is no longer on the page.</li>
+      <li>Memory tip: "remove() = delete key — element is gone from the page."</li>
+    </ul>
+    <p class="cl">HTML</p>
+    <pre>&lt;h1 id="title"&gt;Hello&lt;/h1&gt;</pre>
+    <p class="cl">JavaScript</p>
+    <pre>let element = document.getElementById("title");
+console.log(element.innerText);  // read before removal
+element.remove();
+console.log("Element removed!");</pre>
+    <p class="cl">Output — console</p>
+    <div class="out" style="border-color:#E24B4A;">Hello
+Element removed!</div>
+    <p class="cl">Output — on screen</p>
+    <div class="out" style="border-color:#E24B4A;">← The h1 with "Hello" disappears from the page instantly</div>
+  </div>
+
+  <!-- 30 second interview answer -->
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:.5rem;border:.5px solid var(--color-border-tertiary);">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 8px;">🎯 30-second interview answer — memorize this</p>
+    <div class="quote" style="margin:0;">"DOM stands for Document Object Model. It is a programming interface that represents an HTML document as a tree of objects. DOM allows JavaScript to dynamically access, modify, create, and delete HTML elements. Common DOM methods include getElementById(), querySelector(), innerHTML, createElement(), appendChild(), and remove(). DOM acts as a bridge between HTML and JavaScript."</div>
+  </div>
+
+  <!-- GOLDEN RULES -->
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:1rem;border:.5px solid var(--color-border-tertiary);">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 8px;">⭐ Golden rules — say these in an interview</p>
+    <ul class="pts">
+      <li><code>querySelector()</code> and <code>querySelectorAll()</code> are the modern preferred selectors — they accept any CSS selector syntax.</li>
+      <li><code>getElementsByClassName()</code> returns a <strong style="font-weight:500">live</strong> HTMLCollection. <code>querySelectorAll()</code> returns a <strong style="font-weight:500">static</strong> NodeList — this is a key difference.</li>
+      <li>Never use <code>innerHTML</code> to insert user-provided content — it can lead to XSS (Cross-Site Scripting) attacks. Use <code>innerText</code> or <code>textContent</code> for safe text insertion.</li>
+      <li>CSS hyphen properties become camelCase in JS — <code>background-color</code> → <code>backgroundColor</code>.</li>
+      <li><code>createElement()</code> creates the element in memory only. You MUST call <code>appendChild()</code> or <code>insertBefore()</code> to make it appear on the page.</li>
+      <li><code>innerText</code> triggers layout recalculation (slower). <code>textContent</code> does not (faster) — use <code>textContent</code> when you only need to read/write plain text.</li>
+    </ul>
+  </div>
+
+</div>

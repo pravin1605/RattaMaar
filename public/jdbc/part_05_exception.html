@@ -1,0 +1,980 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center; font-size: 20px; font-weight: 700;
+    border: 2.5px solid #111; padding: 9px 18px;
+    margin-bottom: 5px; letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 13px; font-style: italic;
+  }
+  .page-title {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: #555; margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title {
+    font-weight: 700; font-size: 11.5px;
+    margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 10.8px; padding: 9px 12px;
+    margin: 7px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw  { color: #569cd6; }
+  .cm  { color: #6a9955; }
+  .st  { color: #ce9178; }
+  .cl  { color: #4ec9b0; }
+  .mt  { color: #dcdcaa; }
+  .nm  { color: #9cdcfe; }
+
+  /* PostgreSQL procedure block */
+  .code-block-pg {
+    background: #0d1117; color: #c9d1d9;
+    font-family: 'Courier New', monospace;
+    font-size: 11px; padding: 9px 12px;
+    margin: 7px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #888;
+  }
+  .pg-kw  { color: #ff7b72; }
+  .pg-fn  { color: #d2a8ff; }
+  .pg-st  { color: #a5d6ff; }
+  .pg-cm  { color: #8b949e; }
+
+  .code-block {
+    background: #f5f5f5; border: 1px solid #ccc;
+    border-left: 3px solid #333;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px; padding: 7px 10px;
+    margin: 5px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.6;
+  }
+
+  .explain-box {
+    background: #fffdf0; border: 1px solid #ddd;
+    border-left: 3px solid #888;
+    padding: 7px 11px; margin: 6px 0; font-size: 12.5px;
+  }
+  .explain-box-title { font-weight: 700; font-size: 12px; margin-bottom: 4px; color: #333; }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  .line-explain { display: flex; gap: 0; margin: 3px 0; border: 1px solid #ddd; }
+  .line-code {
+    background: #f0f0f0; font-family: 'Courier New', monospace;
+    font-size: 11px; padding: 4px 8px;
+    border-right: 1px solid #ccc; min-width: 46%;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .line-meaning { padding: 4px 8px; font-size: 11.5px; color: #333; flex: 1; }
+
+  .step-row { display: flex; align-items: flex-start; gap: 9px; margin: 5px 0; }
+  .step-num {
+    min-width: 22px; height: 22px;
+    background: #111; color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .method-row { display: flex; gap: 6px; align-items: baseline; margin: 3px 0; }
+  .method-name {
+    font-family: 'Courier New', monospace; font-weight: 700;
+    font-size: 11.5px; background: #eee;
+    padding: 1px 5px; border-radius: 2px; white-space: nowrap;
+  }
+  .method-desc { font-size: 12px; color: #333; }
+
+  .tag {
+    display: inline-block; background: #111; color: #fff;
+    font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px;
+    margin-right: 4px; vertical-align: middle;
+  }
+
+  .output-box {
+    background: #111; color: #00dd00;
+    font-family: 'Courier New', monospace;
+    font-size: 12px; padding: 7px 12px; margin: 6px 0;
+  }
+  .output-box::before { content: '▶ Output: '; color: #aaa; font-size: 10px; display:block; margin-bottom:2px; }
+
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  .flow-row {
+    display: flex; align-items: center; gap: 0; margin: 8px 0; flex-wrap: wrap;
+  }
+  .flow-box {
+    border: 1.5px solid #333; padding: 5px 10px;
+    font-size: 11px; font-weight: 600; text-align: center;
+    background: #fff; min-width: 90px;
+  }
+  .flow-arrow { font-size: 16px; padding: 0 4px; color: #444; }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  ol { padding-left: 17px; margin: 3px 0; }
+  ol li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — STORED PROCEDURE THEORY ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">JDBC — Stored Procedure + CallableStatement (Complete Notes)</div>
+  <div class="main-subtitle">Package: jdbcFourthDay | Theory + INSERT + UPDATE using Stored Procedure | db.properties</div>
+
+  <!-- What is Stored Procedure -->
+  <div class="section">
+    <div class="section-header">📘 1. What is a Stored Procedure?</div>
+    <div class="section-body">
+      <p>✅ <strong>Definition:</strong> A Stored Procedure is a <strong>pre-written set of SQL statements stored inside the database</strong>, which can be executed whenever needed.</p>
+
+      <div class="subsection-title">🔹 Simple Words</div>
+      <p>👉 It is like a <strong>function inside the database</strong>.</p>
+      <p>👉 You write SQL logic once → store it in DB → call it by name from Java/Python/etc. whenever needed.</p>
+
+      <div class="two-col" style="margin-top:8px;">
+        <div class="inline-box">
+          <div class="inline-box-title">Real-Life Analogy</div>
+          <p>Think of a <strong>saved recipe</strong> 📖 in a cookbook:</p>
+          <ul>
+            <li>You write the recipe once</li>
+            <li>Any chef (Java, Python, PHP) can follow it</li>
+            <li>Recipe is stored in one place</li>
+            <li>Everyone calls the same recipe by name</li>
+          </ul>
+          <p style="margin-top:4px;">👉 Recipe = Stored Procedure | Chef = Application</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">How it works in DB</div>
+          <div class="flow-row" style="flex-direction:column; gap:3px;">
+            <div class="flow-box" style="width:100%;">SQL logic written in DB</div>
+            <div class="flow-arrow" style="text-align:center;">↓</div>
+            <div class="flow-box" style="width:100%;">Stored with a name (e.g. insertdata)</div>
+            <div class="flow-arrow" style="text-align:center;">↓</div>
+            <div class="flow-box" style="width:100%;">Java calls: {call insertdata(?,?,?)}</div>
+            <div class="flow-arrow" style="text-align:center;">↓</div>
+            <div class="flow-box" style="width:100%;">DB executes the stored SQL</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interview-line">A Stored Procedure is a pre-compiled, named block of SQL statements stored inside the database. It is like a function in a programming language — written once, stored in DB, and called by name from any application using CallableStatement in JDBC.</div>
+    </div>
+  </div>
+
+  <!-- Why Stored Procedure -->
+  <div class="section">
+    <div class="section-header">📘 2. Why We Use Stored Procedure?</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">🔹 1. Code Reusability ♻️</div>
+          <p>👉 Write once → use many times</p>
+          <ul>
+            <li>Insert logic written once</li>
+            <li>Used from Java, Python, etc.</li>
+          </ul>
+
+          <div class="subsection-title">🔹 2. Performance ⚡</div>
+          <p>👉 Stored procedure is:</p>
+          <ul>
+            <li>Precompiled</li>
+            <li>Optimized by database</li>
+          </ul>
+          <p>✔ Faster than normal SQL</p>
+          <p style="font-size:12px; color:#444;">👉 DB compiles procedure once when created — not on every call. Just executes cached plan.</p>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 3. Security 🔐</div>
+          <p>👉 Users don't access tables directly</p>
+          <p>👉 Only call procedure</p>
+          <p>✔ More secure</p>
+          <p style="font-size:12px; color:#444;">👉 You give user permission to call procedure — not to directly SELECT/INSERT/DELETE on table. Table structure is hidden.</p>
+
+          <div class="subsection-title">🔹 4. Centralized Logic 🧠</div>
+          <p>👉 Business logic stored in DB</p>
+          <p>👉 Easy to maintain</p>
+          <p style="font-size:12px; color:#444;">👉 Change logic in one place (DB) — all applications automatically get the updated logic without redeploying code.</p>
+        </div>
+      </div>
+      <div class="interview-line">Stored Procedures are used for: Code Reusability (write once, call many times), Performance (pre-compiled and optimized), Security (hide table structure, expose only procedure), and Centralized Logic (business logic in DB — one change affects all clients).</div>
+    </div>
+  </div>
+
+  <!-- Table vs Stored Procedure -->
+  <div class="section">
+    <div class="section-header">📘 3. How It is Different from Normal Table?</div>
+    <div class="section-body">
+      <p>🔥 <strong>Key Difference</strong></p>
+      <table class="comp-table">
+        <tr>
+          <th>Feature</th>
+          <th>Table</th>
+          <th>Stored Procedure</th>
+        </tr>
+        <tr>
+          <td><strong>Purpose</strong></td>
+          <td>Store data</td>
+          <td>Perform operations</td>
+        </tr>
+        <tr>
+          <td><strong>Contains</strong></td>
+          <td>Rows &amp; columns</td>
+          <td>SQL logic</td>
+        </tr>
+        <tr>
+          <td><strong>Type</strong></td>
+          <td>Data object</td>
+          <td>Program / logic object</td>
+        </tr>
+        <tr>
+          <td><strong>Execution</strong></td>
+          <td>Cannot execute</td>
+          <td>Can be executed</td>
+        </tr>
+        <tr>
+          <td><strong>Example</strong></td>
+          <td>student table</td>
+          <td>insertdata() procedure</td>
+        </tr>
+        <tr>
+          <td><strong>Created by</strong></td>
+          <td>CREATE TABLE</td>
+          <td>CREATE OR REPLACE PROCEDURE</td>
+        </tr>
+        <tr>
+          <td><strong>Called by JDBC</strong></td>
+          <td>via Statement / PreparedStatement</td>
+          <td>via CallableStatement</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — CALLABLESTATEMENT THEORY ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Stored Procedure Notes | Page 2 — CallableStatement Theory + Hierarchy</div>
+
+  <!-- What is CallableStatement -->
+  <div class="section">
+    <div class="section-header">📘 4. What is CallableStatement?</div>
+    <div class="section-body">
+      <p>👉 <strong>CallableStatement</strong> is an interface in <code>java.sql</code> package used to <strong>call stored procedures</strong> stored in the database from Java.</p>
+      <p style="margin-top:4px;">👉 It <strong>extends PreparedStatement</strong> — so it has all features of PreparedStatement plus ability to call stored procedures.</p>
+      <p style="margin-top:4px;">👉 It supports <strong>IN, OUT, and INOUT</strong> parameters.</p>
+
+      <div class="subsection-title">🔹 How to Create CallableStatement</div>
+      <div class="code-block">CallableStatement cs = connection.prepareCall("{call procedurename(?,?,?)}"); </div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Syntax Breakdown</div>
+        <div class="line-explain">
+          <div class="line-code">CallableStatement</div>
+          <div class="line-meaning">Interface in java.sql. Extends PreparedStatement. Used specifically for calling stored procedures.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">connection.prepareCall()</div>
+          <div class="line-meaning">Non-static (instance) method of Connection interface. Creates and returns a CallableStatement object.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">{call procedurename(?,?,?)}</div>
+          <div class="line-meaning">JDBC escape syntax to call a stored procedure. Curly braces {} are mandatory. "call" is keyword. ? are placeholders for procedure parameters.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">? placeholders</div>
+          <div class="line-meaning">Same as PreparedStatement — index starts from 1. Set values using setXxx() methods before execution.</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>⚠️ JDBC Escape Syntax — Very Important:</strong><br>
+        <code>{call procedurename()}</code> — procedure with no parameters<br>
+        <code>{call procedurename(?,?,?)}</code> — procedure with 3 IN parameters<br>
+        <code>{? = call procedurename(?)}</code> — procedure with OUT/return value<br>
+        The <code>{ }</code> curly braces are mandatory — they tell JDBC driver this is a stored procedure call.
+      </div>
+
+      <div class="interview-line">CallableStatement is an interface in java.sql that extends PreparedStatement. It is used to call stored procedures from Java using JDBC escape syntax: {call procedurename(?)}. It supports IN, OUT, and INOUT parameters. prepareCall() is the method of Connection used to create it.</div>
+    </div>
+  </div>
+
+  <!-- Hierarchy -->
+  <div class="section">
+    <div class="section-header">📘 5. Statement Hierarchy (java.sql)</div>
+    <div class="section-body">
+      <div style="font-family:'Courier New',monospace; font-size:12px; background:#f5f5f5; border:1px solid #ccc; border-left:3px solid #333; padding:10px 14px; line-height:2; margin:6px 0;">Statement  (Interface)  →  base interface
+   ↑
+   ├── PreparedStatement  (Interface)  →  extends Statement  →  parameterized SQL
+   │              ↑
+   │               └── CallableStatement  (Interface)  →  extends PreparedStatement  →  stored procedures</div>
+
+      <div class="three-col" style="margin-top:8px;">
+        <div class="inline-box">
+          <div class="inline-box-title">Statement</div>
+          <ul style="font-size:11.5px;">
+            <li>Base interface</li>
+            <li>Hardcoded SQL</li>
+            <li>createStatement()</li>
+            <li>No parameters</li>
+            <li>SQL Injection risk</li>
+          </ul>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">PreparedStatement</div>
+          <ul style="font-size:11.5px;">
+            <li>Extends Statement</li>
+            <li>Parameterized SQL</li>
+            <li>prepareStatement(sql)</li>
+            <li>? placeholders</li>
+            <li>Pre-compiled. Secure.</li>
+          </ul>
+        </div>
+        <div class="inline-box" style="border:2px solid #111;">
+          <div class="inline-box-title"><span class="tag" style="font-size:9px;">★ This Chapter</span> CallableStatement</div>
+          <ul style="font-size:11.5px;">
+            <li>Extends PreparedStatement</li>
+            <li>Calls stored procedures</li>
+            <li>prepareCall({call ...})</li>
+            <li>IN / OUT / INOUT params</li>
+            <li>Pre-compiled. Secure.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IN OUT INOUT params -->
+  <div class="section">
+    <div class="section-header">📘 6. Parameter Types in CallableStatement</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Parameter Type</th>
+          <th>Direction</th>
+          <th>How to Set</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><strong>IN</strong></td>
+          <td>Java → DB (input)</td>
+          <td><code>setXxx(index, value)</code></td>
+          <td>Passing id, name, salary to procedure</td>
+        </tr>
+        <tr>
+          <td><strong>OUT</strong></td>
+          <td>DB → Java (output)</td>
+          <td><code>registerOutParameter(index, Types.xxx)</code> then <code>getXxx(index)</code></td>
+          <td>Getting result/status back from procedure</td>
+        </tr>
+        <tr>
+          <td><strong>INOUT</strong></td>
+          <td>Both directions</td>
+          <td>Both setXxx() and registerOutParameter()</td>
+          <td>Send value, procedure modifies and returns it</td>
+        </tr>
+      </table>
+      <div class="note-box">
+        <strong>📝 Programs in these notes use IN parameters only</strong> — values are passed FROM Java TO stored procedure. OUT parameters are used when procedure needs to return a value back to Java.
+      </div>
+      <div class="interview-line">CallableStatement supports three parameter modes: IN (Java sends value to DB), OUT (DB sends value back to Java — needs registerOutParameter()), and INOUT (bidirectional). In our programs, only IN parameters are used — set using setInt(), setString(), setDouble().</div>
+    </div>
+  </div>
+
+  <!-- Steps for CallableStatement -->
+  <div class="section">
+    <div class="section-header">📘 7. JDBC Steps for CallableStatement</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="step-row"><div class="step-num">1</div><div>Load Driver — <code>Class.forName()</code> or <code>new Driver()</code></div></div>
+          <div class="step-row"><div class="step-num">2</div><div>Register Driver — <code>DriverManager.registerDriver(d)</code></div></div>
+          <div class="step-row"><div class="step-num">3</div><div>Create Connection — <code>DriverManager.getConnection()</code></div></div>
+          <div class="step-row"><div class="step-num">4</div><div>Create CallableStatement — <code>connection.prepareCall("{call name(?,?,?)}")</code></div></div>
+          <div class="step-row"><div class="step-num">5</div><div>Set Parameters — <code>cs.setInt(1,val)</code> | <code>cs.setString(2,val)</code></div></div>
+          <div class="step-row"><div class="step-num">6</div><div>Execute — <code>cs.execute()</code></div></div>
+          <div class="step-row"><div class="step-num">7</div><div>Close — <code>connection.close()</code></div></div>
+          <div class="step-row"><div class="step-num">8</div><div>Print confirmation message</div></div>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Comparison with Statement Steps</div>
+          <table class="comp-table" style="font-size:11px;">
+            <tr><th>Step</th><th>Statement</th><th>CallableStatement</th></tr>
+            <tr><td>3</td><td>createStatement()</td><td>prepareCall("{call ...}")</td></tr>
+            <tr><td>4</td><td>execute(sql)</td><td>setXxx() + execute()</td></tr>
+            <tr><td>SQL</td><td>Written in Java</td><td>Written in DB as procedure</td></tr>
+            <tr><td>DB Work</td><td>Compiles every call</td><td>Pre-compiled in DB</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — INSERT PROGRAM + PROCEDURE ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Stored Procedure Notes | Page 3 — Program 1: InsertData.java + PostgreSQL Procedure</div>
+
+  <!-- PostgreSQL INSERT Procedure -->
+  <div class="section">
+    <div class="section-header">🗄️ PostgreSQL Stored Procedure — insertdata (INSERT Logic)</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 Procedure stored inside PostgreSQL Database</div>
+      <div class="code-block-pg"><span class="pg-kw">BEGIN</span>
+<span class="pg-kw">INSERT INTO</span> emp(eid, ename, sal)
+<span class="pg-kw">VALUES</span> (id, name, esal);
+<span class="pg-kw">END</span></div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Procedure Breakdown</div>
+        <div class="line-explain">
+          <div class="line-code">BEGIN</div>
+          <div class="line-meaning">Starts the procedure body block. All SQL logic goes between BEGIN and END.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">INSERT INTO emp(eid, ename, sal)</div>
+          <div class="line-meaning">SQL INSERT into emp table — targeting specific columns: eid, ename, sal.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">VALUES (id, name, esal)</div>
+          <div class="line-meaning">id, name, esal are the IN parameters of the procedure — passed from Java via CallableStatement setXxx() methods.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">END</div>
+          <div class="line-meaning">Ends the procedure body block.</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>📝 Full PostgreSQL Procedure Syntax (Complete Form):</strong>
+        <div class="code-block-pg" style="margin-top:5px;"><span class="pg-kw">CREATE OR REPLACE PROCEDURE</span> <span class="pg-fn">insertdata</span>(id <span class="pg-kw">INT</span>, name <span class="pg-kw">VARCHAR</span>, esal <span class="pg-kw">DOUBLE PRECISION</span>)
+<span class="pg-kw">LANGUAGE</span> plpgsql
+<span class="pg-kw">AS</span> $$
+<span class="pg-kw">BEGIN</span>
+    <span class="pg-kw">INSERT INTO</span> emp(eid, ename, sal)
+    <span class="pg-kw">VALUES</span> (id, name, esal);
+<span class="pg-kw">END</span>;
+$$;</div>
+        <strong>CREATE OR REPLACE</strong> → creates new or replaces existing procedure | <strong>LANGUAGE plpgsql</strong> → procedural SQL language | <strong>$$</strong> → dollar-quoting for procedure body
+      </div>
+      <div class="interview-line">A PostgreSQL stored procedure uses CREATE OR REPLACE PROCEDURE. Parameters defined in signature (id, name, esal) are IN parameters. BEGIN...END block contains the SQL logic. Java calls it via CallableStatement using JDBC escape syntax {call insertdata(?,?,?)}.</div>
+    </div>
+  </div>
+
+  <!-- Java INSERT Program -->
+  <div class="section">
+    <div class="section-header">📄 Program 1 — InsertData.java (CallableStatement + Driver object registration)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Calls the <code>insertdata</code> stored procedure in PostgreSQL to insert one employee record into emp table. Uses <strong>Driver object registration</strong> (not Class.forName). Uses <code>connection.prepareCall()</code> to create CallableStatement.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbcFourthDay</span>;
+<span class="kw">import</span> <span class="nm">java.sql.CallableStatement</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+<span class="kw">import</span> <span class="nm">org.postgresql.Driver</span>;
+
+<span class="kw">public class</span> <span class="cl">InsertData</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">SQLException</span> {
+
+        <span class="cm">// Step 1: Create PostgreSQL Driver object</span>
+        <span class="cl">Driver</span> <span class="nm">d</span> = <span class="kw">new</span> <span class="cl">Driver</span>();
+
+        <span class="cm">// Step 2: Register driver with DriverManager</span>
+        <span class="cl">DriverManager</span>.<span class="mt">registerDriver</span>(<span class="nm">d</span>);
+
+        <span class="cm">// Step 3: Establish connection with database</span>
+        <span class="cl">Connection</span> <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+                <span class="st">"jdbc:postgresql://localhost:5433/FourthDayDatabse"</span>,
+                <span class="st">"postgres"</span>,
+                <span class="st">"root"</span>);
+
+        <span class="cm">// Step 4: Create CallableStatement to call stored procedure</span>
+        <span class="cm">// "insertdata" is procedure name with 3 parameters</span>
+        <span class="cl">CallableStatement</span> <span class="nm">s</span> = <span class="nm">connection</span>.<span class="mt">prepareCall</span>(<span class="st">"{call insertdata(?,?,?)}"</span>);
+
+        <span class="cm">// Step 5: Set input values for procedure parameters</span>
+        <span class="nm">s</span>.<span class="mt">setInt</span>(1, 101);         <span class="cm">// 1st parameter → id</span>
+        <span class="nm">s</span>.<span class="mt">setString</span>(2, <span class="st">"Pravin"</span>); <span class="cm">// 2nd parameter → name</span>
+        <span class="nm">s</span>.<span class="mt">setDouble</span>(3, 34550);   <span class="cm">// 3rd parameter → salary</span>
+
+        <span class="cm">// Step 6: Execute stored procedure</span>
+        <span class="nm">s</span>.<span class="mt">execute</span>();
+
+        <span class="cm">// Step 7: Close connection (good practice)</span>
+        <span class="nm">connection</span>.<span class="mt">close</span>();
+
+        <span class="cm">// Step 8: Confirmation message</span>
+        <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Data Insert"</span>);
+    }
+}</div>
+
+      <div class="output-box">Data Insert</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">import java.sql.CallableStatement;</div>
+          <div class="line-meaning">Must explicitly import CallableStatement interface from java.sql. Not auto-imported.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">import org.postgresql.Driver;</div>
+          <div class="line-meaning">Import PostgreSQL Driver class — needed because we create its object manually (new Driver()).</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">throws SQLException (only)</div>
+          <div class="line-meaning">No ClassNotFoundException — Driver object created directly, no Class.forName() dynamic loading used.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">Driver d = new Driver(); DriverManager.registerDriver(d);</div>
+          <div class="line-meaning">Alternative driver registration — manual object creation + explicit registration. Same result as Class.forName().</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">connection.prepareCall("{call insertdata(?,?,?)}")</div>
+          <div class="line-meaning">Non-static method of Connection. Creates CallableStatement. JDBC escape syntax with 3 ? for 3 IN parameters of insertdata procedure.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">s.setInt(1, 101) | s.setString(2, "Pravin") | s.setDouble(3, 34550)</div>
+          <div class="line-meaning">Sets IN parameters: index 1=id, index 2=name, index 3=salary. Maps to procedure parameters in order.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">s.execute()</div>
+          <div class="line-meaning">Calls the stored procedure in DB. execute() is preferred for stored procedures — it handles both result sets and update counts.</div>
+        </div>
+      </div>
+
+      <div class="interview-line">prepareCall() is a non-static method of Connection that creates a CallableStatement. The JDBC escape syntax {call procedurename(?,?,?)} is mandatory. setXxx() sets IN parameters. execute() is preferred over executeUpdate() for stored procedures as procedures can return result sets or update counts.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 4 — UPDATE PROGRAM + db.properties ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Stored Procedure Notes | Page 4 — Program 2: updateData.java + db.properties</div>
+
+  <!-- db.properties -->
+  <div class="section">
+    <div class="section-header">📘 8. What is db.properties File? (New Concept)</div>
+    <div class="section-body">
+      <p>👉 A <code>db.properties</code> file is an <strong>external configuration file</strong> that stores database connection details (URL, username, password, driver class) as <strong>key=value pairs</strong>.</p>
+      <p style="margin-top:5px;">👉 Instead of hardcoding DB credentials in Java code, we <strong>externalize them into a .properties file</strong>.</p>
+
+      <div class="subsection-title">🔹 Sample db.properties file content</div>
+      <div class="code-block">driverclass=org.postgresql.Driver
+url=jdbc:postgresql://localhost:5433/FourthDayDatabse
+user=postgres
+password=root</div>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="subsection-title">🔹 Why use db.properties?</div>
+          <ul>
+            <li>No hardcoded credentials in source code</li>
+            <li>Change DB URL/password → only update .properties file — no recompile</li>
+            <li>Secure — .properties file can be excluded from version control (git)</li>
+            <li>Professional practice used in real projects</li>
+            <li>Different environments (dev/test/prod) → different .properties files</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 How to read db.properties in Java</div>
+          <div class="code-block" style="font-size:11px;">// 1. Open the file
+FileInputStream fis =
+  new FileInputStream("db.properties");
+
+// 2. Create Properties object
+Properties p = new Properties();
+
+// 3. Load file data into Properties
+p.load(fis);
+
+// 4. Read values by key
+String driver = p.getProperty("driverclass");
+String url = p.getProperty("url");</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>📝 Classes used for db.properties:</strong><br>
+        <code>FileInputStream</code> (java.io) → opens the file as byte stream<br>
+        <code>Properties</code> (java.util) → stores key-value pairs; extends Hashtable<br>
+        <code>p.load(fis)</code> → reads key=value pairs from file into Properties object<br>
+        <code>p.getProperty("key")</code> → returns String value for given key<br>
+        <strong>Extra import needed:</strong> <code>java.io.FileInputStream</code>, <code>java.io.IOException</code>, <code>java.util.Properties</code>
+      </div>
+      <div class="interview-line">db.properties is an external configuration file storing DB credentials as key=value pairs. FileInputStream reads it; Properties.load() parses it. DriverManager.getConnection(url, p) accepts a Properties object directly — reading user and password from it — avoiding hardcoded credentials in Java source code.</div>
+    </div>
+  </div>
+
+  <!-- PostgreSQL UPDATE Procedure -->
+  <div class="section">
+    <div class="section-header">🗄️ PostgreSQL Stored Procedure — updatedata (UPDATE Logic)</div>
+    <div class="section-body">
+      <div class="code-block-pg"><span class="pg-kw">BEGIN</span>
+<span class="pg-kw">UPDATE</span> emp <span class="pg-kw">SET</span> sal=esal <span class="pg-kw">WHERE</span> eid=id;
+<span class="pg-kw">END</span>;</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Procedure Breakdown</div>
+        <div class="line-explain">
+          <div class="line-code">BEGIN</div>
+          <div class="line-meaning">Start of procedure body block.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">UPDATE emp SET sal=esal WHERE eid=id;</div>
+          <div class="line-meaning">Updates salary (sal) to esal value WHERE employee id (eid) matches id. esal and id are IN parameters from Java.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">END;</div>
+          <div class="line-meaning">End of procedure body block. Semicolon after END is required in PostgreSQL.</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>📝 Full PostgreSQL UPDATE Procedure:</strong>
+        <div class="code-block-pg" style="margin-top:5px;"><span class="pg-kw">CREATE OR REPLACE PROCEDURE</span> <span class="pg-fn">updatedata</span>(id <span class="pg-kw">INT</span>, esal <span class="pg-kw">DOUBLE PRECISION</span>)
+<span class="pg-kw">LANGUAGE</span> plpgsql
+<span class="pg-kw">AS</span> $$
+<span class="pg-kw">BEGIN</span>
+    <span class="pg-kw">UPDATE</span> emp <span class="pg-kw">SET</span> sal=esal <span class="pg-kw">WHERE</span> eid=id;
+<span class="pg-kw">END</span>;
+$$;</div>
+        2 parameters: id (to find row) + esal (new salary value). Called from Java as: <code>{call updatedata(?,?)}</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Java UPDATE Program -->
+  <div class="section">
+    <div class="section-header">📄 Program 2 — updateData.java (CallableStatement + db.properties)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Calls <code>updatedata</code> stored procedure to update employee salary. Uses <strong>db.properties file</strong> to load DB configuration — no hardcoded credentials in Java code. Demonstrates <code>DriverManager.getConnection(url, Properties)</code> overload.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbcFourthDay</span>;
+<span class="kw">import</span> <span class="nm">java.io.FileInputStream</span>;
+<span class="kw">import</span> <span class="nm">java.io.IOException</span>;
+<span class="kw">import</span> <span class="nm">java.sql.CallableStatement</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+<span class="kw">import</span> <span class="nm">java.util.Properties</span>;
+
+<span class="kw">public class</span> <span class="cl">updateData</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">ClassNotFoundException</span>, <span class="cl">IOException</span>, <span class="cl">SQLException</span> {
+
+        <span class="cm">// Step 1: Load properties file (db configuration)</span>
+        <span class="cl">FileInputStream</span> <span class="nm">fis</span> = <span class="kw">new</span> <span class="cl">FileInputStream</span>(<span class="st">"db.properties"</span>);
+
+        <span class="cm">// Step 2: Create Properties object</span>
+        <span class="cl">Properties</span> <span class="nm">p</span> = <span class="kw">new</span> <span class="cl">Properties</span>();
+
+        <span class="cm">// Step 3: Load data from file into Properties</span>
+        <span class="nm">p</span>.<span class="mt">load</span>(<span class="nm">fis</span>);
+
+        <span class="cm">// Step 4: Load driver class dynamically from properties file</span>
+        <span class="cl">Class</span>.<span class="mt">forName</span>(<span class="nm">p</span>.<span class="mt">getProperty</span>(<span class="st">"driverclass"</span>));
+
+        <span class="cm">// Step 5: Create connection using URL + properties (username, password inside file)</span>
+        <span class="cl">Connection</span> <span class="nm">c</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(<span class="nm">p</span>.<span class="mt">getProperty</span>(<span class="st">"url"</span>), <span class="nm">p</span>);
+
+        <span class="cm">// Step 6: Prepare callable statement to call stored procedure</span>
+        <span class="cl">CallableStatement</span> <span class="nm">cs</span> = <span class="nm">c</span>.<span class="mt">prepareCall</span>(<span class="st">"{call updatedata(?, ?)}"</span>);
+
+        <span class="cm">// Step 7: Set input parameters</span>
+
+        <span class="cm">// Step 8: Execute procedure</span>
+        <span class="nm">cs</span>.<span class="mt">execute</span>();   <span class="cm">// good for procedure</span>
+
+        <span class="cm">// Step 9: Close connection</span>
+        <span class="nm">c</span>.<span class="mt">close</span>();
+
+        <span class="cm">// Step 10: Print message</span>
+        <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Data Updated Successfully"</span>);
+    }
+}</div>
+
+      <div class="output-box">Data Updated Successfully</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">throws ClassNotFoundException, IOException, SQLException</div>
+          <div class="line-meaning">Three checked exceptions: ClassNotFoundException (Class.forName), IOException (FileInputStream file not found), SQLException (DB operations).</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">new FileInputStream("db.properties")</div>
+          <div class="line-meaning">Opens db.properties file from project root as byte stream. Throws IOException if file not found.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">new Properties()</div>
+          <div class="line-meaning">Creates Properties object — stores key-value pairs. Part of java.util package. Extends Hashtable.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">p.load(fis)</div>
+          <div class="line-meaning">Reads all key=value lines from db.properties file and stores them in Properties object p.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">Class.forName(p.getProperty("driverclass"))</div>
+          <div class="line-meaning">Loads driver dynamically. p.getProperty("driverclass") returns "org.postgresql.Driver" from file. No hardcoded string in Java.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">DriverManager.getConnection(p.getProperty("url"), p)</div>
+          <div class="line-meaning">Overloaded getConnection(url, Properties). URL from file; user and password also read from Properties p automatically.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">c.prepareCall("{call updatedata(?, ?)}")</div>
+          <div class="line-meaning">Creates CallableStatement. updatedata procedure has 2 IN parameters: id and esal.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">Step 7 — Set input parameters (empty in notes)</div>
+          <div class="line-meaning">cs.setInt(1, eid) and cs.setDouble(2, newSalary) should be added here to complete the call. Placeholder left in original notes.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">cs.execute() // good for procedure</div>
+          <div class="line-meaning">Calls the stored procedure. Comment confirms execute() is appropriate for stored procedures.</div>
+        </div>
+      </div>
+      <div class="interview-line">DriverManager.getConnection(url, Properties) is an overloaded form that reads "user" and "password" keys directly from the Properties object. This avoids passing credentials as separate String arguments and enables externalized configuration via db.properties file.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 5 — SUMMARY + COMPARISON ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">Stored Procedure Notes | Page 5 — Summary, Comparison &amp; Quick Revision</div>
+
+  <!-- Both programs comparison -->
+  <div class="section">
+    <div class="section-header">🗂️ Both Programs — Comparison Table</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Feature</th>
+          <th>InsertData.java</th>
+          <th>updateData.java</th>
+        </tr>
+        <tr>
+          <td><strong>Operation</strong></td>
+          <td>INSERT via insertdata procedure</td>
+          <td>UPDATE via updatedata procedure</td>
+        </tr>
+        <tr>
+          <td><strong>Driver Loading</strong></td>
+          <td>new Driver() + registerDriver()</td>
+          <td>Class.forName(p.getProperty("driverclass"))</td>
+        </tr>
+        <tr>
+          <td><strong>DB Config</strong></td>
+          <td>Hardcoded in Java (url, user, password)</td>
+          <td>External db.properties file</td>
+        </tr>
+        <tr>
+          <td><strong>getConnection() form</strong></td>
+          <td>getConnection(url, user, password)</td>
+          <td>getConnection(url, Properties)</td>
+        </tr>
+        <tr>
+          <td><strong>Procedure call syntax</strong></td>
+          <td>{call insertdata(?,?,?)}</td>
+          <td>{call updatedata(?, ?)}</td>
+        </tr>
+        <tr>
+          <td><strong>Parameters</strong></td>
+          <td>3 → setInt(1) + setString(2) + setDouble(3)</td>
+          <td>2 → setXxx for eid and esal</td>
+        </tr>
+        <tr>
+          <td><strong>Execute method</strong></td>
+          <td>s.execute()</td>
+          <td>cs.execute()</td>
+        </tr>
+        <tr>
+          <td><strong>throws clause</strong></td>
+          <td>throws SQLException</td>
+          <td>throws ClassNotFoundException, IOException, SQLException</td>
+        </tr>
+        <tr>
+          <td><strong>Extra imports</strong></td>
+          <td>org.postgresql.Driver</td>
+          <td>java.io.FileInputStream, java.io.IOException, java.util.Properties</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Statement vs PreparedStatement vs CallableStatement -->
+  <div class="section">
+    <div class="section-header">📘 Statement vs PreparedStatement vs CallableStatement — Complete Comparison</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Feature</th>
+          <th>Statement</th>
+          <th>PreparedStatement</th>
+          <th>CallableStatement</th>
+        </tr>
+        <tr><td><strong>Package</strong></td><td>java.sql</td><td>java.sql</td><td>java.sql</td></tr>
+        <tr><td><strong>Extends</strong></td><td>—</td><td>Statement</td><td>PreparedStatement</td></tr>
+        <tr><td><strong>Purpose</strong></td><td>Static SQL</td><td>Parameterized SQL</td><td>Stored Procedures</td></tr>
+        <tr><td><strong>Created by</strong></td><td>createStatement()</td><td>prepareStatement(sql)</td><td>prepareCall({call ...})</td></tr>
+        <tr><td><strong>SQL Location</strong></td><td>Written in Java</td><td>Written in Java</td><td>Written in Database</td></tr>
+        <tr><td><strong>Parameters</strong></td><td>❌ No</td><td>✅ Yes (?)</td><td>✅ Yes (IN/OUT/INOUT)</td></tr>
+        <tr><td><strong>SQL Injection</strong></td><td>❌ Vulnerable</td><td>✅ Protected</td><td>✅ Protected</td></tr>
+        <tr><td><strong>Compilation</strong></td><td>Every call</td><td>Once at prepareStatement()</td><td>Once when procedure created in DB</td></tr>
+        <tr><td><strong>Performance</strong></td><td>Slow</td><td>Fast</td><td>Fastest</td></tr>
+        <tr><td><strong>OUT params</strong></td><td>❌ No</td><td>❌ No</td><td>✅ Yes (registerOutParameter)</td></tr>
+        <tr><td><strong>Use case</strong></td><td>Simple one-time queries</td><td>User input / real projects</td><td>Enterprise / complex DB logic</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quick revision -->
+  <div class="section">
+    <div class="section-header">🗂️ Quick Revision — Key Rules for CallableStatement + Stored Procedure</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">CallableStatement Rules:</div>
+          <ul>
+            <li>Created by <code>connection.prepareCall()</code></li>
+            <li>JDBC escape syntax: <code>{call name(?,?)}</code></li>
+            <li>Curly braces <code>{ }</code> are mandatory</li>
+            <li>Index starts from <strong>1</strong> for setXxx()</li>
+            <li><code>execute()</code> preferred for stored procedures</li>
+            <li>Extends PreparedStatement → all PS methods available</li>
+            <li>OUT params: <code>registerOutParameter(index, Types.xxx)</code></li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title">db.properties Rules:</div>
+          <ul>
+            <li>External file — not in Java code</li>
+            <li>Format: <code>key=value</code></li>
+            <li>Read using: <code>FileInputStream + Properties.load()</code></li>
+            <li>Access value: <code>p.getProperty("key")</code></li>
+            <li>getConnection accepts Properties object directly</li>
+            <li>Must <code>throws IOException</code> for FileInputStream</li>
+            <li>Stored Procedure rules:</li>
+            <li>Created with <code>CREATE OR REPLACE PROCEDURE</code></li>
+            <li>Body between <code>BEGIN...END</code></li>
+            <li>Parameters are IN by default</li>
+            <li>Language: <code>plpgsql</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="interview-line">CallableStatement.prepareCall("{call procedurename(?,?)}") creates a callable statement. Curly braces are mandatory JDBC escape syntax. execute() is preferred for procedures. db.properties externalizes DB credentials — FileInputStream reads it, Properties.load() parses it, and getConnection(url, p) uses it directly.</div>
+    </div>
+  </div>
+
+  <!-- imports summary -->
+  <div class="section">
+    <div class="section-header">📋 Import Summary — Both Programs</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">InsertData.java imports:</div>
+          <div class="code-block" style="font-size:11px;">import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import org.postgresql.Driver;  // ← for new Driver()</div>
+        </div>
+        <div>
+          <div class="subsection-title">updateData.java imports:</div>
+          <div class="code-block" style="font-size:11px;">import java.io.FileInputStream;  // ← new
+import java.io.IOException;      // ← new
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;     // ← new</div>
+        </div>
+      </div>
+      <div class="note-box" style="margin-top:7px;">
+        <strong>📝 3 New Classes introduced in updateData.java:</strong><br>
+        <code>FileInputStream</code> (java.io) → opens .properties file as byte input stream<br>
+        <code>IOException</code> (java.io) → checked exception thrown if file not found or read error<br>
+        <code>Properties</code> (java.util) → key-value store; extends Hashtable; load() reads .properties file
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

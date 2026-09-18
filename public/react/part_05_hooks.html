@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>React.js – Chapter 5 Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --text: #111111;
+    --muted: #555555;
+    --border: #e0e0e0;
+
+    --blue:      #1a6bff;
+    --blue-bg:   #e8f0ff;
+    --green:     #0a8a3c;
+    --green-bg:  #e4f5ec;
+    --orange:    #d95f00;
+    --orange-bg: #fff0e4;
+    --purple:    #6b2fbd;
+    --purple-bg: #f0eaff;
+    --red:       #c4001a;
+    --red-bg:    #fff0f2;
+    --teal:      #006d77;
+    --teal-bg:   #e0f4f5;
+    --pink:      #b5006e;
+    --pink-bg:   #ffe8f5;
+    --yellow:    #a06000;
+    --yellow-bg: #fff8e1;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 20px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: linear-gradient(135deg, #6b2fbd 0%, #b5006e 50%, #1a6bff 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 36px 40px;
+    margin-bottom: 36px;
+  }
+  .page-header .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 4px 14px; margin-bottom: 14px;
+  }
+  .page-header h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+  .page-header p  { font-size: 14px; opacity: .88; }
+
+  /* ── SECTION CARD ── */
+  .section {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .sec-num {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0; color: #fff;
+  }
+  .section-header h2 { font-size: 18px; font-weight: 700; color: var(--text); }
+  .section-body { padding: 22px 24px; }
+
+  /* ── DEF BOX ── */
+  .def-box {
+    border-left: 4px solid var(--blue);
+    background: var(--blue-bg);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px; margin: 14px 0;
+  }
+  .def-box.green  { border-color: var(--green);  background: var(--green-bg);  }
+  .def-box.purple { border-color: var(--purple); background: var(--purple-bg); }
+  .def-box.teal   { border-color: var(--teal);   background: var(--teal-bg);   }
+  .def-box.orange { border-color: var(--orange); background: var(--orange-bg); }
+  .def-box .def-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--blue); margin-bottom: 4px;
+  }
+  .def-box.green  .def-label { color: var(--green);  }
+  .def-box.purple .def-label { color: var(--purple); }
+  .def-box.teal   .def-label { color: var(--teal);   }
+  .def-box.orange .def-label { color: var(--orange); }
+  .def-box p { font-size: 14.5px; }
+
+  /* ── CODE ── */
+  pre {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px; line-height: 1.6;
+    overflow-x: auto; margin: 10px 0;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .kw   { color: #c792ea; }
+  .fn   { color: #82aaff; }
+  .str  { color: #c3e88d; }
+  .tag-c{ color: #f07178; }
+  .attr { color: #ffcb6b; }
+  .cmt  { color: #546e7a; }
+  .num  { color: #f78c6c; }
+  .hk   { color: #89ddff; }   /* hook highlight */
+  code {
+    font-family: 'Fira Code', monospace; font-size: 13px;
+    background: #f0f0f0; padding: 1px 6px;
+    border-radius: 4px; color: var(--purple);
+  }
+
+  /* ── COMPARE ── */
+  .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .compare-box { border-radius: 8px; padding: 14px 16px; font-size: 13.5px; }
+  .compare-box .cb-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing:.08em; margin-bottom: 6px;
+  }
+  .cb-wrong { background: var(--red-bg);   border-left: 4px solid var(--red);   }
+  .cb-right { background: var(--green-bg); border-left: 4px solid var(--green); }
+  .cb-wrong .cb-label { color: var(--red);   }
+  .cb-right .cb-label { color: var(--green); }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px; margin-top: 14px;
+  }
+  .feature-card { border-radius: 10px; padding: 16px 18px; border: 1.5px solid transparent; }
+  .feature-card .fc-title {
+    font-weight: 700; font-size: 14px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .feature-card p  { font-size: 13.5px; color: var(--muted); }
+  .feature-card pre { font-size: 12px; margin: 6px 0 0; }
+  .fc-blue   { background: var(--blue-bg);   border-color: #b8d0ff; }
+  .fc-green  { background: var(--green-bg);  border-color: #9ddbb9; }
+  .fc-orange { background: var(--orange-bg); border-color: #ffc999; }
+  .fc-purple { background: var(--purple-bg); border-color: #c9abf0; }
+  .fc-teal   { background: var(--teal-bg);   border-color: #90d4d8; }
+  .fc-pink   { background: var(--pink-bg);   border-color: #f0a0d4; }
+  .fc-yellow { background: var(--yellow-bg); border-color: #ffd080; }
+  .fc-red    { background: var(--red-bg);    border-color: #f0b0bb; }
+  .fc-blue   .fc-title { color: var(--blue);   }
+  .fc-green  .fc-title { color: var(--green);  }
+  .fc-orange .fc-title { color: var(--orange); }
+  .fc-purple .fc-title { color: var(--purple); }
+  .fc-teal   .fc-title { color: var(--teal);   }
+  .fc-pink   .fc-title { color: var(--pink);   }
+  .fc-yellow .fc-title { color: var(--yellow); }
+  .fc-red    .fc-title { color: var(--red);    }
+
+  /* ── FLOW ── */
+  .flow-col { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin: 14px 0; }
+  .flow-step { border-radius: 8px; padding: 10px 18px; font-size: 13.5px; font-weight: 600; border: 1.5px solid transparent; }
+  .flow-arrow-d { color: #888; font-size: 18px; font-weight: 700; padding-left: 20px; }
+  .flow-h { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0; }
+  .fh-step { background: var(--blue-bg); border: 1.5px solid #b8d0ff; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--blue); }
+  .fh-arrow { color: #888; font-size: 18px; font-weight: 700; }
+
+  /* ── TIP / WARN ── */
+  .tip {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--teal-bg); border-left: 4px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 14px; color: var(--teal);
+  }
+  .tip .ti { font-size: 18px; flex-shrink: 0; }
+  .warn {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--red-bg); border-left: 4px solid var(--red);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 14px; color: var(--red);
+  }
+  .warn .ti { font-size: 18px; flex-shrink: 0; }
+
+  /* ── EXAMPLE WRAP ── */
+  .example-wrap { border: 1.5px solid var(--border); border-radius: 0 8px 8px 8px; overflow: hidden; margin: 12px 0; }
+  .example-wrap pre { border-radius: 0; margin: 0; }
+  .example-header {
+    display: flex; align-items: center; gap: 6px;
+    background: #f5f5f5; border-radius: 8px 8px 0 0;
+    padding: 10px 16px;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    border: 1.5px solid var(--border); border-bottom: none;
+  }
+  .dot-file { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ── OUTPUT BOX ── */
+  .output-box {
+    background: var(--green-bg); border: 1.5px solid #9ddbb9;
+    border-radius: 8px; padding: 12px 16px; margin: 10px 0;
+    font-family: 'Fira Code', monospace; font-size: 13px; color: var(--green);
+  }
+  .output-box .out-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing:.08em; color: var(--green); margin-bottom: 6px;
+  }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th {
+    background: var(--purple-bg); color: var(--purple);
+    font-weight: 700; text-align: left;
+    padding: 10px 14px; border: 1px solid #d6c4f4;
+  }
+  td { padding: 9px 14px; border: 1px solid var(--border); }
+  tr:nth-child(even) td { background: #fafafa; }
+
+  /* ── INTERVIEW ── */
+  .interview-box {
+    background: var(--orange-bg); border: 1.5px solid #ffc999;
+    border-radius: 10px; padding: 16px 18px; margin: 14px 0;
+  }
+  .interview-box .ib-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--orange); margin-bottom: 8px;
+  }
+  .interview-box .qa { margin-bottom: 10px; }
+  .interview-box .qa:last-child { margin-bottom: 0; }
+  .interview-box .q { font-weight: 600; font-size: 13.5px; color: var(--text); }
+  .interview-box .a { font-size: 13.5px; color: var(--muted); margin-left: 14px; margin-top: 2px; }
+
+  /* ── SYNTAX BREAKDOWN ── */
+  .syntax-breakdown {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 14px 0;
+  }
+  .sb-card {
+    border-radius: 10px; padding: 14px 16px;
+    border: 1.5px solid transparent;
+    text-align: center;
+  }
+  .sb-card .sbc-code {
+    font-family: 'Fira Code', monospace; font-size: 16px;
+    font-weight: 700; margin-bottom: 6px;
+  }
+  .sb-card .sbc-name {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing:.08em;
+    margin-bottom: 4px;
+  }
+  .sb-card .sbc-desc { font-size: 13px; color: var(--muted); }
+
+  /* ── VALUE TYPE GRID ── */
+  .val-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 12px; margin: 14px 0;
+  }
+  .val-card {
+    border-radius: 10px; padding: 14px 16px;
+    border: 1.5px solid transparent;
+  }
+  .val-card .vc-type {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing:.08em;
+    margin-bottom: 6px;
+  }
+
+  /* ── RULE CARD ── */
+  .rule-card {
+    border-radius: 10px; padding: 16px 18px;
+    margin-bottom: 14px;
+    border: 1.5px solid var(--border);
+    background: #fafafa;
+  }
+  .rule-card .rc-title {
+    font-weight: 700; font-size: 14.5px;
+    margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ── QUICK REVISION BOX ── */
+  .revision-box {
+    background: var(--purple-bg); border: 1.5px solid #c9abf0;
+    border-radius: 12px; padding: 20px 24px; margin: 14px 0;
+  }
+  .revision-box .rev-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing:.08em;
+    color: var(--purple); margin-bottom: 12px;
+  }
+  .rev-flow { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+  .rev-step {
+    font-size: 14px; font-weight: 600; color: var(--purple);
+    padding: 6px 14px; background: rgba(107,47,189,0.1);
+    border-radius: 6px; width: fit-content;
+  }
+  .rev-hooks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .rev-hook-item {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Fira Code', monospace; font-size: 13px;
+    padding: 8px 12px; border-radius: 6px;
+    background: rgba(107,47,189,0.08);
+    color: var(--purple);
+  }
+  .rev-hook-item .rh-fn { font-weight: 700; }
+  .rev-hook-item .rh-arrow { color: var(--pink); }
+
+  h3 { font-size: 16px; font-weight: 700; margin: 18px 0 8px; color: var(--text); }
+  h4 { font-size: 14px; font-weight: 700; margin: 12px 0 6px; color: var(--muted); }
+  p  { margin-bottom: 8px; font-size: 14.5px; }
+  ul, ol { padding-left: 20px; margin-bottom: 10px; }
+  li { font-size: 14.5px; margin-bottom: 4px; }
+
+  @media print { body { padding: 10px; } .section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="page-header">
+  <div class="tag">React.js · Chapter 5</div>
+  <h1>React Hooks &amp; useState</h1>
+  <p>What are Hooks · Why Hooks · Rules of Hooks · All Hooks List · useState · Examples · Data Types in State</p>
+</div>
+
+
+<!-- ═══ 1. WHAT ARE HOOKS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--purple);">1</div>
+    <h2>What are Hooks?</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box purple">
+      <div class="def-label">📘 Definition</div>
+      <p><strong>Hooks</strong> are built-in functions provided by React that allow <strong>Function Components</strong> to use React features such as <strong>State, Context, Lifecycle methods</strong>, and more. Hooks were introduced in <strong>React 16.8</strong>.</p>
+    </div>
+
+    <div class="def-box green">
+      <div class="def-label">⚡ Simple Definition</div>
+      <p>Hooks are <strong>special React functions</strong> that allow Function Components to access features that were previously available only in Class Components.</p>
+    </div>
+
+    <h3>Why Were Hooks Introduced?</h3>
+    <div class="compare-row">
+      <div class="compare-box cb-wrong">
+        <div class="cb-label">❌ Before Hooks — Class Components Required</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:10px; font-size:12.5px; margin:6px 0 0;"><span class="cmt">// Needed for state, lifecycle, context...</span>
+<span class="kw">class</span> <span class="fn">Counter</span> <span class="kw">extends</span> Component {
+  state = {
+    count: <span class="num">0</span>
+  }
+  <span class="cmt">// render(), constructor, bind()...</span>
+}</pre>
+        <p style="font-size:13px; color:var(--red); margin-top:8px;">More boilerplate · Hard to read · Hard to reuse logic</p>
+      </div>
+      <div class="compare-box cb-right">
+        <div class="cb-label">✅ After Hooks — Function Component is Enough</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:10px; font-size:12.5px; margin:6px 0 0;"><span class="kw">function</span> <span class="fn">Counter</span>() {
+  <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="num">0</span>);
+  <span class="cmt">// Done! Clean and simple</span>
+}</pre>
+        <p style="font-size:13px; color:var(--green); margin-top:8px;">Cleaner · Simpler · Reusable · Easy to maintain</p>
+      </div>
+    </div>
+
+    <h3>Important Features of Hooks</h3>
+    <div class="feature-grid">
+      <div class="feature-card fc-blue">
+        <div class="fc-title">🔧 Built into React</div>
+        <p>No installation needed. Hooks come with React — just import what you need.</p>
+      </div>
+      <div class="feature-card fc-purple">
+        <div class="fc-title">⚛️ Function Components Only</div>
+        <p>Hooks work <strong>only inside Function Components</strong> — not in Class Components.</p>
+      </div>
+      <div class="feature-card fc-green">
+        <div class="fc-title">💾 State Management</div>
+        <p>Allow state to be created and managed using <code>useState()</code> in Function Components.</p>
+      </div>
+      <div class="feature-card fc-orange">
+        <div class="fc-title">🔄 Lifecycle Functionality</div>
+        <p>Replace <code>componentDidMount</code>, <code>componentDidUpdate</code> etc. using <code>useEffect()</code>.</p>
+      </div>
+      <div class="feature-card fc-teal">
+        <div class="fc-title">♻️ Make Code Reusable</div>
+        <p>Custom Hooks allow sharing logic across multiple components without duplication.</p>
+      </div>
+      <div class="feature-card fc-pink">
+        <div class="fc-title">📉 Reduce Class Usage</div>
+        <p>Hooks eliminate the need for Class Components in modern React development.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 2. RULES OF HOOKS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--red);">2</div>
+    <h2>Rules of Hooks</h2>
+  </div>
+  <div class="section-body">
+
+    <!-- Rule 1 -->
+    <div class="rule-card">
+      <div class="rc-title" style="color:var(--blue);">📌 Rule 1 — Only Inside Function Components</div>
+      <div class="compare-row">
+        <div class="compare-box cb-right">
+          <div class="cb-label">✅ Correct</div>
+          <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12.5px; margin:4px 0 0;"><span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="num">0</span>);
+}</pre>
+        </div>
+        <div class="compare-box cb-wrong">
+          <div class="cb-label">❌ Wrong — Outside Component</div>
+          <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12.5px; margin:4px 0 0;"><span class="kw">function</span> <span class="fn">demo</span>() {}
+
+<span class="cmt">// ❌ called outside any component</span>
+<span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="num">0</span>);</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rule 2 -->
+    <div class="rule-card">
+      <div class="rc-title" style="color:var(--green);">📌 Rule 2 — Hook Names Must Start With "use"</div>
+      <div class="feature-grid" style="margin-top:6px;">
+        <div class="feature-card fc-green" style="padding:10px 14px;">
+          <div style="font-family:'Fira Code',monospace; font-size:13px; color:var(--green); line-height:2;">
+            <span class="hk" style="color:var(--green);">useState</span>()<br/>
+            <span class="hk" style="color:var(--green);">useEffect</span>()<br/>
+            <span class="hk" style="color:var(--green);">useContext</span>()<br/>
+            <span class="hk" style="color:var(--green);">useRef</span>()<br/>
+            <span class="hk" style="color:var(--green);">useMemo</span>()
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; padding:10px;">
+          <p style="font-size:13.5px; color:var(--muted);">React identifies Hooks by the <code>use</code> prefix. Custom hooks you write must also start with <code>use</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rule 3 -->
+    <div class="rule-card">
+      <div class="rc-title" style="color:var(--orange);">📌 Rule 3 — Cannot Use Inside Loops</div>
+      <div class="compare-row">
+        <div class="compare-box cb-wrong">
+          <div class="cb-label">❌ Wrong — Hook Inside Loop</div>
+          <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12.5px; margin:4px 0 0;"><span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
+  <span class="hk">useState</span>();  <span class="cmt">// ❌ Not allowed</span>
+}</pre>
+        </div>
+        <div style="padding:14px;">
+          <p style="font-size:13.5px; color:var(--muted);">Hooks must be called the <strong>same number of times</strong> on every render. Loops break this guarantee.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rule 4 -->
+    <div class="rule-card">
+      <div class="rc-title" style="color:var(--purple);">📌 Rule 4 — Cannot Use Inside Conditions</div>
+      <div class="compare-row">
+        <div class="compare-box cb-wrong">
+          <div class="cb-label">❌ Wrong — Hook Inside if Block</div>
+          <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12.5px; margin:4px 0 0;"><span class="kw">if</span> (<span class="kw">true</span>) {
+  <span class="hk">useState</span>();  <span class="cmt">// ❌ Not allowed</span>
+}</pre>
+        </div>
+        <div style="padding:14px;">
+          <p style="font-size:13.5px; color:var(--muted);">Conditional Hooks cause React to lose track of hook order between renders — always call unconditionally.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rule 5 -->
+    <div class="rule-card" style="margin-bottom:0;">
+      <div class="rc-title" style="color:var(--teal);">📌 Rule 5 — Call at Top Level of Component</div>
+      <div class="compare-row">
+        <div class="compare-box cb-right">
+          <div class="cb-label">✅ Correct — Top Level</div>
+          <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12.5px; margin:4px 0 0;"><span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="cmt">// ✅ Hooks at top — always called</span>
+  <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="num">0</span>);
+
+  <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Hello<span class="tag-c">&lt;/h1&gt;</span>;
+}</pre>
+        </div>
+        <div style="padding:14px;">
+          <div class="tip" style="margin:0;">
+            <span class="ti">💡</span>
+            <span>Always declare Hooks <strong>before any return statement</strong> and <strong>outside loops/conditions</strong> to ensure consistent hook order every render.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══ 3. ALL HOOKS TABLE ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--teal);">3</div>
+    <h2>Commonly Used Hooks</h2>
+  </div>
+  <div class="section-body">
+
+    <table>
+      <thead>
+        <tr><th>Hook</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>useState</code></td><td>Manage state in Function Components</td></tr>
+        <tr><td><code>useEffect</code></td><td>Handle side effects (API calls, subscriptions, timers)</td></tr>
+        <tr><td><code>useContext</code></td><td>Access Context data without prop drilling</td></tr>
+        <tr><td><code>useRef</code></td><td>Access and store DOM elements or mutable values</td></tr>
+        <tr><td><code>useMemo</code></td><td>Optimize performance by memoizing expensive calculations</td></tr>
+        <tr><td><code>useCallback</code></td><td>Memoize functions to avoid re-creation on every render</td></tr>
+        <tr><td><code>useReducer</code></td><td>Manage complex state logic (like Redux pattern)</td></tr>
+        <tr><td><code>useLayoutEffect</code></td><td>Run effects synchronously before browser paints</td></tr>
+        <tr><td><code>useImperativeHandle</code></td><td>Customize what a ref exposes to parent components</td></tr>
+        <tr><td><code>useId</code></td><td>Generate unique IDs for accessibility attributes</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      <span class="ti">⭐</span>
+      <span><strong>Most Important for Beginners:</strong> <code>useState</code> → <code>useEffect</code> → <code>useContext</code> → <code>useRef</code>. Master these four first — they cover 90% of real-world use cases.</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 4. useState HOOK ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--blue);">4</div>
+    <h2>useState Hook — Deep Dive</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box purple">
+      <div class="def-label">📘 Definition</div>
+      <p><code>useState</code> is a React Hook that allows Function Components to <strong>create and manage state variables</strong>. It is used to store and update data that changes over time.</p>
+    </div>
+
+    <h3>Syntax</h3>
+    <pre><span class="kw">const</span> [state, setState] = <span class="hk">useState</span>(initialValue);</pre>
+
+    <h3>Syntax Breakdown</h3>
+    <div class="syntax-breakdown">
+      <div class="sb-card" style="background:var(--blue-bg); border-color:#b8d0ff;">
+        <div class="sbc-code" style="color:var(--blue);">count</div>
+        <div class="sbc-name" style="color:var(--blue);">State Variable</div>
+        <div class="sbc-desc">Holds the current state value.<br/><code>count = 0</code> initially</div>
+      </div>
+      <div class="sb-card" style="background:var(--green-bg); border-color:#9ddbb9;">
+        <div class="sbc-code" style="color:var(--green);">setCount</div>
+        <div class="sbc-name" style="color:var(--green);">Setter Function</div>
+        <div class="sbc-desc">Function to update the state.<br/><code>setCount(5)</code> sets count to 5</div>
+      </div>
+      <div class="sb-card" style="background:var(--purple-bg); border-color:#c9abf0;">
+        <div class="sbc-code" style="color:var(--purple);">useState()</div>
+        <div class="sbc-name" style="color:var(--purple);">Hook Call</div>
+        <div class="sbc-desc">React Hook that creates the state.<br/>Returns <code>[value, setter]</code></div>
+      </div>
+      <div class="sb-card" style="background:var(--orange-bg); border-color:#ffc999;">
+        <div class="sbc-code" style="color:var(--orange);">0</div>
+        <div class="sbc-name" style="color:var(--orange);">Initial Value</div>
+        <div class="sbc-desc">Value assigned when component first loads.<br/><code>useState(0)</code> → starts at 0</div>
+      </div>
+    </div>
+
+    <h3>How useState Solves the UI Update Problem</h3>
+    <div class="flow-col">
+      <div class="flow-step" style="background:var(--blue-bg); border-color:#b8d0ff; color:var(--blue);">setCount() called (state changes)</div>
+      <div class="flow-arrow-d">↓</div>
+      <div class="flow-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">React detects the change</div>
+      <div class="flow-arrow-d">↓</div>
+      <div class="flow-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">Component re-renders</div>
+      <div class="flow-arrow-d">↓</div>
+      <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">UI updates automatically ✅</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 5. PRACTICAL EXAMPLES ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--green);">5</div>
+    <h2>Practical Examples</h2>
+  </div>
+  <div class="section-body">
+
+    <!-- Example 1: Counter -->
+    <h3>Example 1 — Counter Application</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; Counter.jsx
+      </div>
+      <pre><span class="kw">import</span> React, { <span class="hk">useState</span> } <span class="kw">from</span> <span class="str">'react'</span>;
+
+<span class="kw">function</span> <span class="fn">Counter</span>() {
+
+  <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="num">0</span>);    <span class="cmt">// Initial value = 0</span>
+
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;&gt;</span>
+      <span class="tag-c">&lt;h1&gt;</span>{count}<span class="tag-c">&lt;/h1&gt;</span>
+
+      <span class="tag-c">&lt;button</span>
+        <span class="attr">onClick=</span>{() => <span class="fn">setCount</span>(count + <span class="num">1</span>)}   <span class="cmt">// update state on click</span>
+      <span class="tag-c">&gt;</span>
+        Increment
+      <span class="tag-c">&lt;/button&gt;</span>
+    <span class="tag-c">&lt;/&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> Counter;</pre>
+    </div>
+    <div class="output-box">
+      <div class="out-label">▶ Output</div>
+      Initially → 0<br/>
+      After 1 click → 1<br/>
+      After 2 clicks → 2<br/>
+      After 3 clicks → 3
+    </div>
+
+    <div style="background:#f8f8f8; border:1.5px solid var(--border); border-radius:10px; padding:14px 18px; margin:12px 0;">
+      <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:10px;">🔍 Line-by-Line Understanding</div>
+      <table style="margin:0;">
+        <thead><tr><th>Line</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>useState(0)</code></td><td>Creates state variable <code>count</code> starting at <strong>0</strong></td></tr>
+          <tr><td><code>count</code></td><td>Current value shown in <code>&lt;h1&gt;</code></td></tr>
+          <tr><td><code>setCount(count + 1)</code></td><td>On click → updates count → React re-renders → new value shown</td></tr>
+          <tr><td><code>() =&gt;</code></td><td>Arrow function wraps the call so it only runs on click (not immediately)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Example 2: Toggle -->
+    <h3>Example 2 — Toggle Button (Online / Offline)</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; Toggle.jsx
+      </div>
+      <pre><span class="kw">import</span> React, { <span class="hk">useState</span> } <span class="kw">from</span> <span class="str">'react'</span>;
+
+<span class="kw">function</span> <span class="fn">Toggle</span>() {
+
+  <span class="kw">const</span> [status, setStatus] = <span class="hk">useState</span>(<span class="kw">false</span>);  <span class="cmt">// starts as false (Offline)</span>
+
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;&gt;</span>
+      <span class="tag-c">&lt;h1&gt;</span>
+        {status ? <span class="str">"Online"</span> : <span class="str">"Offline"</span>}   <span class="cmt">// Conditional Rendering</span>
+      <span class="tag-c">&lt;/h1&gt;</span>
+
+      <span class="tag-c">&lt;button</span>
+        <span class="attr">onClick=</span>{() => <span class="fn">setStatus</span>(!status)}   <span class="cmt">// flip true↔false</span>
+      <span class="tag-c">&gt;</span>
+        Toggle
+      <span class="tag-c">&lt;/button&gt;</span>
+    <span class="tag-c">&lt;/&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> Toggle;</pre>
+    </div>
+    <div class="compare-row">
+      <div class="output-box" style="margin:0;">
+        <div class="out-label">▶ Initially (status = false)</div>
+        Offline
+      </div>
+      <div class="output-box" style="margin:0;">
+        <div class="out-label">▶ After Toggle Click (status = true)</div>
+        Online
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="ti">💡</span>
+      <span><code>!status</code> flips the boolean — <code>true</code> becomes <code>false</code> and vice versa. This is a common pattern for toggle switches, dark mode, show/hide panels etc.</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 6. DATA TYPES IN useState ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--orange);">6</div>
+    <h2>Types of Values Stored in useState</h2>
+  </div>
+  <div class="section-body">
+
+    <p>useState can store <strong>any JavaScript data type</strong> as its initial value.</p>
+
+    <div class="val-grid">
+
+      <div class="val-card" style="background:var(--blue-bg); border-color:#b8d0ff;">
+        <div class="vc-type" style="color:var(--blue);">🔤 String</div>
+        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [name, setName] =
+  <span class="hk">useState</span>(<span class="str">"Pravin"</span>);</pre>
+      </div>
+
+      <div class="val-card" style="background:var(--green-bg); border-color:#9ddbb9;">
+        <div class="vc-type" style="color:var(--green);">🔢 Number</div>
+        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [age, setAge] =
+  <span class="hk">useState</span>(<span class="num">21</span>);</pre>
+      </div>
+
+      <div class="val-card" style="background:var(--purple-bg); border-color:#c9abf0;">
+        <div class="vc-type" style="color:var(--purple);">✅ Boolean</div>
+        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [isLogin, setIsLogin] =
+  <span class="hk">useState</span>(<span class="kw">false</span>);</pre>
+      </div>
+
+      <div class="val-card" style="background:var(--orange-bg); border-color:#ffc999;">
+        <div class="vc-type" style="color:var(--orange);">📋 Array</div>
+        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [students, setStudents] =
+  <span class="hk">useState</span>([<span class="str">"Ram"</span>, <span class="str">"Sham"</span>]);</pre>
+      </div>
+
+      <div class="val-card" style="background:var(--teal-bg); border-color:#90d4d8;">
+        <div class="vc-type" style="color:var(--teal);">📦 Object</div>
+        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [user, setUser] =
+  <span class="hk">useState</span>({
+    name: <span class="str">"Pravin"</span>,
+    age: <span class="num">21</span>
+  });</pre>
+      </div>
+
+      <div class="val-card" style="background:var(--pink-bg); border-color:#f0a0d4;">
+        <div class="vc-type" style="color:var(--pink);">🚫 null / undefined</div>
+        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [data, setData] =
+  <span class="hk">useState</span>(<span class="kw">null</span>);
+<span class="cmt">// common for API data</span></pre>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 7. QUICK REVISION + INTERVIEW ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--pink);">7</div>
+    <h2>Quick Revision &amp; Interview Q&amp;A</h2>
+  </div>
+  <div class="section-body">
+
+    <!-- Quick Revision Visual -->
+    <div class="revision-box">
+      <div class="rev-label">⚡ Quick Revision — Hooks at a Glance</div>
+      <div class="rev-flow">
+        <div class="rev-step">Hooks</div>
+        <div style="color:var(--purple); padding-left:14px; font-size:18px;">↓</div>
+        <div class="rev-step">Built-in React Functions</div>
+        <div style="color:var(--purple); padding-left:14px; font-size:18px;">↓</div>
+        <div class="rev-step">Used Inside Function Components</div>
+        <div style="color:var(--purple); padding-left:14px; font-size:18px;">↓</div>
+        <div class="rev-step">Provide Class Component Features</div>
+      </div>
+      <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--purple); margin-bottom:8px;">Popular Hooks</div>
+      <div class="rev-hooks">
+        <div class="rev-hook-item"><span class="rh-fn">useState</span> <span class="rh-arrow">→</span> State Management</div>
+        <div class="rev-hook-item"><span class="rh-fn">useEffect</span> <span class="rh-arrow">→</span> Side Effects</div>
+        <div class="rev-hook-item"><span class="rh-fn">useContext</span> <span class="rh-arrow">→</span> Context API</div>
+        <div class="rev-hook-item"><span class="rh-fn">useRef</span> <span class="rh-arrow">→</span> DOM Access</div>
+        <div class="rev-hook-item"><span class="rh-fn">useMemo</span> <span class="rh-arrow">→</span> Performance Optimization</div>
+        <div class="rev-hook-item"><span class="rh-fn">useCallback</span> <span class="rh-arrow">→</span> Function Optimization</div>
+        <div class="rev-hook-item"><span class="rh-fn">useReducer</span> <span class="rh-arrow">→</span> Complex State</div>
+        <div class="rev-hook-item"><span class="rh-fn">useId</span> <span class="rh-arrow">→</span> Unique IDs</div>
+      </div>
+    </div>
+
+    <!-- Interview -->
+    <div class="interview-box">
+      <div class="ib-label">🎯 Interview Q&amp;A</div>
+      <div class="qa">
+        <div class="q">Q: What are Hooks in React?</div>
+        <div class="a">A: Hooks are built-in React functions that allow Function Components to use state, lifecycle features, context, and other React functionalities without using Class Components. Introduced in React 16.8.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Why were Hooks introduced?</div>
+        <div class="a">A: Hooks were introduced to make Function Components more powerful and to reduce the complexity and boilerplate of Class Components — making code cleaner, simpler, and more reusable.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What is useState?</div>
+        <div class="a">A: <code>useState</code> is a React Hook that allows Function Components to create and manage state variables. Syntax: <code>const [state, setState] = useState(initialValue);</code></div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What happens when state changes using useState?</div>
+        <div class="a">A: When the setter function (e.g., <code>setCount</code>) is called, React detects the change, re-renders the component, and automatically updates the UI with the new value.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What are the rules of Hooks?</div>
+        <div class="a">A: (1) Only inside Function Components. (2) Names must start with "use". (3) Cannot use inside loops. (4) Cannot use inside conditions. (5) Must be called at the top level of the component.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Can useState store objects or arrays?</div>
+        <div class="a">A: Yes. useState can store any JavaScript value — string, number, boolean, array, object, or null. For objects/arrays, always create a new copy when updating to trigger re-render properly.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="text-align:center; padding:20px; color:#aaa; font-size:12.5px; margin-top:10px;">
+  React.js Chapter 5 · React Hooks &amp; useState · Study Notes
+</div>
+
+</body>
+</html>

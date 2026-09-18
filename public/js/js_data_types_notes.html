@@ -1,0 +1,433 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.root{font-family:'DM Sans',sans-serif;color:var(--color-text-primary);padding:2rem 0.5rem;max-width:680px;}
+.ch-sub{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:.3rem;}
+.ch-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;letter-spacing:-.5px;margin-bottom:2.5rem;}
+.sec{margin-bottom:3rem;}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.sec-num{font-size:11px;font-weight:500;color:var(--color-text-secondary);background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary);border-radius:20px;padding:3px 10px;letter-spacing:.05em;}
+.sec-title{font-size:18px;font-weight:500;}
+.accent{width:28px;height:3px;border-radius:2px;margin-bottom:1.1rem;}
+.a-blue{background:#378ADD;}.a-purple{background:#7F77DD;}.a-teal{background:#1D9E75;}.a-amber{background:#EF9F27;}.a-coral{background:#D85A30;}.a-green{background:#639922;}.a-pink{background:#D4537E;}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:.75rem;}
+.clabel{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:.4rem;}
+.ctext{font-size:14px;line-height:1.65;color:var(--color-text-primary);}
+.mt{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-secondary);margin:.9rem 0 .4rem;}
+.code-b{background:#F1EFE8;border-radius:var(--border-radius-md);padding:.85rem 1rem;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75;color:#2C2C2A;white-space:pre;overflow-x:auto;margin-bottom:.4rem;}
+.out-b{background:#E1F5EE;border-radius:var(--border-radius-md);padding:.6rem 1rem;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:#085041;margin-bottom:.75rem;}
+.out-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:#0F6E56;margin-bottom:3px;}
+.real-b{background:#E6F1FB;border-radius:var(--border-radius-md);padding:.65rem 1rem;font-size:13px;line-height:1.65;color:#185FA5;margin-bottom:.75rem;}
+.real-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:#0C447C;margin-bottom:3px;}
+.rule{border-left:3px solid;padding:.65rem 1rem;border-radius:0;background:var(--color-background-secondary);margin-bottom:.55rem;font-size:13.5px;line-height:1.6;}
+.r-blue{border-color:#378ADD;}.r-teal{border-color:#1D9E75;}.r-purple{border-color:#7F77DD;}.r-amber{border-color:#EF9F27;}.r-coral{border-color:#D85A30;}.r-pink{border-color:#D4537E;}
+.pill-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:.4rem;}
+.pill{font-size:12px;font-weight:500;padding:4px 11px;border-radius:20px;}
+.p-blue{background:#E6F1FB;color:#185FA5;}.p-purple{background:#EEEDFE;color:#3C3489;}.p-teal{background:#E1F5EE;color:#0F6E56;}.p-amber{background:#FAEEDA;color:#854F0B;}.p-coral{background:#FAECE7;color:#993C1D;}.p-green{background:#EAF3DE;color:#3B6D11;}.p-gray{background:#F1EFE8;color:#5F5E5A;}.p-pink{background:#FBEAF0;color:#72243E;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.75rem;}
+.mc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.8rem 1rem;border:.5px solid var(--color-border-tertiary);}
+.mc-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;}
+.ibox{background:#EEEDFE;border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin:.6rem 0;}
+.ibox-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:#534AB7;margin-bottom:.4rem;}
+.ibox-text{font-size:13.5px;line-height:1.65;color:#3C3489;}
+.trick{display:flex;gap:10px;align-items:flex-start;background:#FAEEDA;border-radius:var(--border-radius-md);padding:.8rem 1rem;margin-top:.75rem;}
+.trick i{font-size:17px;flex-shrink:0;margin-top:2px;color:#854F0B;}
+.trick-t{font-size:13.5px;line-height:1.5;color:#854F0B;font-weight:500;}
+hr.dv{border:none;border-top:.5px solid var(--color-border-tertiary);margin:2.2rem 0;}
+.tbl-wrap{overflow-x:auto;margin-top:.5rem;}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
+.tbl th{text-align:left;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);padding:0 8px 8px 0;border-bottom:.5px solid var(--color-border-tertiary);}
+.tbl td{padding:8px 8px 8px 0;border-bottom:.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:top;line-height:1.5;}
+.dtype-card{border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem;background:var(--color-background-primary);}
+.dtype-hdr{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;}
+.dtype-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;}
+.dtype-name{font-size:16px;font-weight:500;}
+.dtype-sub{font-size:13px;color:var(--color-text-secondary);margin-top:2px;}
+.section-banner{border-radius:var(--border-radius-md);padding:.75rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:10px;}
+.banner-purple{background:#EEEDFE;}
+.banner-amber{background:#FAEEDA;}
+.banner-title{font-size:14px;font-weight:500;}
+.banner-sub{font-size:12px;margin-top:2px;}
+.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:.5rem;}
+.adv-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem;border:.5px solid var(--color-border-tertiary);font-size:13px;line-height:1.5;color:var(--color-text-primary);}
+.adv-card strong{display:block;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);margin-bottom:4px;}
+</style>
+
+<div class="root">
+
+<p class="ch-sub">JavaScript · Chapter 2</p>
+<h1 class="ch-title">Data Types in JavaScript</h1>
+
+<!-- ═══════════ WHAT IS A DATA TYPE ═══════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">01</span><span class="sec-title">What is a data type?</span></div>
+<div class="accent a-blue"></div>
+
+<div class="card">
+<div class="clabel">Definition</div>
+<div class="ctext">A Data Type defines what kind of value a variable can store in memory. It tells JavaScript whether the stored value is a Number, Text (String), True/False (Boolean), Object, Array, or something else.</div>
+</div>
+
+<div class="mt">Two main categories</div>
+<div class="two">
+<div class="mc">
+<div class="mc-lbl" style="color:#534AB7;">Primitive data types</div>
+<div style="font-size:13px;line-height:1.7;color:var(--color-text-secondary);">Store a single value directly in memory. They are simple and immutable.</div>
+<div class="pill-row" style="margin-top:.5rem;">
+<span class="pill p-purple">Number</span><span class="pill p-purple">String</span><span class="pill p-purple">Boolean</span><span class="pill p-purple">Null</span><span class="pill p-purple">Undefined</span>
+</div>
+</div>
+<div class="mc">
+<div class="mc-lbl" style="color:#854F0B;">Non-primitive data types</div>
+<div style="font-size:13px;line-height:1.7;color:var(--color-text-secondary);">Store collections of values or complex entities. They are mutable.</div>
+<div class="pill-row" style="margin-top:.5rem;">
+<span class="pill p-amber">Object</span><span class="pill p-amber">Array</span><span class="pill p-amber">Function</span>
+</div>
+</div>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════ PRIMITIVE DATA TYPES ═══════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">02</span><span class="sec-title">Primitive data types</span></div>
+<div class="accent a-purple"></div>
+
+<div class="section-banner banner-purple">
+<div>
+<div class="banner-title" style="color:#3C3489;">Definition of Primitive Data Types</div>
+<div class="banner-sub" style="color:#534AB7;">Primitive data types are basic built-in data types that store single immutable values directly in memory.</div>
+</div>
+</div>
+
+<!-- NUMBER -->
+<div class="dtype-card">
+<div class="dtype-hdr">
+<span class="dtype-badge p-purple">01</span>
+<div>
+<div class="dtype-name">Number</div>
+<div class="dtype-sub">Stores integers, decimals, positive and negative values</div>
+</div>
+</div>
+<div class="clabel">Definition</div>
+<div class="ctext" style="margin-bottom:.75rem;">The Number datatype is used to store integer values, decimal values, and positive or negative numbers. All numeric values in JavaScript — whether whole or decimal — use the same Number type.</div>
+<div class="mt">Example</div>
+<div class="code-b">let age = 22;
+let price = 99.99;
+let temperature = -5;
+
+console.log(age);
+console.log(price);
+console.log(temperature);</div>
+<div class="out-b"><div class="out-lbl">Output</div>22
+99.99
+-5</div>
+<div class="real-b"><div class="real-lbl">Real-life examples</div>Age = 22 &nbsp;·&nbsp; Salary = 50000 &nbsp;·&nbsp; Marks = 89.5</div>
+</div>
+
+<!-- STRING -->
+<div class="dtype-card">
+<div class="dtype-hdr">
+<span class="dtype-badge p-blue">02</span>
+<div>
+<div class="dtype-name">String</div>
+<div class="dtype-sub">Stores characters, words, and sentences inside quotes</div>
+</div>
+</div>
+<div class="clabel">Definition</div>
+<div class="ctext" style="margin-bottom:.6rem;">String datatype is used to store characters, words, and sentences inside quotes. Quotes can be single quotes ( ' ' ), double quotes ( " " ), or backticks ( ` ` ).</div>
+<div class="ibox">
+<div class="ibox-lbl">Interview definition</div>
+<div class="ibox-text">String is a primitive datatype used to represent textual data enclosed within quotes.</div>
+</div>
+<div class="mt">Example</div>
+<div class="code-b">let name = "Pravin";
+let city = 'Nashik';
+let message = `Hello, ${name}`;
+
+console.log(name);
+console.log(city);
+console.log(message);</div>
+<div class="out-b"><div class="out-lbl">Output</div>Pravin
+Nashik
+Hello, Pravin</div>
+<div class="real-b"><div class="real-lbl">Real-life examples</div>Name = "Rahul" &nbsp;·&nbsp; Email = "abc@gmail.com"</div>
+<div class="mt">Types of quotes allowed</div>
+<div class="pill-row">
+<span class="pill p-blue">Single quotes ' '</span><span class="pill p-blue">Double quotes " "</span><span class="pill p-blue">Backticks ` `</span>
+</div>
+</div>
+
+<!-- BOOLEAN -->
+<div class="dtype-card">
+<div class="dtype-hdr">
+<span class="dtype-badge p-teal">03</span>
+<div>
+<div class="dtype-name">Boolean</div>
+<div class="dtype-sub">Stores only two values — true or false</div>
+</div>
+</div>
+<div class="clabel">Definition</div>
+<div class="ctext" style="margin-bottom:.6rem;">Boolean datatype stores only two values — true or false. It is used in conditions, decision making, and validation.</div>
+<div class="mt">Used in</div>
+<div class="pill-row" style="margin-bottom:.6rem;">
+<span class="pill p-teal">Conditions</span><span class="pill p-teal">Decision making</span><span class="pill p-teal">Validation</span>
+</div>
+<div class="mt">Example</div>
+<div class="code-b">let isPassed    = true;
+let isLoggedIn  = false;
+
+console.log(isPassed);
+console.log(isLoggedIn);</div>
+<div class="out-b"><div class="out-lbl">Output</div>true
+false</div>
+<div class="real-b"><div class="real-lbl">Real-life examples</div>Exam Passed = true &nbsp;·&nbsp; User Logged In = false</div>
+</div>
+
+<!-- NULL -->
+<div class="dtype-card">
+<div class="dtype-hdr">
+<span class="dtype-badge p-amber">04</span>
+<div>
+<div class="dtype-name">Null</div>
+<div class="dtype-sub">Intentionally empty value — set manually</div>
+</div>
+</div>
+<div class="clabel">Definition</div>
+<div class="ctext" style="margin-bottom:.6rem;">Null represents an intentionally empty value. It means the value exists but is intentionally set to nothing. This is done by the developer on purpose.</div>
+<div class="ibox">
+<div class="ibox-lbl">Interview definition</div>
+<div class="ibox-text">Null is a primitive datatype that represents an intentional absence of value.</div>
+</div>
+<div class="mt">Example</div>
+<div class="code-b">let data = null;
+
+console.log(data);</div>
+<div class="out-b"><div class="out-lbl">Output</div>null</div>
+<div class="real-b"><div class="real-lbl">Real-life example</div>Middle Name = null &nbsp;·&nbsp; Means: the user does not have a middle name — intentionally left empty.</div>
+</div>
+
+<!-- UNDEFINED -->
+<div class="dtype-card">
+<div class="dtype-hdr">
+<span class="dtype-badge p-coral">05</span>
+<div>
+<div class="dtype-name">Undefined</div>
+<div class="dtype-sub">Variable declared but value not yet assigned</div>
+</div>
+</div>
+<div class="clabel">Definition</div>
+<div class="ctext" style="margin-bottom:.6rem;">Undefined means the variable is declared but no value has been assigned to it. JavaScript automatically assigns undefined in this case — the developer does not set it manually.</div>
+<div class="ibox">
+<div class="ibox-lbl">Interview definition</div>
+<div class="ibox-text">Undefined is a primitive datatype assigned automatically to variables that are declared but not initialized.</div>
+</div>
+<div class="mt">Example</div>
+<div class="code-b">let x;
+
+console.log(x);</div>
+<div class="out-b"><div class="out-lbl">Output</div>undefined</div>
+<div class="real-b"><div class="real-lbl">Real-life example</div>Student marks not entered yet — the field exists but has no value assigned.</div>
+</div>
+
+<!-- NULL vs UNDEFINED -->
+<div class="mt">Null vs Undefined — key difference</div>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead><tr><th style="width:25%;">Feature</th><th style="width:37%;">null</th><th style="width:38%;">undefined</th></tr></thead>
+<tbody>
+<tr><td>Meaning</td><td>Intentional empty value</td><td>Value not yet assigned</td></tr>
+<tr><td>Who sets it?</td><td>Developer sets it manually</td><td>JavaScript sets it automatically</td></tr>
+<tr><td>Represents</td><td>Absence of value (on purpose)</td><td>Uninitialized variable</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════ NON-PRIMITIVE DATA TYPES ═══════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">03</span><span class="sec-title">Non-primitive data types</span></div>
+<div class="accent a-amber"></div>
+
+<div class="section-banner banner-amber">
+<div>
+<div class="banner-title" style="color:#633806;">Definition of Non-Primitive Data Types</div>
+<div class="banner-sub" style="color:#854F0B;">Non-primitive data types are reference data types used to store collections of values or complex entities.</div>
+</div>
+</div>
+
+<!-- OBJECT -->
+<div class="dtype-card">
+<div class="dtype-hdr">
+<span class="dtype-badge p-amber">01</span>
+<div>
+<div class="dtype-name">Object</div>
+<div class="dtype-sub">Stores data as key-value pairs — represents real-world entities</div>
+</div>
+</div>
+<div class="clabel">Definition</div>
+<div class="ctext" style="margin-bottom:.6rem;">Object stores data in key-value pairs. It is used to represent real-world entities like a student, employee, or product — where each property has a name (key) and a value.</div>
+<div class="ibox">
+<div class="ibox-lbl">Interview definition</div>
+<div class="ibox-text">Object is a non-primitive datatype that stores data as key-value pairs.</div>
+</div>
+<div class="mt">Example</div>
+<div class="code-b">let student = {
+    name: "Pravin",
+    age: 22,
+    city: "Nashik"
+};
+
+console.log(student.name);
+console.log(student.age);
+console.log(student.city);</div>
+<div class="out-b"><div class="out-lbl">Output</div>Pravin
+22
+Nashik</div>
+<div class="real-b"><div class="real-lbl">Real-life example</div>Student object — Name: Pravin &nbsp;·&nbsp; Age: 22 &nbsp;·&nbsp; City: Nashik</div>
+</div>
+
+<!-- ARRAY -->
+<div class="dtype-card">
+<div class="dtype-hdr">
+<span class="dtype-badge p-teal">02</span>
+<div>
+<div class="dtype-name">Array</div>
+<div class="dtype-sub">Stores multiple ordered values — index starts from 0</div>
+</div>
+</div>
+<div class="clabel">Definition</div>
+<div class="ctext" style="margin-bottom:.6rem;">Array stores multiple values in an ordered form inside square brackets [ ]. Each value has a position called an index, and indexing always starts from 0.</div>
+<div class="ibox">
+<div class="ibox-lbl">Interview definition</div>
+<div class="ibox-text">Array is a non-primitive datatype used to store multiple ordered values in a single variable.</div>
+</div>
+<div class="mt">Example</div>
+<div class="code-b">let colors = ["Red", "Blue", "Green"];
+
+console.log(colors[0]);  // index 0
+console.log(colors[1]);  // index 1
+console.log(colors[2]);  // index 2</div>
+<div class="out-b"><div class="out-lbl">Output</div>Red
+Blue
+Green</div>
+<div class="real-b"><div class="real-lbl">Real-life example</div>Subjects = ["Math", "Science", "English"] &nbsp;·&nbsp; index 0 = Math, index 1 = Science, index 2 = English</div>
+</div>
+
+<!-- FUNCTION -->
+<div class="dtype-card">
+<div class="dtype-hdr">
+<span class="dtype-badge p-pink">03</span>
+<div>
+<div class="dtype-name">Function</div>
+<div class="dtype-sub">A reusable block of code that runs when called</div>
+</div>
+</div>
+<div class="clabel">Definition</div>
+<div class="ctext" style="margin-bottom:.6rem;">Function is a reusable block of code designed to perform a specific task. It runs only when it is called (invoked).</div>
+<div class="ibox">
+<div class="ibox-lbl">Interview definition</div>
+<div class="ibox-text">Function is a reusable block of code that executes when it is invoked or called.</div>
+</div>
+<div class="mt">Example</div>
+<div class="code-b">function greet() {
+    console.log("Welcome");
+}
+
+greet();  // calling the function</div>
+<div class="out-b"><div class="out-lbl">Output</div>Welcome</div>
+<div class="real-b"><div class="real-lbl">Real-life example</div>ATM Machine — Withdraw Money function &nbsp;·&nbsp; Check Balance function &nbsp;·&nbsp; Deposit Money function</div>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════ IMMUTABLE vs MUTABLE ═══════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Immutable vs Mutable behavior</span></div>
+<div class="accent a-teal"></div>
+
+<!-- IMMUTABLE -->
+<div class="card">
+<div class="clabel">Immutable — Primitive data types</div>
+<div class="ctext" style="margin-bottom:.6rem;">Immutable means the original value cannot be changed after it is created. Primitive datatypes like String, Number, Boolean are all immutable — once a value is created in memory, it stays the same.</div>
+<div class="rule r-blue">If you try to change a character inside a string, JavaScript silently ignores it. The string stays unchanged.</div>
+<div class="mt">Example — trying to change a string character</div>
+<div class="code-b">let str = "Hello";
+
+str[0] = "Y";  // trying to change first character
+
+console.log(str);</div>
+<div class="out-b"><div class="out-lbl">Output</div>Hello</div>
+<div class="ctext" style="font-size:13px;color:var(--color-text-secondary);">The string remains "Hello" — the change at index 0 was silently ignored. Strings are immutable.</div>
+</div>
+
+<!-- MUTABLE -->
+<div class="card">
+<div class="clabel">Mutable — Non-primitive data types</div>
+<div class="ctext" style="margin-bottom:.6rem;">Mutable means the value can be modified after it is created. Objects and Arrays are mutable — their properties and elements can be changed, added, or deleted at any time.</div>
+<div class="rule r-teal">Objects and arrays can be changed after creation. Non-primitive types are always mutable.</div>
+<div class="mt">Example — changing an object property</div>
+<div class="code-b">let person = {
+    name: "Pravin"
+};
+
+person.name = "Rahul";  // changing the property
+
+console.log(person.name);</div>
+<div class="out-b"><div class="out-lbl">Output</div>Rahul</div>
+<div class="ctext" style="font-size:13px;color:var(--color-text-secondary);">The name was successfully changed from "Pravin" to "Rahul" — objects are mutable.</div>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════ PRIMITIVE vs NON-PRIMITIVE ═══════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">05</span><span class="sec-title">Primitive vs Non-primitive — full comparison</span></div>
+<div class="accent a-coral"></div>
+
+<div class="tbl-wrap">
+<table class="tbl">
+<thead><tr><th style="width:25%;">Feature</th><th style="width:37%;">Primitive</th><th style="width:38%;">Non-primitive</th></tr></thead>
+<tbody>
+<tr><td>Stores</td><td>Single value only</td><td>Multiple values or complex data</td></tr>
+<tr><td>Nature</td><td>Immutable — cannot change</td><td>Mutable — can be changed</td></tr>
+<tr><td>Memory</td><td>Stored by value</td><td>Stored by reference</td></tr>
+<tr><td>Complexity</td><td>Simple</td><td>Complex</td></tr>
+<tr><td>Examples</td><td>Number, String, Boolean, Null, Undefined</td><td>Object, Array, Function</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="two" style="margin-top:.75rem;">
+<div class="mc">
+<div class="mc-lbl" style="color:#534AB7;">Stored by value — primitive</div>
+<div class="code-b">let a = 10;
+let b = a;
+b = 20;
+console.log(a); // 10
+console.log(b); // 20</div>
+<div style="font-size:12px;color:var(--color-text-secondary);margin-top:4px;">a is not affected — they are separate copies.</div>
+</div>
+<div class="mc">
+<div class="mc-lbl" style="color:#854F0B;">Stored by reference — non-primitive</div>
+<div class="code-b">let obj1 = {x:10};
+let obj2 = obj1;
+obj2.x = 99;
+console.log(obj1.x); // 99</div>
+<div style="font-size:12px;color:var(--color-text-secondary);margin-top:4px;">obj1 is also changed — they share the same reference.</div>
+</div>
+</div>
+
+<div class="trick">
+<i class="ti ti-bulb" aria-hidden="true"></i>
+<div class="trick-t">Memory Trick — Primitive = Single value, Immutable, By Value &nbsp;·&nbsp; Non-Primitive = Multiple values, Mutable, By Reference</div>
+</div>
+</div>
+
+</div>

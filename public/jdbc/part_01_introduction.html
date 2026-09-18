@@ -1,0 +1,920 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 14mm 16mm 14mm 16mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center;
+    font-size: 21px;
+    font-weight: 700;
+    border: 2.5px solid #111;
+    padding: 9px 18px;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+    background: #fff;
+    color: #111;
+  }
+
+  .page-title {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #555;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+  }
+
+  .section {
+    border: 1.5px solid #222;
+    margin-bottom: 11px;
+  }
+
+  .section-header {
+    background: #111;
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 5px 11px;
+    letter-spacing: 0.4px;
+  }
+
+  .section-body {
+    padding: 9px 13px 11px;
+    background: #fff;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box {
+    border: 1px solid #bbb;
+    padding: 7px 9px;
+    background: #fafafa;
+  }
+  .inline-box-title {
+    font-weight: 700;
+    font-size: 11.5px;
+    margin-bottom: 3px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700;
+    font-size: 12.5px;
+    margin-bottom: 3px;
+    margin-top: 7px;
+    color: #111;
+  }
+
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    border-left: 3px solid #333;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.6;
+  }
+
+  .interview-line {
+    background: #f5f5f5;
+    border-left: 3px solid #111;
+    padding: 6px 10px;
+    font-style: italic;
+    font-size: 12px;
+    margin: 8px 0 3px;
+    color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 11px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555;
+    padding: 6px 10px;
+    margin: 7px 0;
+    font-size: 12px;
+    background: #fafafa;
+  }
+
+  .step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin: 5px 0;
+  }
+
+  .step-num {
+    min-width: 22px; height: 22px;
+    background: #111; color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .flow-box {
+    border: 1px solid #444;
+    padding: 3px 10px;
+    text-align: center;
+    font-size: 11.5px;
+    font-weight: 600;
+    margin: 2px 0;
+    background: #fff;
+  }
+  .flow-arrow { text-align: center; font-size: 12px; color: #555; margin: 1px 0; }
+
+  .method-row {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    margin: 3px 0;
+  }
+  .method-name {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 11.5px;
+    background: #eee;
+    padding: 1px 5px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .method-desc { font-size: 12px; color: #333; }
+
+  .badge {
+    display: inline-block;
+    border: 1px solid #444;
+    font-size: 10px;
+    padding: 1px 5px;
+    margin-right: 4px;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+
+  .tag {
+    display: inline-block;
+    background: #111;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-right: 4px;
+    letter-spacing: 0.3px;
+    vertical-align: middle;
+  }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  ol { padding-left: 17px; margin: 3px 0; }
+  ol li { margin-bottom: 2px; font-size: 12.5px; }
+
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 7px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0;
+      box-shadow: none;
+      border: none;
+      padding: 14mm 16mm;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== PAGE 1 ===================== -->
+<div class="a4-page">
+  <div class="main-title">JDBC — COMPLETE STUDY NOTES (Interview Ready)</div>
+
+  <!-- Section 1 -->
+  <div class="section">
+    <div class="section-header">📘 1. What is JDBC?</div>
+    <div class="section-body">
+      <p>JDBC stands for <strong>Java Database Connectivity</strong>. It is an <strong>API (Application Programming Interface)</strong> provided by Java that allows Java programs to connect with databases, send SQL queries, and get results.</p>
+      <p style="margin-top:5px;">Using JDBC, Java can communicate with databases like:</p>
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <ul>
+            <li>PostgreSQL</li>
+            <li>MySQL</li>
+            <li>Oracle</li>
+            <li>SQL Server</li>
+            <li>SQLite</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Real-Life Example:</div>
+          <p>You = Java Program 👨‍💻<br>
+          Friend = Database 🗄️<br>
+          Language difference exists ❌<br>
+          👉 You need a translator → That translator is <strong>JDBC</strong></p>
+        </div>
+      </div>
+      <div class="interview-line">JDBC is a Java API that provides a standard way for Java applications to interact with relational databases using SQL.</div>
+    </div>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="section">
+    <div class="section-header">📘 2. Why JDBC is Used?</div>
+    <div class="section-body">
+      <p>JDBC is used to:</p>
+      <div class="two-col" style="margin-top:6px;">
+        <div>
+          <ul>
+            <li>Connect Java with database</li>
+            <li>Execute SQL queries (INSERT, UPDATE, DELETE, SELECT)</li>
+            <li>Fetch data from database</li>
+            <li>Store data into database</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Real-Life Example — ATM Machine:</div>
+          <p>You insert card → Java program<br>
+          Machine connects to bank server → JDBC<br>
+          Fetches your balance → Database</p>
+          <p style="margin-top:4px;">👉 Without JDBC, Java cannot talk to database.</p>
+        </div>
+      </div>
+      <div class="interview-line">Without JDBC, Java has no standard mechanism to communicate with a database. JDBC acts as the bridge between the Java application layer and the database layer.</div>
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="section">
+    <div class="section-header">📘 3. Key Features / Properties of JDBC</div>
+    <div class="section-body">
+      <div class="three-col">
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 1. Platform Independent</div>
+          <p>Works on any OS (Windows, Linux, Mac)</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 2. Database Independent</div>
+          <p>Can connect to MySQL, PostgreSQL, Oracle, SQL Server. Only driver changes, code remains almost same.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 3. Simple API</div>
+          <p>Provides interfaces like: Connection, Statement, ResultSet</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 4. Supports SQL</div>
+          <p>DDL → CREATE, ALTER<br>
+          DML → INSERT, UPDATE, DELETE<br>
+          DQL → SELECT</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 5. Secure (PreparedStatement)</div>
+          <p>Prevents SQL Injection</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 6. Reusable</div>
+          <p>PreparedStatement can be executed multiple times</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="section">
+    <div class="section-header">📘 4. What is Vendor in JDBC?</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <p>👉 Vendor = Database Company / Provider</p>
+          <p style="margin-top:5px;">Examples:</p>
+          <ul>
+            <li>Oracle Corporation → Oracle DB</li>
+            <li>PostgreSQL Global Development Group → PostgreSQL</li>
+            <li>Microsoft → SQL Server</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Real-Life Example:</div>
+          <p>JDBC = Universal charger 🔌<br>
+          Vendor = Mobile company 📱<br>
+          Each company needs a different pin (driver)</p>
+        </div>
+      </div>
+      <div class="interview-line">Vendor refers to the database company/provider. Each vendor provides their own JDBC driver. Only the driver changes per vendor; the JDBC API remains the same.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE 2 ===================== -->
+<div class="a4-page">
+  <div class="page-title">JDBC — COMPLETE STUDY NOTES | Page 2</div>
+
+  <!-- Section 5 -->
+  <div class="section">
+    <div class="section-header">📘 5. What is JDBC Driver?</div>
+    <div class="section-body">
+      <p>👉 A <strong>Driver</strong> is a software component that helps Java communicate with database.</p>
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="subsection-title">🔹 Simple Definition:</div>
+          <p>JDBC Driver converts Java commands into database-understandable format.</p>
+          <div class="subsection-title" style="margin-top:8px;">🔹 Real-Life Example:</div>
+          <p>You speak English<br>
+          Database understands SQL<br>
+          👉 Driver = Translator 🧠</p>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Flow:</div>
+          <div class="flow-box">Java</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-box">JDBC API</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-box">Driver (Translator)</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-box">Database</div>
+        </div>
+      </div>
+      <div class="interview-line">A JDBC Driver is a software component that translates Java method calls into database-specific protocol calls, enabling communication between Java and the database.</div>
+    </div>
+  </div>
+
+  <!-- Section 6 -->
+  <div class="section">
+    <div class="section-header">📘 6. Types of JDBC Drivers (Important for Interview)</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div class="inline-box">
+          <div class="inline-box-title"><span class="badge">Type 1</span> JDBC-ODBC Bridge Driver</div>
+          <ul>
+            <li>Old and removed in modern Java</li>
+            <li>Uses ODBC driver</li>
+            <li>❌ Slow performance</li>
+          </ul>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title"><span class="badge">Type 2</span> Native API Driver</div>
+          <ul>
+            <li>Uses database-specific libraries</li>
+            <li>👉 Example: Oracle native driver</li>
+            <li>Partially Java</li>
+          </ul>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title"><span class="badge">Type 3</span> Network Protocol Driver</div>
+          <ul>
+            <li>Uses middleware server</li>
+            <li>👉 Less used today</li>
+            <li>Pure Java</li>
+          </ul>
+        </div>
+        <div class="inline-box" style="border:2px solid #111;">
+          <div class="inline-box-title"><span class="tag">★ Most Important</span><span class="badge">Type 4</span> Thin Driver</div>
+          <ul>
+            <li>Pure Java driver</li>
+            <li>Directly connects to database</li>
+            <li>✔ Fast ✔ Most used in real projects</li>
+            <li>👉 Example: PostgreSQL Driver → <code>org.postgresql.Driver</code></li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">Type 4 (Thin Driver) is the most preferred in real projects because it is pure Java, platform-independent, and directly communicates with the database without any middleware.</div>
+    </div>
+  </div>
+
+  <!-- JDBC Steps Overview -->
+  <div class="section">
+    <div class="section-header">🚀 JDBC Steps — Overview</div>
+    <div class="section-body">
+      <div style="display:flex; gap:0; align-items:stretch;">
+        <div style="flex:1; border-right:1px dashed #ccc; padding:0 8px; text-align:center;">
+          <div class="step-num" style="margin:0 auto 4px;">1</div>
+          <div style="font-weight:700; font-size:12px;">Load &amp; Register Driver</div>
+          <div style="font-size:11px; color:#555;">Class.forName()</div>
+        </div>
+        <div style="flex:1; border-right:1px dashed #ccc; padding:0 8px; text-align:center;">
+          <div class="step-num" style="margin:0 auto 4px;">2</div>
+          <div style="font-weight:700; font-size:12px;">Create Connection</div>
+          <div style="font-size:11px; color:#555;">DriverManager.getConnection()</div>
+        </div>
+        <div style="flex:1; border-right:1px dashed #ccc; padding:0 8px; text-align:center;">
+          <div class="step-num" style="margin:0 auto 4px;">3</div>
+          <div style="font-weight:700; font-size:12px;">Create Statement</div>
+          <div style="font-size:11px; color:#555;">con.createStatement()</div>
+        </div>
+        <div style="flex:1; border-right:1px dashed #ccc; padding:0 8px; text-align:center;">
+          <div class="step-num" style="margin:0 auto 4px;">4</div>
+          <div style="font-weight:700; font-size:12px;">Execute Query</div>
+          <div style="font-size:11px; color:#555;">executeQuery / executeUpdate</div>
+        </div>
+        <div style="flex:1; padding:0 8px; text-align:center;">
+          <div class="step-num" style="margin:0 auto 4px;">5</div>
+          <div style="font-weight:700; font-size:12px;">Close Connection</div>
+          <div style="font-size:11px; color:#555;">rs / stmt / con .close()</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE 3 ===================== -->
+<div class="a4-page">
+  <div class="page-title">JDBC — COMPLETE STUDY NOTES | Page 3 — Step 1: Load &amp; Register Driver</div>
+
+  <div class="section">
+    <div class="section-header">✅ Step 1: Load &amp; Register Driver (Deep Explanation)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 Why do we load and register the driver?</div>
+      <p>👉 Purpose:</p>
+      <ul>
+        <li>Java doesn't know how to talk to database directly</li>
+        <li>Driver acts as a bridge/translator between Java and DB</li>
+      </ul>
+      <p style="margin-top:5px;">🧠 Flow: <strong>Java → JDBC API → Driver → Database</strong></p>
+      <p>👉 Without driver: ❌ Java cannot understand DB-specific language</p>
+
+      <div class="subsection-title">🔹 Two Ways to Load Driver</div>
+      <p>✔️ 1. Using Class.forName()</p>
+      <div class="code-block">Class.forName("org.postgresql.Driver");</div>
+      <p>✔️ 2. Using Driver object</p>
+      <div class="code-block">Driver d = new Driver();
+DriverManager.registerDriver(d);</div>
+      <p>👉 Both do same thing → register driver with DriverManager</p>
+
+      <hr/>
+
+      <div class="subsection-title">🔍 Deep Dive into Class.forName()</div>
+
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">🔹 What is Class?</div>
+          <p>👉 <code>Class</code> is a built-in class in Java (<code>java.lang</code> package)</p>
+          <p>👉 Example: It holds information like:</p>
+          <ul>
+            <li>Class name</li>
+            <li>Methods</li>
+            <li>Constructors</li>
+          </ul>
+
+          <div class="subsection-title" style="margin-top:8px;">🔹 What is forName()?</div>
+          <p>👉 <code>forName()</code> is a <strong>static method</strong> of Class class</p>
+          <p>Syntax:</p>
+          <div class="code-block">Class.forName("fully_qualified_class_name");</div>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 What happens internally?</div>
+          <div class="code-block">Class.forName("org.postgresql.Driver");</div>
+          <p>👉 Step-by-step:</p>
+          <ol>
+            <li>JVM searches this class in classpath</li>
+            <li>Loads it into memory</li>
+            <li>Executes static block inside driver class</li>
+          </ol>
+
+          <div class="note-box" style="margin-top:8px;">
+            <strong>🔥 Important Point</strong><br>
+            Inside PostgreSQL driver:
+            <div class="code-block" style="margin-top:4px;">static {
+    DriverManager.registerDriver(new Driver());
+}</div>
+            👉 So automatically:<br>
+            ✔️ Driver gets registered<br>
+            ✔️ You don't need manual registration
+          </div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="subsection-title">🔹 What is inside "org.postgresql.Driver"?</div>
+      <p>👉 This is called <strong>Fully Qualified Class Name (FQCN)</strong></p>
+      <p>Breakdown:</p>
+      <ul>
+        <li><strong>org</strong> → organization</li>
+        <li><strong>postgresql</strong> → package</li>
+        <li><strong>Driver</strong> → class</li>
+      </ul>
+      <p>👉 It tells JVM: "Load this exact driver class"</p>
+
+      <div class="subsection-title" style="margin-top:8px;">🔹 What does driver do after loading?</div>
+      <p>👉 Driver:</p>
+      <ul>
+        <li>Registers with DriverManager</li>
+        <li>Knows how to:
+          <ul>
+            <li>Open DB connection</li>
+            <li>Send SQL</li>
+            <li>Receive results</li>
+          </ul>
+        </li>
+      </ul>
+
+      <div class="note-box">
+        <strong>⚠️ Exception:</strong> When driver JAR is not added to classpath, it shows <code>ClassNotFoundException</code>. We need to propagate this exception (throws or try-catch).
+      </div>
+
+      <div class="interview-line">Class.forName() dynamically loads the driver class into JVM memory at runtime. Its internal static block auto-registers the driver with DriverManager, making it ready to establish database connections.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE 4 ===================== -->
+<div class="a4-page">
+  <div class="page-title">JDBC — COMPLETE STUDY NOTES | Page 4 — Step 2: Create Connection</div>
+
+  <div class="section">
+    <div class="section-header">✅ Step 2: Create Connection</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 Meaning</div>
+      <p>👉 Establish a live connection (session) between Java application and the database so queries can be executed.</p>
+
+      <div class="subsection-title">🔹 Syntax</div>
+      <div class="code-block">Connection con = DriverManager.getConnection(
+    "jdbc:postgresql://localhost:5432/mydb",
+    "postgres",
+    "password"
+);</div>
+
+      <div class="subsection-title">🔍 URL Breakdown (Very Important)</div>
+      <div class="code-block">jdbc:postgresql://localhost:5432/mydb</div>
+      <p>🧠 What each part means:</p>
+      <ul>
+        <li><strong>jdbc</strong> → tells Java we're using JDBC API</li>
+        <li><strong>postgresql</strong> → which DB driver to use</li>
+        <li><strong>localhost</strong> → DB server location (your machine)</li>
+        <li><strong>5432</strong> → port where DB listens</li>
+        <li><strong>mydb</strong> → specific database to connect</li>
+      </ul>
+
+      <hr/>
+
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">🔹 What is DriverManager?</div>
+          <p>👉 A JDBC class (<code>java.sql</code> package) that:</p>
+          <ul>
+            <li>Maintains list of all registered drivers</li>
+            <li>Chooses the correct driver based on URL</li>
+            <li>Establishes connection between Java and DB</li>
+          </ul>
+          <p style="margin-top:5px;"><strong>DriverManager = Manager who assigns right driver</strong></p>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 What is getConnection()?</div>
+          <p><code>getConnection()</code> is a <strong>static factory method</strong> of the DriverManager class that is used to establish a connection with a database and return a Connection object without exposing its implementation details.</p>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="subsection-title">🔹 Overloaded Methods of getConnection()</div>
+      <p>✔️ 1. Using URL + username + password</p>
+      <div class="code-block">Connection con = DriverManager.getConnection(url, user, password);</div>
+      <p>✔️ 2. Using only URL (credentials inside URL)</p>
+      <div class="code-block">Connection con = DriverManager.getConnection(
+    "jdbc:postgresql://localhost:5432/mydb?user=postgres&password=root"
+);</div>
+      <p>✔️ 3. Using Properties object</p>
+      <div class="code-block">Properties p = new Properties();
+p.put("user", "postgres");
+p.put("password", "root");
+
+Connection con = DriverManager.getConnection(url, p);</div>
+
+      <hr/>
+
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">🔹 What is Connection?</div>
+          <p>👉 An <strong>interface</strong> in <code>java.sql</code> package</p>
+          <p>Purpose:</p>
+          <ul>
+            <li>Represents a session with database</li>
+            <li>Used to:
+              <ul>
+                <li>Create statements</li>
+                <li>Execute queries</li>
+                <li>Manage transactions</li>
+              </ul>
+            </li>
+          </ul>
+          <p style="margin-top:5px;">Common Methods:</p>
+          <div class="code-block">con.prepareStatement(...)
+con.createStatement()
+con.setAutoCommit(false)
+con.close()</div>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Why this line is used?</div>
+          <div class="code-block">Connection con = DriverManager.getConnection(...);</div>
+          <p>👉 Without this:</p>
+          <ul>
+            <li>❌ No communication with DB</li>
+            <li>❌ No query execution</li>
+            <li>✔️ It is the entry point to database operations</li>
+          </ul>
+
+          <div class="subsection-title" style="margin-top:10px;">🔴 Exceptions (Very Important)</div>
+          <p>✔️ 1. <strong>SQLException</strong></p>
+          <p>👉 Main exception</p>
+          <p>❓ When occurs?</p>
+          <ul>
+            <li>Wrong URL</li>
+            <li>Wrong username/password</li>
+            <li>DB not running</li>
+            <li>Network issue</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="interview-line">DriverManager.getConnection() is a static factory method that scans registered drivers, matches the URL to the correct driver, and returns a Connection object representing an active session with the database.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE 5 ===================== -->
+<div class="a4-page">
+  <div class="page-title">JDBC — COMPLETE STUDY NOTES | Page 5 — Step 3: Create Statement</div>
+
+  <div class="section">
+    <div class="section-header">✅ Step 3: Create Statement</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 Meaning</div>
+      <p>👉 Create an object that can send SQL queries from Java to the database.</p>
+      <p>👉 After connection, this is the tool used to communicate with DB.</p>
+
+      <hr/>
+
+      <div class="subsection-title">✅ Statement (Only)</div>
+
+      <div class="subsection-title">🔹 Meaning</div>
+      <p>👉 Used to send simple SQL queries from Java to the database.</p>
+
+      <div class="subsection-title">🔹 Syntax</div>
+      <div class="code-block">Statement stmt = con.createStatement();</div>
+
+      <div class="subsection-title">🔹 Breakdown</div>
+      <ul>
+        <li><strong>Statement</strong> → Interface from <code>java.sql</code></li>
+        <li><strong>con.createStatement()</strong> → <code>createStatement()</code> is an <strong>instance method</strong> of the Connection interface used to create and return a Statement object for executing SQL queries.</li>
+        <li>Returns a <strong>Statement</strong> object</li>
+      </ul>
+
+      <div class="subsection-title">🔹 How it Works</div>
+      <ul>
+        <li>SQL query is written directly (hardcoded)</li>
+        <li>Sent to database</li>
+        <li>Database compiles and executes every time</li>
+      </ul>
+
+      <div class="subsection-title">🔹 Example</div>
+      <div class="code-block">Statement stmt = con.createStatement();
+stmt.executeUpdate("INSERT INTO emp VALUES(101, 'Pravin', 30000)");</div>
+
+      <div class="subsection-title">🔹 Execution Methods</div>
+      <div class="method-row"><span class="method-name">executeQuery()</span><span class="method-desc"> → for SELECT</span></div>
+      <div class="method-row"><span class="method-name">executeUpdate()</span><span class="method-desc"> → for INSERT, UPDATE, DELETE</span></div>
+      <div class="method-row"><span class="method-name">execute()</span><span class="method-desc"> → for any SQL</span></div>
+
+      <div class="subsection-title">🔹 Disadvantages</div>
+      <ul>
+        <li>❌ Prone to SQL Injection</li>
+        <li>❌ Slower (no pre-compilation)</li>
+        <li>❌ Not reusable</li>
+      </ul>
+
+      <div class="subsection-title">🔹 Exception</div>
+      <ul>
+        <li><strong>SQLException</strong> → if query is wrong / DB issue</li>
+      </ul>
+
+      <div class="interview-line">con.createStatement() is an instance method of the Connection interface that creates a Statement object. Statement sends hardcoded SQL queries to the database but is prone to SQL Injection and slower due to no pre-compilation.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE 6 ===================== -->
+<div class="a4-page">
+  <div class="page-title">JDBC — COMPLETE STUDY NOTES | Page 6 — Step 4: Execute the Query</div>
+
+  <div class="section">
+    <div class="section-header">✅ Step 4: Execute the Query (PostgreSQL)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 Meaning</div>
+      <p>👉 Send the SQL query to PostgreSQL and get result / perform operation.</p>
+
+      <div class="subsection-title">🔹 Methods</div>
+
+      <div class="subsection-title">🔸 1. executeQuery() (For SELECT)</div>
+      <div class="code-block">ResultSet rs = stmt.executeQuery("SELECT * FROM emp");</div>
+      <p>🔍 Breakdown:</p>
+      <ul>
+        <li><code>executeQuery()</code> → method of Statement</li>
+        <li>Used only for SELECT</li>
+        <li>Returns a <strong>ResultSet</strong></li>
+      </ul>
+
+      <div class="subsection-title">🔹 What is ResultSet?</div>
+      <p>👉 <strong>ResultSet</strong> is an interface (<code>java.sql</code> package)</p>
+      <p>🧠 Meaning:</p>
+      <ul>
+        <li>Represents data returned from database in tabular form</li>
+        <li>Like a table cursor (points to rows one by one)</li>
+      </ul>
+
+      <div class="subsection-title">🔹 How it works</div>
+      <ul>
+        <li>Initially pointer is before first row</li>
+        <li>You must move it using <code>next()</code></li>
+      </ul>
+
+      <div class="subsection-title">🔹 Important Methods</div>
+      <div class="code-block">while(rs.next()) {
+    int id = rs.getInt("eid");
+    String name = rs.getString("ename");
+    double sal = rs.getDouble("esal");
+}</div>
+      <p>🔍 Methods Explanation:</p>
+      <ul>
+        <li><code>rs.next()</code> → Moves cursor to next row. Returns <strong>true</strong> if row exists</li>
+        <li><code>getInt("column")</code> → fetch integer column value</li>
+        <li><code>getString("column")</code> → fetch string column value</li>
+        <li><code>getDouble("column")</code> → fetch double column value</li>
+      </ul>
+
+      <hr/>
+
+      <div class="subsection-title">🔸 2. executeUpdate() (For INSERT, UPDATE, DELETE)</div>
+      <div class="code-block">int rows = stmt.executeUpdate("INSERT INTO emp VALUES(1,'John',30000)");</div>
+      <p>🔍 Breakdown:</p>
+      <ul>
+        <li>Returns <strong>number of rows affected</strong></li>
+        <li>Insert → 1</li>
+        <li>Update → number of rows updated</li>
+      </ul>
+
+      <hr/>
+
+      <div class="subsection-title">🔸 3. execute() (For both)</div>
+      <div class="code-block">boolean result = stmt.execute("SELECT * FROM emp");</div>
+      <p>🔍 Breakdown:</p>
+      <ul>
+        <li>Returns <strong>boolean</strong></li>
+        <li><code>true</code> → ResultSet available</li>
+        <li><code>false</code> → update count</li>
+      </ul>
+
+      <div class="subsection-title">🔴 Exception</div>
+      <p>✔️ <strong>SQLException</strong></p>
+      <p>👉 Occurs when:</p>
+      <ul>
+        <li>Wrong SQL syntax</li>
+        <li>Table/column not found</li>
+        <li>PostgreSQL server issue</li>
+      </ul>
+
+      <div class="interview-line">executeQuery() is used for SELECT and returns a ResultSet. executeUpdate() is used for INSERT/UPDATE/DELETE and returns rows affected. execute() works for both and returns a boolean.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE 7 ===================== -->
+<div class="a4-page">
+  <div class="page-title">JDBC — COMPLETE STUDY NOTES | Page 7 — Step 5: Close Connection</div>
+
+  <div class="section">
+    <div class="section-header">✅ Step 5: Close the Connection</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 Meaning</div>
+      <p>👉 Close all JDBC resources after execution to free memory and avoid resource leaks.</p>
+
+      <div class="subsection-title">🔹 Syntax</div>
+      <div class="code-block">rs.close();
+stmt.close();
+con.close();</div>
+
+      <div class="subsection-title">🔍 Breakdown</div>
+      <ul>
+        <li><code>ResultSet.close()</code> → closes fetched data</li>
+        <li><code>Statement.close()</code> → closes query object</li>
+        <li><code>Connection.close()</code> → ends database session</li>
+      </ul>
+
+      <div class="subsection-title">🔹 Why this step is important</div>
+      <ul>
+        <li>Prevents memory leaks</li>
+        <li>Frees database resources</li>
+        <li>Avoids connection overload</li>
+        <li>Improves performance</li>
+      </ul>
+
+      <div class="note-box">
+        <strong>⚠️ Best Practice:</strong> Always close in reverse order of creation: ResultSet → Statement → Connection. Use try-with-resources in modern Java for automatic cleanup.
+      </div>
+
+      <div class="interview-line">Not closing JDBC resources causes resource leaks and connection pool exhaustion. Closing order must be ResultSet → Statement → Connection. Use try-with-resources for automatic cleanup in modern Java.</div>
+    </div>
+  </div>
+
+  <!-- Quick Reference -->
+  <div class="section">
+    <div class="section-header">📋 Quick Reference — JDBC Interfaces &amp; Classes</div>
+    <div class="section-body">
+      <div class="three-col">
+        <div class="inline-box">
+          <div class="inline-box-title">DriverManager <span class="tag" style="font-size:9px;">class</span></div>
+          <p>java.sql. Manages registered drivers. getConnection() picks correct driver from URL.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">Connection <span class="tag" style="font-size:9px;">interface</span></div>
+          <p>java.sql. Represents live DB session. Creates statements, manages transactions.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">Statement <span class="tag" style="font-size:9px;">interface</span></div>
+          <p>java.sql. Sends SQL to DB. Prone to SQL Injection. No pre-compilation.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">ResultSet <span class="tag" style="font-size:9px;">interface</span></div>
+          <p>java.sql. Holds SELECT results as tabular data. Cursor-based row iteration.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">PreparedStatement <span class="tag" style="font-size:9px;">interface</span></div>
+          <p>java.sql. Pre-compiled SQL. Prevents SQL Injection. Reusable. Preferred.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">SQLException <span class="tag" style="font-size:9px;">exception</span></div>
+          <p>Main checked exception. Thrown for DB errors, wrong URL, wrong credentials.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All JDBC Steps Summary -->
+  <div class="section">
+    <div class="section-header">🗂️ Complete JDBC Flow Summary</div>
+    <div class="section-body">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div><strong>Load &amp; Register Driver</strong> — <code>Class.forName("org.postgresql.Driver");</code><br>
+        <span style="font-size:12px; color:#444;">JVM loads driver class, static block auto-registers with DriverManager</span></div>
+      </div>
+      <div class="step-row" style="margin-top:7px;">
+        <div class="step-num">2</div>
+        <div><strong>Create Connection</strong> — <code>Connection con = DriverManager.getConnection(url, user, pwd);</code><br>
+        <span style="font-size:12px; color:#444;">Live session established between Java and DB</span></div>
+      </div>
+      <div class="step-row" style="margin-top:7px;">
+        <div class="step-num">3</div>
+        <div><strong>Create Statement</strong> — <code>Statement stmt = con.createStatement();</code><br>
+        <span style="font-size:12px; color:#444;">Object to send SQL queries to database</span></div>
+      </div>
+      <div class="step-row" style="margin-top:7px;">
+        <div class="step-num">4</div>
+        <div><strong>Execute Query</strong> — <code>ResultSet rs = stmt.executeQuery("SELECT * FROM emp");</code><br>
+        <span style="font-size:12px; color:#444;">SQL sent to DB; ResultSet holds the result rows</span></div>
+      </div>
+      <div class="step-row" style="margin-top:7px;">
+        <div class="step-num">5</div>
+        <div><strong>Close Connection</strong> — <code>rs.close(); stmt.close(); con.close();</code><br>
+        <span style="font-size:12px; color:#444;">Free all resources in reverse order</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

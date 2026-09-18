@@ -1,0 +1,935 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    border: 2.5px solid #111;
+    padding: 9px 18px;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+    background: #fff;
+    color: #111;
+  }
+  .main-subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 13px;
+    font-style: italic;
+  }
+
+  .page-title {
+    text-align: center;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    color: #555;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+  }
+
+  .section {
+    border: 1.5px solid #222;
+    margin-bottom: 10px;
+  }
+
+  .section-header {
+    background: #111;
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 5px 11px;
+    letter-spacing: 0.4px;
+  }
+
+  .section-body {
+    padding: 9px 13px 11px;
+    background: #fff;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box {
+    border: 1px solid #bbb;
+    padding: 7px 9px;
+    background: #fafafa;
+  }
+  .inline-box-title {
+    font-weight: 700;
+    font-size: 11.5px;
+    margin-bottom: 3px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700;
+    font-size: 12.5px;
+    margin-bottom: 3px;
+    margin-top: 8px;
+    color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  /* Full program code block - darker */
+  .code-block-full {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    padding: 10px 13px;
+    margin: 7px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .code-block-full .kw { color: #569cd6; }
+  .code-block-full .cm { color: #6a9955; }
+  .code-block-full .st { color: #ce9178; }
+  .code-block-full .cl { color: #4ec9b0; }
+  .code-block-full .mt { color: #dcdcaa; }
+  .code-block-full .nm { color: #9cdcfe; }
+
+  /* Snippet code block - light */
+  .code-block {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    border-left: 3px solid #333;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.6;
+  }
+
+  .interview-line {
+    background: #f5f5f5;
+    border-left: 3px solid #111;
+    padding: 6px 10px;
+    font-style: italic;
+    font-size: 12px;
+    margin: 8px 0 3px;
+    color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 11px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555;
+    padding: 6px 10px;
+    margin: 7px 0;
+    font-size: 12px;
+    background: #fafafa;
+  }
+
+  .explain-box {
+    background: #fffdf0;
+    border: 1px solid #ddd;
+    border-left: 3px solid #888;
+    padding: 7px 11px;
+    margin: 6px 0;
+    font-size: 12.5px;
+  }
+  .explain-box-title {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 4px;
+    color: #333;
+  }
+
+  .step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin: 5px 0;
+  }
+  .step-num {
+    min-width: 22px; height: 22px;
+    background: #111; color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .method-row {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    margin: 3px 0;
+  }
+  .method-name {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 11.5px;
+    background: #eee;
+    padding: 1px 5px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .method-desc { font-size: 12px; color: #333; }
+
+  .badge {
+    display: inline-block;
+    border: 1px solid #444;
+    font-size: 10px;
+    padding: 1px 5px;
+    margin-right: 4px;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+  .tag {
+    display: inline-block;
+    background: #111;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-right: 4px;
+    letter-spacing: 0.3px;
+    vertical-align: middle;
+  }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  ol { padding-left: 17px; margin: 3px 0; }
+  ol li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  .line-explain {
+    display: flex;
+    gap: 0;
+    margin: 4px 0;
+    border: 1px solid #ddd;
+  }
+  .line-code {
+    background: #f0f0f0;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-right: 1px solid #ccc;
+    min-width: 44%;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .line-meaning {
+    padding: 4px 8px;
+    font-size: 11.5px;
+    color: #333;
+    flex: 1;
+  }
+
+  .output-box {
+    background: #111;
+    color: #00dd00;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    padding: 8px 12px;
+    margin: 6px 0;
+    border-radius: 2px;
+  }
+  .output-box::before { content: '$ Output: '; color: #aaa; font-size: 10px; display:block; margin-bottom:2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0;
+      box-shadow: none;
+      border: none;
+      padding: 13mm 15mm;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================== PAGE 1 — PROGRAM OVERVIEW ============================== -->
+<div class="a4-page">
+  <div class="main-title">JDBC — InsertDataIntoTable.java</div>
+  <div class="main-subtitle">Package: jdbcfirstdayproject | Complete Code + Line-by-Line Explanation + Interview Notes</div>
+
+  <!-- Full Program -->
+  <div class="section">
+    <div class="section-header">📄 Complete Program — InsertDataIntoTable.java</div>
+    <div class="section-body">
+<div class="code-block-full"><span class="kw">package</span> <span class="nm">jdbcfirstdayproject</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Statement</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+
+<span class="kw">public class</span> <span class="cl">InsertDataIntoTable</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">ClassNotFoundException</span>, <span class="cl">SQLException</span> {
+
+        <span class="cm">// Step 1: Load and Register the Driver</span>
+        <span class="cm">// Class is a predefined class in java.lang package</span>
+        <span class="cm">// forName() is a static method used to load the driver class into memory</span>
+        <span class="cl">Class</span>.<span class="mt">forName</span>(<span class="st">"org.postgresql.Driver"</span>);
+
+        <span class="cm">// Step 2: Create Connection</span>
+        <span class="cm">// DriverManager is a class that manages database drivers</span>
+        <span class="cm">// getConnection() is a static factory method that returns Connection object</span>
+        <span class="cl">Connection</span> <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+                <span class="st">"jdbc:postgresql://localhost:5433/FirstDayDataBase"</span>,
+                <span class="st">"postgres"</span>,
+                <span class="st">"root"</span>
+        );
+
+        <span class="cm">// Step 3: Create Statement</span>
+        <span class="cm">// Connection is an interface</span>
+        <span class="cm">// createStatement() is a non-static method of Connection</span>
+        <span class="cm">// It returns a Statement object used to execute SQL queries</span>
+        <span class="cl">Statement</span> <span class="nm">statement</span> = <span class="nm">connection</span>.<span class="mt">createStatement</span>();
+
+        <span class="cm">// Step 4: Execute Query (INSERT)</span>
+        <span class="cm">// execute() is a non-static method present in Statement interface</span>
+        <span class="cm">// It sends SQL query to database</span>
+        <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="st">"insert into employee values(101,'Pravin',50000)"</span>);
+        <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="st">"insert into employee values(102,'Mayuresh',40000)"</span>);
+        <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="st">"insert into employee values(103,'Vednat',50)"</span>);
+
+        <span class="cm">// Step 5: Close Connection</span>
+        <span class="cm">// Closes the database connection and releases resources</span>
+        <span class="nm">connection</span>.<span class="mt">close</span>();
+
+        <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Successfully data added"</span>);
+    }
+}</div>
+
+      <div class="output-box">Successfully data added</div>
+    </div>
+  </div>
+
+  <!-- Package + Imports -->
+  <div class="section">
+    <div class="section-header">📘 Package Declaration &amp; Imports — Explanation</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 Package Declaration</div>
+      <div class="code-block">package jdbcfirstdayproject;</div>
+      <div class="explain-box">
+        <div class="explain-box-title">📖 What is a Package?</div>
+        <ul>
+          <li>A <strong>package</strong> is a namespace/folder that organizes related Java classes together.</li>
+          <li><code>jdbcfirstdayproject</code> is the name of our package — it groups all JDBC-related classes of this project.</li>
+          <li>Prevents naming conflicts between classes in large projects.</li>
+          <li>👉 Like a folder on your computer — all related files are kept inside one folder.</li>
+        </ul>
+      </div>
+
+      <div class="subsection-title">🔹 Import Statements</div>
+      <div class="code-block">import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.SQLException;</div>
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Why we import?</div>
+        <ul>
+          <li>All JDBC classes/interfaces are in <code>java.sql</code> package — they are not auto-available.</li>
+          <li>We must import them explicitly to use them in our class.</li>
+        </ul>
+        <div style="margin-top:6px;">
+          <div class="line-explain">
+            <div class="line-code">import java.sql.Connection;</div>
+            <div class="line-meaning">Interface — represents active session/connection with DB</div>
+          </div>
+          <div class="line-explain">
+            <div class="line-code">import java.sql.DriverManager;</div>
+            <div class="line-meaning">Class — manages drivers, provides getConnection()</div>
+          </div>
+          <div class="line-explain">
+            <div class="line-code">import java.sql.Statement;</div>
+            <div class="line-meaning">Interface — used to send SQL queries to DB</div>
+          </div>
+          <div class="line-explain">
+            <div class="line-code">import java.sql.SQLException;</div>
+            <div class="line-meaning">Checked exception — thrown when DB operations fail</div>
+          </div>
+        </div>
+      </div>
+      <div class="interview-line">All JDBC classes are in the java.sql package. We import them explicitly since Java does not auto-import them. Connection, Statement, ResultSet are interfaces; DriverManager is a class.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== PAGE 2 — CLASS + MAIN METHOD + STEP 1 ============================== -->
+<div class="a4-page">
+  <div class="page-title">InsertDataIntoTable.java | Page 2 — Class Declaration, main() Method &amp; Step 1</div>
+
+  <!-- Class Declaration -->
+  <div class="section">
+    <div class="section-header">📘 Class Declaration</div>
+    <div class="section-body">
+      <div class="code-block">public class InsertDataIntoTable {</div>
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Explanation</div>
+        <ul>
+          <li><code>public</code> → access modifier — class is accessible from everywhere</li>
+          <li><code>class</code> → keyword to define a class</li>
+          <li><code>InsertDataIntoTable</code> → name of the class (must match filename exactly)</li>
+          <li>👉 Class name follows <strong>PascalCase</strong> convention in Java</li>
+          <li>👉 This class contains logic to insert employee data into PostgreSQL using JDBC</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- main() Method -->
+  <div class="section">
+    <div class="section-header">📘 main() Method Declaration</div>
+    <div class="section-body">
+      <div class="code-block">public static void main(String[] args) throws ClassNotFoundException, SQLException {</div>
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Breakdown — each keyword explained</div>
+        <div class="line-explain">
+          <div class="line-code">public</div>
+          <div class="line-meaning">Accessible from everywhere — JVM needs to call it from outside class</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">static</div>
+          <div class="line-meaning">JVM calls main() without creating object of class</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">void</div>
+          <div class="line-meaning">main() returns nothing to JVM</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">main</div>
+          <div class="line-meaning">Entry point of every Java program — JVM looks for this method</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">String[] args</div>
+          <div class="line-meaning">Command-line arguments — passed when running the program</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">throws ClassNotFoundException</div>
+          <div class="line-meaning">Propagates exception if driver class not found in classpath</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">throws SQLException</div>
+          <div class="line-meaning">Propagates exception if any DB operation fails (wrong URL, wrong password, etc.)</div>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>⚠️ Why throws instead of try-catch?</strong><br>
+        Both are valid. Using <code>throws</code> means we propagate the exception to the caller (JVM). In real projects, try-catch-finally is preferred for proper resource cleanup and user-friendly error messages.
+      </div>
+      <div class="interview-line">The main() method uses throws ClassNotFoundException and throws SQLException to propagate checked exceptions. ClassNotFoundException is thrown by Class.forName() if driver JAR is missing. SQLException is thrown by DriverManager.getConnection() if DB connection fails.</div>
+    </div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="section">
+    <div class="section-header">✅ Step 1 — Load and Register the Driver</div>
+    <div class="section-body">
+      <div class="code-block">// Step 1: Load and Register the Driver
+// Class is a predefined class in java.lang package
+// forName() is a static method used to load the driver class into memory
+Class.forName("org.postgresql.Driver");</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">Class</div>
+          <div class="line-meaning">Predefined class in java.lang package. Represents runtime metadata of a class — name, methods, constructors.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">forName()</div>
+          <div class="line-meaning">Static method of Class. Takes FQCN as String. Loads the specified class into JVM memory at runtime.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">"org.postgresql.Driver"</div>
+          <div class="line-meaning">Fully Qualified Class Name (FQCN) of PostgreSQL driver. org=organization, postgresql=package, Driver=class.</div>
+        </div>
+      </div>
+
+      <div class="subsection-title">🔹 What happens internally when this line runs?</div>
+      <ol>
+        <li>JVM searches <code>org.postgresql.Driver</code> class in the classpath</li>
+        <li>Loads it into JVM memory</li>
+        <li>Executes the <code>static block</code> inside the PostgreSQL driver class</li>
+        <li>Static block internally calls <code>DriverManager.registerDriver(new Driver())</code></li>
+        <li>Driver is now registered — ready to accept connections</li>
+      </ol>
+
+      <div class="subsection-title" style="margin-top:8px;">🔹 Static block inside PostgreSQL Driver (Internal Code)</div>
+      <div class="code-block">static {
+    DriverManager.registerDriver(new Driver());
+}</div>
+      <p>👉 This runs <strong>automatically</strong> when the class is loaded by JVM. You do NOT need to call it manually.</p>
+
+      <div class="subsection-title">🔹 Alternative Way (manual registration)</div>
+      <div class="code-block">Driver d = new Driver();
+DriverManager.registerDriver(d);</div>
+      <p>👉 Both approaches achieve the same result — driver gets registered with DriverManager.</p>
+
+      <div class="note-box">
+        <strong>⚠️ Exception:</strong> If PostgreSQL JDBC JAR file is not added to the project classpath, <code>ClassNotFoundException</code> is thrown.<br>
+        Fix: Add <code>postgresql-42.x.x.jar</code> to build path / dependencies.
+      </div>
+
+      <div class="note-box">
+        <strong>📝 Note — Modern Java (JDBC 4.0+):</strong> From Java 6 onwards, <code>Class.forName()</code> is not mandatory. JDBC 4.0 introduced <strong>auto-loading</strong> of drivers using Java's ServiceLoader mechanism — the driver is auto-detected from the JAR's META-INF/services file. But we still write it for <strong>clarity and older compatibility</strong>.
+      </div>
+
+      <div class="interview-line">Class.forName() dynamically loads the PostgreSQL driver class into JVM. Its static block auto-registers with DriverManager. From JDBC 4.0 onwards, driver auto-loads from classpath, but Class.forName() is still written for explicit clarity.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== PAGE 3 — STEP 2: CREATE CONNECTION ============================== -->
+<div class="a4-page">
+  <div class="page-title">InsertDataIntoTable.java | Page 3 — Step 2: Create Connection</div>
+
+  <div class="section">
+    <div class="section-header">✅ Step 2 — Create Connection</div>
+    <div class="section-body">
+
+      <div class="code-block">// Step 2: Create Connection
+// DriverManager is a class that manages database drivers
+// getConnection() is a static factory method that returns Connection object
+Connection connection = DriverManager.getConnection(
+        "jdbc:postgresql://localhost:5433/FirstDayDataBase",
+        "postgres",
+        "root"
+);</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">Connection</div>
+          <div class="line-meaning">Interface in java.sql. Represents an active session/connection between Java and DB. Reference variable type.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">connection</div>
+          <div class="line-meaning">Variable name — holds the reference to the Connection object returned by getConnection()</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">DriverManager</div>
+          <div class="line-meaning">Predefined class in java.sql. Manages all registered drivers. Acts like a manager assigning the right driver.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">getConnection()</div>
+          <div class="line-meaning">Static factory method of DriverManager. Reads URL, picks correct registered driver, returns Connection object.</div>
+        </div>
+      </div>
+
+      <div class="subsection-title">🔹 URL Breakdown (Very Important)</div>
+      <div class="code-block">"jdbc:postgresql://localhost:5433/FirstDayDataBase"</div>
+      <div class="line-explain">
+        <div class="line-code">jdbc</div>
+        <div class="line-meaning">Protocol — tells Java we are using JDBC API to connect</div>
+      </div>
+      <div class="line-explain">
+        <div class="line-code">postgresql</div>
+        <div class="line-meaning">Sub-protocol — tells DriverManager to use the PostgreSQL driver</div>
+      </div>
+      <div class="line-explain">
+        <div class="line-code">localhost</div>
+        <div class="line-meaning">Host — location of DB server. localhost = your own machine (127.0.0.1)</div>
+      </div>
+      <div class="line-explain">
+        <div class="line-code">5433</div>
+        <div class="line-meaning">Port number — PostgreSQL running on port 5433 (default is 5432). Must match your PostgreSQL config.</div>
+      </div>
+      <div class="line-explain">
+        <div class="line-code">FirstDayDataBase</div>
+        <div class="line-meaning">Database name — the exact database in PostgreSQL we want to connect to</div>
+      </div>
+
+      <div class="subsection-title" style="margin-top:8px;">🔹 Username &amp; Password Parameters</div>
+      <div class="line-explain">
+        <div class="line-code">"postgres"</div>
+        <div class="line-meaning">Username — default PostgreSQL superuser username</div>
+      </div>
+      <div class="line-explain">
+        <div class="line-code">"root"</div>
+        <div class="line-meaning">Password — password set during PostgreSQL installation</div>
+      </div>
+
+      <div class="subsection-title">🔹 What is Connection interface?</div>
+      <div class="two-col">
+        <div>
+          <ul>
+            <li>Interface in <code>java.sql</code> package</li>
+            <li>Represents a <strong>live session</strong> between Java app and DB</li>
+            <li>Without connection → no SQL execution possible</li>
+            <li>It is the <strong>entry point</strong> to all DB operations</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title">Common Methods of Connection:</div>
+          <div class="method-row"><span class="method-name">createStatement()</span><span class="method-desc"> → creates Statement object</span></div>
+          <div class="method-row"><span class="method-name">prepareStatement(sql)</span><span class="method-desc"> → creates PreparedStatement</span></div>
+          <div class="method-row"><span class="method-name">setAutoCommit(false)</span><span class="method-desc"> → disables auto-commit</span></div>
+          <div class="method-row"><span class="method-name">commit()</span><span class="method-desc"> → commits transaction</span></div>
+          <div class="method-row"><span class="method-name">rollback()</span><span class="method-desc"> → rolls back transaction</span></div>
+          <div class="method-row"><span class="method-name">close()</span><span class="method-desc"> → ends DB session</span></div>
+        </div>
+      </div>
+
+      <div class="subsection-title">🔹 What is a Factory Method?</div>
+      <p>👉 <code>getConnection()</code> is called a <strong>static factory method</strong> because:</p>
+      <ul>
+        <li>It is <strong>static</strong> — called on class, not object</li>
+        <li>It <strong>creates and returns an object</strong> (Connection) without exposing how it is created internally</li>
+        <li>The actual object returned is an implementation class (like <code>PgConnection</code>), not <code>Connection</code> itself — because Connection is an interface</li>
+      </ul>
+
+      <div class="subsection-title">🔹 What happens internally when getConnection() runs?</div>
+      <ol>
+        <li>DriverManager loops through all registered drivers</li>
+        <li>Checks which driver accepts the given URL (<code>jdbc:postgresql://...</code>)</li>
+        <li>PostgreSQL driver accepts it → creates a connection</li>
+        <li>Returns a <code>Connection</code> object (actually <code>PgConnection</code> under the hood)</li>
+      </ol>
+
+      <div class="note-box">
+        <strong>⚠️ Port Note:</strong> Default PostgreSQL port is <code>5432</code>. In this program, port <code>5433</code> is used — this means PostgreSQL was configured or installed on a non-default port. Always match the port with your PostgreSQL installation.
+      </div>
+
+      <div class="note-box">
+        <strong>⚠️ SQLException Causes:</strong> Wrong URL → SQLException | Wrong username/password → SQLException | DB server not running → SQLException | Network issue → SQLException
+      </div>
+
+      <div class="interview-line">DriverManager.getConnection() is a static factory method that internally loops through all registered drivers, matches the URL to the correct driver, and returns a Connection object representing a live database session.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== PAGE 4 — STEP 3 + STEP 4 ============================== -->
+<div class="a4-page">
+  <div class="page-title">InsertDataIntoTable.java | Page 4 — Step 3: Create Statement &amp; Step 4: Execute Query</div>
+
+  <!-- Step 3 -->
+  <div class="section">
+    <div class="section-header">✅ Step 3 — Create Statement</div>
+    <div class="section-body">
+
+      <div class="code-block">// Step 3: Create Statement
+// Connection is an interface
+// createStatement() is a non-static method of Connection
+// It returns a Statement object used to execute SQL queries
+Statement statement = connection.createStatement();</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">Statement</div>
+          <div class="line-meaning">Interface in java.sql. Provides methods to send SQL queries to DB. Reference variable type.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">statement</div>
+          <div class="line-meaning">Variable name — holds the Statement object returned by createStatement()</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">connection</div>
+          <div class="line-meaning">The Connection object created in Step 2. We call createStatement() on it.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">createStatement()</div>
+          <div class="line-meaning">Non-static (instance) method of Connection interface. Creates and returns a Statement object.</div>
+        </div>
+      </div>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="subsection-title">🔹 What is Statement interface?</div>
+          <ul>
+            <li>Interface in <code>java.sql</code></li>
+            <li>Used to send <strong>static SQL queries</strong> to database</li>
+            <li>SQL is written as a hardcoded String</li>
+            <li>DB compiles query every single time it runs</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Methods of Statement:</div>
+          <div class="method-row"><span class="method-name">execute(sql)</span><span class="method-desc"> → any SQL; returns boolean</span></div>
+          <div class="method-row"><span class="method-name">executeQuery(sql)</span><span class="method-desc"> → SELECT; returns ResultSet</span></div>
+          <div class="method-row"><span class="method-name">executeUpdate(sql)</span><span class="method-desc"> → DML; returns int (rows)</span></div>
+          <div class="method-row"><span class="method-name">close()</span><span class="method-desc"> → releases Statement resources</span></div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>⚠️ Disadvantages of Statement:</strong> ❌ Prone to SQL Injection (user input directly in SQL string) | ❌ Slower — DB compiles SQL on every call | ❌ Not reusable — new compilation each time | ✅ Use PreparedStatement in real projects for security + performance.
+      </div>
+      <div class="interview-line">createStatement() is a non-static (instance) method of the Connection interface. It returns a Statement object. Statement is an interface in java.sql used to send hardcoded SQL queries to the database — it is prone to SQL Injection and slower due to no pre-compilation.</div>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="section">
+    <div class="section-header">✅ Step 4 — Execute Query (INSERT)</div>
+    <div class="section-body">
+
+      <div class="code-block">// Step 4: Execute Query (INSERT)
+// execute() is a non-static method present in Statement interface
+// It sends SQL query to database
+statement.execute("insert into employee values(101,'Pravin',50000)");
+statement.execute("insert into employee values(102,'Mayuresh',40000)");
+statement.execute("insert into employee values(103,'Vednat',50)");</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">statement</div>
+          <div class="line-meaning">The Statement object created in Step 3. We use it to send SQL.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">execute()</div>
+          <div class="line-meaning">Non-static method of Statement interface. Sends any SQL to DB. Returns boolean: true = ResultSet available, false = update count.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">"insert into employee..."</div>
+          <div class="line-meaning">SQL INSERT query as a String. Inserts one row into the employee table per call.</div>
+        </div>
+      </div>
+
+      <div class="subsection-title">🔹 What is execute() method?</div>
+      <ul>
+        <li><strong>Non-static (instance) method</strong> of Statement interface</li>
+        <li>Can execute <strong>any SQL statement</strong> — DDL, DML, DQL</li>
+        <li>Returns <strong>boolean</strong>:
+          <ul>
+            <li><code>true</code> → query produced a ResultSet (SELECT)</li>
+            <li><code>false</code> → query is DML (INSERT/UPDATE/DELETE) — no ResultSet</li>
+          </ul>
+        </li>
+        <li>👉 Here INSERT is used → returns <code>false</code> (no ResultSet needed)</li>
+      </ul>
+
+      <div class="subsection-title">🔹 SQL INSERT Query Breakdown</div>
+      <div class="code-block">insert into employee values(101,'Pravin',50000)</div>
+      <div class="line-explain">
+        <div class="line-code">insert into</div>
+        <div class="line-meaning">SQL DML command — inserts a new row into a table</div>
+      </div>
+      <div class="line-explain">
+        <div class="line-code">employee</div>
+        <div class="line-meaning">Name of the table in PostgreSQL database where data is inserted</div>
+      </div>
+      <div class="line-explain">
+        <div class="line-code">values(101,'Pravin',50000)</div>
+        <div class="line-meaning">Values for each column: 101=id (int), 'Pravin'=name (varchar), 50000=salary (numeric)</div>
+      </div>
+
+      <div class="subsection-title">🔹 Data Inserted into employee Table</div>
+      <div style="border:1px solid #999; font-family:monospace; font-size:12px; margin:6px 0;">
+        <div style="background:#111; color:#fff; padding:4px 10px; display:grid; grid-template-columns:1fr 1fr 1fr;">
+          <span>eid</span><span>ename</span><span>esal</span>
+        </div>
+        <div style="padding:3px 10px; display:grid; grid-template-columns:1fr 1fr 1fr; border-bottom:1px solid #ddd;">
+          <span>101</span><span>Pravin</span><span>50000</span>
+        </div>
+        <div style="padding:3px 10px; display:grid; grid-template-columns:1fr 1fr 1fr; border-bottom:1px solid #ddd;">
+          <span>102</span><span>Mayuresh</span><span>40000</span>
+        </div>
+        <div style="padding:3px 10px; display:grid; grid-template-columns:1fr 1fr 1fr;">
+          <span>103</span><span>Vednat</span><span>50</span>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>⚠️ Why execute() and not executeUpdate() here?</strong><br>
+        Both work for INSERT. <code>executeUpdate()</code> is more appropriate for DML (returns int = rows affected). <code>execute()</code> is more generic — works for any SQL. Here <code>execute()</code> is used since the return value (boolean) is not being captured or used.
+      </div>
+      <div class="interview-line">execute() is a non-static method of the Statement interface that can execute any SQL statement. For DML operations like INSERT, it returns false (no ResultSet). executeUpdate() is more suitable for INSERT/UPDATE/DELETE as it returns the number of rows affected.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== PAGE 5 — STEP 5 + EXTRA INFO ============================== -->
+<div class="a4-page">
+  <div class="page-title">InsertDataIntoTable.java | Page 5 — Step 5: Close Connection + Extra Information</div>
+
+  <!-- Step 5 -->
+  <div class="section">
+    <div class="section-header">✅ Step 5 — Close the Connection</div>
+    <div class="section-body">
+
+      <div class="code-block">// Step 5: Close Connection
+// Closes the database connection and releases resources
+connection.close();
+
+System.out.println("Successfully data added");</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">connection</div>
+          <div class="line-meaning">The Connection object created in Step 2 — holds the live DB session</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">close()</div>
+          <div class="line-meaning">Non-static method of Connection interface. Terminates the DB session, releases all DB resources held by this connection.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">System.out.println(...)</div>
+          <div class="line-meaning">Prints confirmation message to console after successful INSERT. Runs only if no exception was thrown.</div>
+        </div>
+      </div>
+
+      <div class="subsection-title">🔹 Why closing connection is critical</div>
+      <ul>
+        <li>Each open connection occupies memory on both Java side and DB server side</li>
+        <li>Databases have a <strong>maximum connection limit</strong> — not closing connections causes <strong>connection pool exhaustion</strong></li>
+        <li>Unclosed connections → <strong>memory leaks</strong> → application slowdown or crash</li>
+        <li>In production, connection pools (HikariCP, C3P0) manage connections — they expect connections to be returned (closed) after use</li>
+      </ul>
+
+      <div class="subsection-title">🔹 Correct Closing Order (when ResultSet and Statement also used)</div>
+      <div class="code-block">rs.close();          // 1. Close ResultSet first
+statement.close();   // 2. Close Statement second
+connection.close();  // 3. Close Connection last</div>
+      <p>👉 In this program, only Connection is used (Statement not closed separately) — for complete cleanup, close Statement too.</p>
+
+      <div class="note-box">
+        <strong>⚠️ Better Practice — try-with-resources (Java 7+):</strong><br>
+        <div class="code-block" style="margin-top:5px;">try (Connection connection = DriverManager.getConnection(url, user, pwd);
+     Statement statement = connection.createStatement()) {
+    statement.execute("insert into employee values(101,'Pravin',50000)");
+}
+// Auto-closes connection and statement — no need to call close() manually</div>
+        Using try-with-resources ensures resources are closed even if an exception occurs.
+      </div>
+
+      <div class="interview-line">connection.close() terminates the active DB session and releases all database resources. Not closing connections causes connection pool exhaustion and memory leaks. Best practice is to use try-with-resources for automatic closure in modern Java.</div>
+    </div>
+  </div>
+
+  <!-- Extra Info -->
+  <div class="section">
+    <div class="section-header">📘 Extra Information — execute() vs executeUpdate() vs executeQuery()</div>
+    <div class="section-body">
+      <div style="border:1px solid #999; font-size:12px;">
+        <div style="background:#111; color:#fff; padding:5px 10px; display:grid; grid-template-columns:1.2fr 1fr 1fr 1fr 1fr;">
+          <span style="font-weight:700;">Method</span>
+          <span style="font-weight:700;">Returns</span>
+          <span style="font-weight:700;">Used For</span>
+          <span style="font-weight:700;">Type</span>
+          <span style="font-weight:700;">Example</span>
+        </div>
+        <div style="padding:4px 10px; display:grid; grid-template-columns:1.2fr 1fr 1fr 1fr 1fr; border-bottom:1px solid #ddd; background:#fafafa;">
+          <code>execute(sql)</code><span>boolean</span><span>Any SQL</span><span>non-static</span><span>INSERT/SELECT</span>
+        </div>
+        <div style="padding:4px 10px; display:grid; grid-template-columns:1.2fr 1fr 1fr 1fr 1fr; border-bottom:1px solid #ddd;">
+          <code>executeUpdate(sql)</code><span>int (rows)</span><span>INSERT/UPDATE/DELETE</span><span>non-static</span><span>INSERT</span>
+        </div>
+        <div style="padding:4px 10px; display:grid; grid-template-columns:1.2fr 1fr 1fr 1fr 1fr; background:#fafafa;">
+          <code>executeQuery(sql)</code><span>ResultSet</span><span>SELECT only</span><span>non-static</span><span>SELECT *</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exception Summary -->
+  <div class="section">
+    <div class="section-header">📘 Exception Handling Summary — This Program</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div class="inline-box">
+          <div class="inline-box-title">ClassNotFoundException</div>
+          <ul>
+            <li>Thrown by: <code>Class.forName()</code></li>
+            <li>Cause: Driver JAR not in classpath</li>
+            <li>Fix: Add <code>postgresql-42.x.x.jar</code></li>
+            <li>Type: Checked exception</li>
+            <li>Package: <code>java.lang</code></li>
+          </ul>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">SQLException</div>
+          <ul>
+            <li>Thrown by: <code>getConnection()</code>, <code>execute()</code></li>
+            <li>Cause: Wrong URL, wrong password, DB not running, wrong SQL, table not found</li>
+            <li>Type: Checked exception</li>
+            <li>Package: <code>java.sql</code></li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">This program declares throws ClassNotFoundException and throws SQLException in main(). ClassNotFoundException is thrown by Class.forName() when driver JAR is missing. SQLException is a checked exception from java.sql thrown when any database operation fails.</div>
+    </div>
+  </div>
+
+  <!-- Quick Revision -->
+  <div class="section">
+    <div class="section-header">🗂️ Quick Revision — All 5 Steps with Code &amp; Purpose</div>
+    <div class="section-body">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div>
+          <strong>Load Driver</strong> — <code>Class.forName("org.postgresql.Driver");</code><br>
+          <span style="font-size:12px; color:#444;">Loads driver into JVM. Static block auto-registers with DriverManager. Throws ClassNotFoundException if JAR missing.</span>
+        </div>
+      </div>
+      <div class="step-row" style="margin-top:6px;">
+        <div class="step-num">2</div>
+        <div>
+          <strong>Create Connection</strong> — <code>Connection connection = DriverManager.getConnection(url, user, pwd);</code><br>
+          <span style="font-size:12px; color:#444;">Establishes live DB session. DriverManager picks correct driver. Throws SQLException if credentials/URL wrong.</span>
+        </div>
+      </div>
+      <div class="step-row" style="margin-top:6px;">
+        <div class="step-num">3</div>
+        <div>
+          <strong>Create Statement</strong> — <code>Statement statement = connection.createStatement();</code><br>
+          <span style="font-size:12px; color:#444;">Creates object to send SQL to DB. Non-static method of Connection interface.</span>
+        </div>
+      </div>
+      <div class="step-row" style="margin-top:6px;">
+        <div class="step-num">4</div>
+        <div>
+          <strong>Execute Query</strong> — <code>statement.execute("insert into employee values(...)"); </code><br>
+          <span style="font-size:12px; color:#444;">Sends INSERT SQL to PostgreSQL. execute() is non-static method of Statement. Returns boolean.</span>
+        </div>
+      </div>
+      <div class="step-row" style="margin-top:6px;">
+        <div class="step-num">5</div>
+        <div>
+          <strong>Close Connection</strong> — <code>connection.close();</code><br>
+          <span style="font-size:12px; color:#444;">Ends DB session. Releases resources. Prevents memory leaks and connection pool exhaustion.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

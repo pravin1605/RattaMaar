@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>React Routing — Notes</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2333;
+      --border: #30363d;
+      --accent:  #58a6ff;
+      --accent2: #3fb950;
+      --accent3: #f78166;
+      --accent4: #d2a8ff;
+      --accent5: #ffa657;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --text-dim: #6e7681;
+      --code-bg: #010409;
+      /* component colors */
+      --cbr: #ffa657;   /* BrowserRouter */
+      --cr:  #58a6ff;   /* Routes */
+      --cro: #3fb950;   /* Route */
+      --cl:  #d2a8ff;   /* Link */
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.7; padding: 0 1rem; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 3.5rem 1rem 2.5rem; }
+    .hero-badge { display: inline-block; background: #1a2030; border: 1px solid var(--accent); color: var(--accent); font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: .35rem .9rem; border-radius: 2rem; margin-bottom: 1.4rem; }
+    .hero h1 { font-size: clamp(2rem, 6vw, 3.2rem); font-weight: 800; background: linear-gradient(135deg, var(--cbr) 0%, var(--cr) 50%, var(--cro) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.15; margin-bottom: .9rem; }
+    .hero p { color: var(--text-muted); font-size: 1rem; max-width: 560px; margin: 0 auto 1.8rem; }
+    .hero-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+    .hero-tag { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); font-size: .76rem; font-weight: 600; padding: .3rem .75rem; border-radius: .4rem; }
+
+    /* TOC */
+    .toc { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: .6rem; padding: 1.4rem 1.6rem; max-width: 700px; margin: 0 auto 2.5rem; }
+    .toc h3 { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: .9rem; }
+    .toc ol { padding-left: 1.2rem; }
+    .toc li { margin-bottom: .35rem; }
+    .toc a { color: var(--text-muted); text-decoration: none; font-size: .9rem; transition: color .2s; }
+    .toc a:hover { color: var(--accent); }
+
+    .container { max-width: 860px; margin: 0 auto; }
+
+    /* SECTION */
+    .section { background: var(--surface); border: 1px solid var(--border); border-radius: .8rem; margin-bottom: 2rem; overflow: hidden; }
+    .section-header { display: flex; align-items: center; gap: .85rem; padding: 1.2rem 1.6rem; border-bottom: 1px solid var(--border); background: var(--surface2); }
+    .section-num { background: var(--accent); color: #0d1117; font-size: .78rem; font-weight: 800; width: 1.8rem; height: 1.8rem; border-radius: .4rem; display: grid; place-items: center; flex-shrink: 0; }
+    .section-header h2 { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+    .section-body { padding: 1.4rem 1.6rem; }
+
+    /* DEF BOX */
+    .def-box { background: #0d1a2a; border: 1px solid var(--accent); border-radius: .6rem; padding: 1rem 1.2rem; margin: 1rem 0; font-size: .9rem; color: var(--text); }
+    .def-box::before { content: '📌 Definition'; display: block; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: .5rem; }
+
+    /* CALLOUTS */
+    .note { background: #1a2640; border-left: 3px solid var(--accent); border-radius: 0 .5rem .5rem 0; padding: .8rem 1.1rem; font-size: .88rem; color: var(--text-muted); margin: .8rem 0; }
+    .note strong { color: var(--accent); }
+    .tip  { background: #0d2a1a; border-left: 3px solid var(--accent2); border-radius: 0 .5rem .5rem 0; padding: .8rem 1.1rem; font-size: .88rem; color: var(--text-muted); margin: .8rem 0; }
+    .tip strong { color: var(--accent2); }
+    .cmd  { background: #0a0a1e; border: 1px solid var(--accent4); border-radius: .6rem; padding: .9rem 1.2rem; margin: 1rem 0; font-family: 'JetBrains Mono', monospace; font-size: .9rem; color: var(--accent4); display: flex; align-items: center; gap: .8rem; }
+    .cmd::before { content: '$'; color: var(--accent2); font-weight: 800; font-size: 1rem; }
+
+    /* CODE */
+    .code-wrap { background: var(--code-bg); border: 1px solid var(--border); border-radius: .6rem; margin: .8rem 0; overflow: hidden; }
+    .code-label { display: flex; align-items: center; justify-content: space-between; background: var(--surface2); border-bottom: 1px solid var(--border); padding: .45rem 1rem; }
+    .code-label span { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); }
+    .code-dots { display: flex; gap: .35rem; }
+    .code-dot { width: .55rem; height: .55rem; border-radius: 50%; }
+    .code-dot.r { background: #f78166; } .code-dot.y { background: #e3b341; } .code-dot.g { background: #3fb950; }
+    pre { padding: 1rem 1.2rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: .83rem; line-height: 1.65; color: #e6edf3; }
+    .kw { color: #ff7b72; } .fn { color: #d2a8ff; } .str { color: #a5d6ff; }
+    .cm { color: #6e7681; font-style: italic; } .tg { color: #7ee787; }
+    .at { color: #ffa657; } .nb { color: #79c0ff; }
+    .cbr { color: var(--cbr); } .cr { color: var(--cr); } .cro { color: var(--cro); } .cl { color: var(--cl); }
+
+    /* WITHOUT / WITH */
+    .ww { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: 1rem 0; }
+    .ww-box { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; padding: 1rem; }
+    .ww-head { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; margin-bottom: .7rem; }
+    .ww-box.bad  .ww-head { color: var(--accent3); }
+    .ww-box.good .ww-head { color: var(--accent2); }
+    .ww-box ul { list-style: none; }
+    .ww-box li { font-size: .85rem; color: var(--text-muted); padding: .22rem 0; display: flex; gap: .5rem; }
+    .ww-box.bad  li::before { content: '❌'; }
+    .ww-box.good li::before { content: '✅'; }
+
+    /* HIERARCHY VISUAL */
+    .hierarchy {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: .7rem;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .hie-head { background: var(--surface2); padding: .5rem 1.1rem; font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-dim); border-bottom: 1px solid var(--border); }
+    .hie-body { padding: 1.1rem 1.4rem; display: flex; flex-direction: column; gap: 0; }
+    .hie-row { display: flex; align-items: center; gap: .7rem; }
+    .hie-box { border-radius: .45rem; padding: .4rem 1.1rem; font-family: 'JetBrains Mono', monospace; font-size: .85rem; font-weight: 700; border: 1px solid; }
+    .hie-box.br  { background: #1e1200; color: var(--cbr); border-color: var(--cbr); }
+    .hie-box.r   { background: #0d1a2a; color: var(--cr);  border-color: var(--cr); }
+    .hie-box.ro  { background: #0a1e10; color: var(--cro); border-color: var(--cro); }
+    .hie-box.li  { background: #1a1430; color: var(--cl);  border-color: var(--cl); }
+    .hie-desc { font-size: .8rem; color: var(--text-muted); }
+    .hie-arr { color: var(--text-dim); font-size: .95rem; padding: .1rem 0 .1rem .9rem; }
+
+    /* COMPONENT CARDS */
+    .comp-card { border-radius: .8rem; overflow: hidden; border: 1px solid var(--border); margin: 1.2rem 0; }
+    .comp-card-head { display: flex; align-items: center; gap: .85rem; padding: .95rem 1.2rem; }
+    .comp-num { font-size: .72rem; font-weight: 800; width: 1.5rem; height: 1.5rem; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; color: #0d1117; }
+    .comp-card-head h3 { font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; margin: 0; }
+    .comp-card-body { padding: .9rem 1.2rem; border-top: 1px solid var(--border); }
+
+    /* BrowserRouter card */
+    .cc-br .comp-card-head { background: #1e1200; }
+    .cc-br .comp-num { background: var(--cbr); }
+    .cc-br .comp-card-head h3 { color: var(--cbr); }
+    .cc-br .comp-card-body { background: #0e0900; }
+    .cc-br { border-color: var(--cbr) !important; }
+
+    /* Routes card */
+    .cc-r .comp-card-head { background: #0d1a2a; }
+    .cc-r .comp-num { background: var(--cr); }
+    .cc-r .comp-card-head h3 { color: var(--cr); }
+    .cc-r .comp-card-body { background: #06101a; }
+    .cc-r { border-color: var(--cr) !important; }
+
+    /* Route card */
+    .cc-ro .comp-card-head { background: #0a1e10; }
+    .cc-ro .comp-num { background: var(--cro); }
+    .cc-ro .comp-card-head h3 { color: var(--cro); }
+    .cc-ro .comp-card-body { background: #050e08; }
+    .cc-ro { border-color: var(--cro) !important; }
+
+    /* ATTRIBUTE CARDS */
+    .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: 1rem 0; }
+    .attr-box { background: var(--surface2); border-radius: .6rem; overflow: hidden; border: 1px solid var(--border); }
+    .attr-head { padding: .5rem .9rem; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+    .attr-head.path { background: #1e1200; color: var(--cbr); border-bottom: 1px solid #3d2600; }
+    .attr-head.elem { background: #0a1e10; color: var(--cro); border-bottom: 1px solid #0d3a1a; }
+    .attr-body { padding: .75rem .9rem; font-size: .84rem; color: var(--text-muted); }
+
+    /* URL TABLE */
+    .url-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .86rem; }
+    .url-table th { background: var(--surface2); padding: .6rem 1rem; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; text-align: left; }
+    .url-table th:first-child { color: var(--cbr); }
+    .url-table th:last-child  { color: var(--cro); }
+    .url-table td { padding: .6rem 1rem; border-bottom: 1px solid var(--border); }
+    .url-table tr:last-child td { border-bottom: none; }
+    .url-table td:first-child { font-family: 'JetBrains Mono', monospace; color: var(--cbr); font-weight: 600; }
+    .url-table td:last-child  { font-family: 'JetBrains Mono', monospace; color: var(--cro); font-weight: 600; }
+
+    /* FLOW */
+    .flow { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 1rem 0; }
+    .flow-box { border: 1px solid var(--border); border-radius: .5rem; padding: .45rem 1.6rem; font-size: .84rem; font-weight: 600; text-align: center; min-width: 220px; background: var(--surface2); color: var(--text); }
+    .flow-box.br  { border-color: var(--cbr); color: var(--cbr); }
+    .flow-box.r   { border-color: var(--cr);  color: var(--cr); }
+    .flow-box.ro  { border-color: var(--cro); color: var(--cro); }
+    .flow-box.acc { border-color: var(--accent); color: var(--accent); }
+    .flow-arr { color: var(--text-dim); font-size: 1.1rem; line-height: 1.4; }
+
+    /* SPA EXAMPLES */
+    .spa-examples { display: flex; gap: .6rem; flex-wrap: wrap; margin: .8rem 0; }
+    .spa-chip { background: var(--surface2); border: 1px solid var(--border); border-radius: 2rem; padding: .3rem .9rem; font-size: .84rem; color: var(--text-muted); font-weight: 600; }
+
+    /* PACKAGES GRID */
+    .pkg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .6rem; margin: 1rem 0; }
+    .pkg-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: .5rem; padding: .6rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; font-weight: 600; }
+    .pkg-pill.main { border-color: var(--cbr); color: var(--cbr); }
+    .pkg-pill.blue { border-color: var(--cr);  color: var(--cr); }
+    .pkg-pill.green{ border-color: var(--cro); color: var(--cro); }
+    .pkg-pill.purp { border-color: var(--cl);  color: var(--cl); }
+
+    /* RESPONSIBILITIES */
+    .resp-list { display: flex; flex-direction: column; gap: .55rem; margin: .8rem 0; }
+    .resp-item { display: flex; gap: .8rem; align-items: flex-start; background: var(--surface2); border: 1px solid var(--border); border-radius: .5rem; padding: .65rem .9rem; }
+    .resp-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .resp-body h4 { font-size: .88rem; font-weight: 700; color: var(--text); margin-bottom: .15rem; }
+    .resp-body p  { font-size: .82rem; color: var(--text-muted); margin: 0; }
+
+    /* QA */
+    .qa-list { display: flex; flex-direction: column; gap: .8rem; margin: 1rem 0; }
+    .qa-item { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; overflow: hidden; }
+    .qa-q { background: #0d1a2a; padding: .65rem 1rem; font-size: .88rem; font-weight: 700; color: var(--accent); }
+    .qa-q::before { content: 'Q: '; color: var(--text-dim); }
+    .qa-a { padding: .7rem 1rem; font-size: .87rem; color: var(--text-muted); }
+    .qa-a strong { color: var(--text); }
+
+    /* TRICK / REVISION */
+    .trick { background: linear-gradient(135deg, #1e1200, #0d1a2a, #0a1e10); border: 1px solid var(--accent); border-radius: .8rem; padding: 1.3rem 1.5rem; margin: 1rem 0; }
+    .trick h3 { color: var(--accent); font-size: .9rem; margin-bottom: .9rem; }
+    .trick-row { display: flex; align-items: center; gap: .9rem; padding: .45rem 0; border-bottom: 1px solid var(--border); }
+    .trick-row:last-child { border-bottom: none; }
+    .trick-tag { font-family: 'JetBrains Mono', monospace; font-size: .82rem; font-weight: 700; padding: .25rem .75rem; border-radius: .35rem; min-width: 140px; text-align: center; border: 1px solid; flex-shrink: 0; }
+    .tt-br  { background: #1e1200; color: var(--cbr); border-color: var(--cbr); }
+    .tt-r   { background: #0d1a2a; color: var(--cr);  border-color: var(--cr); }
+    .tt-ro  { background: #0a1e10; color: var(--cro); border-color: var(--cro); }
+    .tt-li  { background: #1a1430; color: var(--cl);  border-color: var(--cl); }
+    .tt-p   { background: #1e1200; color: var(--cbr); border-color: var(--cbr); }
+    .tt-e   { background: #0a1e10; color: var(--cro); border-color: var(--cro); }
+    .trick-arr { color: var(--text-dim); font-size: 1.1rem; }
+    .trick-desc { font-size: .88rem; color: var(--text-muted); }
+    .trick-desc strong { color: var(--text); }
+
+    p { font-size: .92rem; color: var(--text-muted); margin-bottom: .5rem; }
+    h3 { font-size: .95rem; font-weight: 700; color: var(--text); margin: 1.1rem 0 .5rem; }
+    code { background: var(--surface2); border: 1px solid var(--border); color: var(--accent4); font-family: 'JetBrains Mono', monospace; font-size: .82em; padding: .1em .4em; border-radius: .3rem; }
+    footer { text-align: center; padding: 2.5rem 1rem; color: var(--text-dim); font-size: .8rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+
+    @media (max-width: 540px) {
+      .ww, .attr-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">React.js — Navigation</div>
+  <h1>React Routing</h1>
+  <p>Navigate between pages without reloading — BrowserRouter, Routes, and Route explained with a full working example.</p>
+  <div class="hero-tags">
+    <span class="hero-tag" style="color:var(--cbr)">BrowserRouter</span>
+    <span class="hero-tag" style="color:var(--cr)">Routes</span>
+    <span class="hero-tag" style="color:var(--cro)">Route</span>
+    <span class="hero-tag" style="color:var(--cl)">Link / NavLink</span>
+    <span class="hero-tag">SPA</span>
+    <span class="hero-tag">react-router-dom</span>
+    <span class="hero-tag">useNavigate</span>
+  </div>
+</div>
+
+<div class="container">
+
+
+
+
+  <!-- S1 — WHAT IS -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>What is Routing?</h2>
+    </div>
+    <div class="section-body">
+      <p><strong>Routing</strong> is the process of <strong>navigating between different pages or components without reloading the entire web page</strong>. It makes React SPAs feel like traditional multi-page websites.</p>
+
+     
+
+      <div class="ww">
+        <div class="ww-box bad">
+          <div class="ww-head">❌ Without Routing</div>
+          <ul>
+            <li>Entire page reloads on navigate</li>
+            <li>Slow performance</li>
+            <li>Poor user experience</li>
+            <li>All data re-fetched again</li>
+          </ul>
+        </div>
+        <div class="ww-box good">
+          <div class="ww-head">✅ With Routing</div>
+          <ul>
+            <li>Only the component changes</li>
+            <li>Fast navigation</li>
+            <li>Better user experience</li>
+            <li>No full page reload</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>What is a Single Page Application (SPA)?</h3>
+      <p>A SPA loads <strong>only one HTML page</strong>. When users navigate between routes, only the content area changes — the browser never refreshes.</p>
+      <div class="spa-examples">
+        <span class="spa-chip">📧 Gmail</span>
+        <span class="spa-chip">🗺️ Google Maps</span>
+        <span class="spa-chip">📘 Facebook</span>
+        <span class="spa-chip">🛒 Amazon</span>
+        <span class="spa-chip">🐦 Twitter / X</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- S2 — INSTALL -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>Installing React Router</h2>
+    </div>
+    <div class="section-body">
+      <p>React does <strong>not include routing by default</strong>. We must install the <code>react-router-dom</code> package separately.</p>
+
+      <div class="cmd">npm install react-router-dom</div>
+
+      <h3>What this package gives us:</h3>
+      <div class="pkg-grid">
+        <div class="pkg-pill main">BrowserRouter</div>
+        <div class="pkg-pill blue">Routes</div>
+        <div class="pkg-pill green">Route</div>
+        <div class="pkg-pill purp">Link</div>
+        <div class="pkg-pill purp">NavLink</div>
+        <div class="pkg-pill blue">useNavigate</div>
+        <div class="pkg-pill green">useParams</div>
+      </div>
+
+      <h3>Routing Hierarchy</h3>
+      <div class="hierarchy">
+        <div class="hie-head">Component Nesting Structure</div>
+        <div class="hie-body">
+          <div class="hie-row">
+            <div class="hie-box br">BrowserRouter</div>
+            <span class="hie-desc">Root — connects URL to React</span>
+          </div>
+          <div class="hie-arr">└──</div>
+          <div class="hie-row" style="padding-left:1.4rem">
+            <div class="hie-box r">Routes</div>
+            <span class="hie-desc">Container for all routes</span>
+          </div>
+          <div class="hie-arr" style="padding-left:1.4rem">└──</div>
+          <div class="hie-row" style="padding-left:2.8rem">
+            <div class="hie-box ro">Route path="/"</div>
+            <span class="hie-desc">Maps / → Home</span>
+          </div>
+          <div class="hie-arr" style="padding-left:2.8rem">├──</div>
+          <div class="hie-row" style="padding-left:2.8rem">
+            <div class="hie-box ro">Route path="/about"</div>
+            <span class="hie-desc">Maps /about → About</span>
+          </div>
+          <div class="hie-arr" style="padding-left:2.8rem">└──</div>
+          <div class="hie-row" style="padding-left:2.8rem">
+            <div class="hie-box ro">Route path="/contact"</div>
+            <span class="hie-desc">Maps /contact → Contact</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- S3 — BROWSERROUTER -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num" style="background:var(--cbr)">3</div>
+      <h2>BrowserRouter</h2>
+    </div>
+    <div class="section-body">
+      <p><code style="color:var(--cbr)">BrowserRouter</code> is the <strong>main/root routing component</strong>. It wraps the entire application and connects React with the browser's URL system.</p>
+
+
+
+      <div class="ww">
+        <div class="ww-box bad">
+          <div class="ww-head">❌ Without BrowserRouter</div>
+          <ul>
+            <li>React cannot understand URL changes</li>
+            <li>Navigating breaks the app</li>
+            <li>No browser history tracking</li>
+          </ul>
+        </div>
+        <div class="ww-box good">
+          <div class="ww-head">✅ With BrowserRouter</div>
+          <ul>
+            <li>Browser URL ↔ React UI synced</li>
+            <li>Back / Forward buttons work</li>
+            <li>No page reload on navigate</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>3 Responsibilities of BrowserRouter</h3>
+      <div class="resp-list">
+        <div class="resp-item">
+          <span class="resp-icon">🔗</span>
+          <div class="resp-body">
+            <h4>Manages URLs</h4>
+            <p>Tracks current URL — <code>/about</code>, <code>/contact</code>, <code>/profile</code> etc.</p>
+          </div>
+        </div>
+        <div class="resp-item">
+          <span class="resp-icon">📜</span>
+          <div class="resp-body">
+            <h4>Tracks Browser History</h4>
+            <p>Supports the browser's Back and Forward buttons for seamless navigation.</p>
+          </div>
+        </div>
+        <div class="resp-item">
+          <span class="resp-icon">🚫</span>
+          <div class="resp-body">
+            <h4>Prevents Page Reload</h4>
+            <p>Navigation happens inside the React app — no full browser refresh ever.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Basic Usage</span></div>
+        <pre><span class="kw">import</span> { <span class="cbr">BrowserRouter</span> } <span class="kw">from</span> <span class="str">"react-router-dom"</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="tg">&lt;</span><span class="cbr">BrowserRouter</span><span class="tg">&gt;</span>
+      <span class="cm">// All Routes go inside here</span>
+    <span class="tg">&lt;/</span><span class="cbr">BrowserRouter</span><span class="tg">&gt;</span>
+  );
+}</pre>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- S4 — ROUTES -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num" style="background:var(--cr)">4</div>
+      <h2>Routes Component</h2>
+    </div>
+    <div class="section-body">
+      <p><code style="color:var(--cr)">Routes</code> is the <strong>container</strong> that holds all <code>Route</code> components. It looks at the current URL and renders only the matching route.</p>
+
+      
+
+      <div class="code-wrap">
+        <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Structure</span></div>
+        <pre><span class="tg">&lt;</span><span class="cr">Routes</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;</span><span class="cro">Route</span> <span class="at">path</span>=<span class="str">"/"</span>        <span class="at">element</span>={<span class="tg">&lt;Home /&gt;</span>} <span class="tg">/&gt;</span>
+  <span class="tg">&lt;</span><span class="cro">Route</span> <span class="at">path</span>=<span class="str">"/about"</span>    <span class="at">element</span>={<span class="tg">&lt;About /&gt;</span>} <span class="tg">/&gt;</span>
+  <span class="tg">&lt;</span><span class="cro">Route</span> <span class="at">path</span>=<span class="str">"/contact"</span>  <span class="at">element</span>={<span class="tg">&lt;Contact /&gt;</span>} <span class="tg">/&gt;</span>
+<span class="tg">&lt;/</span><span class="cr">Routes</span><span class="tg">&gt;</span></pre>
+      </div>
+      <div class="note"><strong>Rule:</strong> <code>Routes</code> must always be placed inside <code>BrowserRouter</code>. And all <code>Route</code> components must be direct children of <code>Routes</code>.</div>
+    </div>
+  </div>
+
+
+  <!-- S5 — ROUTE -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num" style="background:var(--cro)">5</div>
+      <h2>Route Component & Attributes</h2>
+    </div>
+    <div class="section-body">
+      <p><code style="color:var(--cro)">Route</code> defines the <strong>relationship between a URL path and a React component</strong>. When the URL matches the path, the component is rendered.</p>
+
+      
+
+      <h3>Two Key Attributes</h3>
+      <div class="attr-grid">
+        <div class="attr-box">
+          <div class="attr-head path">path — URL Pattern</div>
+          <div class="attr-body">
+            <p>Defines which URL this route matches.</p>
+            <div class="code-wrap" style="margin:.5rem 0">
+              <pre style="padding:.65rem .9rem;font-size:.82rem"><span class="at">path</span>=<span class="str">"/about"</span>
+<span class="cm">// matches: /about</span></pre>
+            </div>
+          </div>
+        </div>
+        <div class="attr-box">
+          <div class="attr-head elem">element — Component to Render</div>
+          <div class="attr-body">
+            <p>The JSX component to show when URL matches.</p>
+            <div class="code-wrap" style="margin:.5rem 0">
+              <pre style="padding:.65rem .9rem;font-size:.82rem"><span class="at">element</span>={<span class="tg">&lt;About /&gt;</span>}
+<span class="cm">// renders &lt;About /&gt;</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Full Route Example</h3>
+      <div class="code-wrap">
+        <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Route Syntax</span></div>
+        <pre><span class="tg">&lt;</span><span class="cro">Route</span>
+  <span class="at">path</span>=<span class="str">"/about"</span>       <span class="cm">// when URL = /about</span>
+  <span class="at">element</span>={<span class="tg">&lt;About /&gt;</span>} <span class="cm">// render About component</span>
+<span class="tg">/&gt;</span></pre>
+      </div>
+
+      <div class="flow">
+        <div class="flow-box br">User visits /about</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box r">Routes checks all Route paths</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box ro">path="/about" matches ✅</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box acc">&lt;About /&gt; component renders</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- S6 — COMPLETE EXAMPLE -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <h2>Complete Working Example</h2>
+    </div>
+    <div class="section-body">
+      <p>Here's a full React app with 3 routes wired up from scratch:</p>
+
+      <div class="code-wrap">
+        <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>App.jsx — Full Routing Setup</span></div>
+        <pre><span class="kw">import</span> { <span class="cbr">BrowserRouter</span>, <span class="cr">Routes</span>, <span class="cro">Route</span> } <span class="kw">from</span> <span class="str">"react-router-dom"</span>;
+<span class="kw">import</span> Home    <span class="kw">from</span> <span class="str">"./Home"</span>;
+<span class="kw">import</span> About   <span class="kw">from</span> <span class="str">"./About"</span>;
+<span class="kw">import</span> Contact <span class="kw">from</span> <span class="str">"./Contact"</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="tg">&lt;</span><span class="cbr">BrowserRouter</span><span class="tg">&gt;</span>          <span class="cm">// Step 1: Wrap everything</span>
+      <span class="tg">&lt;</span><span class="cr">Routes</span><span class="tg">&gt;</span>                <span class="cm">// Step 2: Routes container</span>
+
+        <span class="tg">&lt;</span><span class="cro">Route</span>              <span class="cm">// Step 3: Each Route</span>
+          <span class="at">path</span>=<span class="str">"/"</span>
+          <span class="at">element</span>={<span class="tg">&lt;Home /&gt;</span>}
+        <span class="tg">/&gt;</span>
+        <span class="tg">&lt;</span><span class="cro">Route</span>
+          <span class="at">path</span>=<span class="str">"/about"</span>
+          <span class="at">element</span>={<span class="tg">&lt;About /&gt;</span>}
+        <span class="tg">/&gt;</span>
+        <span class="tg">&lt;</span><span class="cro">Route</span>
+          <span class="at">path</span>=<span class="str">"/contact"</span>
+          <span class="at">element</span>={<span class="tg">&lt;Contact /&gt;</span>}
+        <span class="tg">/&gt;</span>
+
+      <span class="tg">&lt;/</span><span class="cr">Routes</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;/</span><span class="cbr">BrowserRouter</span><span class="tg">&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> App;</pre>
+      </div>
+
+      <h3>How It Flows</h3>
+      <div class="flow">
+        <div class="flow-box">User enters a URL</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box br">BrowserRouter intercepts</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box r">Routes checks each Route's path</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box ro">Matching Route found</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box acc">Component renders in the browser ✅</div>
+      </div>
+
+      <div class="tip"><strong>Clean setup tip:</strong> Always import all three — <code style="color:var(--cbr)">BrowserRouter</code>, <code style="color:var(--cr)">Routes</code>, <code style="color:var(--cro)">Route</code> — in a single import statement from <code>react-router-dom</code>.</div>
+    </div>
+  </div>
+
+
+  <!-- S7 — URL MAPPING -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <h2>URL Mapping & Real-Life Example</h2>
+    </div>
+    <div class="section-body">
+
+      <table class="url-table">
+        <tr><th>URL</th><th>Component Rendered</th></tr>
+        <tr><td>/</td><td>&lt;Home /&gt;</td></tr>
+        <tr><td>/about</td><td>&lt;About /&gt;</td></tr>
+        <tr><td>/contact</td><td>&lt;Contact /&gt;</td></tr>
+        <tr><td>/profile</td><td>&lt;Profile /&gt;</td></tr>
+        <tr><td>/products</td><td>&lt;Products /&gt;</td></tr>
+      </table>
+
+      <h3>🛒 Real-Life — E-Commerce Website (like Amazon)</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.6rem;margin:1rem 0">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.6rem;overflow:hidden">
+          <div style="background:#1e1200;padding:.4rem .8rem;font-size:.74rem;font-weight:700;color:var(--cbr)">URL</div>
+          <div style="padding:.6rem .8rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--cbr)">/</div>
+          <div style="border-top:1px solid var(--border);padding:.5rem .8rem;font-size:.83rem;color:var(--text-muted)">🏠 Home Page</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.6rem;overflow:hidden">
+          <div style="background:#1e1200;padding:.4rem .8rem;font-size:.74rem;font-weight:700;color:var(--cbr)">URL</div>
+          <div style="padding:.6rem .8rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--cbr)">/products</div>
+          <div style="border-top:1px solid var(--border);padding:.5rem .8rem;font-size:.83rem;color:var(--text-muted)">📦 Products List</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.6rem;overflow:hidden">
+          <div style="background:#1e1200;padding:.4rem .8rem;font-size:.74rem;font-weight:700;color:var(--cbr)">URL</div>
+          <div style="padding:.6rem .8rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--cbr)">/cart</div>
+          <div style="border-top:1px solid var(--border);padding:.5rem .8rem;font-size:.83rem;color:var(--text-muted)">🛒 Cart Page</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.6rem;overflow:hidden">
+          <div style="background:#1e1200;padding:.4rem .8rem;font-size:.74rem;font-weight:700;color:var(--cbr)">URL</div>
+          <div style="padding:.6rem .8rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--cbr)">/profile</div>
+          <div style="border-top:1px solid var(--border);padding:.5rem .8rem;font-size:.83rem;color:var(--text-muted)">👤 Profile Page</div>
+        </div>
+      </div>
+
+      <h3>Coming Up Next — More Routing Components</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:.6rem;margin:.8rem 0">
+        <div style="background:var(--surface2);border:1px solid var(--cl);border-radius:.5rem;padding:.5rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.83rem;color:var(--cl)">Link</div>
+        <div style="background:var(--surface2);border:1px solid var(--cl);border-radius:.5rem;padding:.5rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.83rem;color:var(--cl)">NavLink</div>
+        <div style="background:var(--surface2);border:1px solid var(--cr);border-radius:.5rem;padding:.5rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.83rem;color:var(--cr)">useNavigate()</div>
+        <div style="background:var(--surface2);border:1px solid var(--cro);border-radius:.5rem;padding:.5rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.83rem;color:var(--cro)">useParams()</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- S8 — INTERVIEW -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <h2>Interview Questions 🎯</h2>
+    </div>
+    <div class="section-body">
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q">What is Routing in React?</div>
+          <div class="qa-a">Routing is the process of <strong>navigating between different pages or components without reloading the entire web page</strong>. It keeps React apps as a Single Page Application.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">Why is Routing used?</div>
+          <div class="qa-a">To create <strong>Single Page Applications (SPA)</strong> that provide fast navigation without browser refresh — improving performance and user experience.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What is BrowserRouter?</div>
+          <div class="qa-a"><strong>BrowserRouter</strong> is the main routing component that <strong>synchronizes the browser URL with the React application UI</strong>. It enables back/forward navigation and prevents page reloads.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What is Routes?</div>
+          <div class="qa-a"><strong>Routes</strong> is a container component that <strong>holds all Route components</strong> and renders the matching route based on the current browser URL.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What is Route?</div>
+          <div class="qa-a"><strong>Route</strong> maps a specific URL path to a React component. When the URL matches the <code>path</code>, the <code>element</code> component is rendered.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What are the attributes of Route?</div>
+          <div class="qa-a"><strong>path</strong> — defines the URL pattern to match (e.g. <code>"/about"</code>)<br><strong>element</strong> — the React component to render when path matches (e.g. <code>&lt;About /&gt;</code>)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- S9 — QUICK REVISION -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <h2>Quick Revision ⚡</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="trick">
+        <h3>🧠 Easy Memory Trick</h3>
+        <div class="trick-row">
+          <span class="trick-tag tt-br">BrowserRouter</span>
+          <span class="trick-arr">→</span>
+          <span class="trick-desc"><strong>Connect</strong> React to the browser URL</span>
+        </div>
+        <div class="trick-row">
+          <span class="trick-tag tt-r">Routes</span>
+          <span class="trick-arr">→</span>
+          <span class="trick-desc"><strong>Container</strong> that holds all routes</span>
+        </div>
+        <div class="trick-row">
+          <span class="trick-tag tt-ro">Route</span>
+          <span class="trick-arr">→</span>
+          <span class="trick-desc"><strong>Mapping</strong> of URL path to component</span>
+        </div>
+        <div class="trick-row">
+          <span class="trick-tag tt-p">path</span>
+          <span class="trick-arr">→</span>
+          <span class="trick-desc">The <strong>URL pattern</strong> to match</span>
+        </div>
+        <div class="trick-row">
+          <span class="trick-tag tt-e">element</span>
+          <span class="trick-arr">→</span>
+          <span class="trick-desc">The <strong>component</strong> to render</span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.6rem;padding:1rem">
+          <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:.7rem">📋 At a Glance</p>
+          <p style="font-size:.84rem;margin-bottom:.3rem">Routing = <strong style="color:var(--text)">Navigate without reload</strong></p>
+          <p style="font-size:.84rem;margin-bottom:.3rem">Install = <strong style="color:var(--text)">npm install react-router-dom</strong></p>
+          <p style="font-size:.84rem;margin-bottom:.3rem">For = <strong style="color:var(--text)">Single Page Applications</strong></p>
+          <p style="font-size:.84rem;margin:0">Order = <strong style="color:var(--cbr)">BrowserRouter</strong> → <strong style="color:var(--cr)">Routes</strong> → <strong style="color:var(--cro)">Route</strong></p>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.6rem;overflow:hidden">
+          <div style="background:var(--surface);padding:.5rem .9rem;font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim);border-bottom:1px solid var(--border)">Example Route</div>
+          <pre style="font-size:.8rem;padding:.8rem"><span class="tg">&lt;</span><span class="cro">Route</span>
+  <span class="at">path</span>=<span class="str">"/about"</span>
+  <span class="at">element</span>={<span class="tg">&lt;About /&gt;</span>}
+<span class="tg">/&gt;</span>
+<span class="cm">// URL /about → &lt;About /&gt;</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  React.js Notes — Routing &nbsp;·&nbsp; BrowserRouter · Routes · Route &nbsp;·&nbsp; Made with ❤️
+</footer>
+
+</body>
+</html>

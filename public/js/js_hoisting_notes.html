@@ -1,0 +1,369 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.root{font-family:'DM Sans',sans-serif;color:var(--color-text-primary);padding:2rem 0.5rem;max-width:680px;}
+.ch-sub{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:.3rem;}
+.ch-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;letter-spacing:-.5px;margin-bottom:2.5rem;}
+.sec{margin-bottom:3rem;}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.sec-num{font-size:11px;font-weight:500;color:var(--color-text-secondary);background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary);border-radius:20px;padding:3px 10px;letter-spacing:.05em;}
+.sec-title{font-size:18px;font-weight:500;}
+.accent{width:28px;height:3px;border-radius:2px;margin-bottom:1.1rem;}
+.a-blue{background:#378ADD;}.a-purple{background:#7F77DD;}.a-teal{background:#1D9E75;}.a-amber{background:#EF9F27;}.a-coral{background:#D85A30;}.a-green{background:#639922;}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:.75rem;}
+.clabel{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:.4rem;}
+.ctext{font-size:14px;line-height:1.65;color:var(--color-text-primary);}
+.mt{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-secondary);margin:.9rem 0 .4rem;}
+.code-b{background:#F1EFE8;border-radius:var(--border-radius-md);padding:.85rem 1rem;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75;color:#2C2C2A;white-space:pre;overflow-x:auto;margin-bottom:.4rem;}
+.out-b{background:#E1F5EE;border-radius:var(--border-radius-md);padding:.6rem 1rem;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:#085041;margin-bottom:.75rem;}
+.out-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:#0F6E56;margin-bottom:3px;}
+.err-b{background:#FAECE7;border-radius:var(--border-radius-md);padding:.65rem 1rem;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:#993C1D;margin-bottom:.75rem;}
+.err-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:#993C1D;margin-bottom:3px;}
+.rule{border-left:3px solid;padding:.65rem 1rem;background:var(--color-background-secondary);margin-bottom:.6rem;font-size:13.5px;line-height:1.6;}
+.r-blue{border-color:#378ADD;}.r-teal{border-color:#1D9E75;}.r-purple{border-color:#7F77DD;}.r-amber{border-color:#EF9F27;}.r-coral{border-color:#D85A30;}
+.pill-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:.4rem;}
+.pill{font-size:12px;font-weight:500;padding:4px 11px;border-radius:20px;}
+.p-blue{background:#E6F1FB;color:#185FA5;}.p-purple{background:#EEEDFE;color:#3C3489;}.p-teal{background:#E1F5EE;color:#0F6E56;}.p-amber{background:#FAEEDA;color:#854F0B;}.p-coral{background:#FAECE7;color:#993C1D;}.p-green{background:#EAF3DE;color:#3B6D11;}.p-gray{background:#F1EFE8;color:#5F5E5A;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.75rem;}
+.mc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.8rem 1rem;border:.5px solid var(--color-border-tertiary);}
+.mc-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;}
+.bad{color:#993C1D;}.good{color:#0F6E56;}
+.ibox{background:#EEEDFE;border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin:.6rem 0;}
+.ibox-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:#534AB7;margin-bottom:.4rem;}
+.ibox-text{font-size:13.5px;line-height:1.65;color:#3C3489;}
+.trick{display:flex;gap:10px;align-items:flex-start;background:#FAEEDA;border-radius:var(--border-radius-md);padding:.8rem 1rem;margin-top:.75rem;}
+.trick-t{font-size:13.5px;line-height:1.5;color:#854F0B;font-weight:500;}
+hr.dv{border:none;border-top:.5px solid var(--color-border-tertiary);margin:2.2rem 0;}
+.tbl-wrap{overflow-x:auto;margin-top:.5rem;}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
+.tbl th{text-align:left;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);padding:0 8px 8px 0;border-bottom:.5px solid var(--color-border-tertiary);}
+.tbl td{padding:8px 8px 8px 0;border-bottom:.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:top;line-height:1.5;}
+.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:.5rem;}
+.adv-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem;border:.5px solid var(--color-border-tertiary);font-size:13px;line-height:1.5;color:var(--color-text-primary);}
+.adv-card strong{display:block;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);margin-bottom:4px;}
+
+/* Phase visualizer */
+.phase-wrap{display:flex;flex-direction:column;gap:0;margin:.5rem 0 .75rem;}
+.phase-row{display:flex;align-items:stretch;gap:0;}
+.phase-line{display:flex;flex-direction:column;align-items:center;width:24px;flex-shrink:0;}
+.phase-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.phase-stem{width:2px;flex:1;min-height:20px;background:var(--color-border-tertiary);}
+.phase-content{padding-bottom:18px;padding-left:12px;font-size:13.5px;line-height:1.55;color:var(--color-text-primary);}
+.phase-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+
+/* TDZ box */
+.tdz-box{border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin:.6rem 0;background:#FAECE7;border:.5px solid #F0C4B4;}
+.tdz-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:#993C1D;margin-bottom:.4rem;}
+.tdz-text{font-size:13.5px;line-height:1.65;color:#7A2A15;}
+
+/* Hoisting summary cards */
+.hoist-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:.5rem;}
+.hoist-card{border-radius:var(--border-radius-md);padding:.85rem 1rem;border:.5px solid var(--color-border-tertiary);text-align:center;}
+.hoist-kw{font-size:16px;font-weight:500;margin-bottom:6px;}
+.hoist-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:6px;}
+.hoist-detail{font-size:12px;line-height:1.5;color:var(--color-text-secondary);}
+
+.step-list{display:flex;flex-direction:column;gap:6px;margin:.5rem 0;}
+.step-item{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.55;}
+.step-num{font-size:11px;font-weight:500;min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+</style>
+
+<div class="root">
+
+<p class="ch-sub">JavaScript · Chapter 4</p>
+<h1 class="ch-title">Hoisting in JavaScript</h1>
+
+<!-- ══════════════════════════════
+     01 · WHAT IS HOISTING
+══════════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">01</span><span class="sec-title">What is Hoisting?</span></div>
+<div class="accent a-blue"></div>
+
+<div class="card">
+<div class="clabel">Definition</div>
+<div class="ctext">Hoisting is the process in JavaScript where variables and functions can be accessed before their declaration. This happens because JavaScript internally moves declarations to the top of their scope during the memory creation phase — before any code actually runs.</div>
+</div>
+
+<div class="mt">How JavaScript executes code — two phases</div>
+<div class="phase-wrap">
+<div class="phase-row">
+<div class="phase-line"><div class="phase-dot" style="background:#378ADD;"></div><div class="phase-stem"></div></div>
+<div class="phase-content"><div class="phase-lbl" style="color:#185FA5;">Phase 1 — Memory creation phase</div>JavaScript scans all the code first and allocates memory for all variables and functions before any line runs. This is where hoisting happens.</div>
+</div>
+<div class="phase-row">
+<div class="phase-line"><div class="phase-dot" style="background:#1D9E75;"></div><div class="phase-stem" style="min-height:0;"></div></div>
+<div class="phase-content" style="padding-bottom:0;"><div class="phase-lbl" style="color:#0F6E56;">Phase 2 — Execution phase</div>JavaScript runs the code line by line. By this point, all declarations are already known.</div>
+</div>
+</div>
+
+<div class="mt">Hoisting behaviour for each keyword</div>
+<div class="hoist-grid">
+<div class="hoist-card" style="background:#FAECE7;">
+<div class="hoist-kw" style="color:#993C1D;">var</div>
+<div class="hoist-badge p-coral">Fully hoisted</div>
+<div class="hoist-detail">Declaration hoisted. Value set to <em>undefined</em> until assignment.</div>
+</div>
+<div class="hoist-card" style="background:#E1F5EE;">
+<div class="hoist-kw" style="color:#0F6E56;">function</div>
+<div class="hoist-badge p-teal">Fully hoisted</div>
+<div class="hoist-detail">Entire function definition hoisted. Can be called before declaration.</div>
+</div>
+<div class="hoist-card" style="background:#EEEDFE;">
+<div class="hoist-kw" style="color:#3C3489;">let / const</div>
+<div class="hoist-badge p-purple">Partially hoisted</div>
+<div class="hoist-detail">Hoisted but stuck in Temporal Dead Zone — cannot be accessed early.</div>
+</div>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════
+     02 · HOISTING WITH VAR
+══════════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">02</span><span class="sec-title">Hoisting with var</span></div>
+<div class="accent a-coral"></div>
+
+<div class="card">
+<div class="clabel">How it works</div>
+<div class="ctext">Variables declared using var are hoisted to the top of their scope. Only the declaration is hoisted — NOT the initialization. So the variable exists before the line runs, but its value is undefined until the assignment line is reached.</div>
+</div>
+
+<div class="rule r-coral"><strong>Declaration is hoisted ✅ &nbsp;·&nbsp; Initialization is NOT hoisted ❌</strong><br>The variable exists but holds <em>undefined</em> until the value is actually assigned.</div>
+
+<div class="mt">Example — accessing var before declaration</div>
+<div class="code-b">console.log(a);   // accessed before declaration
+var a = 10;</div>
+<div class="out-b"><div class="out-lbl">Output</div>undefined</div>
+
+<div class="mt">Internal working — what JavaScript actually does</div>
+<div class="ctext" style="font-size:13.5px;margin-bottom:.5rem;">JavaScript internally rearranges the code like this during the memory creation phase:</div>
+<div class="two">
+<div class="mc">
+<div class="mc-lbl bad">Code you write</div>
+<div class="code-b">console.log(a);
+var a = 10;</div>
+</div>
+<div class="mc">
+<div class="mc-lbl good">What JS does internally</div>
+<div class="code-b">var a;           // hoisted
+console.log(a);  // undefined
+a = 10;          // assigned later</div>
+</div>
+</div>
+
+<div class="mt">Why output is undefined — step by step</div>
+<div class="step-list">
+<div class="step-item">
+<span class="step-num" style="background:#E6F1FB;color:#185FA5;">1</span>
+<span>JS scans code → finds <strong>var a</strong> → allocates memory → sets value to <strong>undefined</strong></span>
+</div>
+<div class="step-item">
+<span class="step-num" style="background:#FAEEDA;color:#854F0B;">2</span>
+<span>Execution starts → <strong>console.log(a)</strong> runs → a is <strong>undefined</strong> at this point</span>
+</div>
+<div class="step-item">
+<span class="step-num" style="background:#E1F5EE;color:#0F6E56;">3</span>
+<span><strong>a = 10</strong> runs → now a is assigned the value 10</span>
+</div>
+</div>
+
+<div class="mt">After declaration — works normally</div>
+<div class="code-b">var a = 10;
+console.log(a);   // accessed after declaration</div>
+<div class="out-b"><div class="out-lbl">Output</div>10</div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════
+     03 · HOISTING WITH FUNCTION DECLARATION
+══════════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">03</span><span class="sec-title">Hoisting with function declaration</span></div>
+<div class="accent a-teal"></div>
+
+<div class="card">
+<div class="clabel">How it works</div>
+<div class="ctext">Function declarations are completely hoisted — the entire function body is moved to the top during the memory creation phase. This means a function can be called before its declaration and it will work perfectly.</div>
+</div>
+
+<div class="rule r-teal"><strong>Entire function definition is hoisted ✅</strong><br>The function can be called anywhere in the code — even before the line where it is written.</div>
+
+<div class="mt">Example — calling function before declaration</div>
+<div class="code-b">greet();   // called before declaration
+
+function greet() {
+    console.log("Hello");
+}</div>
+<div class="out-b"><div class="out-lbl">Output</div>Hello</div>
+
+<div class="mt">Internal working — what JavaScript does</div>
+<div class="two">
+<div class="mc">
+<div class="mc-lbl bad">Code you write</div>
+<div class="code-b">greet();
+
+function greet() {
+  console.log("Hello");
+}</div>
+</div>
+<div class="mc">
+<div class="mc-lbl good">What JS does internally</div>
+<div class="code-b">// entire function hoisted
+function greet() {
+  console.log("Hello");
+}
+
+greet();  // now called</div>
+</div>
+</div>
+
+<div class="mt">Why function declaration works — but function expression does not</div>
+<div class="two">
+<div class="mc">
+<div class="mc-lbl good">Function declaration ✅</div>
+<div class="code-b">greet();   // works!
+
+function greet() {
+    console.log("Hello");
+}</div>
+<div class="out-b" style="margin-bottom:0;"><div class="out-lbl">Output</div>Hello</div>
+</div>
+<div class="mc">
+<div class="mc-lbl bad">Function expression ❌</div>
+<div class="code-b">greet();   // error!
+
+var greet = function() {
+    console.log("Hello");
+};</div>
+<div class="err-b" style="margin-bottom:0;"><div class="err-lbl">Error</div>TypeError: greet is not a function</div>
+</div>
+</div>
+<div class="ctext" style="font-size:13px;color:var(--color-text-secondary);margin-top:4px;">With a function expression, only the <em>var greet</em> part is hoisted (as undefined) — the function body is not. So calling it early causes a TypeError.</div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════
+     04 · HOISTING WITH LET AND CONST
+══════════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Hoisting with let and const</span></div>
+<div class="accent a-purple"></div>
+
+<div class="card">
+<div class="clabel">How it works</div>
+<div class="ctext">let and const are also hoisted — but they are placed into the Temporal Dead Zone (TDZ) and cannot be accessed before their declaration line is reached. Trying to access them early throws a ReferenceError.</div>
+</div>
+
+<div class="tdz-box">
+<div class="tdz-lbl">Temporal Dead Zone (TDZ)</div>
+<div class="tdz-text">The Temporal Dead Zone is the period between the start of the block and the line where the variable is declared. During this time, the variable exists in memory but is completely inaccessible. Any attempt to read it throws a ReferenceError.</div>
+</div>
+
+<div class="mt">Example — accessing let before declaration</div>
+<div class="code-b">console.log(b);   // accessed before declaration
+let b = 20;</div>
+<div class="err-b"><div class="err-lbl">Error</div>ReferenceError: Cannot access 'b' before initialization</div>
+
+<div class="mt">Example — accessing const before declaration</div>
+<div class="code-b">console.log(c);   // accessed before declaration
+const c = 100;</div>
+<div class="err-b"><div class="err-lbl">Error</div>ReferenceError: Cannot access 'c' before initialization</div>
+
+<div class="mt">After declaration — works normally</div>
+<div class="code-b">let b = 20;
+console.log(b);   // accessed after declaration
+
+const c = 100;
+console.log(c);   // accessed after declaration</div>
+<div class="out-b"><div class="out-lbl">Output</div>20
+100</div>
+
+<div class="mt">Visualising the Temporal Dead Zone</div>
+<div class="phase-wrap" style="margin-bottom:0;">
+<div class="phase-row">
+<div class="phase-line"><div class="phase-dot" style="background:#D85A30;"></div><div class="phase-stem"></div></div>
+<div class="phase-content"><div class="phase-lbl" style="color:#993C1D;">TDZ starts here</div>Block begins — let/const are hoisted into memory but completely inaccessible. Accessing them here throws ReferenceError.</div>
+</div>
+<div class="phase-row">
+<div class="phase-line"><div class="phase-dot" style="background:#EF9F27;"></div><div class="phase-stem"></div></div>
+<div class="phase-content"><div class="phase-lbl" style="color:#854F0B;">TDZ zone — danger area</div>Any console.log or access here will throw: <em>ReferenceError: Cannot access before initialization</em></div>
+</div>
+<div class="phase-row">
+<div class="phase-line"><div class="phase-dot" style="background:#1D9E75;"></div><div class="phase-stem" style="min-height:0;"></div></div>
+<div class="phase-content" style="padding-bottom:0;"><div class="phase-lbl" style="color:#0F6E56;">TDZ ends here — safe zone</div>The declaration line is reached → variable is initialized → now accessible safely.</div>
+</div>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════
+     05 · FULL COMPARISON
+══════════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">05</span><span class="sec-title">Hoisting — full comparison</span></div>
+<div class="accent a-amber"></div>
+
+<div class="tbl-wrap">
+<table class="tbl">
+<thead>
+<tr>
+<th style="width:25%;">Type</th>
+<th style="width:25%;">Hoisted?</th>
+<th style="width:25%;">Initial value</th>
+<th style="width:25%;">Access before declaration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>var</td>
+<td style="color:#1D9E75;">Yes — fully</td>
+<td>undefined</td>
+<td style="color:#1D9E75;">Allowed — returns undefined</td>
+</tr>
+<tr>
+<td>function declaration</td>
+<td style="color:#1D9E75;">Yes — fully</td>
+<td>Full function</td>
+<td style="color:#1D9E75;">Allowed — works perfectly</td>
+</tr>
+<tr>
+<td>let</td>
+<td style="color:#EF9F27;">Yes — partial</td>
+<td>TDZ (no value)</td>
+<td style="color:#D85A30;">Not allowed — ReferenceError</td>
+</tr>
+<tr>
+<td>const</td>
+<td style="color:#EF9F27;">Yes — partial</td>
+<td>TDZ (no value)</td>
+<td style="color:#D85A30;">Not allowed — ReferenceError</td>
+</tr>
+<tr>
+<td>function expression</td>
+<td style="color:#EF9F27;">Partial (var only)</td>
+<td>undefined</td>
+<td style="color:#D85A30;">Not allowed — TypeError</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="ibox" style="margin-top:.75rem;">
+<div class="ibox-lbl">Interview Answer — What is Hoisting?</div>
+<div class="ibox-text">Hoisting is a JavaScript mechanism where variable and function declarations are moved to the top of their scope during the memory creation phase before code execution. var is fully hoisted with value undefined, function declarations are fully hoisted with their complete body, and let and const are hoisted but remain in the Temporal Dead Zone and cannot be accessed before their declaration line.</div>
+</div>
+
+<div class="trick">
+<i class="ti ti-bulb" aria-hidden="true"></i>
+<div class="trick-t">Memory Trick — var = hoisted as undefined &nbsp;·&nbsp; function declaration = fully hoisted &nbsp;·&nbsp; let / const = hoisted but in TDZ → ReferenceError if accessed early</div>
+</div>
+</div>
+
+</div>

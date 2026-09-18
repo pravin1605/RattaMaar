@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spring MVC — Complete Notes</title>
+<style>
+  :root{
+    --bg: #fbfaf7;
+    --paper: #ffffff;
+    --ink: #1f2420;
+    --ink-dim: #6b7268;
+    --line: #e4e0d6;
+    --accent: #2f6d4f;
+    --accent-soft: #e9f2ec;
+    --accent-2: #b5651d;
+    --accent-2-soft: #f7ecdf;
+    --mono: "JetBrains Mono","Fira Code",Consolas,monospace;
+    --serif: "Source Serif Pro","Georgia",serif;
+    --sans: "IBM Plex Sans","Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.65;
+    padding-bottom:80px;
+  }
+
+  /* ===== Header ===== */
+  header{
+    background:var(--paper);
+    padding:54px 8vw 30px;
+    border-bottom:2px solid var(--ink);
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    color:var(--accent);
+    letter-spacing:.18em;
+    font-size:12px;
+    text-transform:uppercase;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:26px; height:1px;
+    background:var(--accent);
+    display:inline-block;
+  }
+  h1{
+    margin:0;
+    font-family:var(--serif);
+    font-size:clamp(32px,4.8vw,52px);
+    font-weight:600;
+    letter-spacing:-.01em;
+    color:var(--ink);
+  }
+  h1 em{ color:var(--accent); font-style:normal; }
+  .sub{
+    margin-top:14px;
+    color:var(--ink-dim);
+    max-width:680px;
+    font-size:15.5px;
+  }
+
+  /* ===== Nav ===== */
+  nav{
+    position:sticky; top:0; z-index:10;
+    background:rgba(251,250,247,.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+    display:flex;
+    flex-wrap:wrap;
+    gap:2px 4px;
+    padding:14px 8vw;
+  }
+  nav a{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--ink-dim);
+    text-decoration:none;
+    padding:6px 11px;
+    border-radius:5px;
+    transition:.15s;
+    white-space:nowrap;
+  }
+  nav a:hover{ background:var(--accent-soft); color:var(--accent); }
+
+  main{
+    max-width:1180px;
+    margin:0 auto;
+    padding:38px 8vw 0;
+    display:grid;
+    gap:28px;
+  }
+
+  section{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:30px 32px;
+    scroll-margin-top:70px;
+    box-shadow:0 1px 2px rgba(0,0,0,.02);
+  }
+  section h2{
+    margin:0 0 4px;
+    font-family:var(--serif);
+    font-size:24px;
+    font-weight:600;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    color:var(--ink);
+  }
+  section h2 small{
+    font-family:var(--mono);
+    color:var(--accent-2);
+    font-size:12.5px;
+    font-weight:400;
+  }
+  section > p.desc{ color:var(--ink-dim); margin-top:0; margin-bottom:16px; font-size:14.5px;}
+
+  h3{
+    font-size:14.5px;
+    color:var(--accent);
+    margin:22px 0 8px;
+    font-family:var(--mono);
+    letter-spacing:.02em;
+    text-transform:uppercase;
+  }
+
+  ul, ol{ margin:8px 0 8px 0; padding-left:22px; }
+  li{ margin:5px 0; }
+  li::marker{ color:var(--accent-2); }
+
+  code{
+    font-family:var(--mono);
+    background:var(--accent-soft);
+    padding:1px 6px;
+    border-radius:4px;
+    font-size:.88em;
+    color:var(--accent);
+  }
+  pre{
+    background:#1c211d;
+    border-radius:6px;
+    padding:16px 18px;
+    overflow-x:auto;
+    font-family:var(--mono);
+    font-size:12.8px;
+    line-height:1.55;
+    color:#e3ece5;
+    margin:12px 0;
+    border-left:3px solid var(--accent);
+  }
+  pre code{ background:none; padding:0; color:inherit; }
+
+  .callout{
+    background:var(--accent-soft);
+    border:1px solid #cfe2d6;
+    border-radius:6px;
+    padding:14px 18px;
+    margin:14px 0;
+    font-size:13.8px;
+  }
+  .callout.warn{
+    background:var(--accent-2-soft);
+    border-color:#e6cba9;
+  }
+  .callout b{ color:var(--accent); }
+  .callout.warn b{ color:var(--accent-2); }
+
+  .flow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+    margin:16px 0;
+    font-family:var(--mono);
+    font-size:12.5px;
+  }
+  .flow .step{
+    background:var(--accent-soft);
+    border:1px solid #cfe2d6;
+    color:var(--accent);
+    padding:8px 14px;
+    border-radius:6px;
+    white-space:nowrap;
+  }
+  .flow .arrow{ color:var(--accent-2); font-weight:700; }
+
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  @media (max-width:760px){ .grid2, .grid3{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:16px 18px;
+  }
+  .card h4{
+    margin:0 0 8px;
+    color:var(--accent-2);
+    font-size:13.5px;
+    font-family:var(--mono);
+  }
+
+  table.dtab{
+    width:100%;
+    border-collapse:collapse;
+    margin:14px 0;
+    font-size:13.8px;
+  }
+  table.dtab th, table.dtab td{
+    border:1px solid var(--line);
+    padding:10px 14px;
+    text-align:left;
+    vertical-align:top;
+  }
+  table.dtab th{
+    background:var(--bg);
+    color:var(--accent);
+    font-family:var(--mono);
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  table.dtab tr:nth-child(even) td{ background:#fcfcfa; }
+
+  .num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:22px; height:22px;
+    border-radius:50%;
+    background:var(--accent);
+    color:#fff;
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:700;
+    margin-right:10px;
+    flex-shrink:0;
+  }
+  .steplist{ list-style:none; padding:0; margin:14px 0; }
+  .steplist li{ display:flex; align-items:flex-start; margin:10px 0; }
+
+  .qa{
+    border-left:3px solid var(--accent-2);
+    padding:4px 0 4px 16px;
+    margin:14px 0;
+  }
+  .qa .q{ font-weight:600; color:var(--ink); font-size:14.5px; }
+  .qa .a{ color:var(--ink-dim); font-size:13.8px; margin-top:4px; }
+
+  .tag{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:10.5px;
+    padding:2px 8px;
+    border-radius:10px;
+    background:var(--accent-2-soft);
+    color:var(--accent-2);
+    margin-right:6px;
+    letter-spacing:.03em;
+  }
+
+  footer{
+    text-align:center;
+    color:var(--ink-dim);
+    font-family:var(--mono);
+    font-size:11.5px;
+    padding:44px 8vw 0;
+    letter-spacing:.08em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Java · Spring Framework</div>
+  <h1>Spring <em>MVC</em> — Complete Notes</h1>
+  <p class="sub">Model–View–Controller on top of the Servlet API — architecture, request lifecycle, project setup, controllers, data binding, validation, interceptors, exception handling, REST, and a quick interview Q&A recap.</p>
+</header>
+
+<nav>
+  <a href="#intro">What & Why</a>
+  <a href="#mvc">MVC Pattern</a>
+  <a href="#analogy">Hotel Analogy</a>
+  <a href="#flow">Request Flow</a>
+  <a href="#setup">Project Setup</a>
+  <a href="#controller">Controller</a>
+  <a href="#data-out">Controller → View</a>
+  <a href="#data-in">View → Controller</a>
+  <a href="#javaconfig">Java Config</a>
+  <a href="#validation">Validation</a>
+  <a href="#interceptor">Interceptors</a>
+  <a href="#exceptions">Exception Handling</a>
+  <a href="#rest">REST Controllers</a>
+  <a href="#annotations">Annotation Cheatsheet</a>
+  <a href="#qa">Quick Q&A</a>
+</nav>
+
+<main>
+
+  <section id="intro">
+    <h2>What is Spring MVC? <small>overview</small></h2>
+    <ul>
+      <li>Used to develop <b>web applications</b>.</li>
+      <li>A <b>sub-framework of Spring</b> used to build web apps.</li>
+      <li>Built on top of the <code>Servlet</code> API.</li>
+      <li>Follows the <b>Model–View–Controller</b> design pattern.</li>
+      <li>Implements core Spring features like <b>IoC</b> and <b>Dependency Injection</b>.</li>
+      <li>Internally uses the Servlet API.</li>
+    </ul>
+
+    <h3>Why use it?</h3>
+    <ul>
+      <li>Separates responsibilities — Model, View, Controller each own one job.</li>
+      <li>Powerful, flexible configuration (XML or Java-based).</li>
+      <li>Inherits Spring core features like IoC out of the box.</li>
+      <li>Supports rapid application development.</li>
+      <li>Flexible, easy to test, feature-rich.</li>
+    </ul>
+  </section>
+
+  <section id="mvc">
+    <h2>MVC Architecture <small>design pattern</small></h2>
+    <p class="desc">A way of organizing application code into three distinct roles.</p>
+    <div class="grid3">
+      <div class="card">
+        <h4>Model</h4>
+        Data + business logic — Java objects, services, DAO layer.
+      </div>
+      <div class="card">
+        <h4>View</h4>
+        The UI — JSP, Thymeleaf, HTML, etc.
+      </div>
+      <div class="card">
+        <h4>Controller</h4>
+        Handles user requests, processes input, talks to the Model, returns a View.
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <b>Without MVC:</b> UI, business logic, and database code are all mixed together in one Servlet/JSP — fine at small scale, unmanageable as the app grows.
+    </div>
+  </section>
+
+  <section id="analogy">
+    <h2>The Hotel Analogy <small>intuition</small></h2>
+    <p class="desc">A mental model for why separating roles matters.</p>
+
+    <h3>Without MVC — the lone owner</h3>
+    <p>One person takes the order, cooks, serves, collects money, and cleans. If a new customer arrives while he's in the kitchen, they wait. Result: confusion, delay, poor service — exactly what happens when Servlets/JSP handle everything in one place.</p>
+
+    <h3>With MVC — a structured hotel</h3>
+    <table class="dtab">
+      <tr><th>Role</th><th>MVC part</th><th>Job</th></tr>
+      <tr><td>Waiter</td><td>Controller</td><td>Takes the order, passes it on, brings back the result — doesn't cook.</td></tr>
+      <tr><td>Chef</td><td>Model</td><td>Prepares the food (business logic) behind the scenes.</td></tr>
+      <tr><td>Dining table</td><td>View</td><td>Displays the final result — customer never sees the kitchen.</td></tr>
+    </table>
+
+    <ol>
+      <li>Customer tells the Waiter (Controller): "I want Chicken Biryani."</li>
+      <li>Waiter passes the order to the Chef (Model).</li>
+      <li>Chef prepares the food.</li>
+      <li>Chef hands the dish back to the Waiter.</li>
+      <li>Waiter serves it on the Table (View) to the customer.</li>
+    </ol>
+  </section>
+
+  <section id="flow">
+    <h2>How a Request Flows <small>request lifecycle</small></h2>
+    <div class="flow">
+      <span class="step">Client request</span><span class="arrow">→</span>
+      <span class="step">DispatcherServlet</span><span class="arrow">→</span>
+      <span class="step">Handler Mapping</span><span class="arrow">→</span>
+      <span class="step">Controller</span><span class="arrow">→</span>
+      <span class="step">Model / Service / DAO</span>
+    </div>
+    <div class="flow">
+      <span class="step">View name + Model</span><span class="arrow">→</span>
+      <span class="step">View Resolver</span><span class="arrow">→</span>
+      <span class="step">View (JSP/HTML)</span><span class="arrow">→</span>
+      <span class="step">Response to client</span>
+    </div>
+    <ol class="steplist">
+      <li><span class="num">1</span>Client sends a request, e.g. <code>/hello</code>.</li>
+      <li><span class="num">2</span><b>DispatcherServlet</b> (the Front Controller) receives every request first.</li>
+      <li><span class="num">3</span><b>Handler Mapping</b> decides which Controller should handle it.</li>
+      <li><span class="num">4</span>The <code>@Controller</code> method runs — processes the request, calls Service/DAO if needed.</li>
+      <li><span class="num">5</span>The Model returns processed data (Employee, Product, Order, etc.).</li>
+      <li><span class="num">6</span>Controller returns a logical view name + data back to the DispatcherServlet.</li>
+      <li><span class="num">7</span><b>View Resolver</b> maps the logical name to an actual file — e.g. <code>"hello"</code> → <code>hello.jsp</code>.</li>
+      <li><span class="num">8</span>The View renders the UI using the model data.</li>
+      <li><span class="num">9</span>DispatcherServlet sends the final response to the client.</li>
+    </ol>
+  </section>
+
+  <section id="setup">
+    <h2>Project Setup <small>XML-based config</small></h2>
+    <p class="desc">Create a Maven project and add the Spring MVC dependency.</p>
+    <div class="callout warn"><b>Note:</b> check your server version — Tomcat 9 or below needs <code>javax</code> packages; newer Tomcat needs <code>jakarta</code> packages instead.</div>
+    <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+    &lt;version&gt;5.2.4.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+
+    <h3>Setup steps</h3>
+    <ol class="steplist">
+      <li><span class="num">1</span>Configure the DispatcherServlet in <code>web.xml</code>.</li>
+      <li><span class="num">2</span>Create the Spring configuration file.</li>
+      <li><span class="num">3</span>Configure the View Resolver.</li>
+      <li><span class="num">4</span>Create a Controller.</li>
+      <li><span class="num">5</span>Create a View to render.</li>
+    </ol>
+
+    <h3>1 · web.xml</h3>
+    <pre><code>&lt;servlet&gt;
+  &lt;servlet-name&gt;Spring&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;Spring&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</code></pre>
+
+    <h3>2 & 3 · spring-servlet.xml (inside WEB-INF)</h3>
+    <p style="color:var(--ink-dim); font-size:13px; margin-top:-4px;">Filename must match the <code>&lt;servlet-name&gt;</code> given in web.xml — here, <code>Spring</code>.</p>
+    <pre><code>&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd"&gt;
+
+  &lt;!-- View Resolver --&gt;
+  &lt;bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="viewResolver"&gt;
+    &lt;property name="prefix" value="/WEB-INF/views/" /&gt;
+    &lt;property name="suffix" value=".jsp" /&gt;
+  &lt;/bean&gt;
+&lt;/beans&gt;</code></pre>
+  </section>
+
+  <section id="controller">
+    <h2>The Controller <small>@Controller & @RequestMapping</small></h2>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>@Controller</h4>
+        Marks a class as a Spring MVC Controller. Handles user requests, talks to the Model, returns a View. Also enables auto-scanning of the class.
+      </div>
+      <div class="card">
+        <h4>@RequestMapping</h4>
+        Maps an HTTP request to a handler method — "when a request hits this URL, run this method." Works at class level and method level.
+      </div>
+    </div>
+
+    <h3>Key points</h3>
+    <ul>
+      <li>A Controller processes requests using the Service/DAO layer.</li>
+      <li><code>@RequestMapping("/demoFile")</code> on a method → runs on requests to <code>/demoFile</code>.</li>
+      <li>Restrict method/verb: <code>@RequestMapping(path="/home", method=RequestMethod.POST)</code>.</li>
+      <li>Return type is always <code>String</code> (a view name) or <code>ModelAndView</code>.</li>
+    </ul>
+
+    <pre><code>@RequestMapping("/add")
+public String add() {
+    int a = 10 + 20;
+    return "output.jsp";
+}</code></pre>
+
+    <h3>Shortcut mapping annotations (since Spring 4.3)</h3>
+    <table class="dtab">
+      <tr><th>Annotation</th><th>Equivalent to</th></tr>
+      <tr><td><code>@GetMapping</code></td><td><code>@RequestMapping(method = RequestMethod.GET)</code></td></tr>
+      <tr><td><code>@PostMapping</code></td><td><code>@RequestMapping(method = RequestMethod.POST)</code></td></tr>
+      <tr><td><code>@PutMapping</code></td><td><code>@RequestMapping(method = RequestMethod.PUT)</code></td></tr>
+      <tr><td><code>@DeleteMapping</code></td><td><code>@RequestMapping(method = RequestMethod.DELETE)</code></td></tr>
+    </table>
+  </section>
+
+  <section id="data-out">
+    <h2>Controller → View <small>sending data out</small></h2>
+    <p class="desc">Two approaches: the <code>Model</code> interface, or the <code>ModelAndView</code> class.</p>
+
+    <h3>a) Model interface — data only</h3>
+    <p>Use <code>addAttribute(key, value)</code> to pass key–value pairs to the view.</p>
+    <pre><code>@RequestMapping("/sample")
+public String showRegisterFile(Model model) {
+    model.addAttribute("name", "Rani");
+    model.addAttribute("percentage", 78);
+    return "Demo.jsp";
+}</code></pre>
+
+    <h3>b) ModelAndView — data + view together</h3>
+    <ul>
+      <li><code>setViewName("file")</code> — with extension = complete response; without = incomplete response.</li>
+      <li><code>addObject(key, value)</code> — attach data.</li>
+    </ul>
+
+    <div class="callout">
+      <b>Access in JSP:</b> call <code>getAttribute("key")</code> in scriptlets.<br>
+      <b>@ResponseBody:</b> prints data/JSON directly to the browser.<br>
+      <b>Redirect:</b> <code>return "redirect:urlOfMethod";</code> — pass data along with <code>RedirectAttributes.addFlashAttribute()</code>.<br>
+      <b>Session storage:</b> <code>@SessionAttributes</code> on the controller + Model/ModelAndView to store, <code>HttpSession.getAttribute()</code> to read elsewhere.
+    </div>
+  </section>
+
+  <section id="data-in">
+    <h2>View → Controller <small>receiving user input</small></h2>
+    <ol>
+      <li>Create a form with input fields, each identified by a <code>name</code> attribute.</li>
+      <li>Read that data in the controller using one of three approaches.</li>
+    </ol>
+
+    <h3>@RequestParam — one annotation per field</h3>
+    <p>Reads a value from an input box or a URL query parameter.</p>
+    <pre><code>@RequestMapping("/add")
+public ModelAndView add(@RequestParam("first") int num1,
+                         @RequestParam("second") int num2) {
+    int result = num1 + num2;
+    ModelAndView mv = new ModelAndView();
+    mv.setViewName("output.jsp");
+    mv.addObject("op", result);
+    return mv;
+}</code></pre>
+
+    <h3>@PathVariable — data embedded in the URL</h3>
+    <pre><code>// localhost:8080/add/10/20
+@RequestMapping("/add/{n1}/{n2}")
+public ModelAndView add(@PathVariable("n1") int num1,
+                         @PathVariable("n2") int num2) {
+    int result = num1 + num2;
+    ModelAndView mv = new ModelAndView();
+    mv.setViewName("output.jsp");
+    mv.addObject("op", result);
+    return mv;
+}</code></pre>
+
+    <h3>@ModelAttribute — bind a whole object</h3>
+    <p>Create a class matching the form's fields; input box names must match the class's variable names.</p>
+    <pre><code>public class Addition {
+    private int num1;
+    private int num2;
+    // getters and setters
+}</code></pre>
+    <p>Spring fetches each field by name, sets it via the setter, and hands the populated object to the controller:</p>
+    <pre><code>@RequestMapping("/add")
+public ModelAndView add(@ModelAttribute Addition info) {
+    int result = info.getNum1() + info.getNum2();
+    ModelAndView mv = new ModelAndView();
+    mv.setViewName("output");
+    mv.addObject("op", result);
+    return mv;
+}</code></pre>
+
+    <h3>@ModelAttribute at method level</h3>
+    <p>Runs before every request-handling method in the controller — useful for data common to all views (e.g. page header, footer text).</p>
+    <pre><code>@ModelAttribute
+public void common(Model m) {
+    m.addAttribute("Header", "Learn code with Shubh");
+    m.addAttribute("Dec", "Home for Programmer");
+}</code></pre>
+  </section>
+
+  <section id="javaconfig">
+    <h2>Java-based Configuration <small>alternative to XML</small></h2>
+    <ol class="steplist">
+      <li><span class="num">1</span>Create a <code>Config</code> class with <code>@Configuration</code> + <code>@ComponentScan(basePackages="package name")</code>.</li>
+      <li><span class="num">2</span>Create a <code>WebInitializer</code> extending <code>AbstractAnnotationConfigDispatcherServletInitializer</code>.</li>
+      <li><span class="num">3</span>Create a Controller.</li>
+      <li><span class="num">4</span>Create a View to render.</li>
+    </ol>
+
+    <h3>1 · Config class</h3>
+    <pre><code>@Configuration
+@ComponentScan(basePackages = "package name")
+public class Config {
+    // helper @Bean methods go here, if needed
+}</code></pre>
+
+    <h3>2 · WebInitializer</h3>
+    <pre><code>public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
+    @Override
+    protected Class&lt;?&gt;[] getRootConfigClasses() {
+        return null;
+    }
+
+    @Override
+    protected Class&lt;?&gt;[] getServletConfigClasses() {
+        return new Class[] { Config.class };
+    }
+
+    @Override
+    protected String[] getServletMappings() {
+        return new String[] { "/" };
+    }
+}</code></pre>
+  </section>
+
+  <section id="validation">
+    <h2>Form Validation <small>bean validation (JSR-380)</small></h2>
+    <p class="desc">Spring MVC integrates with the standard <code>javax.validation</code> / <code>jakarta.validation</code> API to validate bound objects automatically.</p>
+
+    <h3>Add dependency</h3>
+    <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.hibernate.validator&lt;/groupId&gt;
+    &lt;artifactId&gt;hibernate-validator&lt;/artifactId&gt;
+    &lt;version&gt;6.1.5.Final&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+
+    <h3>Annotate the model</h3>
+    <pre><code>public class Addition {
+    @NotNull(message = "First number is required")
+    private Integer num1;
+
+    @Min(value = 1, message = "Second number must be positive")
+    private Integer num2;
+    // getters and setters
+}</code></pre>
+
+    <h3>Validate in the controller</h3>
+    <pre><code>@RequestMapping("/add")
+public String add(@Valid @ModelAttribute Addition info,
+                   BindingResult result) {
+    if (result.hasErrors()) {
+        return "form.jsp";   // re-show form with errors
+    }
+    // proceed
+    return "output.jsp";
+}</code></pre>
+    <div class="callout">
+      <b>Note:</b> <code>BindingResult</code> must come immediately after the <code>@Valid</code> argument, or Spring throws an exception instead of populating errors.
+    </div>
+  </section>
+
+  <section id="interceptor">
+    <h2>Interceptors <small>pre/post-process requests</small></h2>
+    <p class="desc">Similar to filters, but Spring-aware — run logic before/after a controller executes (e.g. logging, auth checks, locale switching).</p>
+
+    <h3>1 · Implement HandlerInterceptor</h3>
+    <pre><code>public class LoggingInterceptor implements HandlerInterceptor {
+
+    public boolean preHandle(HttpServletRequest req,
+                              HttpServletResponse res,
+                              Object handler) {
+        System.out.println("Request URL: " + req.getRequestURI());
+        return true;   // false = stop the chain here
+    }
+
+    public void postHandle(HttpServletRequest req,
+                            HttpServletResponse res,
+                            Object handler,
+                            ModelAndView mv) {
+        System.out.println("Controller finished, view not yet rendered");
+    }
+
+    public void afterCompletion(HttpServletRequest req,
+                                 HttpServletResponse res,
+                                 Object handler,
+                                 Exception ex) {
+        System.out.println("Response fully sent");
+    }
+}</code></pre>
+
+    <h3>2 · Register it</h3>
+    <pre><code>@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LoggingInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/login", "/css/**");
+    }
+}</code></pre>
+  </section>
+
+  <section id="exceptions">
+    <h2>Exception Handling <small>@ExceptionHandler & @ControllerAdvice</small></h2>
+
+    <h3>Local — inside one controller</h3>
+    <pre><code>@Controller
+public class UserController {
+
+    @RequestMapping("/user/{id}")
+    public String getUser(@PathVariable int id, Model model) {
+        if (id <= 0) throw new IllegalArgumentException("Invalid id");
+        // ...
+        return "user.jsp";
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handleBadId(IllegalArgumentException ex, Model model) {
+        model.addAttribute("error", ex.getMessage());
+        return "error.jsp";
+    }
+}</code></pre>
+
+    <h3>Global — across all controllers</h3>
+    <pre><code>@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleAll(Exception ex) {
+        ModelAndView mv = new ModelAndView("error");
+        mv.addObject("message", ex.getMessage());
+        return mv;
+    }
+}</code></pre>
+    <div class="callout">
+      <b>@ControllerAdvice</b> centralizes error handling for the whole application instead of repeating <code>@ExceptionHandler</code> in every controller.
+    </div>
+  </section>
+
+  <section id="rest">
+    <h2>REST Controllers <small>@RestController & JSON</small></h2>
+    <p class="desc">For APIs that return data (typically JSON) instead of a rendered view.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>@RestController</h4>
+        Equivalent to <code>@Controller</code> + <code>@ResponseBody</code> on every method — the return value is written straight to the response body, not resolved to a view.
+      </div>
+      <div class="card">
+        <h4>@RequestBody</h4>
+        Binds the incoming JSON request body directly to a Java object.
+      </div>
+    </div>
+
+    <pre><code>@RestController
+@RequestMapping("/api/users")
+public class UserApiController {
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable int id) {
+        return userService.findById(id);   // serialized to JSON automatically
+    }
+
+    @PostMapping
+    public User createUser(@RequestBody User user) {
+        return userService.save(user);
+    }
+}</code></pre>
+    <div class="callout">
+      Needs the Jackson library on the classpath (<code>jackson-databind</code>) for automatic Java ⇄ JSON conversion.
+    </div>
+  </section>
+
+  <section id="annotations">
+    <h2>Annotation Cheatsheet <small>quick reference</small></h2>
+    <table class="dtab">
+      <tr><th>Annotation</th><th>Purpose</th></tr>
+      <tr><td><code>@Controller</code></td><td>Marks a class as a Spring MVC controller returning views.</td></tr>
+      <tr><td><code>@RestController</code></td><td>Controller + <code>@ResponseBody</code> — returns data, not views.</td></tr>
+      <tr><td><code>@RequestMapping</code></td><td>Maps a URL (and optionally HTTP method) to a handler.</td></tr>
+      <tr><td><code>@GetMapping / @PostMapping / etc.</code></td><td>Shortcut for <code>@RequestMapping</code> with a fixed HTTP verb.</td></tr>
+      <tr><td><code>@RequestParam</code></td><td>Binds a single query/form parameter to a method argument.</td></tr>
+      <tr><td><code>@PathVariable</code></td><td>Binds a URI template variable to a method argument.</td></tr>
+      <tr><td><code>@ModelAttribute</code></td><td>Binds form fields to a whole object, or exposes common data to every view.</td></tr>
+      <tr><td><code>@RequestBody</code></td><td>Binds the raw request body (typically JSON) to an object.</td></tr>
+      <tr><td><code>@ResponseBody</code></td><td>Writes the return value directly to the response body.</td></tr>
+      <tr><td><code>@Valid</code></td><td>Triggers bean validation on the annotated argument.</td></tr>
+      <tr><td><code>@ExceptionHandler</code></td><td>Handles a specific exception type thrown in that controller.</td></tr>
+      <tr><td><code>@ControllerAdvice</code></td><td>Applies exception handling / common logic globally.</td></tr>
+      <tr><td><code>@SessionAttributes</code></td><td>Stores specific model attributes in the HTTP session.</td></tr>
+      <tr><td><code>@Configuration</code></td><td>Marks a class as a source of bean definitions (Java config).</td></tr>
+      <tr><td><code>@ComponentScan</code></td><td>Tells Spring which packages to scan for annotated classes.</td></tr>
+    </table>
+  </section>
+
+  <section id="qa">
+    <h2>Quick Recap <small>interview-style Q&A</small></h2>
+
+    <div class="qa">
+      <div class="q">Q: What is the DispatcherServlet?</div>
+      <div class="a">A: The Front Controller of Spring MVC — every incoming request passes through it first, and it delegates to the right controller.</div>
+    </div>
+    <div class="qa">
+      <div class="q">Q: Difference between @RequestParam and @PathVariable?</div>
+      <div class="a">A: @RequestParam reads query-string/form parameters (<code>?key=value</code>); @PathVariable reads values embedded directly in the URL path (<code>/add/10/20</code>).</div>
+    </div>
+    <div class="qa">
+      <div class="q">Q: Model vs ModelAndView?</div>
+      <div class="a">A: Model only carries data to the view (the method still returns the view name as a String). ModelAndView carries both the data and the view name in one object.</div>
+    </div>
+    <div class="qa">
+      <div class="q">Q: What does the View Resolver do?</div>
+      <div class="a">A: Converts a logical view name returned by the controller (e.g. "hello") into an actual resource path (e.g. /WEB-INF/views/hello.jsp).</div>
+    </div>
+    <div class="qa">
+      <div class="q">Q: @Controller vs @RestController?</div>
+      <div class="a">A: @Controller returns view names to be resolved into pages. @RestController returns data (usually JSON) written directly to the response body.</div>
+    </div>
+    <div class="qa">
+      <div class="q">Q: How do interceptors differ from filters?</div>
+      <div class="a">A: Filters are part of the raw Servlet API and run outside Spring's context; interceptors are Spring-aware and can access handler details like the controller method being invoked.</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>SPRING MVC · COMPLETE NOTES</footer>
+
+</body>
+</html>

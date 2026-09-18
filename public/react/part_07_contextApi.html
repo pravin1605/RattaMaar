@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>React.js – Chapter 7 Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#ffffff; --text:#111111; --muted:#555555; --border:#e0e0e0;
+    --blue:#1a6bff; --blue-bg:#e8f0ff;
+    --green:#0a8a3c; --green-bg:#e4f5ec;
+    --orange:#d95f00; --orange-bg:#fff0e4;
+    --purple:#6b2fbd; --purple-bg:#f0eaff;
+    --red:#c4001a; --red-bg:#fff0f2;
+    --teal:#006d77; --teal-bg:#e0f4f5;
+    --pink:#b5006e; --pink-bg:#ffe8f5;
+    --yellow:#a06000; --yellow-bg:#fff8e1;
+  }
+  body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); font-size:15px; line-height:1.7; padding:20px; max-width:960px; margin:0 auto; }
+
+  .page-header { background:linear-gradient(135deg,#006d77 0%,#1a6bff 50%,#6b2fbd 100%); color:#fff; border-radius:14px; padding:36px 40px; margin-bottom:36px; }
+  .page-header .tag { display:inline-block; background:rgba(255,255,255,0.25); border-radius:20px; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:4px 14px; margin-bottom:14px; }
+  .page-header h1 { font-size:30px; font-weight:700; margin-bottom:6px; }
+  .page-header p  { font-size:14px; opacity:.88; }
+
+  .section { background:#fff; border:1.5px solid var(--border); border-radius:12px; margin-bottom:28px; overflow:hidden; }
+  .section-header { display:flex; align-items:center; gap:12px; padding:16px 24px; border-bottom:1.5px solid var(--border); }
+  .sec-num { width:32px; height:32px; border-radius:8px; display:grid; place-items:center; font-size:13px; font-weight:700; flex-shrink:0; color:#fff; }
+  .section-header h2 { font-size:18px; font-weight:700; color:var(--text); }
+  .section-body { padding:22px 24px; }
+
+  .def-box { border-left:4px solid var(--blue); background:var(--blue-bg); border-radius:0 8px 8px 0; padding:14px 18px; margin:14px 0; }
+  .def-box.green  { border-color:var(--green);  background:var(--green-bg);  }
+  .def-box.teal   { border-color:var(--teal);   background:var(--teal-bg);   }
+  .def-box.orange { border-color:var(--orange); background:var(--orange-bg); }
+  .def-box.purple { border-color:var(--purple); background:var(--purple-bg); }
+  .def-box.red    { border-color:var(--red);    background:var(--red-bg);    }
+  .def-box .def-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--blue); margin-bottom:4px; }
+  .def-box.green  .def-label { color:var(--green);  }
+  .def-box.teal   .def-label { color:var(--teal);   }
+  .def-box.orange .def-label { color:var(--orange); }
+  .def-box.purple .def-label { color:var(--purple); }
+  .def-box.red    .def-label { color:var(--red);    }
+  .def-box p { font-size:14.5px; }
+
+  pre { background:#1a1a2e; color:#e0e0e0; border-radius:8px; padding:14px 18px; font-family:'Fira Code',monospace; font-size:13px; line-height:1.6; overflow-x:auto; margin:10px 0; white-space:pre-wrap; word-break:break-word; }
+  .kw   { color:#c792ea; }
+  .fn   { color:#82aaff; }
+  .str  { color:#c3e88d; }
+  .tag-c{ color:#f07178; }
+  .attr { color:#ffcb6b; }
+  .cmt  { color:#546e7a; }
+  .num  { color:#f78c6c; }
+  .ctx  { color:#89ddff; }
+  code  { font-family:'Fira Code',monospace; font-size:13px; background:#f0f0f0; padding:1px 6px; border-radius:4px; color:var(--purple); }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0; }
+  .compare-box { border-radius:8px; padding:14px 16px; font-size:13.5px; }
+  .compare-box .cb-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+  .cb-wrong { background:var(--red-bg);   border-left:4px solid var(--red);   } .cb-wrong .cb-label { color:var(--red);   }
+  .cb-right { background:var(--green-bg); border-left:4px solid var(--green); } .cb-right .cb-label { color:var(--green); }
+
+  .feature-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin-top:14px; }
+  .feature-card { border-radius:10px; padding:16px 18px; border:1.5px solid transparent; }
+  .feature-card .fc-title { font-weight:700; font-size:14px; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+  .feature-card p { font-size:13.5px; color:var(--muted); }
+  .fc-blue   { background:var(--blue-bg);   border-color:#b8d0ff; } .fc-blue   .fc-title { color:var(--blue);   }
+  .fc-green  { background:var(--green-bg);  border-color:#9ddbb9; } .fc-green  .fc-title { color:var(--green);  }
+  .fc-orange { background:var(--orange-bg); border-color:#ffc999; } .fc-orange .fc-title { color:var(--orange); }
+  .fc-purple { background:var(--purple-bg); border-color:#c9abf0; } .fc-purple .fc-title { color:var(--purple); }
+  .fc-teal   { background:var(--teal-bg);   border-color:#90d4d8; } .fc-teal   .fc-title { color:var(--teal);   }
+  .fc-red    { background:var(--red-bg);    border-color:#f0b0bb; } .fc-red    .fc-title { color:var(--red);    }
+  .fc-pink   { background:var(--pink-bg);   border-color:#f0a0d4; } .fc-pink   .fc-title { color:var(--pink);   }
+  .fc-yellow { background:var(--yellow-bg); border-color:#ffd080; } .fc-yellow .fc-title { color:var(--yellow); }
+
+  .flow-col { display:flex; flex-direction:column; align-items:flex-start; gap:4px; margin:14px 0; }
+  .flow-step { border-radius:8px; padding:10px 18px; font-size:13.5px; font-weight:600; border:1.5px solid transparent; }
+  .flow-d { color:#888; font-size:18px; font-weight:700; padding-left:20px; }
+
+  .tip  { display:flex; gap:10px; align-items:flex-start; background:var(--teal-bg); border-left:4px solid var(--teal); border-radius:0 8px 8px 0; padding:12px 16px; margin:12px 0; font-size:14px; color:var(--teal); }
+  .tip .ti { font-size:18px; flex-shrink:0; }
+  .warn { display:flex; gap:10px; align-items:flex-start; background:var(--red-bg); border-left:4px solid var(--red); border-radius:0 8px 8px 0; padding:12px 16px; margin:12px 0; font-size:14px; color:var(--red); }
+  .warn .ti { font-size:18px; flex-shrink:0; }
+
+  .example-wrap { border:1.5px solid var(--border); border-radius:0 8px 8px 8px; overflow:hidden; margin:12px 0; }
+  .example-wrap pre { border-radius:0; margin:0; }
+  .example-header { display:flex; align-items:center; gap:6px; background:#f5f5f5; border-radius:8px 8px 0 0; padding:10px 16px; font-size:13px; font-weight:600; color:var(--muted); border:1.5px solid var(--border); border-bottom:none; }
+  .dot-file { width:10px; height:10px; border-radius:50%; }
+
+  .output-box { background:var(--green-bg); border:1.5px solid #9ddbb9; border-radius:8px; padding:12px 16px; margin:10px 0; font-family:'Fira Code',monospace; font-size:13px; color:var(--green); }
+  .output-box .out-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--green); margin-bottom:6px; }
+
+  table { width:100%; border-collapse:collapse; margin:14px 0; font-size:14px; }
+  th { background:var(--purple-bg); color:var(--purple); font-weight:700; text-align:left; padding:10px 14px; border:1px solid #d6c4f4; }
+  td { padding:9px 14px; border:1px solid var(--border); }
+  tr:nth-child(even) td { background:#fafafa; }
+
+  .interview-box { background:var(--orange-bg); border:1.5px solid #ffc999; border-radius:10px; padding:16px 18px; margin:14px 0; }
+  .interview-box .ib-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--orange); margin-bottom:8px; }
+  .interview-box .qa { margin-bottom:10px; }
+  .interview-box .qa:last-child { margin-bottom:0; }
+  .interview-box .q { font-weight:600; font-size:13.5px; color:var(--text); }
+  .interview-box .a { font-size:13.5px; color:var(--muted); margin-left:14px; margin-top:2px; }
+
+  .steps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:16px 0; }
+  .step-card { border-radius:12px; padding:20px 18px; border:2px solid transparent; text-align:center; }
+  .step-card .step-num { width:36px; height:36px; border-radius:50%; display:grid; place-items:center; font-size:16px; font-weight:800; margin:0 auto 10px; color:#fff; }
+  .step-card .step-title { font-size:14.5px; font-weight:700; margin-bottom:6px; }
+  .step-card .step-fn { font-family:'Fira Code',monospace; font-size:13px; font-weight:600; margin-bottom:6px; }
+  .step-card p { font-size:13px; color:var(--muted); }
+
+  .analogy-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0; }
+  .analogy-card { border-radius:12px; padding:18px 20px; border:1.5px solid transparent; }
+  .analogy-card .an-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; }
+  .an-node  { border-radius:8px; padding:8px 14px; font-size:13px; font-weight:600; margin-bottom:4px; text-align:center; }
+  .an-arrow { text-align:center; color:#aaa; font-size:18px; line-height:1.2; }
+
+  .chain { display:flex; flex-direction:column; align-items:center; gap:2px; margin:12px auto; width:fit-content; }
+  .chain-node  { border-radius:10px; padding:9px 28px; font-size:13.5px; font-weight:700; border:2px solid transparent; text-align:center; min-width:180px; }
+  .chain-sub   { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-top:2px; opacity:.75; }
+  .chain-arrow { color:#aaa; font-size:20px; line-height:1.1; }
+
+  .revision-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:14px 0; }
+  .rev-card { border-radius:12px; padding:18px 20px; border:1.5px solid transparent; }
+  .rev-card .rc-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; }
+  .rev-item { display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:500; margin-bottom:6px; }
+  .rdot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+  .use-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; margin:8px 0; }
+  .use-item { border-radius:8px; padding:8px 10px; font-size:13px; font-weight:600; text-align:center; border:1.5px solid transparent; }
+
+  h3 { font-size:16px; font-weight:700; margin:18px 0 8px; color:var(--text); }
+  h4 { font-size:14px; font-weight:700; margin:12px 0 6px; color:var(--muted); }
+  p  { margin-bottom:8px; font-size:14.5px; }
+  ul, ol { padding-left:20px; margin-bottom:10px; }
+  li { font-size:14.5px; margin-bottom:4px; }
+
+  @media print { body { padding:10px; } .section { break-inside:avoid; } }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="tag">React.js · Chapter 7</div>
+  <h1>Context API in React</h1>
+  <p>What is Context API · Why Needed · 3 Steps · createContext · Provider · useContext · Advantages · Disadvantages</p>
+</div>
+
+<!-- 1. WHAT IS CONTEXT API -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--teal);">1</div>
+    <h2>What is Context API?</h2>
+  </div>
+  <div class="section-body">
+    <div class="def-box teal">
+      <div class="def-label">📘 Definition</div>
+      <p><strong>Context API</strong> is a built-in React mechanism used to <strong>share data between components</strong> without passing props through every intermediate component. It helps avoid the problem of <strong>Props Drilling</strong>.</p>
+    </div>
+    <div class="def-box green">
+      <div class="def-label">⚡ Simple Definition</div>
+      <p>Context API allows sharing data <strong>globally</strong> — any component in the tree can directly access the shared data without needing props passed through every level.</p>
+    </div>
+
+    <h3>The Problem Context API Solves</h3>
+    <div class="compare-row">
+      <div class="compare-box cb-wrong">
+        <div class="cb-label">❌ Without Context — Props Drilling</div>
+        <p style="font-size:13px; color:var(--muted); margin-bottom:8px;">Data must pass through EVERY component — even those that don't need it.</p>
+        <div class="chain">
+          <div class="chain-node" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">App <div class="chain-sub">has data</div></div>
+          <div class="chain-arrow">↓ props</div>
+          <div class="chain-node" style="background:#f8f8f8; border-color:var(--border); color:var(--muted);">A <div class="chain-sub" style="color:var(--red);">doesn't need it</div></div>
+          <div class="chain-arrow">↓ props</div>
+          <div class="chain-node" style="background:#f8f8f8; border-color:var(--border); color:var(--muted);">B <div class="chain-sub" style="color:var(--red);">doesn't need it</div></div>
+          <div class="chain-arrow">↓ props</div>
+          <div class="chain-node" style="background:#f8f8f8; border-color:var(--border); color:var(--muted);">C <div class="chain-sub" style="color:var(--red);">doesn't need it</div></div>
+          <div class="chain-arrow">↓ props</div>
+          <div class="chain-node" style="background:var(--red-bg); border-color:#f0b0bb; color:var(--red);">D <div class="chain-sub">finally needs data</div></div>
+        </div>
+      </div>
+      <div class="compare-box cb-right">
+        <div class="cb-label">✅ With Context API — Direct Access</div>
+        <p style="font-size:13px; color:var(--muted); margin-bottom:8px;">Any component accesses data directly from the Context Provider.</p>
+        <div class="chain">
+          <div class="chain-node" style="background:var(--teal-bg); border-color:#90d4d8; color:var(--teal);">Context Provider <div class="chain-sub">holds data globally</div></div>
+          <div class="chain-arrow" style="color:var(--green);">↓</div>
+          <div class="chain-node" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">A / B / C / D <div class="chain-sub">any can access directly ✅</div></div>
+        </div>
+        <p style="font-size:13px; color:var(--green); text-align:center; margin-top:8px;">No prop drilling — clean and simple!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. WIFI ANALOGY -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--orange);">2</div>
+    <h2>Real-Life Analogy — WiFi Router 📶</h2>
+  </div>
+  <div class="section-body">
+    <div class="analogy-grid">
+      <div class="analogy-card" style="background:var(--red-bg); border-color:#f0b0bb;">
+        <div class="an-label" style="color:var(--red);">❌ Without Context — Wired Internet</div>
+        <p style="font-size:13.5px; color:var(--muted); margin-bottom:10px;">Internet must pass through each room one by one.</p>
+        <div class="chain" style="margin:0 auto;">
+          <div class="an-node" style="background:#fff; border:1.5px solid #f0b0bb; color:var(--red);">Router</div>
+          <div class="an-arrow">↓</div>
+          <div class="an-node" style="background:#fff; border:1.5px solid var(--border); color:var(--muted);">Room 1</div>
+          <div class="an-arrow">↓</div>
+          <div class="an-node" style="background:#fff; border:1.5px solid var(--border); color:var(--muted);">Room 2</div>
+          <div class="an-arrow">↓</div>
+          <div class="an-node" style="background:var(--red-bg); border:1.5px solid #f0b0bb; color:var(--red);">Mobile</div>
+        </div>
+      </div>
+      <div class="analogy-card" style="background:var(--teal-bg); border-color:#90d4d8;">
+        <div class="an-label" style="color:var(--teal);">✅ With Context API — WiFi</div>
+        <p style="font-size:13.5px; color:var(--muted); margin-bottom:10px;">Any device connects directly — no middle steps.</p>
+        <div class="chain" style="margin:0 auto;">
+          <div class="an-node" style="background:var(--teal-bg); border:2px solid var(--teal); color:var(--teal); font-size:14px;">📡 WiFi Router</div>
+          <div class="an-arrow" style="color:var(--teal); font-size:24px;">↓</div>
+          <div class="an-node" style="background:var(--green-bg); border:1.5px solid #9ddbb9; color:var(--green);">💻 Any Device — Direct!</div>
+        </div>
+        <p style="font-size:13px; color:var(--teal); text-align:center; margin-top:12px;">Context = WiFi: broadcast once, consume anywhere.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. THREE STEPS -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--blue);">3</div>
+    <h2>3 Steps to Use Context API</h2>
+  </div>
+  <div class="section-body">
+    <div class="steps-grid">
+      <div class="step-card" style="background:var(--blue-bg); border-color:#b8d0ff;">
+        <div class="step-num" style="background:var(--blue);">1</div>
+        <div class="step-title" style="color:var(--blue);">Create Context</div>
+        <div class="step-fn" style="color:var(--blue);">createContext()</div>
+        <p>Create a context object — a central store for your shared data.</p>
+      </div>
+      <div class="step-card" style="background:var(--orange-bg); border-color:#ffc999;">
+        <div class="step-num" style="background:var(--orange);">2</div>
+        <div class="step-title" style="color:var(--orange);">Provide Data</div>
+        <div class="step-fn" style="color:var(--orange);">&lt;Context.Provider&gt;</div>
+        <p>Wrap components with Provider to make data available to all children.</p>
+      </div>
+      <div class="step-card" style="background:var(--green-bg); border-color:#9ddbb9;">
+        <div class="step-num" style="background:var(--green);">3</div>
+        <div class="step-title" style="color:var(--green);">Consume Data</div>
+        <div class="step-fn" style="color:var(--green);">useContext()</div>
+        <p>Use the <code>useContext</code> Hook inside any child component to read data directly.</p>
+      </div>
+    </div>
+
+    <h3>Complete Flow</h3>
+    <div class="flow-col">
+      <div class="flow-step" style="background:var(--blue-bg); border-color:#b8d0ff; color:var(--blue);">Step 1 — <code>createContext()</code> — Creates the context storage</div>
+      <div class="flow-d">↓</div>
+      <div class="flow-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">Step 2 — &lt;Context.Provider value={data}&gt; — Broadcasts the data</div>
+      <div class="flow-d">↓</div>
+      <div class="flow-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">value travels through the Provider tree</div>
+      <div class="flow-d">↓</div>
+      <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">Step 3 — <code>useContext()</code> — Any component reads the data directly ✅</div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. STEP BY STEP SYNTAX -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--purple);">4</div>
+    <h2>Step-by-Step Syntax</h2>
+  </div>
+  <div class="section-body">
+
+    <!-- Step 1 -->
+    <div style="background:#f8f8f8; border:1.5px solid var(--border); border-radius:12px; padding:18px 20px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="background:var(--blue); color:#fff; width:28px; height:28px; border-radius:8px; display:grid; place-items:center; font-size:13px; font-weight:700; flex-shrink:0;">1</div>
+        <div style="font-size:15px; font-weight:700; color:var(--blue);">Create Context — createContext()</div>
+      </div>
+      <pre><span class="kw">import</span> { <span class="ctx">createContext</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">const</span> <span class="ctx">UserContext</span> = <span class="ctx">createContext</span>();
+<span class="cmt">// Creates a central storage object for shared data</span></pre>
+      <div class="def-box" style="margin-top:10px;">
+        <div class="def-label">💡 Why createContext()?</div>
+        <p>React needs a <strong>central place</strong> to store shared data. <code>createContext()</code> creates that storage — like setting up a WiFi hotspot.</p>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div style="background:#f8f8f8; border:1.5px solid var(--border); border-radius:12px; padding:18px 20px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="background:var(--orange); color:#fff; width:28px; height:28px; border-radius:8px; display:grid; place-items:center; font-size:13px; font-weight:700; flex-shrink:0;">2</div>
+        <div style="font-size:15px; font-weight:700; color:var(--orange);">Provide Data — Context.Provider</div>
+      </div>
+      <pre><span class="kw">import</span> { <span class="ctx">createContext</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">export const</span> <span class="ctx">UserContext</span> = <span class="ctx">createContext</span>();   <span class="cmt">// export so child can import</span>
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> name = <span class="str">"Pravin"</span>;
+
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;UserContext.Provider</span> <span class="attr">value=</span>{name}<span class="tag-c">&gt;</span>   <span class="cmt">// broadcast data to all children</span>
+      <span class="tag-c">&lt;Home /&gt;</span>
+    <span class="tag-c">&lt;/UserContext.Provider&gt;</span>
+  );
+}</pre>
+      <div class="def-box orange" style="margin-top:10px;">
+        <div class="def-label">💡 Why Provider?</div>
+        <p><strong>Provider</strong> makes data available to <strong>all child components</strong>. The <code>value</code> prop is what gets shared — wrap your whole app or a section of it.</p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div style="background:#f8f8f8; border:1.5px solid var(--border); border-radius:12px; padding:18px 20px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="background:var(--green); color:#fff; width:28px; height:28px; border-radius:8px; display:grid; place-items:center; font-size:13px; font-weight:700; flex-shrink:0;">3</div>
+        <div style="font-size:15px; font-weight:700; color:var(--green);">Consume Data — useContext()</div>
+      </div>
+      <pre><span class="kw">import</span> { <span class="ctx">useContext</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+<span class="kw">import</span> { <span class="ctx">UserContext</span> } <span class="kw">from</span> <span class="str">"./App"</span>;    <span class="cmt">// import the context object</span>
+
+<span class="kw">function</span> <span class="fn">Home</span>() {
+  <span class="kw">const</span> data = <span class="ctx">useContext</span>(<span class="ctx">UserContext</span>);   <span class="cmt">// directly access data — no props!</span>
+
+  <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>{data}<span class="tag-c">&lt;/h1&gt;</span>;
+}</pre>
+      <div class="def-box green" style="margin-top:10px;">
+        <div class="def-label">💡 Why useContext()?</div>
+        <p><code>useContext()</code> directly accesses data from the Context — <strong>no props needed</strong>. Import the context, call the hook, done!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. PRACTICAL EXAMPLE -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--green);">5</div>
+    <h2>Practical Example — Complete App</h2>
+  </div>
+  <div class="section-body">
+    <div class="compare-row">
+      <div>
+        <h4 style="color:var(--orange);">App.jsx — Create &amp; Provide</h4>
+        <div class="example-wrap">
+          <div class="example-header">
+            <div class="dot-file" style="background:#ff5f57;"></div>
+            <div class="dot-file" style="background:#febc2e;"></div>
+            <div class="dot-file" style="background:#28c840;"></div>
+            &nbsp; App.jsx
+          </div>
+          <pre style="border-radius:0; margin:0;"><span class="kw">import</span> React, { <span class="ctx">createContext</span> } <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> Home <span class="kw">from</span> <span class="str">'./Home'</span>;
+
+<span class="cmt">// Step 1: Create</span>
+<span class="kw">export const</span> <span class="ctx">UserContext</span> = <span class="ctx">createContext</span>();
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> name = <span class="str">"Pravin"</span>;
+
+  <span class="kw">return</span> (
+    <span class="cmt">// Step 2: Provide</span>
+    <span class="tag-c">&lt;UserContext.Provider</span> <span class="attr">value=</span>{name}<span class="tag-c">&gt;</span>
+      <span class="tag-c">&lt;Home /&gt;</span>
+    <span class="tag-c">&lt;/UserContext.Provider&gt;</span>
+  );
+}
+<span class="kw">export default</span> App;</pre>
+        </div>
+      </div>
+      <div>
+        <h4 style="color:var(--blue);">Home.jsx — Consume</h4>
+        <div class="example-wrap">
+          <div class="example-header">
+            <div class="dot-file" style="background:#ff5f57;"></div>
+            <div class="dot-file" style="background:#febc2e;"></div>
+            <div class="dot-file" style="background:#28c840;"></div>
+            &nbsp; Home.jsx
+          </div>
+          <pre style="border-radius:0; margin:0;"><span class="kw">import</span> React, { <span class="ctx">useContext</span> } <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { <span class="ctx">UserContext</span> } <span class="kw">from</span> <span class="str">'./App'</span>;
+
+<span class="kw">function</span> <span class="fn">Home</span>() {
+  <span class="cmt">// Step 3: Consume</span>
+  <span class="kw">const</span> user = <span class="ctx">useContext</span>(<span class="ctx">UserContext</span>);
+
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;h1&gt;</span>Welcome {user}<span class="tag-c">&lt;/h1&gt;</span>
+  );
+}
+<span class="kw">export default</span> Home;</pre>
+        </div>
+      </div>
+    </div>
+    <div class="output-box">
+      <div class="out-label">▶ Output</div>
+      Welcome Pravin
+    </div>
+
+    <h3>Sharing Multiple Values — Object in Context</h3>
+    <div class="compare-row">
+      <div>
+        <h4 style="color:var(--orange);">Provide Object</h4>
+        <pre><span class="kw">const</span> user = {
+  name: <span class="str">"Pravin"</span>,
+  age:  <span class="num">21</span>,
+  city: <span class="str">"Mumbai"</span>
+};
+
+<span class="tag-c">&lt;UserContext.Provider</span> <span class="attr">value=</span>{user}<span class="tag-c">&gt;</span>
+  <span class="tag-c">&lt;Home /&gt;</span>
+<span class="tag-c">&lt;/UserContext.Provider&gt;</span></pre>
+      </div>
+      <div>
+        <h4 style="color:var(--blue);">Consume Object</h4>
+        <pre><span class="kw">const</span> data = <span class="ctx">useContext</span>(<span class="ctx">UserContext</span>);
+
+<span class="tag-c">&lt;h1&gt;</span>{data.name}<span class="tag-c">&lt;/h1&gt;</span>   <span class="cmt">// Pravin</span>
+<span class="tag-c">&lt;h2&gt;</span>{data.age}<span class="tag-c">&lt;/h2&gt;</span>    <span class="cmt">// 21</span>
+<span class="tag-c">&lt;h2&gt;</span>{data.city}<span class="tag-c">&lt;/h2&gt;</span>   <span class="cmt">// Mumbai</span></pre>
+      </div>
+    </div>
+
+    <h3>Real Project Pattern — Language Context</h3>
+    <pre><span class="cmt">// App.jsx — create and provide language globally</span>
+<span class="kw">export const</span> <span class="ctx">languageContext</span> = <span class="ctx">createContext</span>();
+
+<span class="tag-c">&lt;languageContext.Provider</span> <span class="attr">value=</span>{language}<span class="tag-c">&gt;</span>
+  <span class="tag-c">&lt;Child /&gt;</span>
+<span class="tag-c">&lt;/languageContext.Provider&gt;</span>
+
+<span class="cmt">// Any child component — consume directly</span>
+<span class="kw">const</span> data = <span class="ctx">useContext</span>(<span class="ctx">languageContext</span>);</pre>
+    <div class="tip">
+      <span class="ti">💡</span>
+      <span>In real projects, Context usually holds objects with theme, user auth, language, etc. This pattern is used everywhere in production React apps.</span>
+    </div>
+  </div>
+</div>
+
+<!-- 6. ADVANTAGES AND DISADVANTAGES -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--pink);">6</div>
+    <h2>Advantages &amp; Disadvantages</h2>
+  </div>
+  <div class="section-body">
+    <div class="compare-row">
+      <div>
+        <div style="font-size:13px; font-weight:700; color:var(--green); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px;">✅ Advantages</div>
+        <div class="feature-card fc-green" style="margin-bottom:10px;">
+          <div class="fc-title">🚫 Avoids Props Drilling</div>
+          <p>No need to pass props through every intermediate component manually.</p>
+        </div>
+        <div class="feature-card fc-blue" style="margin-bottom:10px;">
+          <div class="fc-title">🧹 Cleaner Code</div>
+          <p>Less prop passing = fewer lines of code = easier to read and maintain.</p>
+        </div>
+        <div class="feature-card fc-teal" style="margin-bottom:10px;">
+          <div class="fc-title">🌐 Global Data Sharing</div>
+          <p>Perfect for theme, user info, language settings, and authentication.</p>
+          <div class="use-grid" style="margin-top:8px;">
+            <div class="use-item" style="background:var(--teal-bg); border-color:#90d4d8; color:var(--teal);">🎨 Theme</div>
+            <div class="use-item" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">👤 User</div>
+            <div class="use-item" style="background:var(--blue-bg); border-color:#b8d0ff; color:var(--blue);">🌍 Lang</div>
+            <div class="use-item" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">🔐 Auth</div>
+          </div>
+        </div>
+        <div class="feature-card fc-purple">
+          <div class="fc-title">⚡ Easy to Use</div>
+          <p>Only 3 things: <code>createContext()</code>, <code>Provider</code>, <code>useContext()</code>.</p>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px; font-weight:700; color:var(--red); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px;">❌ Disadvantages</div>
+        <div class="feature-card fc-red" style="margin-bottom:10px;">
+          <div class="fc-title">🔄 Re-rendering Issue</div>
+          <p>When context value changes, <strong>all components using that context re-render</strong> — may affect performance in large apps.</p>
+        </div>
+        <div class="feature-card fc-orange" style="margin-bottom:10px;">
+          <div class="fc-title">📦 Not Ideal for Large State</div>
+          <p>For very large apps, <strong>Redux / Zustand / Recoil</strong> are preferred over Context API.</p>
+        </div>
+        <div class="feature-card fc-yellow" style="margin-bottom:10px;">
+          <div class="fc-title">🐛 Difficult to Debug</div>
+          <p>When many contexts exist, tracking which context holds which data can become confusing.</p>
+        </div>
+        <div class="feature-card fc-pink">
+          <div class="fc-title">🔗 Reduces Reusability</div>
+          <p>Components that depend on specific Context Providers are harder to reuse outside that tree.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. COMPARISON + REVISION + INTERVIEW -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--blue);">7</div>
+    <h2>Context API vs Props · Revision · Interview</h2>
+  </div>
+  <div class="section-body">
+
+    <h3>Context API vs Props</h3>
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>Props</th><th>Context API</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Data Flow</strong></td><td>Parent to Child (manual)</td><td>Global — any component</td></tr>
+        <tr><td><strong>Passing Method</strong></td><td>Manual through each level</td><td>Direct via <code>useContext()</code></td></tr>
+        <tr><td><strong>Props Drilling</strong></td><td>❌ Causes drilling</td><td>✅ Avoids it completely</td></tr>
+        <tr><td><strong>Best For</strong></td><td>Small, direct data sharing</td><td>App-wide shared data</td></tr>
+        <tr><td><strong>Component Trees</strong></td><td>Few levels deep</td><td>Deep, nested component trees</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Quick Revision</h3>
+    <div class="revision-grid">
+      <div class="rev-card" style="background:var(--teal-bg); border-color:#90d4d8;">
+        <div class="rc-label" style="color:var(--teal);">📡 CONTEXT API</div>
+        <div class="rev-item"><div class="rdot" style="background:var(--teal);"></div>Share Data Globally</div>
+        <div class="rev-item"><div class="rdot" style="background:var(--teal);"></div>Avoids Props Drilling</div>
+        <div class="rev-item"><div class="rdot" style="background:var(--teal);"></div>Built into React — no install</div>
+        <div class="rev-item"><div class="rdot" style="background:var(--teal);"></div>No prop passing needed</div>
+      </div>
+      <div class="rev-card" style="background:var(--purple-bg); border-color:#c9abf0;">
+        <div class="rc-label" style="color:var(--purple);">📋 3 STEPS</div>
+        <div class="rev-item"><div style="width:20px; height:20px; background:var(--blue); border-radius:6px; display:grid; place-items:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0;">1</div><code>createContext()</code> — Create storage</div>
+        <div class="rev-item"><div style="width:20px; height:20px; background:var(--orange); border-radius:6px; display:grid; place-items:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0;">2</div><code>&lt;Provider value={}&gt;</code> — Broadcast</div>
+        <div class="rev-item"><div style="width:20px; height:20px; background:var(--green); border-radius:6px; display:grid; place-items:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0;">3</div><code>useContext()</code> — Consume</div>
+      </div>
+    </div>
+
+    <div class="interview-box">
+      <div class="ib-label">🎯 Interview Q&amp;A</div>
+      <div class="qa">
+        <div class="q">Q: What is Context API in React?</div>
+        <div class="a">A: Context API is a React feature that allows data to be shared globally among components without passing props manually through every intermediate component. It solves the Props Drilling problem.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Why is Context API used?</div>
+        <div class="a">A: Context API is used to avoid Props Drilling and make shared data — like user info, theme, language, authentication — directly available to any component that needs it.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What are the 3 steps to use Context API?</div>
+        <div class="a">A: (1) Create Context using <code>createContext()</code>. (2) Provide data using <code>&lt;Context.Provider value={data}&gt;</code>. (3) Consume data using the <code>useContext()</code> Hook inside any child component.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What is the difference between Props and Context API?</div>
+        <div class="a">A: Props pass data manually from parent to child — causes Props Drilling. Context API provides global access — any component can consume it directly without intermediate components needing to pass it down.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What are the disadvantages of Context API?</div>
+        <div class="a">A: (1) Re-rendering — all consumers re-render when context changes. (2) Not ideal for very large state management — Redux/Zustand are better. (3) Harder to debug with many contexts. (4) Reduces component reusability.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center; padding:20px; color:#aaa; font-size:12.5px; margin-top:10px;">
+  React.js Chapter 7 · Context API · Study Notes
+</div>
+</body>
+</html>

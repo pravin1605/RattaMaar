@@ -1,0 +1,399 @@
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">JavaScript Arrays — Complete Study Notes</h2>
+<style>
+  .wrap{padding:1rem 0;font-family:var(--font-sans);}
+  .hero{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.5rem;margin-bottom:1.25rem;border:0.5px solid var(--color-border-tertiary);}
+  .hero-title{font-size:22px;font-weight:500;color:var(--color-text-primary);margin:0 0 6px;}
+  .hero-def{font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin:0 0 14px;}
+  .meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+  .meta-box{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;}
+  .mlabel{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px;}
+  .mval{font-size:13px;color:var(--color-text-primary);line-height:1.55;margin:0;}
+  .section-head{font-size:13px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.07em;margin:1.75rem 0 0.75rem;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:6px;}
+  .card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.1rem 1.4rem;margin-bottom:1rem;}
+  .ctag{display:inline-block;font-size:11px;font-weight:500;padding:2px 9px;border-radius:var(--border-radius-md);margin-bottom:8px;}
+  .ctitle{font-size:16px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px;}
+  .cdef{font-size:13px;color:var(--color-text-secondary);line-height:1.65;margin:0 0 10px;}
+  .clabel{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px;}
+  pre{background:var(--color-background-tertiary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 13px;font-family:var(--font-mono);font-size:12.5px;line-height:1.6;margin:0 0 8px;overflow-x:auto;color:var(--color-text-primary);}
+  .out{background:var(--color-background-secondary);border-left:3px solid;border-radius:0;padding:7px 13px;font-family:var(--font-mono);font-size:12.5px;color:var(--color-text-primary);}
+  .pts{margin:0;padding:0;list-style:none;}
+  .pts li{font-size:13px;color:var(--color-text-secondary);line-height:1.6;padding:3px 0 3px 18px;position:relative;border-bottom:0.5px solid var(--color-border-tertiary);}
+  .pts li:last-child{border-bottom:none;}
+  .pts li::before{content:"→";position:absolute;left:0;color:var(--color-text-tertiary);font-size:11px;top:5px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md);margin-left:6px;font-weight:500;vertical-align:middle;}
+  .two-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .adv-head{font-size:15px;font-weight:500;color:var(--color-text-primary);margin:0 0 3px;}
+  .returns-pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:var(--border-radius-md);font-weight:500;margin-left:6px;vertical-align:middle;}
+</style>
+
+<div class="wrap">
+
+  <div class="hero">
+    <p class="hero-title">Arrays in JavaScript</p>
+    <p class="hero-def">An array is a data structure that stores an ordered collection of elements. Elements can be of any data type — numbers, strings, booleans, objects, functions, or even other arrays. Each element has a specific index starting from <code>0</code>.</p>
+    <div class="meta-grid">
+      <div class="meta-box">
+        <p class="mlabel"><i class="ti ti-code" aria-hidden="true"></i> Way 1 — literal</p>
+        <pre style="margin:0;font-size:12px;padding:7px 10px;">let arr = [1, "Pravin", true];</pre>
+      </div>
+      <div class="meta-box">
+        <p class="mlabel"><i class="ti ti-code" aria-hidden="true"></i> Way 2 — constructor</p>
+        <pre style="margin:0;font-size:12px;padding:7px 10px;">let arr = new Array(1, "Pravin", true);</pre>
+      </div>
+      <div class="meta-box">
+        <p class="mlabel"><i class="ti ti-info-circle" aria-hidden="true"></i> Key traits</p>
+        <p class="mval">Zero-indexed · Can hold mixed types · Dynamic size · Reference type · Built-in methods</p>
+      </div>
+      <div class="meta-box">
+        <p class="mlabel"><i class="ti ti-bulb" aria-hidden="true"></i> Why use arrays</p>
+        <p class="mval">Store lists of data, loop over collections, apply bulk transformations, and manage ordered sequences.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-head">Basic array methods</p>
+
+  <div class="two-col">
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">01</span>
+      <p class="ctitle"><code>push()</code> <span class="badge" style="background:#EAF3DE;color:#3B6D11;">adds to end</span></p>
+      <p class="cdef">Adds one or more elements to the end of an array. Modifies the original array and returns the new length.</p>
+      <ul class="pts">
+        <li>Mutates the original array.</li>
+        <li>Returns the new <code>length</code> of the array.</li>
+        <li>Can push multiple items at once: <code>push(6, 7, 8)</code>.</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num = [1,2,3,4,5];
+num.push(6);
+console.log(num);</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#7F77DD;">[1, 2, 3, 4, 5, 6]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">02</span>
+      <p class="ctitle"><code>pop()</code> <span class="badge" style="background:#FCEBEB;color:#A32D2D;">removes from end</span></p>
+      <p class="cdef">Removes the last element from an array. Modifies the original array and returns the removed element.</p>
+      <ul class="pts">
+        <li>Mutates the original array.</li>
+        <li>Returns the element that was removed.</li>
+        <li>No parameters needed.</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num = [1,2,3,4,5];
+num.pop();
+console.log(num);</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#1D9E75;">[1, 2, 3, 4]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAECE7;color:#993C1D;">03</span>
+      <p class="ctitle"><code>unshift()</code> <span class="badge" style="background:#EAF3DE;color:#3B6D11;">adds to start</span></p>
+      <p class="cdef">Adds one or more elements to the beginning of an array. Shifts existing elements to higher indexes.</p>
+      <ul class="pts">
+        <li>Mutates the original array.</li>
+        <li>Returns the new length of the array.</li>
+        <li>Slower than <code>push()</code> — all existing indexes must shift.</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num = [1,2,3,4,5];
+num.unshift(10);
+console.log(num);</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#D85A30;">[10, 1, 2, 3, 4, 5]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E6F1FB;color:#0C447C;">04</span>
+      <p class="ctitle"><code>shift()</code> <span class="badge" style="background:#FCEBEB;color:#A32D2D;">removes from start</span></p>
+      <p class="cdef">Removes the first element from an array and shifts all remaining elements to lower indexes.</p>
+      <ul class="pts">
+        <li>Mutates the original array.</li>
+        <li>Returns the element that was removed.</li>
+        <li>Slower than <code>pop()</code> — all indexes must be re-numbered.</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num = [1,2,3,4,5];
+num.shift();
+console.log(num);</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#378ADD;">[2, 3, 4, 5]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EAF3DE;color:#3B6D11;">05</span>
+      <p class="ctitle"><code>indexOf()</code> <span class="badge" style="background:#E6F1FB;color:#0C447C;">search</span></p>
+      <p class="cdef">Returns the index of the first occurrence of a specified element. Returns <code>-1</code> if the element is not found.</p>
+      <ul class="pts">
+        <li>Does not mutate the array.</li>
+        <li>Uses strict equality (<code>===</code>) for comparison.</li>
+        <li>Use <code>lastIndexOf()</code> to find the last occurrence.</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num = [1,2,3,4,5];
+console.log(num.indexOf(3));</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#639922;">2</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAEEDA;color:#633806;">06</span>
+      <p class="ctitle"><code>includes()</code> <span class="badge" style="background:#E6F1FB;color:#0C447C;">search</span></p>
+      <p class="cdef">Checks whether an array contains a specific element. Returns <code>true</code> or <code>false</code>.</p>
+      <ul class="pts">
+        <li>Does not mutate the array.</li>
+        <li>Returns a boolean — perfect for conditions.</li>
+        <li>Can also check for <code>NaN</code>, unlike <code>indexOf()</code>.</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num = [1,2,3,4,5];
+console.log(num.includes(3));</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#EF9F27;">true</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FBEAF0;color:#72243E;">07</span>
+      <p class="ctitle"><code>concat()</code> <span class="badge" style="background:#EAF3DE;color:#3B6D11;">new array</span></p>
+      <p class="cdef">Merges two or more arrays into a new array. Does not change the original arrays.</p>
+      <ul class="pts">
+        <li>Does NOT mutate the original arrays.</li>
+        <li>Returns a brand new merged array.</li>
+        <li>Can merge multiple arrays at once: <code>a.concat(b, c)</code>.</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num  = [1,2,3,4,5];
+let num1 = [6,7,8];
+let num2 = num.concat(num1);
+console.log(num2);</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#D4537E;">[1, 2, 3, 4, 5, 6, 7, 8]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">08</span>
+      <p class="ctitle"><code>slice(start, end)</code> <span class="badge" style="background:#EAF3DE;color:#3B6D11;">new array</span></p>
+      <p class="cdef">Extracts a portion of an array from <code>start</code> index up to (but not including) <code>end</code> index. Returns a new array.</p>
+      <ul class="pts">
+        <li>Does NOT mutate the original array.</li>
+        <li>End index is exclusive — element at <code>end</code> is not included.</li>
+        <li>Negative indexes count from the end: <code>slice(-2)</code> = last 2 elements.</li>
+        <li>Memory tip: "slice = copy a slice of cake — original stays whole."</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num2 = [1,2,3,4,5,6,7,8];
+let num3 = num2.slice(2, 5);
+console.log(num3);</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#7F77DD;">[3, 4, 5]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">09</span>
+      <p class="ctitle"><code>splice(index, deleteCount, ...items)</code> <span class="badge" style="background:#FCEBEB;color:#A32D2D;">mutates</span></p>
+      <p class="cdef">Removes, replaces, or inserts elements in place. Takes 3 params: start index, number of elements to remove, and optional new elements to insert.</p>
+      <ul class="pts">
+        <li>Mutates the original array — modifies it directly.</li>
+        <li>Returns an array of removed elements.</li>
+        <li>Can be used to insert without removing: <code>splice(2, 0, 99)</code>.</li>
+        <li>Memory tip: "splice = surgery on the array — cuts and replaces."</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num2 = [1,2,3,4,5,6,7,8];
+num2.splice(2, 1, 10); // from index 2, remove 1, add 10
+console.log(num2);</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#1D9E75;">[1, 2, 10, 4, 5, 6, 7, 8]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAECE7;color:#993C1D;">10</span>
+      <p class="ctitle"><code>flat()</code> <span class="badge" style="background:#EAF3DE;color:#3B6D11;">new array</span></p>
+      <p class="cdef">Flattens a nested array into a single-level array. Accepts an optional depth parameter (default is 1).</p>
+      <ul class="pts">
+        <li>Does NOT mutate the original array.</li>
+        <li>Use <code>flat(Infinity)</code> to flatten any depth of nesting.</li>
+        <li>Introduced in ES2019 (ES10).</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let arr = [1, 2, [3, 4], [5, 6]];
+console.log(arr.flat());</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#D85A30;">[1, 2, 3, 4, 5, 6]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E6F1FB;color:#0C447C;">11</span>
+      <p class="ctitle"><code>toString()</code> &amp; <code>join(separator)</code></p>
+      <p class="cdef"><code>toString()</code> converts the array to a comma-separated string. <code>join()</code> does the same but lets you choose the separator character.</p>
+      <ul class="pts">
+        <li>Neither mutates the original array.</li>
+        <li><code>toString()</code> always uses a comma.</li>
+        <li><code>join("-")</code> joins with hyphen; <code>join(" ")</code> with space, etc.</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num = [1,2,3,4,5];
+console.log(num.toString());
+console.log(num.join("-"));</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#378ADD;">1,2,3,4,5<br>1-2-3-4-5</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EAF3DE;color:#3B6D11;">12</span>
+      <p class="ctitle"><code>reverse()</code> <span class="badge" style="background:#FCEBEB;color:#A32D2D;">mutates</span></p>
+      <p class="cdef">Reverses the order of elements in the array in place. The first element becomes the last, and the last becomes the first.</p>
+      <ul class="pts">
+        <li>Mutates the original array.</li>
+        <li>To reverse without mutating: <code>[...arr].reverse()</code>.</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num = [1,2,3,4,5];
+num.reverse();
+console.log(num);</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#639922;">[5, 4, 3, 2, 1]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAEEDA;color:#633806;">13</span>
+      <p class="ctitle"><code>forEach(callback)</code> <span class="badge" style="background:#F1EFE8;color:#5F5E5A;">iterate</span></p>
+      <p class="cdef">Iterates over every element of an array and executes a callback for each one. Used for side effects like logging, not for building a new array.</p>
+      <ul class="pts">
+        <li>Does not return anything — returns <code>undefined</code>.</li>
+        <li>Cannot be stopped mid-loop (use <code>for</code> loop if you need <code>break</code>).</li>
+        <li>Callback receives: <code>(element, index, array)</code>.</li>
+      </ul>
+      <p class="clabel">Example</p>
+      <pre>let num = [1,2,3];
+num.forEach((el) => {
+  console.log(el);
+});</pre>
+      <p class="clabel">Output</p>
+      <div class="out" style="border-color:#EF9F27;">1<br>2<br>3</div>
+    </div>
+  </div>
+
+  <p class="section-head">Advanced array methods</p>
+
+  <div class="card">
+    <span class="ctag" style="background:#EEEDFE;color:#3C3489;">map()</span>
+    <p class="ctitle" style="font-size:17px;">
+      <code>array.map(callback)</code>
+      <span class="returns-pill" style="background:#EEEDFE;color:#3C3489;">always returns new array</span>
+    </p>
+    <p class="cdef">Creates a new array by applying a function to every element of the original array. Output array always has the same number of elements as the input array.</p>
+    <ul class="pts">
+      <li>Does NOT mutate the original array.</li>
+      <li>Output length = Input length — always 1:1 mapping.</li>
+      <li>Callback receives: <code>(currentValue, index, array)</code>.</li>
+      <li>Use when you want to transform every element — e.g. adding grace marks, doubling prices.</li>
+      <li>Interview tip: "map is for transformation — every element in, every element out."</li>
+    </ul>
+    <p class="clabel">Syntax</p>
+    <pre>let newArr = array.map((currentValue, index, arr) => { return newValue; });</pre>
+    <p class="clabel">Example — add 5 grace marks to every student</p>
+    <pre>let marks   = [10, 20, 30, 40, 50];
+let newData = marks.map((i) => i + 5);
+console.log(newData);</pre>
+    <p class="clabel">Output</p>
+    <div class="out" style="border-color:#7F77DD;">[15, 25, 35, 45, 55]</div>
+  </div>
+
+  <div class="card">
+    <span class="ctag" style="background:#E1F5EE;color:#085041;">filter()</span>
+    <p class="ctitle" style="font-size:17px;">
+      <code>array.filter(callback)</code>
+      <span class="returns-pill" style="background:#E1F5EE;color:#085041;">returns filtered new array</span>
+    </p>
+    <p class="cdef">Creates a new array containing only the elements that pass the given condition (callback returns <code>true</code>). Elements that fail the test are excluded.</p>
+    <ul class="pts">
+      <li>Does NOT mutate the original array.</li>
+      <li>Output length ≤ Input length — only matching elements are kept.</li>
+      <li>Callback must return <code>true</code> or <code>false</code>.</li>
+      <li>Use when you want to extract a subset — e.g. passed students, even numbers, items in stock.</li>
+      <li>Interview tip: "filter is a bouncer — only elements that pass the condition get in."</li>
+    </ul>
+    <p class="clabel">Syntax</p>
+    <pre>let newArr = array.filter((currentValue, index, arr) => { return condition; });</pre>
+    <p class="clabel">Example — find students who scored ≥ 40</p>
+    <pre>let newData      = [15, 25, 35, 45, 55];
+let passedMarks  = newData.filter((i) => i >= 40);
+console.log(passedMarks);</pre>
+    <p class="clabel">Output</p>
+    <div class="out" style="border-color:#1D9E75;">[45, 55]</div>
+  </div>
+
+  <div class="card">
+    <span class="ctag" style="background:#FAECE7;color:#993C1D;">reduce()</span>
+    <p class="ctitle" style="font-size:17px;">
+      <code>array.reduce(callback, initialValue)</code>
+      <span class="returns-pill" style="background:#FAECE7;color:#993C1D;">always returns single value</span>
+    </p>
+    <p class="cdef">Reduces an entire array to a single value by repeatedly applying a function that carries an accumulator forward. The accumulator holds the running result from each step.</p>
+    <ul class="pts">
+      <li>Does NOT mutate the original array.</li>
+      <li>Always returns ONE value — a number, string, object, or array.</li>
+      <li>Callback receives: <code>(accumulator, currentValue, index, array)</code>.</li>
+      <li><code>accumulator</code> = the running total; <code>currentValue</code> = current element being processed.</li>
+      <li>If no <code>initialValue</code> is provided, the first element is used as the accumulator.</li>
+      <li>Use for: sum, product, counting, grouping, flattening.</li>
+      <li>Interview tip: "reduce = a snowball rolling — it picks up each element and grows into a final value."</li>
+    </ul>
+    <p class="clabel">Syntax</p>
+    <pre>let result = array.reduce((accumulator, currentValue, index, arr) => {
+  return accumulator + currentValue;
+}, initialValue);</pre>
+    <p class="clabel">Example — total marks of passed students</p>
+    <pre>let passedMarks   = [45, 55];
+let totalAddition = passedMarks.reduce((a, c) => {
+  console.log("accumulator:", a, " current:", c);
+  return a + c;
+});
+console.log(totalAddition);</pre>
+    <p class="clabel">Output</p>
+    <div class="out" style="border-color:#D85A30;">accumulator: 45  current: 55<br>100</div>
+  </div>
+
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:0.5rem;border:0.5px solid var(--color-border-tertiary);">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;"><i class="ti ti-table" aria-hidden="true" style="margin-right:6px;"></i>Quick comparison — map vs filter vs reduce</p>
+    <table style="width:100%;font-size:13px;border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:0.5px solid var(--color-border-tertiary);">
+          <th style="text-align:left;padding:6px 8px;font-weight:500;color:var(--color-text-secondary);">Method</th>
+          <th style="text-align:left;padding:6px 8px;font-weight:500;color:var(--color-text-secondary);">Returns</th>
+          <th style="text-align:left;padding:6px 8px;font-weight:500;color:var(--color-text-secondary);">Output size</th>
+          <th style="text-align:left;padding:6px 8px;font-weight:500;color:var(--color-text-secondary);">Mutates?</th>
+          <th style="text-align:left;padding:6px 8px;font-weight:500;color:var(--color-text-secondary);">Use for</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:0.5px solid var(--color-border-tertiary);">
+          <td style="padding:7px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">map()</td>
+          <td style="padding:7px 8px;color:var(--color-text-secondary);">New array</td>
+          <td style="padding:7px 8px;color:var(--color-text-secondary);">= input length</td>
+          <td style="padding:7px 8px;color:#A32D2D;">No</td>
+          <td style="padding:7px 8px;color:var(--color-text-secondary);">Transform elements</td>
+        </tr>
+        <tr style="border-bottom:0.5px solid var(--color-border-tertiary);">
+          <td style="padding:7px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">filter()</td>
+          <td style="padding:7px 8px;color:var(--color-text-secondary);">New array</td>
+          <td style="padding:7px 8px;color:var(--color-text-secondary);">≤ input length</td>
+          <td style="padding:7px 8px;color:#A32D2D;">No</td>
+          <td style="padding:7px 8px;color:var(--color-text-secondary);">Extract subset</td>
+        </tr>
+        <tr>
+          <td style="padding:7px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">reduce()</td>
+          <td style="padding:7px 8px;color:var(--color-text-secondary);">Single value</td>
+          <td style="padding:7px 8px;color:var(--color-text-secondary);">Always 1</td>
+          <td style="padding:7px 8px;color:#A32D2D;">No</td>
+          <td style="padding:7px 8px;color:var(--color-text-secondary);">Compute totals</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

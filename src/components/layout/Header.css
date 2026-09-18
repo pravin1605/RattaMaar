@@ -1,0 +1,236 @@
+/* =========================================================
+   APP HEADER
+========================================================= */
+
+.app-header {
+  width: 100%;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 18px;
+
+  background: var(--bg-secondary);
+
+  border-bottom: 1px solid var(--border-color);
+
+  position: sticky;
+  top: 0;
+
+  z-index: 100;
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+/* =========================================================
+   HEADER BRAND
+========================================================= */
+
+.header-brand {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+
+/* =========================================================
+   HEADER LOGO
+========================================================= */
+
+.header-logo {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 10px;
+
+  background: var(--text-primary);
+  color: var(--bg-secondary);
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+
+/* =========================================================
+   HEADER TITLE
+========================================================= */
+
+.header-title {
+  min-width: 0;
+}
+
+.header-title h1 {
+  font-size: 17px;
+  font-weight: 700;
+
+  line-height: 20px;
+
+  color: var(--text-primary);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  transition: color 0.25s ease;
+}
+
+.header-title span {
+  display: block;
+
+  margin-top: 2px;
+
+  font-size: 10px;
+
+  color: var(--text-muted);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  transition: color 0.25s ease;
+}
+
+
+/* =========================================================
+   SEARCH BUTTON
+========================================================= */
+
+.header-search-btn {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* =========================================================
+   SEARCH BUTTON — HOVER
+========================================================= */
+
+.header-search-btn:hover {
+  background: var(--border-color);
+}
+
+
+/* =========================================================
+   SEARCH BUTTON — PRESS
+========================================================= */
+
+.header-search-btn:active {
+  transform: scale(0.94);
+}
+
+
+/* =========================================================
+   KEYBOARD ACCESSIBILITY
+========================================================= */
+
+.header-search-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+html[data-theme="dark"] .app-header {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+
+/* =========================================================
+   SYSTEM DARK MODE
+========================================================= */
+
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] .app-header {
+    background: var(--bg-secondary);
+    border-bottom-color: var(--border-color);
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+  .app-header {
+    height: 60px;
+    padding: 0 14px;
+  }
+
+  .header-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+  }
+
+  .header-title h1 {
+    font-size: 16px;
+    line-height: 19px;
+  }
+
+  .header-title span {
+    font-size: 9px;
+  }
+
+  .header-search-btn {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .app-header,
+  .header-logo,
+  .header-title h1,
+  .header-title span,
+  .header-search-btn {
+    transition: none;
+  }
+
+  .header-search-btn:active {
+    transform: none;
+  }
+}

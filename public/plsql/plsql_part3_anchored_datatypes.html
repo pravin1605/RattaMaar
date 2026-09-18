@@ -1,0 +1,377 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+.warn-box{background:#fff3e0;border-left:5px solid #e65100;padding:10px 14px;margin-top:10px}
+.warn-box .lbl{font-size:10px;font-weight:700;color:#e65100;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.warn-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:3px}
+.mini-card p{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.pq{border:1px solid #ccc;border-radius:6px;margin-bottom:10px;overflow:hidden}
+.pq-q{background:#1a1a6e;padding:8px 12px;font-size:13px;font-weight:700;color:#fff}
+.pq-task{background:#f5f6ff;padding:6px 12px;font-size:12px;color:#1a1a6e;font-weight:700;border-bottom:1px solid #ddd}
+.pq-steps{background:#fff;padding:8px 12px}
+.pq-steps p{font-size:13px;color:#111;margin-bottom:3px}
+.pq-out{background:#e8f5e9;padding:6px 12px;font-size:13px;font-family:'Courier New',monospace;color:#1b5e20;border-top:1px solid #ddd}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+.mono{background:#f0f0f0;border:1px solid #ddd;border-radius:4px;padding:8px 12px;font-family:'Courier New',monospace;font-size:13px;color:#111;margin:8px 0}
+.emp-table th{background:#2c2c2c;color:#fff;font-size:12px;padding:6px 8px}
+.emp-table td{font-size:12px;padding:5px 8px;font-family:'Courier New',monospace;color:#111}
+.emp-table tr:nth-child(even) td{background:#f5f5f5}
+.emp-table tr:nth-child(odd) td{background:#fff}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">PL/SQL — Part 3: Anchored Datatypes (%TYPE and %ROWTYPE)</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; Interview-Ready Notes &nbsp;|&nbsp; Orange tag = Extra added content</div>
+</div>
+
+<div class="sec-label">EMP Table Reference (Used in All Examples)</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:8px;font-weight:700">Standard Oracle EMP Table — memorize this for practice questions:</p>
+  <div style="overflow-x:auto">
+  <table class="emp-table">
+    <tr><th>EMPNO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>DEPTNO</th></tr>
+    <tr><td>7369</td><td>SMITH</td><td>CLERK</td><td>7902</td><td>17-DEC-80</td><td>800</td><td>-</td><td>20</td></tr>
+    <tr><td>7499</td><td>ALLEN</td><td>SALESMAN</td><td>7698</td><td>20-FEB-81</td><td>1600</td><td>300</td><td>30</td></tr>
+    <tr><td>7521</td><td>WARD</td><td>SALESMAN</td><td>7698</td><td>22-FEB-81</td><td>1250</td><td>500</td><td>30</td></tr>
+    <tr><td>7566</td><td>JONES</td><td>MANAGER</td><td>7839</td><td>02-APR-81</td><td>2975</td><td>-</td><td>20</td></tr>
+    <tr><td>7654</td><td>MARTIN</td><td>SALESMAN</td><td>7698</td><td>28-SEP-81</td><td>1250</td><td>1400</td><td>30</td></tr>
+    <tr><td>7698</td><td>BLAKE</td><td>MANAGER</td><td>7839</td><td>01-MAY-81</td><td>2850</td><td>-</td><td>30</td></tr>
+    <tr><td>7782</td><td>CLARK</td><td>MANAGER</td><td>7839</td><td>09-JUN-81</td><td>2450</td><td>-</td><td>10</td></tr>
+    <tr><td>7788</td><td>SCOTT</td><td>ANALYST</td><td>7566</td><td>19-APR-87</td><td>3000</td><td>-</td><td>20</td></tr>
+    <tr><td>7839</td><td>KING</td><td>PRESIDENT</td><td>-</td><td>17-NOV-81</td><td>5000</td><td>-</td><td>10</td></tr>
+    <tr><td>7844</td><td>TURNER</td><td>SALESMAN</td><td>7698</td><td>08-SEP-81</td><td>1500</td><td>0</td><td>30</td></tr>
+    <tr><td>7876</td><td>ADAMS</td><td>CLERK</td><td>7788</td><td>23-MAY-87</td><td>1100</td><td>-</td><td>20</td></tr>
+    <tr><td>7900</td><td>JAMES</td><td>CLERK</td><td>7698</td><td>03-DEC-81</td><td>950</td><td>-</td><td>30</td></tr>
+    <tr><td>7902</td><td>FORD</td><td>ANALYST</td><td>7566</td><td>03-DEC-81</td><td>3000</td><td>-</td><td>20</td></tr>
+    <tr><td>7934</td><td>MILLER</td><td>CLERK</td><td>7782</td><td>23-JAN-82</td><td>1300</td><td>-</td><td>10</td></tr>
+  </table>
+  </div>
+  <div class="tip-box">
+    <div class="lbl">Quick Facts to Remember</div>
+    <p>Highest Salary: KING = 5000 &nbsp;|&nbsp; Lowest: SMITH = 800 &nbsp;|&nbsp; Total Employees: 14</p>
+    <p>Jobs: CLERK(4), SALESMAN(4), MANAGER(3), ANALYST(2), PRESIDENT(1)</p>
+    <p>Departments: DEPTNO 10 = 3 emp, DEPTNO 20 = 5 emp, DEPTNO 30 = 6 emp</p>
+  </div>
+</div>
+
+<div class="sec-label">1. What are Anchored Datatypes?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>Anchored Datatypes are special PL/SQL datatypes that automatically derive their datatype from a database table column or another variable, instead of manually specifying it. This makes the code more flexible, reliable, and easier to maintain.</p>
+  </div>
+  <p style="font-size:13px;color:#111;margin:8px 0 4px">They are also called <strong>Reference Datatypes</strong> in PL/SQL.</p>
+  <div class="two-col" style="margin-top:8px">
+    <div class="mini-card">
+      <div class="mct">Without Anchored Datatype</div>
+      <p>V_NAME VARCHAR2(20);</p>
+      <p style="font-size:11px;color:#555;margin-top:4px">If ENAME column changes to VARCHAR2(50), this code breaks — must be manually updated</p>
+    </div>
+    <div class="mini-card">
+      <div class="mct">With Anchored Datatype</div>
+      <p>V_NAME EMP.ENAME%TYPE;</p>
+      <p style="font-size:11px;color:#555;margin-top:4px">Automatically uses whatever datatype ENAME has — no code change needed</p>
+    </div>
+  </div>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Anchored = Tied to the source. Like a boat anchored to the sea floor — wherever the floor changes, the boat stays connected.</p>
+  </div>
+</div>
+
+<div class="sec-label">2. Why Do We Need Anchored Datatypes?</div>
+<div class="card">
+  <table>
+    <tr><th>Problem Without Anchored Datatypes</th><th>Solution With Anchored Datatypes</th></tr>
+    <tr><td>Must manually check and update datatypes in code whenever DB column changes</td><td>Code automatically picks up the new datatype — zero manual effort</td></tr>
+    <tr><td>Risk of datatype mismatch causing runtime errors</td><td>Datatype always matches the source — no mismatch possible</td></tr>
+    <tr><td>Code is less flexible and harder to maintain</td><td>Code is flexible, reliable, and easy to maintain</td></tr>
+  </table>
+</div>
+
+<div class="sec-label">3. Advantages of Anchored Datatypes</div>
+<div class="card">
+  <ul>
+    <li>Automatically adopts column datatype, size, precision, and scale</li>
+    <li>Reduces maintenance effort — no need to update code when DB column changes</li>
+    <li>Prevents datatype mismatch errors at runtime</li>
+    <li>Improves code reliability and flexibility</li>
+    <li>Makes code self-documenting — clear which column a variable is linked to</li>
+  </ul>
+</div>
+
+<div class="sec-label">4. Types of Anchored Datatypes</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">%TYPE</div>
+      <p>Anchors a variable to the datatype of a single table column or another variable</p>
+      <p style="font-size:11px;color:#555;margin-top:4px">Example: V_NAME EMP.ENAME%TYPE;</p>
+    </div>
+    <div class="mini-card">
+      <div class="mct">%ROWTYPE</div>
+      <p>Anchors a record variable to the structure of an entire table row — holds all columns</p>
+      <p style="font-size:11px;color:#555;margin-top:4px">Example: V_EMP EMP%ROWTYPE;</p>
+    </div>
+  </div>
+</div>
+
+<div class="sec-label">5. %TYPE — Definition and Syntax</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>The %TYPE attribute allows a variable to inherit the datatype, length, precision, and scale of a table column or another variable. The variable automatically becomes the same type as the referenced source.</p>
+  </div>
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Syntax — Anchoring to a Table Column:</p>
+  <div class="mono">VARIABLE_NAME  TABLE_NAME.COLUMN_NAME%TYPE;</div>
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Syntax — Anchoring to Another Variable:</p>
+  <div class="mono">VARIABLE_NAME  OTHER_VARIABLE_NAME%TYPE;</div>
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Examples:</p>
+  <div class="mono">V_NAME  EMP.ENAME%TYPE;   -- inherits ENAME's datatype from EMP table<br>V_SAL   EMP.SAL%TYPE;     -- inherits SAL's datatype from EMP table</div>
+  <div class="tip-box">
+    <div class="lbl">Extra — Anchoring to Another Variable</div>
+    <p>%TYPE can also anchor to another PL/SQL variable:</p>
+    <div class="mono" style="margin-top:6px">V_NAME     VARCHAR2(30);<br>V_EMP_NAME V_NAME%TYPE;  -- inherits same type as V_NAME</div>
+    <p>V_EMP_NAME automatically becomes VARCHAR2(30)</p>
+  </div>
+</div>
+
+<div class="sec-label">6. %TYPE — What It Inherits</div>
+<div class="card">
+  <table>
+    <tr><th>Property Inherited</th><th>Example</th></tr>
+    <tr><td>Datatype</td><td>ENAME is VARCHAR2, so V_NAME becomes VARCHAR2</td></tr>
+    <tr><td>Length / Size</td><td>ENAME is VARCHAR2(10), so V_NAME becomes VARCHAR2(10)</td></tr>
+    <tr><td>Precision</td><td>SAL is NUMBER(7,2), so V_SAL gets precision 7</td></tr>
+    <tr><td>Scale</td><td>SAL is NUMBER(7,2), so V_SAL gets scale 2</td></tr>
+  </table>
+  <div class="warn-box">
+    <div class="lbl">Important — NOT Inherited</div>
+    <p>%TYPE does NOT inherit the NOT NULL constraint. Even if the column is NOT NULL, the PL/SQL variable declared with %TYPE can still hold NULL.</p>
+  </div>
+</div>
+
+<div class="sec-label">7. %ROWTYPE — Definition and Syntax</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>The %ROWTYPE attribute creates a record variable that can store an entire row of a table. Instead of declaring separate variables for each column, one %ROWTYPE variable holds all column values of the row together.</p>
+  </div>
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Syntax:</p>
+  <div class="mono">VARIABLE_NAME  TABLE_NAME%ROWTYPE;</div>
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Example:</p>
+  <div class="mono">V_EMP  EMP%ROWTYPE;</div>
+  <p style="font-size:13px;color:#111;margin-top:8px">V_EMP now contains all columns of EMP table: EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO</p>
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Accessing Individual Columns — Syntax:</p>
+  <div class="mono">RECORD_VARIABLE.COLUMN_NAME</div>
+  <div class="mono">V_EMP.ENAME &nbsp;&nbsp; -- access name<br>V_EMP.SAL &nbsp;&nbsp;&nbsp; -- access salary<br>V_EMP.JOB &nbsp;&nbsp;&nbsp; -- access job</div>
+</div>
+
+<div class="sec-label">8. %TYPE vs %ROWTYPE — Comparison</div>
+<div class="card">
+  <table>
+    <tr><th>Feature</th><th>%TYPE</th><th>%ROWTYPE</th></tr>
+    <tr><td>Refers to</td><td>One column of a table</td><td>Complete row of a table (all columns)</td></tr>
+    <tr><td>Stores</td><td>Single value</td><td>Multiple values (one per column)</td></tr>
+    <tr><td>Used for</td><td>Individual fields / single column fetch</td><td>Entire records / SELECT * fetch</td></tr>
+    <tr><td>Memory</td><td>More efficient — only one value</td><td>Uses more memory — holds all columns</td></tr>
+    <tr><td>Access syntax</td><td>Direct — V_NAME</td><td>Dot notation — V_EMP.ENAME</td></tr>
+    <tr><td>Example</td><td>V_SAL EMP.SAL%TYPE;</td><td>V_EMP EMP%ROWTYPE;</td></tr>
+    <tr><td>Best used when</td><td>Fetching one or few specific columns</td><td>Fetching all columns of a row</td></tr>
+  </table>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>%TYPE = one TYPE (one column) &nbsp;|&nbsp; %ROWTYPE = entire ROW (all columns)</p>
+    <p>If column name appears → %TYPE &nbsp;|&nbsp; If only table name appears → %ROWTYPE</p>
+  </div>
+</div>
+
+<div class="sec-label">9. Side-by-Side Comparison — Declaration</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">Without %ROWTYPE — 3 separate variables</div>
+      <div class="mono" style="font-size:12px;margin-top:6px">V_NAME EMP.ENAME%TYPE;<br>V_JOB  EMP.JOB%TYPE;<br>V_SAL  EMP.SAL%TYPE;</div>
+      <p style="font-size:11px;color:#555;margin-top:6px">Need one variable per column — gets long quickly</p>
+    </div>
+    <div class="mini-card">
+      <div class="mct">With %ROWTYPE — 1 record variable</div>
+      <div class="mono" style="font-size:12px;margin-top:6px">V_EMP EMP%ROWTYPE;</div>
+      <p style="font-size:11px;color:#555;margin-top:6px">One variable holds all columns — cleaner and simpler</p>
+    </div>
+  </div>
+</div>
+
+<div class="sec-label">10. Practice Questions on EMP Table</div>
+<div class="card" style="margin-bottom:0">
+  <p style="font-size:13px;color:#111;margin-bottom:12px">All questions use %TYPE and %ROWTYPE with the standard EMP table.</p>
+
+  <div class="pq">
+    <div class="pq-q">Q1. Fetch the name and job of SCOTT (EMPNO 7788) using %TYPE</div>
+    <div class="pq-task">Logic</div>
+    <div class="pq-steps">
+      <p>Declare V_NAME as EMP.ENAME%TYPE and V_JOB as EMP.JOB%TYPE</p>
+      <p>Use SELECT INTO to fetch ENAME and JOB where EMPNO = 7788</p>
+      <p>Display using DBMS_OUTPUT.PUT_LINE</p>
+    </div>
+    <div class="pq-out">Output: NAME: SCOTT &nbsp; JOB: ANALYST</div>
+  </div>
+
+  <div class="pq">
+    <div class="pq-q">Q2. Fetch all details of KING (EMPNO 7839) using %ROWTYPE</div>
+    <div class="pq-task">Logic</div>
+    <div class="pq-steps">
+      <p>Declare V_EMP as EMP%ROWTYPE</p>
+      <p>Use SELECT * INTO V_EMP where EMPNO = 7839</p>
+      <p>Access V_EMP.ENAME, V_EMP.SAL, V_EMP.JOB, V_EMP.DEPTNO individually</p>
+    </div>
+    <div class="pq-out">Output: NAME: KING &nbsp; SAL: 5000 &nbsp; JOB: PRESIDENT &nbsp; DEPTNO: 10</div>
+  </div>
+
+  <div class="pq">
+    <div class="pq-q">Q3. Fetch name and salary of the employee with the highest salary using %TYPE</div>
+    <div class="pq-task">Logic</div>
+    <div class="pq-steps">
+      <p>Declare V_NAME as EMP.ENAME%TYPE and V_SAL as EMP.SAL%TYPE</p>
+      <p>Use SELECT ENAME, SAL INTO V_NAME, V_SAL FROM EMP WHERE SAL = (SELECT MAX(SAL) FROM EMP)</p>
+      <p>KING has salary 5000 — the subquery returns 5000, outer query fetches KING's row</p>
+    </div>
+    <div class="pq-out">Output: NAME: KING &nbsp; SALARY: 5000</div>
+  </div>
+
+  <div class="pq">
+    <div class="pq-q">Q4. Fetch all details of SMITH (lowest salary) using %ROWTYPE</div>
+    <div class="pq-task">Logic</div>
+    <div class="pq-steps">
+      <p>Declare V_EMP as EMP%ROWTYPE</p>
+      <p>Use SELECT * INTO V_EMP WHERE SAL = (SELECT MIN(SAL) FROM EMP)</p>
+      <p>SMITH has the lowest salary = 800 — his entire row is fetched</p>
+    </div>
+    <div class="pq-out">Output: NAME: SMITH &nbsp; SAL: 800 &nbsp; JOB: CLERK &nbsp; DEPTNO: 20</div>
+  </div>
+
+  <div class="pq">
+    <div class="pq-q">Q5. Fetch the name and department number of BLAKE (EMPNO 7698) using %TYPE</div>
+    <div class="pq-task">Logic</div>
+    <div class="pq-steps">
+      <p>Declare V_NAME as EMP.ENAME%TYPE and V_DEPTNO as EMP.DEPTNO%TYPE</p>
+      <p>Use SELECT ENAME, DEPTNO INTO V_NAME, V_DEPTNO WHERE EMPNO = 7698</p>
+    </div>
+    <div class="pq-out">Output: NAME: BLAKE &nbsp; DEPTNO: 30</div>
+  </div>
+
+  <div class="pq">
+    <div class="pq-q">Q6. Fetch name, job and salary of FORD (EMPNO 7902) using %ROWTYPE and display all three <span class="extra">Extra</span></div>
+    <div class="pq-task">Logic</div>
+    <div class="pq-steps">
+      <p>Declare V_EMP as EMP%ROWTYPE</p>
+      <p>SELECT * INTO V_EMP WHERE EMPNO = 7902</p>
+      <p>Display V_EMP.ENAME, V_EMP.JOB, V_EMP.SAL separately</p>
+    </div>
+    <div class="pq-out">Output: NAME: FORD &nbsp; JOB: ANALYST &nbsp; SALARY: 3000</div>
+  </div>
+
+  <div class="pq">
+    <div class="pq-q">Q7. Using %TYPE, fetch the name of the employee whose manager is KING (EMPNO 7839) and works in DEPTNO 10 <span class="extra">Extra</span></div>
+    <div class="pq-task">Logic</div>
+    <div class="pq-steps">
+      <p>Declare V_NAME as EMP.ENAME%TYPE</p>
+      <p>SELECT ENAME INTO V_NAME FROM EMP WHERE MGR = 7839 AND DEPTNO = 10</p>
+      <p>CLARK reports to KING (MGR=7839) and is in DEPTNO 10</p>
+    </div>
+    <div class="pq-out">Output: NAME: CLARK</div>
+  </div>
+
+  <div class="pq">
+    <div class="pq-q">Q8. Using %ROWTYPE, fetch the complete details of the employee with second highest salary <span class="extra">Extra</span></div>
+    <div class="pq-task">Logic</div>
+    <div class="pq-steps">
+      <p>Declare V_EMP as EMP%ROWTYPE</p>
+      <p>Use subquery with DENSE_RANK() OVER (ORDER BY SAL DESC) and filter WHERE RN = 2</p>
+      <p>SCOTT and FORD both have salary 3000 — DENSE_RANK gives them rank 2</p>
+      <p>This may raise TOO_MANY_ROWS — use ROWNUM = 1 to limit to one result</p>
+    </div>
+    <div class="pq-out">Output: NAME: SCOTT or FORD &nbsp; SAL: 3000 &nbsp; JOB: ANALYST</div>
+  </div>
+
+</div>
+
+<div class="sec-label">11. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What is an Anchored Datatype?</div>
+  <div class="qa-a">An Anchored Datatype is a datatype that automatically derives its datatype from a table column or another variable instead of being manually specified. Types: %TYPE and %ROWTYPE.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. What are the types of Anchored Datatypes?</div>
+  <div class="qa-a">1. %TYPE — anchors to a single table column or variable. &nbsp; 2. %ROWTYPE — anchors to the entire row structure of a table.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. What is %TYPE?</div>
+  <div class="qa-a">%TYPE is used to declare a variable with the same datatype, length, precision, and scale as a table column or another variable. Example: V_NAME EMP.ENAME%TYPE;</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. What is %ROWTYPE?</div>
+  <div class="qa-a">%ROWTYPE is used to create a record variable that can store an entire row of a table. All columns and their datatypes are inherited automatically. Example: V_EMP EMP%ROWTYPE;</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. What are the advantages of using %TYPE?</div>
+  <div class="qa-a">1. Automatic datatype and size matching with the DB column. &nbsp; 2. No manual updates needed when column type changes. &nbsp; 3. Prevents datatype mismatch errors. &nbsp; 4. Less maintenance effort.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. What is the difference between %TYPE and %ROWTYPE?</div>
+  <div class="qa-a">%TYPE anchors to one column and stores a single value. %ROWTYPE anchors to an entire table row and stores all column values in one record variable. %TYPE uses less memory; %ROWTYPE is more convenient when fetching all columns.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q7. How do you access individual columns from a %ROWTYPE variable? <span class="extra">Extra</span></div>
+  <div class="qa-a">Using dot notation: RECORD_VARIABLE.COLUMN_NAME. Example: V_EMP.ENAME gives the name, V_EMP.SAL gives the salary from the V_EMP record.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q8. Does %TYPE inherit the NOT NULL constraint from the column? <span class="extra">Extra</span></div>
+  <div class="qa-a">No. %TYPE inherits only the datatype, length, precision, and scale — it does NOT inherit the NOT NULL constraint. A variable declared with %TYPE can still hold a NULL value even if the source column is NOT NULL.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q9. Can %TYPE anchor to another PL/SQL variable (not just a table column)? <span class="extra">Extra</span></div>
+  <div class="qa-a">Yes. %TYPE can anchor to another variable declared earlier in the same DECLARE section. Example: V_NAME VARCHAR2(30); V_EMP_NAME V_NAME%TYPE; — V_EMP_NAME automatically becomes VARCHAR2(30).</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q10. When should you use %TYPE vs %ROWTYPE? <span class="extra">Extra</span></div>
+  <div class="qa-a">Use %TYPE when fetching specific columns — it is memory efficient. Use %ROWTYPE when fetching all columns of a row using SELECT * — it is more convenient and reduces the number of variable declarations needed.</div>
+</div>
+
+<div class="divider"></div>
+<footer>PL/SQL Part 3 — Anchored Datatypes (%TYPE and %ROWTYPE) &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>

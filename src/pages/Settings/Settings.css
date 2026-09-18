@@ -1,0 +1,1137 @@
+/* =========================================================
+   SETTINGS PAGE
+========================================================= */
+
+.settings-page {
+  width: 100%;
+  min-height: 100vh;
+
+  overflow-x: hidden;
+
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.settings-content {
+  width: 100%;
+  max-width: 850px;
+
+  margin: 0 auto;
+
+  padding: 0 16px 40px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.settings-header {
+  width: 100%;
+  max-width: 850px;
+
+  margin: 0 auto;
+
+  padding: 22px 16px 20px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+}
+
+.settings-header-text {
+  min-width: 0;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.settings-back-button {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.settings-back-button:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+.settings-back-button:active {
+  transform: scale(0.94);
+}
+
+
+/* =========================================================
+   BACK ARROW
+========================================================= */
+
+.settings-icon {
+  width: 22px;
+  height: 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 21px;
+  line-height: 1;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   HEADER TITLE
+========================================================= */
+
+.settings-header h1 {
+  margin: 0;
+
+  color: var(--text-primary);
+
+  font-size: 25px;
+  line-height: 1.2;
+  font-weight: 750;
+}
+
+.settings-header p {
+  margin: 5px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.settings-section {
+  margin-bottom: 25px;
+
+  min-width: 0;
+}
+
+.settings-section-title {
+  margin-bottom: 9px;
+
+  padding-left: 3px;
+
+  color: var(--text-muted);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.settings-card {
+  width: 100%;
+  max-width: 100%;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+
+  background: var(--bg-secondary);
+
+  box-shadow:
+    0 2px 10px var(--shadow-color);
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+/* =========================================================
+   MAIN ITEM
+========================================================= */
+
+.settings-item-main {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  text-align: left;
+}
+
+.settings-item-main > div:last-child {
+  min-width: 0;
+}
+
+.settings-theme-main {
+  padding: 16px;
+}
+
+
+/* =========================================================
+   ICON BOX
+========================================================= */
+
+.settings-item-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 11px;
+
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+
+  font-size: 19px;
+  line-height: 1;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.settings-item-icon span {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   ONLINE
+========================================================= */
+
+.settings-item-icon.online {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+
+/* =========================================================
+   OFFLINE
+========================================================= */
+
+.settings-item-icon.offline {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+
+/* =========================================================
+   ITEM TEXT
+========================================================= */
+
+.settings-item-main h3 {
+  margin: 0;
+
+  color: var(--text-primary);
+
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.settings-item-main p {
+  margin: 4px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   THEME OPTIONS
+========================================================= */
+
+.theme-options {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 8px;
+
+  padding: 0 16px 16px;
+}
+
+
+/* =========================================================
+   THEME BUTTON
+========================================================= */
+
+.theme-option {
+  min-height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 8px;
+
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.theme-option:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+.theme-option.active {
+  border-color: var(--accent);
+
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.theme-option.active:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.theme-option:active {
+  transform: scale(0.97);
+}
+
+
+/* =========================================================
+   THEME ICON
+========================================================= */
+
+.theme-icon {
+  width: 18px;
+  height: 18px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  font-size: 16px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   LINK ITEMS
+========================================================= */
+
+.settings-link-item {
+  width: 100%;
+  min-height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  border: 0;
+  border-bottom: 1px solid var(--border-light);
+
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.settings-link-item:last-child {
+  border-bottom: 0;
+}
+
+.settings-link-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.settings-link-item:active {
+  background: var(--bg-tertiary);
+}
+
+
+/* =========================================================
+   STATIC ITEM
+========================================================= */
+
+.static-item {
+  cursor: default;
+}
+
+.static-item:hover {
+  background: var(--bg-secondary);
+}
+
+.static-item:active {
+  background: var(--bg-secondary);
+}
+
+
+/* =========================================================
+   CHEVRON
+========================================================= */
+
+.settings-chevron {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  color: var(--text-light);
+
+  font-size: 25px;
+  line-height: 1;
+
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.settings-link-item:hover .settings-chevron {
+  color: var(--text-secondary);
+
+  transform: translateX(2px);
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: var(--text-light);
+}
+
+.status-dot.online {
+  background: var(--success);
+
+  box-shadow:
+    0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+
+.status-dot.offline {
+  background: var(--danger);
+
+  box-shadow:
+    0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+
+/* =========================================================
+   PWA INSTALL SECTION
+========================================================= */
+
+.pwa-install-section {
+  width: 100%;
+
+  padding: 14px 16px 16px;
+
+  border-top: 1px solid var(--border-light);
+
+  background: var(--bg-secondary);
+}
+
+
+/* =========================================================
+   PWA INSTALL CARD
+========================================================= */
+
+.pwa-install-card {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  padding: 16px;
+
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+
+  background: var(--bg-primary);
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+/* =========================================================
+   PWA ICON
+========================================================= */
+
+.pwa-install-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 13px;
+
+  background: var(--accent-soft);
+  color: var(--accent);
+
+  font-size: 23px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   PWA CONTENT
+========================================================= */
+
+.pwa-install-content {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.pwa-install-content h3 {
+  margin: 0 0 5px;
+
+  color: var(--text-primary);
+
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.pwa-install-content p {
+  margin: 0;
+
+  color: var(--text-secondary);
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   PWA SUCCESS
+========================================================= */
+
+.pwa-install-success {
+  color: var(--success) !important;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   INSTALL BUTTON
+========================================================= */
+
+.install-app-button {
+  min-height: 44px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 13px;
+
+  padding: 10px 17px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: var(--accent);
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.15s ease,
+    background-color 0.2s ease;
+}
+
+.install-app-button:hover {
+  opacity: 0.92;
+}
+
+.install-app-button:active {
+  transform: scale(0.97);
+}
+
+.install-app-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.install-button-icon {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 17px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   INSTALL HELP
+========================================================= */
+
+.install-help-text {
+  margin-top: 10px !important;
+
+  color: var(--text-muted) !important;
+
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+}
+
+
+/* =========================================================
+   DATA / DANGER ITEMS
+========================================================= */
+
+.settings-danger-item {
+  width: 100%;
+  min-height: 53px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 13px 16px;
+
+  border: 0;
+  border-bottom: 1px solid var(--border-light);
+
+  background: var(--bg-secondary);
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.settings-danger-item:last-child {
+  border-bottom: 0;
+}
+
+.settings-danger-item:hover {
+  background: var(--danger-soft);
+
+  color: var(--danger);
+}
+
+.settings-danger-item:active {
+  background: var(--danger-soft);
+}
+
+.settings-danger-item.danger-all {
+  color: var(--danger);
+}
+
+
+/* =========================================================
+   DANGER ICON
+========================================================= */
+
+.danger-icon {
+  width: 24px;
+  height: 24px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  font-size: 18px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   ABOUT CARD
+========================================================= */
+
+.settings-about-card {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 18px;
+
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+
+  background: var(--bg-secondary);
+
+  box-shadow:
+    0 2px 10px var(--shadow-color);
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+/* =========================================================
+   ABOUT LOGO
+========================================================= */
+
+.settings-about-logo {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 15px;
+
+  background: var(--text-primary);
+  color: var(--bg-secondary);
+
+  font-size: 24px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   ABOUT TITLE
+========================================================= */
+
+.settings-about-card h2 {
+  margin: 0;
+
+  color: var(--text-primary);
+
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.settings-about-card p {
+  margin: 4px 0;
+
+  color: var(--text-muted);
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.settings-about-card span {
+  color: var(--text-light);
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   ABOUT INFORMATION
+========================================================= */
+
+.settings-about-info {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 8px;
+
+  margin-top: 10px;
+
+  padding: 0 4px;
+
+  color: var(--text-light);
+}
+
+.settings-about-info p {
+  margin: 0;
+
+  color: var(--text-light);
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   INFO ICON
+========================================================= */
+
+.settings-info-icon {
+  width: 17px;
+  height: 17px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border: 1px solid var(--text-light);
+  border-radius: 50%;
+
+  color: var(--text-light);
+
+  font-size: 10px;
+  font-weight: 700;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   BOTTOM SPACE
+========================================================= */
+
+.settings-bottom-space {
+  height: 90px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width: 600px) {
+
+  .settings-header {
+    padding: 30px 24px 24px;
+  }
+
+  .settings-content {
+    padding: 0 24px 50px;
+  }
+
+  .settings-header h1 {
+    font-size: 29px;
+  }
+
+  .settings-card {
+    border-radius: 18px;
+  }
+
+  .settings-about-card {
+    border-radius: 18px;
+  }
+
+  .pwa-install-card {
+    padding: 18px;
+  }
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 768px) {
+
+  .settings-page {
+    padding-bottom: 30px;
+  }
+
+  .settings-header {
+    padding-top: 38px;
+  }
+
+  .settings-link-item {
+    min-height: 76px;
+  }
+
+  .settings-danger-item {
+    min-height: 56px;
+  }
+
+  .settings-bottom-space {
+    height: 25px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 599px) {
+
+  .settings-content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .settings-header {
+    width: 100%;
+    max-width: 100%;
+
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .settings-header-text {
+    overflow: hidden;
+  }
+
+  .settings-header h1,
+  .settings-header p {
+    overflow-wrap: anywhere;
+  }
+
+  .pwa-install-section {
+    padding: 12px;
+  }
+
+  .pwa-install-card {
+    gap: 12px;
+
+    padding: 14px;
+
+    border-radius: 13px;
+  }
+
+  .pwa-install-icon {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 12px;
+
+    font-size: 21px;
+  }
+
+  .pwa-install-content h3 {
+    font-size: 15px;
+  }
+
+  .pwa-install-content p {
+    font-size: 12px;
+  }
+
+  .install-app-button {
+    width: 100%;
+
+    min-height: 44px;
+
+    margin-top: 12px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .settings-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .settings-header {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .settings-header h1 {
+    font-size: 22px;
+  }
+
+  .settings-header p {
+    font-size: 12px;
+  }
+
+  .settings-item-main {
+    gap: 9px;
+  }
+
+  .settings-item-icon {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 10px;
+  }
+
+  .theme-options {
+    gap: 6px;
+
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .theme-option {
+    min-height: 40px;
+
+    font-size: 11px;
+  }
+
+  .theme-icon {
+    width: 16px;
+    height: 16px;
+
+    font-size: 14px;
+  }
+
+  .pwa-install-section {
+    padding: 10px;
+  }
+
+  .pwa-install-card {
+    padding: 12px;
+  }
+
+  .pwa-install-icon {
+    width: 40px;
+    height: 40px;
+
+    font-size: 19px;
+  }
+
+  .pwa-install-content h3 {
+    font-size: 14px;
+  }
+
+  .pwa-install-content p {
+    font-size: 11.5px;
+  }
+
+  .settings-bottom-space {
+    height: 90px;
+  }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.settings-back-button:focus-visible,
+.theme-option:focus-visible,
+.settings-link-item:focus-visible,
+.settings-danger-item:focus-visible,
+.install-app-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .settings-page,
+  .settings-back-button,
+  .theme-option,
+  .settings-link-item,
+  .settings-danger-item,
+  .settings-chevron,
+  .settings-card,
+  .settings-about-card,
+  .install-app-button {
+    transition: none;
+  }
+}

@@ -1,0 +1,418 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.root{font-family:'DM Sans',sans-serif;color:var(--color-text-primary);padding:2rem 0.5rem;max-width:680px;}
+.ch-sub{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:.3rem;}
+.ch-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;letter-spacing:-.5px;margin-bottom:2.5rem;}
+.sec{margin-bottom:2.8rem;}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.sec-num{font-size:11px;font-weight:500;color:var(--color-text-secondary);background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary);border-radius:20px;padding:3px 10px;letter-spacing:.05em;}
+.sec-title{font-size:18px;font-weight:500;}
+.accent{width:28px;height:3px;border-radius:2px;margin-bottom:1rem;}
+.a-purple{background:#7F77DD;} .a-teal{background:#1D9E75;} .a-amber{background:#EF9F27;} .a-coral{background:#D85A30;} .a-blue{background:#378ADD;} .a-green{background:#639922;}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:.75rem;}
+.clabel{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:.35rem;}
+.ctext{font-size:14px;line-height:1.65;color:var(--color-text-primary);}
+.code-block{background:#F1EFE8;border-radius:var(--border-radius-md);padding:.85rem 1rem;margin-top:.5rem;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:#2C2C2A;white-space:pre;overflow-x:auto;}
+.code-out{background:#E1F5EE;border-radius:var(--border-radius-md);padding:.65rem 1rem;margin-top:.4rem;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:#085041;}
+.out-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:#0F6E56;margin-bottom:3px;}
+.rule-box{border-left:3px solid;padding:.7rem 1rem;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;background:var(--color-background-secondary);margin-bottom:.6rem;font-size:13.5px;line-height:1.6;color:var(--color-text-primary);}
+.r-purple{border-color:#7F77DD;} .r-teal{border-color:#1D9E75;} .r-amber{border-color:#EF9F27;} .r-coral{border-color:#D85A30;} .r-blue{border-color:#378ADD;}
+.pill-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:.5rem;}
+.pill{font-size:12px;font-weight:500;padding:4px 11px;border-radius:20px;}
+.p-purple{background:#EEEDFE;color:#3C3489;} .p-teal{background:#E1F5EE;color:#0F6E56;} .p-amber{background:#FAEEDA;color:#854F0B;} .p-coral{background:#FAECE7;color:#993C1D;} .p-blue{background:#E6F1FB;color:#185FA5;} .p-green{background:#EAF3DE;color:#3B6D11;} .p-gray{background:#F1EFE8;color:#5F5E5A;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:.5rem;}
+.mini-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.8rem 1rem;border:.5px solid var(--color-border-tertiary);}
+.mc-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;}
+.mc-text{font-size:13px;line-height:1.55;color:var(--color-text-secondary);}
+.ibox{background:#EEEDFE;border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:.75rem;}
+.ibox-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:#534AB7;margin-bottom:.4rem;}
+.ibox-text{font-size:13.5px;line-height:1.65;color:#3C3489;}
+.trick{display:flex;gap:10px;align-items:flex-start;background:#FAEEDA;border-radius:var(--border-radius-md);padding:.8rem 1rem;margin-top:.75rem;}
+.trick i{font-size:17px;flex-shrink:0;margin-top:1px;color:#854F0B;}
+.trick-text{font-size:13.5px;line-height:1.5;color:#854F0B;font-weight:500;}
+hr.div{border:none;border-top:.5px solid var(--color-border-tertiary);margin:2rem 0;}
+.tbl-wrap{overflow-x:auto;margin-top:.5rem;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);padding:0 0 8px;border-bottom:.5px solid var(--color-border-tertiary);}
+td{padding:8px 0;border-bottom:.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:top;line-height:1.5;padding-right:8px;}
+.mini-title{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-secondary);margin-bottom:.5rem;margin-top:1rem;}
+.flow-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:.5rem;}
+.fnode{background:#E1F5EE;color:#0F6E56;font-size:13px;font-weight:500;padding:5px 14px;border-radius:20px;}
+.farrow{color:var(--color-text-tertiary);font-size:15px;}
+.note-warn{background:#FAECE7;border-radius:var(--border-radius-md);padding:.7rem 1rem;font-size:13px;line-height:1.55;color:#993C1D;margin-top:.5rem;}
+.code-pair{margin-bottom:1rem;}
+.cp-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;}
+.cp-bad{color:#993C1D;} .cp-good{color:#0F6E56;}
+</style>
+
+<div class="root">
+<p class="ch-sub">JavaScript · ES6 / ECMAScript 2015</p>
+<h1 class="ch-title">Modern JavaScript — Full Notes</h1>
+
+<!-- ══════════ 01 · ES6 INTRO ══════════ -->
+<div class="sec">
+  <div class="sec-hdr"><span class="sec-num">01</span><span class="sec-title">What is ES6?</span></div>
+  <div class="accent a-purple"></div>
+
+  <div class="card">
+    <div class="clabel">Definition</div>
+    <div class="ctext">ES6 (ECMAScript 2015) is the 6th version of JavaScript released in 2015. It makes code shorter, cleaner, and easier to maintain.</div>
+  </div>
+
+  <div class="mini-title">Before vs After ES6</div>
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mc-label cp-bad">Before ES6</div>
+      <div class="code-block">var name = "Pravin";
+console.log("Hello " + name);</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-label cp-good">After ES6</div>
+      <div class="code-block">let name = "Pravin";
+console.log(`Hello ${name}`);</div>
+    </div>
+  </div>
+
+  <div class="mini-title">Key Features</div>
+  <div class="pill-row">
+    <span class="pill p-purple">let &amp; const</span><span class="pill p-teal">Arrow Functions</span><span class="pill p-amber">Default Parameters</span><span class="pill p-coral">Template Literals</span><span class="pill p-blue">Destructuring</span><span class="pill p-green">Spread Operator</span><span class="pill p-gray">Rest Operator</span><span class="pill p-purple">Classes</span><span class="pill p-teal">Modules</span><span class="pill p-amber">Promises</span>
+  </div>
+
+  <div class="ibox">
+    <div class="ibox-lbl">Interview Answer</div>
+    <div class="ibox-text">ES6 stands for ECMAScript 2015 — the sixth version of JavaScript. It introduced let, const, arrow functions, template literals, destructuring, classes, modules, promises, and more to make code cleaner and easier to maintain.</div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ══════════ 02 · DEFAULT PARAMETERS ══════════ -->
+<div class="sec">
+  <div class="sec-hdr"><span class="sec-num">02</span><span class="sec-title">Default Parameters</span></div>
+  <div class="accent a-teal"></div>
+
+  <div class="card">
+    <div class="clabel">Definition</div>
+    <div class="ctext">Default Parameters let us assign a fallback value to a function parameter when no value is passed. Without this, JavaScript returns <em>undefined</em>.</div>
+  </div>
+
+  <div class="mini-title">Problem without default parameters</div>
+  <div class="code-block">function greet(name) {
+    console.log("Hello " + name);
+}
+greet(); </div>
+  <div class="code-out"><div class="out-label">Output</div>Hello undefined</div>
+
+  <div class="mini-title">Solution with default parameters</div>
+  <div class="code-block">function greet(name = "Guest") {
+    console.log("Hello " + name);
+}
+greet();
+greet("Pravin");</div>
+  <div class="code-out"><div class="out-label">Output</div>Hello Guest
+Hello Pravin</div>
+
+  <div class="mini-title">Example — Employee Salary</div>
+  <div class="code-block">function employee(name = "Employee", salary = 15000) {
+    console.log(name + " Salary: " + salary);
+}
+employee();
+employee("Pravin");
+employee("Pravin", 50000);</div>
+  <div class="code-out"><div class="out-label">Output</div>Employee Salary: 15000
+Pravin Salary: 15000
+Pravin Salary: 50000</div>
+
+  <div class="mini-title">Real-life Example — Electricity Bill</div>
+  <div class="code-block">function bill(amount, tax = 18) {
+    let total = amount + (amount * tax / 100);
+    console.log("Total Bill = " + total);
+}
+bill(1000);
+bill(1000, 10);</div>
+  <div class="code-out"><div class="out-label">Output</div>Total Bill = 1180
+Total Bill = 1100</div>
+
+  <div class="mini-title">Important — undefined vs null</div>
+  <div class="rule-box r-teal">Passing <strong>undefined</strong> → default value is used.</div>
+  <div class="rule-box r-coral">Passing <strong>null</strong> → null is used (treated as an actual value).</div>
+  <div class="code-block">function demo(x = 10) { console.log(x); }
+demo(undefined); // 10
+demo(null);      // null</div>
+</div>
+
+<hr class="div">
+
+<!-- ══════════ 03 · SPREAD OPERATOR ══════════ -->
+<div class="sec">
+  <div class="sec-hdr"><span class="sec-num">03</span><span class="sec-title">Spread Operator ( ... )</span></div>
+  <div class="accent a-amber"></div>
+
+  <div class="card">
+    <div class="clabel">Definition</div>
+    <div class="ctext">The Spread Operator <strong>( ... )</strong> expands elements of an array or object into individual values.</div>
+  </div>
+
+  <div class="mini-title">Basic — how it works</div>
+  <div class="two-col">
+    <div>
+      <div class="cp-label cp-bad" style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Without spread</div>
+      <div class="code-block">let n = [10,20,30];
+console.log(n);</div>
+      <div class="code-out"><div class="out-label">Output</div>[10, 20, 30]</div>
+    </div>
+    <div>
+      <div class="cp-label cp-good" style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">With spread</div>
+      <div class="code-block">let n = [10,20,30];
+console.log(...n);</div>
+      <div class="code-out"><div class="out-label">Output</div>10 20 30</div>
+    </div>
+  </div>
+
+  <div class="mini-title">Copying an array</div>
+  <div class="code-block">let arr1 = [10, 20, 30];
+let arr2 = [...arr1];   // new copy
+arr2.push(40);
+console.log(arr1); // [10,20,30] ← unchanged
+console.log(arr2); // [10,20,30,40]</div>
+
+  <div class="mini-title">Merging arrays</div>
+  <div class="code-block">let arr1 = [1,2,3];
+let arr2 = [4,5,6];
+let merged = [...arr1, ...arr2];
+console.log(merged); // [1,2,3,4,5,6]</div>
+
+  <div class="mini-title">Passing array to a function</div>
+  <div class="code-block">function add(a,b,c) { return a+b+c; }
+let numbers = [10,20,30];
+console.log(add(...numbers)); // 60</div>
+
+  <div class="mini-title">Spread with objects</div>
+  <div class="code-block">let basic = { name:"Pravin", age:22 };
+let job   = { role:"Developer", salary:50000 };
+let emp   = { ...basic, ...job };
+console.log(emp);</div>
+  <div class="code-out"><div class="out-label">Output</div>{ name:"Pravin", age:22, role:"Developer", salary:50000 }</div>
+
+  <div class="trick">
+    <i class="ti ti-bulb" aria-hidden="true"></i>
+    <div class="trick-text">Memory Trick — SPREAD = EXPAND &nbsp;·&nbsp; Array → Individual Values</div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ══════════ 04 · REST PARAMETER ══════════ -->
+<div class="sec">
+  <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Rest Parameter ( ... )</span></div>
+  <div class="accent a-coral"></div>
+
+  <div class="card">
+    <div class="clabel">Definition</div>
+    <div class="ctext">The Rest Parameter <strong>( ... )</strong> collects multiple arguments passed to a function into a single array. Used inside function parameters.</div>
+  </div>
+
+  <div class="mini-title">Basic example</div>
+  <div class="code-block">function demo(...numbers) {
+    console.log(numbers);
+}
+demo(10, 20, 30, 40);</div>
+  <div class="code-out"><div class="out-label">Output</div>[10, 20, 30, 40]</div>
+
+  <div class="mini-title">Sum of any number of values</div>
+  <div class="code-block">function sum(...numbers) {
+    let total = 0;
+    for(let num of numbers) {
+        total += num;
+    }
+    return total;
+}
+console.log(sum(10, 20, 30, 40)); // 100</div>
+
+  <div class="mini-title">Mixed — normal + rest parameter</div>
+  <div class="code-block">function student(course, ...names) {
+    console.log(course);
+    console.log(names);
+}
+student("Java", "Pravin", "Ramesh", "Siva");</div>
+  <div class="code-out"><div class="out-label">Output</div>Java
+["Pravin", "Ramesh", "Siva"]</div>
+
+  <div class="note-warn"><strong>Important Rule:</strong> Rest parameter must always be the LAST parameter. Writing it before other params causes an error.</div>
+
+  <div class="mini-title">Rest vs Spread comparison</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Rest Parameter</th><th>Spread Operator</th></tr></thead>
+      <tbody>
+        <tr><td>Collects values</td><td>Expands values</td></tr>
+        <tr><td>Used in function params</td><td>Used when calling functions / with arrays</td></tr>
+        <tr><td>Many values → one array</td><td>Array → individual values</td></tr>
+        <tr><td>Packs data</td><td>Unpacks data</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="trick">
+    <i class="ti ti-bulb" aria-hidden="true"></i>
+    <div class="trick-text">Memory Trick — REST = COLLECT &nbsp;·&nbsp; Individual Values → Array</div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ══════════ 05 · DESTRUCTURING ══════════ -->
+<div class="sec">
+  <div class="sec-hdr"><span class="sec-num">05</span><span class="sec-title">Destructuring</span></div>
+  <div class="accent a-blue"></div>
+
+  <div class="card">
+    <div class="clabel">Definition</div>
+    <div class="ctext">Destructuring is a shortcut to extract values from arrays or objects into individual variables in one clean line.</div>
+  </div>
+
+  <div class="mini-title">Array destructuring — basic</div>
+  <div class="code-block">let fruits = ["Apple", "Banana", "Mango"];
+let [a, b, c] = fruits;
+console.log(a); // Apple
+console.log(b); // Banana
+console.log(c); // Mango</div>
+
+  <div class="mini-title">Skipping values</div>
+  <div class="code-block">let colors = ["Red", "Green", "Blue"];
+let [first, , third] = colors;
+console.log(first); // Red
+console.log(third); // Blue</div>
+
+  <div class="mini-title">Swapping variables</div>
+  <div class="code-block">let a = 10, b = 20;
+[a, b] = [b, a];
+console.log(a); // 20
+console.log(b); // 10</div>
+
+  <div class="mini-title">Default values in array destructuring</div>
+  <div class="code-block">let numbers = [10];
+let [a, b = 20] = numbers;
+console.log(a); // 10
+console.log(b); // 20  ← default used</div>
+
+  <div class="mini-title">Object destructuring — basic</div>
+  <div class="code-block">let student = { name:"Pravin", age:22, course:"Java" };
+let { name, age, course } = student;
+console.log(name);   // Pravin
+console.log(age);    // 22
+console.log(course); // Java</div>
+
+  <div class="rule-box r-blue">For object destructuring — variable names MUST match property names, otherwise the value will be <em>undefined</em>.</div>
+
+  <div class="mini-title">Renaming variables</div>
+  <div class="code-block">let student = { name:"Pravin", age:22 };
+let { name: studentName, age: studentAge } = student;
+console.log(studentName); // Pravin
+console.log(studentAge);  // 22</div>
+
+  <div class="mini-title">Default values in object destructuring</div>
+  <div class="code-block">let student = { name:"Pravin" };
+let { name, course = "Java" } = student;
+console.log(name);   // Pravin
+console.log(course); // Java  ← default used</div>
+
+  <div class="mini-title">Destructuring in function parameters</div>
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mc-label cp-bad">Without</div>
+      <div class="code-block">function show(s){
+  console.log(s.name);
+  console.log(s.age);
+}</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-label cp-good">With</div>
+      <div class="code-block">function show({name,age}){
+  console.log(name);
+  console.log(age);
+}</div>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ══════════ 06 · MODULES ══════════ -->
+<div class="sec">
+  <div class="sec-hdr"><span class="sec-num">06</span><span class="sec-title">ES6 Modules</span></div>
+  <div class="accent a-green"></div>
+
+  <div class="card">
+    <div class="clabel">Definition</div>
+    <div class="ctext">A Module is a separate JavaScript file that holds specific functionality and can be imported into any other file whenever needed. Keeps projects clean and organised.</div>
+  </div>
+
+  <div class="mini-title">Module flow</div>
+  <div class="flow-row">
+    <span class="fnode">Create function</span><span class="farrow">→</span><span class="fnode">Export it</span><span class="farrow">→</span><span class="fnode">Import it</span><span class="farrow">→</span><span class="fnode">Use it</span>
+  </div>
+
+  <div class="mini-title">Named export</div>
+  <div class="code-block">// math.js
+export const pi = 3.14;
+export function add(a,b){ return a+b; }
+export function sub(a,b){ return a-b; }</div>
+
+  <div class="code-block">// app.js
+import { pi, add, sub } from "./math.js";
+console.log(pi);        // 3.14
+console.log(add(10,20)); // 30
+console.log(sub(20,10)); // 10</div>
+
+  <div class="mini-title">Default export</div>
+  <div class="code-block">// greet.js
+export default function greet(){
+    console.log("Welcome");
+}</div>
+
+  <div class="code-block">// app.js
+import greet from "./greet.js";  // no { } needed
+greet(); // Welcome</div>
+
+  <div class="mini-title">Using both together</div>
+  <div class="code-block">// student.js
+export const course = "Java";
+export function add(a,b){ return a+b; }
+export default function greet(){ console.log("Hello Student"); }</div>
+
+  <div class="code-block">// app.js
+import greet, { course, add } from "./student.js";
+greet();
+console.log(course);    // Java
+console.log(add(10,20)); // 30</div>
+
+  <div class="mini-title">Named vs Default — comparison</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>Named Export</th><th>Default Export</th></tr></thead>
+      <tbody>
+        <tr><td>How many per file?</td><td>Multiple allowed</td><td>Only one</td></tr>
+        <tr><td>Curly braces?</td><td>Yes — required</td><td>No — not needed</td></tr>
+        <tr><td>Syntax (export)</td><td>export { add }</td><td>export default add</td></tr>
+        <tr><td>Syntax (import)</td><td>import { add }</td><td>import add</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="rule-box r-teal" style="margin-top:.75rem;">To use ES6 Modules in HTML add <strong>type="module"</strong> to the script tag — otherwise imports and exports will not work.</div>
+
+  <div class="mini-title">Advantages</div>
+  <div class="pill-row">
+    <span class="pill p-green">Code reusability</span><span class="pill p-green">Easy maintenance</span><span class="pill p-green">Better organisation</span><span class="pill p-green">Faster debugging</span><span class="pill p-green">Team collaboration</span>
+  </div>
+
+  <div class="trick">
+    <i class="ti ti-bulb" aria-hidden="true"></i>
+    <div class="trick-text">Memory Trick — Module = Separate file &nbsp;·&nbsp; Export = Send out &nbsp;·&nbsp; Import = Bring in &nbsp;·&nbsp; Named = { } &nbsp;·&nbsp; Default = No { }</div>
+  </div>
+</div>
+
+</div>

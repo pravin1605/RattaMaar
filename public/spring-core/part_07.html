@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spring Framework – Annotations</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { font-family: 'Inter', sans-serif; background: #e8eaf0; color: #000; font-size: 13px; line-height: 1.6; }
+
+  .page { width: 794px; min-height: 1123px; background: #fff; margin: 32px auto; padding: 36px 40px 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.13); page-break-after: always; }
+
+  .page-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 22px; }
+  .page-header .subject { font-size: 11px; font-weight: 700; color: #000; letter-spacing: 1.5px; text-transform: uppercase; }
+  .page-header .topic { font-size: 20px; font-weight: 800; color: #000; }
+  .page-header .badge { background: #000; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 1px; }
+
+  .section-label { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #000; margin: 18px 0 8px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1.5px; background: #000; }
+
+  /* ANNOTATION CARD */
+  .ann-card { border: 1.5px solid #000; border-radius: 8px; margin-bottom: 14px; overflow: hidden; }
+  .ann-header { background: #000; color: #fff; padding: 7px 14px; display: flex; align-items: center; justify-content: space-between; }
+  .ann-header .ann-name { font-family: 'Fira Code', monospace; font-size: 14px; font-weight: 700; }
+  .ann-header .ann-num { font-size: 10px; font-weight: 700; opacity: 0.7; letter-spacing: 1px; }
+  .ann-body { padding: 12px 14px; }
+  .ann-why { font-size: 12px; color: #000; margin-bottom: 8px; line-height: 1.55; }
+  .ann-def { background: #f5f5f5; border-left: 3px solid #000; padding: 8px 10px; margin-bottom: 8px; font-size: 12px; color: #000; line-height: 1.55; }
+  .ann-def strong { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 3px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+
+  .code-block { background: #000; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+  .code-block pre { font-family: 'Fira Code', monospace; font-size: 11px; color: #fff; white-space: pre-wrap; word-break: break-word; line-height: 1.65; }
+  .cm { color: #888; font-style: italic; }
+
+  .xml-block { background: #f0f0f0; border: 1px solid #ccc; border-radius: 6px; padding: 8px 12px; margin-bottom: 8px; }
+  .xml-block pre { font-family: 'Fira Code', monospace; font-size: 11px; color: #000; white-space: pre-wrap; }
+  .xml-label { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-bottom: 3px; }
+
+  .out-bar { background: #222; border-radius: 0 0 6px 6px; padding: 6px 12px; margin-top: -8px; margin-bottom: 8px; }
+  .out-bar .out-label { font-size: 9px; font-weight: 800; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+  .out-bar pre { font-family: 'Fira Code', monospace; font-size: 11px; color: #ccc; }
+
+  .warn-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 6px 6px 0; padding: 8px 12px; margin-bottom: 8px; }
+  .warn-box .warn-label { font-size: 9px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
+  .warn-box p { font-size: 11.5px; color: #000; }
+
+  .tip-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 6px 6px 0; padding: 8px 12px; margin-bottom: 8px; }
+  .tip-box .tip-label { font-size: 9px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
+  .tip-box p { font-size: 11.5px; color: #000; }
+
+  .example-card { border: 1.5px solid #000; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+  .example-card .ex-label { font-size: 9px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+
+  .trick-box { border: 2px dashed #000; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+  .trick-box .trick-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .trick-box p { font-size: 12px; color: #000; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 11.5px; }
+  .cmp-table thead th { background: #000; color: #fff; padding: 8px 10px; text-align: left; font-weight: 800; }
+  .cmp-table tbody tr:nth-child(even) { background: #f5f5f5; }
+  .cmp-table tbody td { padding: 6px 10px; border-bottom: 1px solid #000; color: #000; vertical-align: top; }
+  .cmp-table tbody td:first-child { font-family: 'Fira Code', monospace; font-weight: 700; font-size: 11px; }
+
+  .pill { display: inline-block; background: #000; color: #fff; border-radius: 4px; padding: 2px 9px; font-size: 11px; font-weight: 700; margin: 2px; font-family: 'Fira Code', monospace; }
+  .pill-outline { display: inline-block; background: #fff; color: #000; border: 1.5px solid #000; border-radius: 4px; padding: 2px 9px; font-size: 11px; font-weight: 700; margin: 2px; }
+  .pros-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+
+  code { font-family: 'Fira Code', monospace; font-size: 11px; background: #f0f0f0; border: 1px solid #ccc; padding: 1px 5px; border-radius: 3px; color: #000; }
+
+  @media print { body { background: #fff; } .page { box-shadow: none; margin: 0; } }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ PAGE 1 — @Component, @Configuration, @ComponentScan, @Value ═══════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Spring Core Annotations</div>
+    </div>
+    <div class="badge">PART 1</div>
+  </div>
+
+  <!-- @Component -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@Component</span><span class="ann-num">01</span></div>
+    <div class="ann-body">
+      <p class="ann-why">Without <code>@Component</code>, Spring doesn't know which class to create as a bean. You'd need a manual <code>&lt;bean&gt;</code> entry in XML for every class — 100 classes = 100 entries. <code>@Component</code> solves this.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Marks a class as a Spring-managed bean. Spring automatically detects it during component scanning, creates its object, and stores it in the IoC Container.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">XML Equivalent</div>
+          <div class="xml-block"><pre>&lt;bean id="student"
+      class="com.ty.Student"/&gt;</pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Annotation Approach</div>
+          <div class="code-block"><pre>@Component
+public class Student {
+  public void study() {
+    System.out.println("Studying");
+  }
+}</pre></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- @Configuration -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@Configuration</span><span class="ann-num">02</span></div>
+    <div class="ann-body">
+      <p class="ann-why">In XML we have <code>&lt;beans&gt;...&lt;/beans&gt;</code> as the starting point. When using annotations, Spring still needs a starting point — that is <code>@Configuration</code>.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Marks a class as a Spring configuration class. It acts as the replacement for the XML <code>&lt;beans&gt;</code> file and contains bean definitions.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">XML Equivalent</div>
+          <div class="xml-block"><pre>&lt;beans&gt;
+  ...
+&lt;/beans&gt;</pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Annotation Approach</div>
+          <div class="code-block"><pre>@Configuration
+public class Configure {
+  <span class="cm">// bean definitions here</span>
+}</pre></div>
+        </div>
+      </div>
+      <div class="tip-box" style="margin-bottom:0;">
+        <div class="tip-label">💡 Real Life Analogy</div>
+        <p>Like a <strong>College Principal Office</strong> — every instruction starts from there. Spring starts from the Configuration Class.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- @ComponentScan -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@ComponentScan</span><span class="ann-num">03</span></div>
+    <div class="ann-body">
+      <p class="ann-why">Classes can be in different packages (<code>com.ty.student</code>, <code>com.ty.employee</code>). Spring doesn't know where to look. <code>@ComponentScan</code> tells Spring which package to search.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Tells Spring where to search for <code>@Component</code>, <code>@Service</code>, <code>@Repository</code>, <code>@Controller</code> classes and automatically create their beans.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">XML Equivalent</div>
+          <div class="xml-block"><pre>&lt;context:component-scan
+  base-package="com.ty"/&gt;</pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Annotation Approach</div>
+          <div class="code-block"><pre>@Configuration
+@ComponentScan("com.ty")
+public class Configure {
+}</pre></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- @Value -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@Value</span><span class="ann-num">04</span></div>
+    <div class="ann-body">
+      <p class="ann-why">Without Spring, you manually call setters to assign values. With <code>@Value</code>, Spring directly injects values into fields — no manual assignment needed.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Used to inject default/hardcoded values into variables, constructors, and setter methods automatically by Spring.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">XML Equivalent</div>
+          <div class="xml-block"><pre>&lt;property name="id"
+          value="101"/&gt;
+&lt;property name="name"
+          value="Pravin"/&gt;</pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Annotation Approach</div>
+          <div class="code-block"><pre>@Component
+public class Student {
+  @Value("101")
+  private int id;
+  @Value("Pravin")
+  private String name;
+}</pre></div>
+        </div>
+      </div>
+      <div class="out-bar"><div class="out-label">📤 Output</div><pre>101 Pravin</pre></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════ PAGE 2 — @Autowired, @Qualifier, @Primary, @Scope ═══════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Annotations — DI &amp; Scope</div>
+    </div>
+    <div class="badge">PART 2</div>
+  </div>
+
+  <!-- @Autowired -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@Autowired</span><span class="ann-num">05</span></div>
+    <div class="ann-body">
+      <p class="ann-why">When one class depends on another (e.g. Student needs Laptop), you'd manually create and pass the object. With 100 dependencies this becomes unmanageable. <code>@Autowired</code> lets Spring handle it automatically.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Used for automatic dependency injection. Spring automatically finds the required bean and injects it — no manual object creation needed.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">XML Equivalent</div>
+          <div class="xml-block"><pre>&lt;bean id="laptop"
+  class="com.ty.Laptop"/&gt;
+&lt;bean id="student"
+  class="com.ty.Student"&gt;
+  &lt;property name="laptop"
+    ref="laptop"/&gt;
+&lt;/bean&gt;</pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Annotation Approach</div>
+          <div class="code-block"><pre>@Component
+public class Student {
+  @Autowired
+  Laptop laptop;
+
+  public void study() {
+    laptop.coding();
+  }
+}</pre></div>
+        </div>
+      </div>
+      <div class="tip-box" style="margin-bottom:0;"><div class="tip-label">⚙️ Internally Spring Does</div><p><code>Laptop l = new Laptop();</code> then <code>student.laptop = l;</code> — automatically!</p></div>
+    </div>
+  </div>
+
+  <!-- @Qualifier -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@Qualifier</span><span class="ann-num">06</span></div>
+    <div class="ann-body">
+      <p class="ann-why">If two beans of same type exist (e.g. <code>OracleDB</code> and <code>MySQLDB</code>), Spring gets confused which one to inject → throws <code>NoUniqueBeanDefinitionException</code>. <code>@Qualifier</code> specifies exactly which bean.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Used with <code>@Autowired</code> to specify exactly which bean should be injected when multiple beans of the same type exist.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">XML Equivalent</div>
+          <div class="xml-block"><pre>&lt;property name="db"
+          ref="mysql"/&gt;</pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Annotation Approach</div>
+          <div class="code-block"><pre>@Component("mysql")
+class MySQLDB {}
+
+@Component("oracle")
+class OracleDB {}
+
+@Autowired
+@Qualifier("mysql")
+MySQLDB db; <span class="cm">// MySQLDB injected</span></pre></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- @Primary -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@Primary</span><span class="ann-num">07</span></div>
+    <div class="ann-body">
+      <p class="ann-why">When many beans of same type exist, instead of writing <code>@Qualifier</code> everywhere, mark one bean as the default choice using <code>@Primary</code>.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Tells Spring to choose this bean by default when multiple beans of the same type exist, without needing <code>@Qualifier</code>.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">XML Equivalent</div>
+          <div class="xml-block"><pre>&lt;bean id="mysql"
+  class="com.ty.MySQLDB"
+  primary="true"/&gt;</pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Annotation Approach</div>
+          <div class="code-block"><pre>@Component
+@Primary
+public class MySQLDB {
+}
+<span class="cm">// Spring auto-picks MySQLDB</span></pre></div>
+        </div>
+      </div>
+      <div class="tip-box" style="margin-bottom:0;"><div class="tip-label">💡 @Primary vs @Qualifier</div><p><code>@Primary</code> = default bean for everyone. &nbsp;|&nbsp; <code>@Qualifier</code> = pick specific bean at injection point. If both used, <code>@Qualifier</code> wins.</p></div>
+    </div>
+  </div>
+
+  <!-- @Scope -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@Scope</span><span class="ann-num">08</span></div>
+    <div class="ann-body">
+      <p class="ann-why">By default Spring creates only <strong>one</strong> object (singleton). Sometimes you need a <strong>new object</strong> every time. <code>@Scope</code> controls this behaviour.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Defines the lifecycle and visibility of a bean inside the Spring Container. Two main scopes: <strong>singleton</strong> and <strong>prototype</strong>.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">Singleton (Default)</div>
+          <div class="code-block"><pre>@Component
+@Scope("singleton")
+public class Student {}
+<span class="cm">// getBean() → same object
+// Student@123
+// Student@123</span></pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Prototype</div>
+          <div class="code-block"><pre>@Component
+@Scope("prototype")
+public class Student {}
+<span class="cm">// getBean() → new object each time
+// Student@123
+// Student@456</span></pre></div>
+        </div>
+      </div>
+      <table class="cmp-table" style="margin-bottom:0;">
+        <thead><tr><th>Scope</th><th>Object Count</th><th>When to Use</th></tr></thead>
+        <tbody>
+          <tr><td>singleton</td><td>Only 1 per container</td><td>Shared stateless beans (services, DAOs)</td></tr>
+          <tr><td>prototype</td><td>New object every time</td><td>Stateful beans (user sessions, carts)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════ PAGE 3 — @Bean, @Lazy, @PostConstruct, @PreDestroy ═══════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Annotations — Bean Control &amp; Lifecycle</div>
+    </div>
+    <div class="badge">PART 3</div>
+  </div>
+
+  <!-- @Bean -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@Bean</span><span class="ann-num">09</span></div>
+    <div class="ann-body">
+      <p class="ann-why">If a class belongs to a <strong>third-party library</strong>, you cannot modify it to add <code>@Component</code>. In such cases, use <code>@Bean</code> inside a <code>@Configuration</code> class to manually register it.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Used to manually create and register a bean inside the Spring Container from a <code>@Configuration</code> class. Useful for third-party classes.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">XML Equivalent</div>
+          <div class="xml-block"><pre>&lt;bean id="engine"
+  class="com.ty.Engine"/&gt;</pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Annotation Approach</div>
+          <div class="code-block"><pre>@Configuration
+public class Configure {
+  @Bean
+  public Engine getEngine() {
+    return new Engine(); <span class="cm">// manual</span>
+  }
+}</pre></div>
+        </div>
+      </div>
+      <div class="tip-box" style="margin-bottom:0;"><div class="tip-label">💡 @Bean vs @Component</div><p><code>@Component</code> = Spring auto-creates (you own the class). &nbsp;|&nbsp; <code>@Bean</code> = you manually create (third-party class you can't modify).</p></div>
+    </div>
+  </div>
+
+  <!-- @Lazy -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@Lazy</span><span class="ann-num">10</span></div>
+    <div class="ann-body">
+      <p class="ann-why">By default Spring creates ALL singleton beans at startup — even if you never use some of them. This wastes memory. <code>@Lazy</code> delays creation until the bean is actually requested.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Delays bean creation until the bean is actually requested using <code>getBean()</code>. Saves memory on startup.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">XML Equivalent</div>
+          <div class="xml-block"><pre>&lt;bean id="student"
+  class="com.ty.Student"
+  lazy-init="true"/&gt;</pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Annotation Approach</div>
+          <div class="code-block"><pre>@Component
+@Lazy
+public class Student {
+  public Student() {
+    System.out.println("Created");
+  }
+}
+<span class="cm">// Object created only after getBean()</span></pre></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- @PostConstruct -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@PostConstruct</span><span class="ann-num">11</span></div>
+    <div class="ann-body">
+      <p class="ann-why">After bean creation and DI, you may want to open a DB connection, load config files, etc. <code>@PostConstruct</code> runs a method automatically right after the bean is ready.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Executes a method immediately after bean creation and dependency injection. Equivalent to <code>init-method</code> in XML.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">XML Equivalent</div>
+          <div class="xml-block"><pre>&lt;bean id="student"
+  init-method="init"/&gt;</pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Annotation Approach</div>
+          <div class="code-block"><pre>@Component
+public class Student {
+  @PostConstruct
+  public void init() {
+    System.out.println("Bean Initialized");
+  }
+}</pre></div>
+        </div>
+      </div>
+      <div class="out-bar"><div class="out-label">📤 Output</div><pre>Bean Initialized</pre></div>
+    </div>
+  </div>
+
+  <!-- @PreDestroy -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@PreDestroy</span><span class="ann-num">12</span></div>
+    <div class="ann-body">
+      <p class="ann-why">Before a bean is destroyed, you may need to close DB connections, release memory, or save logs. <code>@PreDestroy</code> runs a method just before the bean is removed.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Executes a method just before bean destruction (when Spring Container is closed). Equivalent to <code>destroy-method</code> in XML.</div>
+      <div class="two-col">
+        <div>
+          <div class="xml-label">XML Equivalent</div>
+          <div class="xml-block"><pre>&lt;bean id="student"
+  destroy-method="destroy"/&gt;</pre></div>
+        </div>
+        <div>
+          <div class="xml-label">Annotation Approach</div>
+          <div class="code-block"><pre>@Component
+public class Student {
+  @PreDestroy
+  public void destroy() {
+    System.out.println("Bean Destroyed");
+  }
+}</pre></div>
+        </div>
+      </div>
+      <div class="out-bar"><div class="out-label">📤 Output (when c.close() called)</div><pre>Bean Destroyed</pre></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════ PAGE 4 — @Service, @Repository, @Controller, @RequestMapping, @PropertySource, @DependsOn + Quick Revision ═══════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Annotations — Layers &amp; Extras</div>
+    </div>
+    <div class="badge">PART 4</div>
+  </div>
+
+  <div class="three-col">
+    <!-- @Service -->
+    <div class="ann-card" style="margin-bottom:0;">
+      <div class="ann-header"><span class="ann-name">@Service</span><span class="ann-num">13</span></div>
+      <div class="ann-body">
+        <div class="ann-def"><strong>📖 Definition</strong>Specialization of <code>@Component</code> for <strong>Service Layer</strong> classes. Contains business logic.</div>
+        <div class="code-block"><pre>@Service
+public class StudentService {
+  public void addStudent() {
+    System.out.println("Student Added");
+  }
+}</pre></div>
+        <p style="font-size:11.5px;">Used for: <strong>Business Logic</strong></p>
+      </div>
+    </div>
+
+    <!-- @Repository -->
+    <div class="ann-card" style="margin-bottom:0;">
+      <div class="ann-header"><span class="ann-name">@Repository</span><span class="ann-num">14</span></div>
+      <div class="ann-body">
+        <div class="ann-def"><strong>📖 Definition</strong>Specialization of <code>@Component</code> for <strong>DAO Layer</strong>. Handles database operations.</div>
+        <div class="code-block"><pre>@Repository
+public class StudentDao {
+  public void save() {
+    System.out.println("Saved to DB");
+  }
+}</pre></div>
+        <p style="font-size:11.5px;">Used for: <strong>Database Access</strong></p>
+      </div>
+    </div>
+
+    <!-- @Controller -->
+    <div class="ann-card" style="margin-bottom:0;">
+      <div class="ann-header"><span class="ann-name">@Controller</span><span class="ann-num">15</span></div>
+      <div class="ann-body">
+        <div class="ann-def"><strong>📖 Definition</strong>Specialization of <code>@Component</code> for <strong>Web Layer</strong>. Handles HTTP requests in Spring MVC.</div>
+        <div class="code-block"><pre>@Controller
+public class StudentController {
+  <span class="cm">// handles web requests</span>
+}</pre></div>
+        <p style="font-size:11.5px;">Used for: <strong>Web/MVC Layer</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="example-card" style="margin-top:10px;margin-bottom:12px;">
+    <div class="ex-label">🏗️ Spring Application Layers</div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:700;margin-top:4px;">
+      <span class="pill">@Controller</span>
+      <span>→</span>
+      <span class="pill">@Service</span>
+      <span>→</span>
+      <span class="pill">@Repository</span>
+      <span>→</span>
+      <span class="pill">Database</span>
+    </div>
+    <p style="font-size:11.5px;margin-top:6px;">All three are specializations of <code>@Component</code>. They work the same way but communicate the <strong>role/layer</strong> of the class.</p>
+  </div>
+
+  <!-- @RequestMapping -->
+  <div class="ann-card">
+    <div class="ann-header"><span class="ann-name">@RequestMapping</span><span class="ann-num">16</span></div>
+    <div class="ann-body">
+      <p class="ann-why">When a user visits <code>http://localhost:8080/home</code>, Spring needs to know which method handles it. <code>@RequestMapping</code> maps URLs to methods.</p>
+      <div class="ann-def"><strong>📖 Definition</strong>Maps a URL path to a specific method in a controller class.</div>
+      <div class="code-block"><pre>@Controller
+public class HomeController {
+  @RequestMapping("/home")
+  public String home() {
+    return "home.jsp";
+  }
+}</pre></div>
+    </div>
+  </div>
+
+  <!-- @PropertySource + @DependsOn side by side -->
+  <div class="two-col">
+    <div class="ann-card" style="margin-bottom:0;">
+      <div class="ann-header"><span class="ann-name">@PropertySource</span><span class="ann-num">17</span></div>
+      <div class="ann-body">
+        <div class="ann-def"><strong>📖 Definition</strong>Loads external properties files so values can be injected using <code>@Value</code>. Avoids hardcoding.</div>
+        <div class="xml-block" style="margin-bottom:6px;"><div class="xml-label">app.properties</div><pre>student.name=Pravin</pre></div>
+        <div class="code-block"><pre>@Configuration
+@PropertySource("app.properties")
+public class Configure {}
+
+<span class="cm">// Then use:</span>
+@Value("${student.name}")
+String name;</pre></div>
+      </div>
+    </div>
+    <div class="ann-card" style="margin-bottom:0;">
+      <div class="ann-header"><span class="ann-name">@DependsOn</span><span class="ann-num">18</span></div>
+      <div class="ann-body">
+        <div class="ann-def"><strong>📖 Definition</strong>Specifies bean creation order. Ensures one bean is created before another.</div>
+        <div class="code-block"><pre>@Component
+public class Database {
+  <span class="cm">// Created FIRST</span>
+}
+
+@Component
+@DependsOn("database")
+public class Student {
+  <span class="cm">// Created AFTER Database</span>
+}</pre></div>
+        <p style="font-size:11.5px;">Use when: Student bean <strong>needs</strong> Database bean to exist first.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Revision Table -->
+  <div class="section-label" style="margin-top:14px;">Quick Revision — All Annotations</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Annotation</th><th>Why Needed</th><th>XML Equivalent</th></tr></thead>
+    <tbody>
+      <tr><td>@Component</td><td>Auto-create bean</td><td><code>&lt;bean&gt;</code></td></tr>
+      <tr><td>@Configuration</td><td>Replace XML beans file</td><td><code>&lt;beans&gt;</code></td></tr>
+      <tr><td>@ComponentScan</td><td>Tell Spring which package to scan</td><td><code>&lt;context:component-scan&gt;</code></td></tr>
+      <tr><td>@Value</td><td>Inject primitive values</td><td><code>&lt;property value=""&gt;</code></td></tr>
+      <tr><td>@Autowired</td><td>Inject dependent object</td><td><code>&lt;property ref=""&gt;</code></td></tr>
+      <tr><td>@Qualifier</td><td>Select specific bean when multiple exist</td><td><code>ref="beanId"</code></td></tr>
+      <tr><td>@Primary</td><td>Default bean when multiple exist</td><td><code>primary="true"</code></td></tr>
+      <tr><td>@Scope</td><td>Control singleton / prototype</td><td><code>scope="singleton/prototype"</code></td></tr>
+      <tr><td>@Bean</td><td>Manually create bean (third-party class)</td><td><code>&lt;bean&gt;</code></td></tr>
+      <tr><td>@Lazy</td><td>Delay bean creation till needed</td><td><code>lazy-init="true"</code></td></tr>
+      <tr><td>@PostConstruct</td><td>Run code after bean created</td><td><code>init-method=""</code></td></tr>
+      <tr><td>@PreDestroy</td><td>Run code before bean destroyed</td><td><code>destroy-method=""</code></td></tr>
+      <tr><td>@Service</td><td>Mark service layer class</td><td><code>&lt;bean&gt;</code></td></tr>
+      <tr><td>@Repository</td><td>Mark DAO layer class</td><td><code>&lt;bean&gt;</code></td></tr>
+      <tr><td>@Controller</td><td>Mark web/MVC layer class</td><td><code>&lt;bean&gt;</code></td></tr>
+      <tr><td>@DependsOn</td><td>Control bean creation order</td><td>No direct equivalent</td></tr>
+      <tr><td>@PropertySource</td><td>Load external .properties file</td><td>No direct equivalent</td></tr>
+    </tbody>
+  </table>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 Interview Priority Order</div>
+    <p><span class="pill">@Component</span><span class="pill">@Configuration</span><span class="pill">@ComponentScan</span><span class="pill">@Value</span><span class="pill">@Autowired</span><span class="pill">@Qualifier</span><span class="pill">@Primary</span><span class="pill">@Bean</span><span class="pill">@Scope</span><span class="pill">@Lazy</span><span class="pill">@PostConstruct</span><span class="pill">@PreDestroy</span></p>
+    <p style="margin-top:6px;">Specializations of @Component: <code>@Service</code> (business) → <code>@Repository</code> (DB) → <code>@Controller</code> (web)</p>
+  </div>
+</div>
+
+</body>
+</html>

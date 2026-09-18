@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>React.js – Chapter 3 Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --text: #111111;
+    --muted: #555555;
+    --border: #e0e0e0;
+
+    --blue:      #1a6bff;
+    --blue-bg:   #e8f0ff;
+    --green:     #0a8a3c;
+    --green-bg:  #e4f5ec;
+    --orange:    #d95f00;
+    --orange-bg: #fff0e4;
+    --purple:    #6b2fbd;
+    --purple-bg: #f0eaff;
+    --red:       #c4001a;
+    --red-bg:    #fff0f2;
+    --teal:      #006d77;
+    --teal-bg:   #e0f4f5;
+    --pink:      #b5006e;
+    --pink-bg:   #ffe8f5;
+    --yellow:    #a06000;
+    --yellow-bg: #fff8e1;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 20px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: linear-gradient(135deg, #c4001a 0%, #d95f00 45%, #a06000 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 36px 40px;
+    margin-bottom: 36px;
+  }
+  .page-header .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 4px 14px; margin-bottom: 14px;
+  }
+  .page-header h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+  .page-header p  { font-size: 14px; opacity: .88; }
+
+  /* ── SECTION CARD ── */
+  .section {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .sec-num {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0; color: #fff;
+  }
+  .section-header h2 { font-size: 18px; font-weight: 700; color: var(--text); }
+  .section-body { padding: 22px 24px; }
+
+  /* ── DEFINITION BOX ── */
+  .def-box {
+    border-left: 4px solid var(--blue);
+    background: var(--blue-bg);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px; margin: 14px 0;
+  }
+  .def-box.green  { border-color: var(--green);  background: var(--green-bg);  }
+  .def-box.orange { border-color: var(--orange); background: var(--orange-bg); }
+  .def-box.purple { border-color: var(--purple); background: var(--purple-bg); }
+  .def-box .def-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--blue); margin-bottom: 4px;
+  }
+  .def-box.green  .def-label { color: var(--green);  }
+  .def-box.orange .def-label { color: var(--orange); }
+  .def-box.purple .def-label { color: var(--purple); }
+  .def-box p { font-size: 14.5px; }
+
+  /* ── CODE BLOCK ── */
+  pre {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px; line-height: 1.6;
+    overflow-x: auto; margin: 10px 0;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .kw   { color: #c792ea; }
+  .fn   { color: #82aaff; }
+  .str  { color: #c3e88d; }
+  .tag-c{ color: #f07178; }
+  .attr { color: #ffcb6b; }
+  .cmt  { color: #546e7a; }
+  .num  { color: #f78c6c; }
+  .this { color: #89ddff; }
+
+  /* ── COMPARE ROW ── */
+  .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .compare-box { border-radius: 8px; padding: 14px 16px; font-size: 13.5px; }
+  .compare-box .cb-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing:.08em; margin-bottom: 6px;
+  }
+  .cb-wrong { background: var(--red-bg);   border-left: 4px solid var(--red);   }
+  .cb-right { background: var(--green-bg); border-left: 4px solid var(--green); }
+  .cb-wrong .cb-label { color: var(--red);   }
+  .cb-right .cb-label { color: var(--green); }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 14px; margin-top: 14px;
+  }
+  .feature-card { border-radius: 10px; padding: 16px 18px; border: 1.5px solid transparent; }
+  .feature-card .fc-title {
+    font-weight: 700; font-size: 14px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .feature-card p  { font-size: 13.5px; color: var(--muted); }
+  .feature-card pre { font-size: 12px; margin: 6px 0 0; }
+  .fc-blue   { background: var(--blue-bg);   border-color: #b8d0ff; }
+  .fc-green  { background: var(--green-bg);  border-color: #9ddbb9; }
+  .fc-orange { background: var(--orange-bg); border-color: #ffc999; }
+  .fc-purple { background: var(--purple-bg); border-color: #c9abf0; }
+  .fc-teal   { background: var(--teal-bg);   border-color: #90d4d8; }
+  .fc-red    { background: var(--red-bg);    border-color: #f0b0bb; }
+  .fc-blue   .fc-title { color: var(--blue);   }
+  .fc-green  .fc-title { color: var(--green);  }
+  .fc-orange .fc-title { color: var(--orange); }
+  .fc-purple .fc-title { color: var(--purple); }
+  .fc-teal   .fc-title { color: var(--teal);   }
+  .fc-red    .fc-title { color: var(--red);    }
+
+  /* ── FLOW COLUMN ── */
+  .flow-col {
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 4px; margin: 14px 0;
+  }
+  .flow-step {
+    border-radius: 8px; padding: 10px 18px;
+    font-size: 13.5px; font-weight: 600;
+    border: 1.5px solid transparent;
+  }
+  .flow-arrow-down { color: #888; font-size: 18px; font-weight: 700; padding-left: 20px; }
+
+  /* ── HORIZONTAL FLOW ── */
+  .flow-h { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0; }
+  .fh-step {
+    background: var(--blue-bg); border: 1.5px solid #b8d0ff;
+    border-radius: 8px; padding: 8px 14px;
+    font-size: 13px; font-weight: 600; color: var(--blue);
+  }
+  .fh-arrow { color: #888; font-size: 18px; font-weight: 700; }
+
+  /* ── EXAMPLE WRAP ── */
+  .example-wrap { border: 1.5px solid var(--border); border-radius: 0 8px 8px 8px; overflow: hidden; margin: 12px 0; }
+  .example-wrap pre { border-radius: 0; margin: 0; }
+  .example-header {
+    display: flex; align-items: center; gap: 6px;
+    background: #f5f5f5; border-radius: 8px 8px 0 0;
+    padding: 10px 16px;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    border: 1.5px solid var(--border); border-bottom: none;
+  }
+  .dot-file { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ── OUTPUT BOX ── */
+  .output-box {
+    background: var(--green-bg); border: 1.5px solid #9ddbb9;
+    border-radius: 8px; padding: 12px 16px; margin: 10px 0;
+    font-family: 'Fira Code', monospace; font-size: 13px; color: var(--green);
+  }
+  .output-box .out-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing:.08em; color: var(--green); margin-bottom: 6px;
+  }
+
+  /* ── TIP / WARN ── */
+  .tip {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--teal-bg); border-left: 4px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 14px; color: var(--teal);
+  }
+  .tip .tip-icon { font-size: 18px; flex-shrink: 0; }
+  .warn {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--red-bg); border-left: 4px solid var(--red);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 14px; color: var(--red);
+  }
+  .warn .tip-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th {
+    background: var(--purple-bg); color: var(--purple);
+    font-weight: 700; text-align: left;
+    padding: 10px 14px; border: 1px solid #d6c4f4;
+  }
+  td { padding: 9px 14px; border: 1px solid var(--border); }
+  tr:nth-child(even) td { background: #fafafa; }
+  td strong { color: var(--blue); }
+
+  /* ── INTERVIEW BOX ── */
+  .interview-box {
+    background: var(--orange-bg); border: 1.5px solid #ffc999;
+    border-radius: 10px; padding: 16px 18px; margin: 14px 0;
+  }
+  .interview-box .ib-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--orange); margin-bottom: 8px;
+  }
+  .interview-box .qa { margin-bottom: 10px; }
+  .interview-box .qa:last-child { margin-bottom: 0; }
+  .interview-box .q { font-weight: 600; font-size: 13.5px; color: var(--text); }
+  .interview-box .a { font-size: 13.5px; color: var(--muted); margin-left: 14px; margin-top: 2px; }
+
+  /* ── PHONE ANALOGY ── */
+  .phone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .phone-card { border-radius: 12px; padding: 18px 20px; }
+
+  /* ── COUNTER DEMO ── */
+  .count-demo {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin: 10px 0;
+  }
+  .count-box {
+    border-radius: 8px; padding: 8px 18px;
+    font-family: 'Fira Code', monospace; font-size: 14px; font-weight: 700;
+    border: 1.5px solid var(--border);
+  }
+
+  h3 { font-size: 16px; font-weight: 700; margin: 18px 0 8px; color: var(--text); }
+  h4 { font-size: 14px; font-weight: 700; margin: 12px 0 6px; color: var(--muted); }
+  p  { margin-bottom: 8px; font-size: 14.5px; }
+  ul, ol { padding-left: 20px; margin-bottom: 10px; }
+  li { font-size: 14.5px; margin-bottom: 4px; }
+  code { font-family: 'Fira Code', monospace; font-size: 13px; background: #f0f0f0; padding: 1px 6px; border-radius: 4px; color: var(--purple); }
+
+  @media print { body { padding: 10px; } .section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="page-header">
+  <div class="tag">React.js · Chapter 3</div>
+  <h1>State in React — Class Based Components</h1>
+  <p>What is State · Why State · setState() · Constructor · Lifecycle · Examples · State vs Props</p>
+</div>
+
+
+<!-- ═══ 1. WHAT IS STATE ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--blue);">1</div>
+    <h2>What is State?</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box">
+      <div class="def-label">📘 Definition</div>
+      <p><strong>State</strong> is a plain JavaScript object used by React to store information about a component. It represents the <strong>current data</strong> of a component. Whenever state changes, React <strong>automatically updates the UI</strong>.</p>
+    </div>
+
+    <div class="def-box green">
+      <div class="def-label">⚡ Simple Definition</div>
+      <p>State is <strong>data that can change over time</strong> and causes the component to <strong>re-render</strong> when updated.</p>
+    </div>
+
+    <h3>The Problem Without State</h3>
+    <div class="compare-row">
+      <div class="compare-box cb-wrong">
+        <div class="cb-label">❌ Without State — UI doesn't update</div>
+        <pre style="background:#fff0f2; color:#333; border-radius:6px; padding:10px; font-size:12.5px; margin:8px 0 0;"><span style="color:#888;">// count changes but UI stays same</span>
+<span style="color:var(--blue);">let</span> count = 0;
+
+<span style="color:var(--blue);">function</span> <span style="color:var(--purple);">increment</span>() {
+  count++;   <span style="color:#888;">// React doesn't know!</span>
+}</pre>
+        <p style="font-size:13px; color:var(--red); margin-top:8px;">Even if count = 3, browser still shows <strong>0</strong> ❌</p>
+      </div>
+      <div class="compare-box cb-right">
+        <div class="cb-label">✅ With State — UI updates automatically</div>
+        <pre style="background:#e4f5ec; color:#333; border-radius:6px; padding:10px; font-size:12.5px; margin:8px 0 0;"><span style="color:var(--blue);">this</span>.setState({
+  count: <span style="color:var(--blue);">this</span>.state.count + 1
+});
+<span style="color:#888;">// React detects → re-renders → UI updates ✅</span></pre>
+        <p style="font-size:13px; color:var(--green); margin-top:8px;">React detects the change → re-renders component → UI updates ✅</p>
+      </div>
+    </div>
+
+    <h3>How State Solves the Problem</h3>
+    <div class="flow-col">
+      <div class="flow-step" style="background:var(--blue-bg); border-color:#b8d0ff; color:var(--blue);">State Changes</div>
+      <div class="flow-arrow-down">↓</div>
+      <div class="flow-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">React Detects Change</div>
+      <div class="flow-arrow-down">↓</div>
+      <div class="flow-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">Component Re-renders</div>
+      <div class="flow-arrow-down">↓</div>
+      <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">UI Updates Automatically ✅</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 2. IMPORTANT POINTS ABOUT STATE ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--purple);">2</div>
+    <h2>Important Points About State</h2>
+  </div>
+  <div class="section-body">
+    <div class="feature-grid">
+
+      <div class="feature-card fc-blue">
+        <div class="fc-title">📦 Plain JavaScript Object</div>
+        <p>State is just a regular JS object with key-value pairs.</p>
+        <pre><span class="this">this</span>.state = {
+  name: <span class="str">"Pravin"</span>,
+  age: <span class="num">21</span>
+};</pre>
+      </div>
+
+      <div class="feature-card fc-orange">
+        <div class="fc-title">🔄 Stores Dynamic Data</div>
+        <p>Counter values, login status, form data, user info, theme mode — anything that changes.</p>
+        <pre><span class="this">this</span>.state = {
+  isLoggedIn: <span class="kw">false</span>
+};</pre>
+      </div>
+
+      <div class="feature-card fc-green">
+        <div class="fc-title">🔒 Internal to Component</div>
+        <p>State belongs only to the component where it is created. Other components <strong>cannot access it directly</strong>.</p>
+      </div>
+
+      <div class="feature-card fc-purple">
+        <div class="fc-title">🏛️ Available in Class Components</div>
+        <p>Before Hooks, state was used inside Class Components. Functional components now use <code>useState()</code>.</p>
+        <pre><span class="kw">class</span> <span class="fn">Demo</span> <span class="kw">extends</span> Component {}</pre>
+      </div>
+
+      <div class="feature-card fc-red">
+        <div class="fc-title">🚫 Never Modify State Directly</div>
+        <pre><span class="cmt">// ❌ Wrong — React won't know</span>
+<span class="this">this</span>.state.count = <span class="num">10</span>;
+
+<span class="cmt">// ✅ Correct — triggers re-render</span>
+<span class="this">this</span>.<span class="fn">setState</span>({ count: <span class="num">10</span> });</pre>
+      </div>
+
+      <div class="feature-card fc-teal">
+        <div class="fc-title">⚡ Causes Re-render</div>
+        <p>Every time <code>setState()</code> is called, React automatically re-renders the component and updates the browser UI.</p>
+      </div>
+
+    </div>
+
+    <div class="warn" style="margin-top:16px;">
+      <span class="tip-icon">🚫</span>
+      <div>
+        <strong>Never do this:</strong> <code>this.state.count = 10;</code><br/>
+        React has no way to detect this change → UI will NOT update.<br/>
+        <strong>Always use:</strong> <code>this.setState({ count: 10 });</code> → React detects → re-renders → UI updates.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 3. CONSTRUCTOR AND STATE ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--orange);">3</div>
+    <h2>Constructor and State</h2>
+  </div>
+  <div class="section-body">
+
+    <p>In Class Components, state is initialized inside the <strong>constructor</strong>.</p>
+
+    <div class="def-box orange">
+      <div class="def-label">🔧 Why Constructor?</div>
+      <p>The constructor executes <strong>first</strong> when a component is created. It is used to initialize state, bind methods, and perform initial setup.</p>
+    </div>
+
+    <h3>Syntax</h3>
+    <pre><span class="fn">constructor</span>() {
+  <span class="kw">super</span>();    <span class="cmt">// must call super() first</span>
+
+  <span class="this">this</span>.state = {
+    count: <span class="num">0</span>
+  };
+}</pre>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <span><strong>Why <code>super()</code>?</strong> — <code>super()</code> calls the parent class constructor (<code>React.Component</code>). Without it, <code>this</code> cannot be used inside the constructor and React will throw an error.</span>
+    </div>
+
+    <h3>State Lifecycle</h3>
+    <div class="flow-col">
+      <div class="flow-step" style="background:var(--blue-bg); border-color:#b8d0ff; color:var(--blue);">1. Component Created</div>
+      <div class="flow-arrow-down">↓</div>
+      <div class="flow-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">2. Constructor Runs</div>
+      <div class="flow-arrow-down">↓</div>
+      <div class="flow-step" style="background:var(--teal-bg); border-color:#90d4d8; color:var(--teal);">3. State Initialized</div>
+      <div class="flow-arrow-down">↓</div>
+      <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">4. Component Rendered (render() called)</div>
+      <div class="flow-arrow-down">↓</div>
+      <div class="flow-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">5. User Action (button click etc.)</div>
+      <div class="flow-arrow-down">↓</div>
+      <div class="flow-step" style="background:var(--pink-bg); border-color:#f0a0d4; color:var(--pink);">6. setState() Called</div>
+      <div class="flow-arrow-down">↓</div>
+      <div class="flow-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">7. Component Re-rendered</div>
+      <div class="flow-arrow-down">↓</div>
+      <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">8. UI Updated ✅</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 4. EXAMPLES ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--green);">4</div>
+    <h2>Practical Examples</h2>
+  </div>
+  <div class="section-body">
+
+    <!-- Example 1 -->
+    <h3>Example 1 — Counter Application</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; Counter.jsx
+      </div>
+      <pre><span class="kw">import</span> React, { Component } <span class="kw">from</span> <span class="str">'react'</span>;
+
+<span class="kw">class</span> <span class="fn">Counter</span> <span class="kw">extends</span> Component {
+
+  <span class="fn">constructor</span>() {
+    <span class="kw">super</span>();
+    <span class="this">this</span>.state = {
+      count: <span class="num">0</span>
+    };
+  }
+
+  increment = () => {         <span class="cmt">// Arrow function — no binding needed</span>
+    <span class="this">this</span>.<span class="fn">setState</span>({
+      count: <span class="this">this</span>.state.count + <span class="num">1</span>
+    });
+  }
+
+  <span class="fn">render</span>() {
+    <span class="kw">return</span> (
+      <span class="tag-c">&lt;&gt;</span>
+        <span class="tag-c">&lt;h1&gt;</span>Count : {<span class="this">this</span>.state.count}<span class="tag-c">&lt;/h1&gt;</span>
+        <span class="tag-c">&lt;button</span> <span class="attr">onClick=</span>{<span class="this">this</span>.increment}<span class="tag-c">&gt;</span>
+          Increment
+        <span class="tag-c">&lt;/button&gt;</span>
+      <span class="tag-c">&lt;/&gt;</span>
+    );
+  }
+}
+
+<span class="kw">export default</span> Counter;</pre>
+    </div>
+
+    <div class="output-box">
+      <div class="out-label">▶ Output</div>
+      Initially → Count : 0<br/>
+      After 1 click → Count : 1<br/>
+      After 2 clicks → Count : 2<br/>
+      After 3 clicks → Count : 3
+    </div>
+
+    <div style="background:#f8f8f8; border:1.5px solid var(--border); border-radius:10px; padding:14px 18px; margin:12px 0;">
+      <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:10px;">🔍 How it works step by step</div>
+      <div class="flow-h">
+        <div class="fh-step">Button Clicked</div>
+        <div class="fh-arrow">→</div>
+        <div class="fh-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">increment() called</div>
+        <div class="fh-arrow">→</div>
+        <div class="fh-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">setState({ count: count+1 })</div>
+        <div class="fh-arrow">→</div>
+        <div class="fh-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">React re-renders</div>
+        <div class="fh-arrow">→</div>
+        <div class="fh-step" style="background:var(--teal-bg); border-color:#90d4d8; color:var(--teal);">New count shown ✅</div>
+      </div>
+    </div>
+
+    <!-- Example 2 -->
+    <h3>Example 2 — Login Status</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; Login.jsx
+      </div>
+      <pre><span class="kw">import</span> React, { Component } <span class="kw">from</span> <span class="str">'react'</span>;
+
+<span class="kw">class</span> <span class="fn">Login</span> <span class="kw">extends</span> Component {
+
+  <span class="fn">constructor</span>() {
+    <span class="kw">super</span>();
+    <span class="this">this</span>.state = {
+      isLoggedIn: <span class="kw">false</span>
+    };
+  }
+
+  login = () => {
+    <span class="this">this</span>.<span class="fn">setState</span>({
+      isLoggedIn: <span class="kw">true</span>
+    });
+  }
+
+  <span class="fn">render</span>() {
+    <span class="kw">return</span> (
+      <span class="tag-c">&lt;&gt;</span>
+        <span class="tag-c">&lt;h1&gt;</span>
+          {<span class="this">this</span>.state.isLoggedIn
+            ? <span class="str">"Welcome User"</span>        <span class="cmt">// true → show this</span>
+            : <span class="str">"Please Login"</span>}       <span class="cmt">// false → show this</span>
+        <span class="tag-c">&lt;/h1&gt;</span>
+        <span class="tag-c">&lt;button</span> <span class="attr">onClick=</span>{<span class="this">this</span>.login}<span class="tag-c">&gt;</span>Login<span class="tag-c">&lt;/button&gt;</span>
+      <span class="tag-c">&lt;/&gt;</span>
+    );
+  }
+}
+
+<span class="kw">export default</span> Login;</pre>
+    </div>
+
+    <div class="compare-row">
+      <div class="output-box" style="margin:0;">
+        <div class="out-label">▶ Before Login Click</div>
+        Please Login
+      </div>
+      <div class="output-box" style="margin:0;">
+        <div class="out-label">▶ After Login Click</div>
+        Welcome User
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <span>This uses a <strong>Ternary Operator</strong> inside JSX: <code>condition ? "value if true" : "value if false"</code>. The UI changes based on state — this is <strong>Conditional Rendering</strong>.</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 5. STATE vs PROPS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--pink);">5</div>
+    <h2>State vs Props</h2>
+  </div>
+  <div class="section-body">
+
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>State</th><th>Props</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Who manages it?</strong></td>
+          <td>Managed <strong>inside</strong> the component</td>
+          <td>Passed <strong>from parent</strong> component</td>
+        </tr>
+        <tr>
+          <td><strong>Can it change?</strong></td>
+          <td>✅ Mutable (can change)</td>
+          <td>❌ Immutable (read-only)</td>
+        </tr>
+        <tr>
+          <td><strong>How to update?</strong></td>
+          <td><code>setState()</code></td>
+          <td>Cannot be modified by child</td>
+        </tr>
+        <tr>
+          <td><strong>Type of data</strong></td>
+          <td>Internal / local data</td>
+          <td>External data from parent</td>
+        </tr>
+        <tr>
+          <td><strong>Re-render?</strong></td>
+          <td>Yes — on every setState()</td>
+          <td>Yes — when parent sends new props</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Phone Analogy -->
+    <h3>Real-Life Analogy — Mobile Phone 📱</h3>
+    <div class="phone-grid">
+      <div class="phone-card" style="background:var(--blue-bg); border:1.5px solid #b8d0ff;">
+        <div style="font-size:13px; font-weight:700; color:var(--blue); margin-bottom:10px; text-transform:uppercase; letter-spacing:.06em;">🔵 Props — Fixed Phone Details</div>
+        <p style="font-size:14px; color:var(--text); margin-bottom:8px;">Received from the company. <strong>Fixed, cannot change.</strong></p>
+        <div style="font-family:'Fira Code',monospace; font-size:13px; line-height:2; color:var(--blue);">
+          Brand = Samsung<br/>
+          Model = S24<br/>
+          Color = Black
+        </div>
+        <p style="font-size:13px; color:var(--muted); margin-top:8px;">These details don't change — just like Props.</p>
+      </div>
+      <div class="phone-card" style="background:var(--orange-bg); border:1.5px solid #ffc999;">
+        <div style="font-size:13px; font-weight:700; color:var(--orange); margin-bottom:10px; text-transform:uppercase; letter-spacing:.06em;">🟠 State — Changing Condition</div>
+        <p style="font-size:14px; color:var(--text); margin-bottom:8px;">Current status that <strong>keeps changing over time.</strong></p>
+        <div style="font-family:'Fira Code',monospace; font-size:13px; line-height:2; color:var(--orange);">
+          Battery = 80%<br/>
+          Battery = 50%<br/>
+          Battery = 20%
+        </div>
+        <p style="font-size:13px; color:var(--muted); margin-top:8px;">Battery keeps changing — just like State.</p>
+      </div>
+    </div>
+
+    <!-- Interview -->
+    <div class="interview-box">
+      <div class="ib-label">🎯 Interview Q&amp;A</div>
+      <div class="qa">
+        <div class="q">Q: What is State in React?</div>
+        <div class="a">A: State is a built-in React object used to store and manage dynamic data within a component. Whenever state changes using <code>setState()</code>, React automatically re-renders the component and updates the UI.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Why is State used?</div>
+        <div class="a">A: State is used to store dynamic information such as user input, counter values, login status, API data, and other data that changes during the lifetime of a component.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Why use setState() instead of directly updating state?</div>
+        <div class="a">A: <code>setState()</code> informs React that state has changed. React then re-renders the component. Directly modifying state (<code>this.state.x = y</code>) does NOT trigger re-rendering — so the UI may never update.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What is the difference between State and Props?</div>
+        <div class="a">A: State is internal, mutable data managed by the component itself. Props are external, read-only data passed from a parent component. Both trigger re-renders when changed.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Why is super() needed in the constructor?</div>
+        <div class="a">A: <code>super()</code> calls the parent class (React.Component) constructor. Without it, <code>this</code> is not available inside the constructor, causing a runtime error.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="text-align:center; padding:20px; color:#aaa; font-size:12.5px; margin-top:10px;">
+  React.js Chapter 3 · State in Class Components · Study Notes
+</div>
+
+</body>
+</html>

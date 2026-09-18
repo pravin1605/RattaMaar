@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>React.js – Chapter 6 Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --text: #111111;
+    --muted: #555555;
+    --border: #e0e0e0;
+    --blue:      #1a6bff; --blue-bg:   #e8f0ff;
+    --green:     #0a8a3c; --green-bg:  #e4f5ec;
+    --orange:    #d95f00; --orange-bg: #fff0e4;
+    --purple:    #6b2fbd; --purple-bg: #f0eaff;
+    --red:       #c4001a; --red-bg:    #fff0f2;
+    --teal:      #006d77; --teal-bg:   #e0f4f5;
+    --pink:      #b5006e; --pink-bg:   #ffe8f5;
+    --yellow:    #a06000; --yellow-bg: #fff8e1;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 20px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: linear-gradient(135deg, #d95f00 0%, #b5006e 50%, #6b2fbd 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 36px 40px;
+    margin-bottom: 36px;
+  }
+  .page-header .tag {
+    display: inline-block; background: rgba(255,255,255,0.25);
+    border-radius: 20px; font-size: 12px; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 4px 14px; margin-bottom: 14px;
+  }
+  .page-header h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+  .page-header p  { font-size: 14px; opacity: .88; }
+
+  /* ── SECTION ── */
+  .section { background: #fff; border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 28px; overflow: hidden; }
+  .section-header { display: flex; align-items: center; gap: 12px; padding: 16px 24px; border-bottom: 1.5px solid var(--border); }
+  .sec-num { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 13px; font-weight: 700; flex-shrink: 0; color: #fff; }
+  .section-header h2 { font-size: 18px; font-weight: 700; color: var(--text); }
+  .section-body { padding: 22px 24px; }
+
+  /* ── DEF BOX ── */
+  .def-box { border-left: 4px solid var(--blue); background: var(--blue-bg); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 14px 0; }
+  .def-box.green  { border-color: var(--green);  background: var(--green-bg);  }
+  .def-box.orange { border-color: var(--orange); background: var(--orange-bg); }
+  .def-box.red    { border-color: var(--red);    background: var(--red-bg);    }
+  .def-box.purple { border-color: var(--purple); background: var(--purple-bg); }
+  .def-box.teal   { border-color: var(--teal);   background: var(--teal-bg);   }
+  .def-box .def-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--blue); margin-bottom: 4px; }
+  .def-box.green  .def-label { color: var(--green);  }
+  .def-box.orange .def-label { color: var(--orange); }
+  .def-box.red    .def-label { color: var(--red);    }
+  .def-box.purple .def-label { color: var(--purple); }
+  .def-box.teal   .def-label { color: var(--teal);   }
+  .def-box p { font-size: 14.5px; }
+
+  /* ── CODE ── */
+  pre { background: #1a1a2e; color: #e0e0e0; border-radius: 8px; padding: 14px 18px; font-family: 'Fira Code', monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; margin: 10px 0; white-space: pre-wrap; word-break: break-word; }
+  .kw  { color: #c792ea; }
+  .fn  { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .tag-c { color: #f07178; }
+  .attr  { color: #ffcb6b; }
+  .cmt   { color: #546e7a; }
+  .num   { color: #f78c6c; }
+  .prop  { color: #89ddff; }
+  code { font-family: 'Fira Code', monospace; font-size: 13px; background: #f0f0f0; padding: 1px 6px; border-radius: 4px; color: var(--purple); }
+
+  /* ── COMPARE ── */
+  .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .compare-box { border-radius: 8px; padding: 14px 16px; font-size: 13.5px; }
+  .compare-box .cb-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing:.08em; margin-bottom: 6px; }
+  .cb-wrong { background: var(--red-bg);   border-left: 4px solid var(--red);   }
+  .cb-right { background: var(--green-bg); border-left: 4px solid var(--green); }
+  .cb-wrong .cb-label { color: var(--red);   }
+  .cb-right .cb-label { color: var(--green); }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
+  .feature-card { border-radius: 10px; padding: 16px 18px; border: 1.5px solid transparent; }
+  .feature-card .fc-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .feature-card p { font-size: 13.5px; color: var(--muted); }
+  .feature-card pre { font-size: 12px; margin: 6px 0 0; }
+  .fc-blue   { background: var(--blue-bg);   border-color: #b8d0ff; } .fc-blue   .fc-title { color: var(--blue);   }
+  .fc-green  { background: var(--green-bg);  border-color: #9ddbb9; } .fc-green  .fc-title { color: var(--green);  }
+  .fc-orange { background: var(--orange-bg); border-color: #ffc999; } .fc-orange .fc-title { color: var(--orange); }
+  .fc-purple { background: var(--purple-bg); border-color: #c9abf0; } .fc-purple .fc-title { color: var(--purple); }
+  .fc-teal   { background: var(--teal-bg);   border-color: #90d4d8; } .fc-teal   .fc-title { color: var(--teal);   }
+  .fc-pink   { background: var(--pink-bg);   border-color: #f0a0d4; } .fc-pink   .fc-title { color: var(--pink);   }
+  .fc-red    { background: var(--red-bg);    border-color: #f0b0bb; } .fc-red    .fc-title { color: var(--red);    }
+  .fc-yellow { background: var(--yellow-bg); border-color: #ffd080; } .fc-yellow .fc-title { color: var(--yellow); }
+
+  /* ── FLOW ── */
+  .flow-col { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin: 14px 0; }
+  .flow-step { border-radius: 8px; padding: 10px 18px; font-size: 13.5px; font-weight: 600; border: 1.5px solid transparent; }
+  .flow-arrow-d { color: #888; font-size: 18px; font-weight: 700; padding-left: 20px; }
+
+  /* ── TIP / WARN ── */
+  .tip { display: flex; gap: 10px; align-items: flex-start; background: var(--teal-bg); border-left: 4px solid var(--teal); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 12px 0; font-size: 14px; color: var(--teal); }
+  .tip .ti { font-size: 18px; flex-shrink: 0; }
+  .warn { display: flex; gap: 10px; align-items: flex-start; background: var(--red-bg); border-left: 4px solid var(--red); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 12px 0; font-size: 14px; color: var(--red); }
+  .warn .ti { font-size: 18px; flex-shrink: 0; }
+
+  /* ── EXAMPLE WRAP ── */
+  .example-wrap { border: 1.5px solid var(--border); border-radius: 0 8px 8px 8px; overflow: hidden; margin: 12px 0; }
+  .example-wrap pre { border-radius: 0; margin: 0; }
+  .example-header { display: flex; align-items: center; gap: 6px; background: #f5f5f5; border-radius: 8px 8px 0 0; padding: 10px 16px; font-size: 13px; font-weight: 600; color: var(--muted); border: 1.5px solid var(--border); border-bottom: none; }
+  .dot-file { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ── OUTPUT BOX ── */
+  .output-box { background: var(--green-bg); border: 1.5px solid #9ddbb9; border-radius: 8px; padding: 12px 16px; margin: 10px 0; font-family: 'Fira Code', monospace; font-size: 13px; color: var(--green); }
+  .output-box .out-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing:.08em; color: var(--green); margin-bottom: 6px; }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th { background: var(--purple-bg); color: var(--purple); font-weight: 700; text-align: left; padding: 10px 14px; border: 1px solid #d6c4f4; }
+  td { padding: 9px 14px; border: 1px solid var(--border); }
+  tr:nth-child(even) td { background: #fafafa; }
+
+  /* ── INTERVIEW ── */
+  .interview-box { background: var(--orange-bg); border: 1.5px solid #ffc999; border-radius: 10px; padding: 16px 18px; margin: 14px 0; }
+  .interview-box .ib-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--orange); margin-bottom: 8px; }
+  .interview-box .qa { margin-bottom: 10px; }
+  .interview-box .qa:last-child { margin-bottom: 0; }
+  .interview-box .q { font-weight: 600; font-size: 13.5px; color: var(--text); }
+  .interview-box .a { font-size: 13.5px; color: var(--muted); margin-left: 14px; margin-top: 2px; }
+
+  /* ── PROPS DRILLING CHAIN ── */
+  .drill-chain { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 16px auto; width: fit-content; }
+  .drill-node { border-radius: 10px; padding: 10px 30px; font-size: 14px; font-weight: 700; border: 2px solid transparent; text-align: center; min-width: 180px; }
+  .drill-arrow { font-size: 22px; color: #aaa; line-height: 1.2; }
+  .drill-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+
+  /* ── PROPS TYPE GRID ── */
+  .type-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 14px 0; }
+  .type-card { border-radius: 10px; padding: 14px 16px; border: 1.5px solid transparent; }
+  .type-card .tc-type { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+
+  /* ── QUICK REVISION ── */
+  .revision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0; }
+  .rev-card { border-radius: 12px; padding: 18px 20px; border: 1.5px solid transparent; }
+  .rev-card .rc-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+  .rev-item { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; margin-bottom: 6px; }
+  .rev-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── SOLUTION COMPARE ── */
+  .solution-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .sol-box { border-radius: 10px; padding: 16px 18px; border: 1.5px solid transparent; }
+  .sol-box .sol-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+
+  h3 { font-size: 16px; font-weight: 700; margin: 18px 0 8px; color: var(--text); }
+  h4 { font-size: 14px; font-weight: 700; margin: 12px 0 6px; color: var(--muted); }
+  p  { margin-bottom: 8px; font-size: 14.5px; }
+  ul, ol { padding-left: 20px; margin-bottom: 10px; }
+  li { font-size: 14.5px; margin-bottom: 4px; }
+
+  @media print { body { padding: 10px; } .section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="page-header">
+  <div class="tag">React.js · Chapter 6</div>
+  <h1>Props &amp; Props Drilling</h1>
+  <p>What are Props · Key Points · Types of Props · Passing Props · Props Drilling · Context API Solution</p>
+</div>
+
+
+<!-- ═══ 1. WHAT ARE PROPS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--orange);">1</div>
+    <h2>What are Props?</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box orange">
+      <div class="def-label">📘 Definition</div>
+      <p><strong>Props (Properties)</strong> are used to <strong>share data from one component to another</strong>. Props allow a <strong>Parent Component</strong> to pass data to a <strong>Child Component</strong>. They are <strong>read-only inputs</strong> that help make components reusable.</p>
+    </div>
+
+    <h3>The Problem Without Props</h3>
+    <div class="compare-row">
+      <div class="compare-box cb-wrong">
+        <div class="cb-label">❌ Without Props — Hardcoded, Duplicate Code</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:10px; font-size:12.5px; margin:6px 0 0;"><span class="cmt">// Data is hardcoded inside</span>
+<span class="kw">function</span> <span class="fn">Student</span>() {
+  <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Pravin<span class="tag-c">&lt;/h1&gt;</span>;
+}
+<span class="cmt">// Need separate components for each student!</span>
+<span class="cmt">// Student1 → Pravin</span>
+<span class="cmt">// Student2 → Rahul   (duplicate code)</span>
+<span class="cmt">// Student3 → Amit    (duplicate code)</span></pre>
+      </div>
+      <div class="compare-box cb-right">
+        <div class="cb-label">✅ With Props — One Component, Multiple Uses</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:10px; font-size:12.5px; margin:6px 0 0;"><span class="cmt">// One component, different data</span>
+<span class="tag-c">&lt;Student</span> <span class="attr">name=</span><span class="str">"Pravin"</span> <span class="tag-c">/&gt;</span>
+<span class="tag-c">&lt;Student</span> <span class="attr">name=</span><span class="str">"Rahul"</span>  <span class="tag-c">/&gt;</span>
+<span class="tag-c">&lt;Student</span> <span class="attr">name=</span><span class="str">"Amit"</span>   <span class="tag-c">/&gt;</span>
+<span class="cmt">// No duplication! Reusable ✅</span></pre>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="ti">💡</span>
+      <span><strong>Props = Properties.</strong> Think of props like <strong>function arguments</strong> — you pass different values each time and get different output from the same component.</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 2. KEY POINTS ABOUT PROPS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--blue);">2</div>
+    <h2>Key Points About Props</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="feature-grid">
+
+      <div class="feature-card fc-blue">
+        <div class="fc-title">🏷️ Props = Attributes</div>
+        <p>Props are special attributes used to pass data between components.</p>
+        <pre><span class="tag-c">&lt;Student</span>
+  <span class="attr">name=</span><span class="str">"Pravin"</span>
+  <span class="attr">age=</span>{<span class="num">21</span>}
+<span class="tag-c">/&gt;</span></pre>
+      </div>
+
+      <div class="feature-card fc-green">
+        <div class="fc-title">➡️ One-Way Data Flow</div>
+        <p>Data always flows <strong>Parent → Child</strong> only. Never child to parent via props.</p>
+        <div class="flow-col" style="margin:6px 0 0; gap:2px;">
+          <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green); padding:6px 12px; font-size:12px;">Parent Component</div>
+          <div class="flow-arrow-d" style="padding-left:14px; font-size:16px;">↓</div>
+          <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green); padding:6px 12px; font-size:12px;">Child Component</div>
+        </div>
+      </div>
+
+      <div class="feature-card fc-red">
+        <div class="fc-title">🔒 Read-Only (Immutable)</div>
+        <p>Props cannot be modified inside the Child Component.</p>
+        <pre><span class="cmt">// ❌ Wrong — throws error</span>
+<span class="prop">props</span>.name = <span class="str">"Rahul"</span>;
+
+<span class="cmt">// ✅ Correct — only read</span>
+<span class="tag-c">&lt;h1&gt;</span>{<span class="prop">props</span>.name}<span class="tag-c">&lt;/h1&gt;</span></pre>
+      </div>
+
+      <div class="feature-card fc-purple">
+        <div class="fc-title">📦 Internally an Object</div>
+        <p>React stores all props inside a single object internally.</p>
+        <pre><span class="cmt">// You write:</span>
+<span class="tag-c">&lt;Student</span> <span class="attr">name=</span><span class="str">"Pravin"</span> <span class="attr">age=</span>{<span class="num">21</span>}<span class="tag-c">/&gt;</span>
+
+<span class="cmt">// React stores as:</span>
+<span class="prop">props</span> = { name: <span class="str">"Pravin"</span>, age: <span class="num">21</span> }</pre>
+      </div>
+
+      <div class="feature-card fc-teal">
+        <div class="fc-title">♻️ Makes Components Reusable</div>
+        <p>Same component, different data, different output — without writing duplicate code.</p>
+        <pre><span class="tag-c">&lt;Student</span> <span class="attr">name=</span><span class="str">"Pravin"</span><span class="tag-c">/&gt;</span>
+<span class="tag-c">&lt;Student</span> <span class="attr">name=</span><span class="str">"Rahul"</span><span class="tag-c">/&gt;</span>
+<span class="tag-c">&lt;Student</span> <span class="attr">name=</span><span class="str">"Amit"</span><span class="tag-c">/&gt;</span></pre>
+      </div>
+
+      <div class="feature-card fc-orange">
+        <div class="fc-title">🧩 Access via props Object</div>
+        <p>The child receives all passed attributes inside a <code>props</code> parameter.</p>
+        <pre><span class="kw">function</span> <span class="fn">Child</span>(<span class="prop">props</span>) {
+  <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>{<span class="prop">props</span>.name}<span class="tag-c">&lt;/h1&gt;</span>;
+}</pre>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 3. HOW PROPS ARE PASSED ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--green);">3</div>
+    <h2>How Props are Passed — Parent to Child</h2>
+  </div>
+  <div class="section-body">
+
+    <p>Props are passed <strong>inside the opening tag</strong> of the component, like HTML attributes.</p>
+
+    <div class="compare-row">
+      <div>
+        <h4 style="color:var(--orange);">👨 Parent Component (App.jsx)</h4>
+        <pre><span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;Student</span>
+      <span class="attr">name=</span><span class="str">"Pravin"</span>
+      <span class="attr">age=</span>{<span class="num">21</span>}
+    <span class="tag-c">/&gt;</span>
+  );
+}</pre>
+      </div>
+      <div>
+        <h4 style="color:var(--blue);">👶 Child Component (Student.jsx)</h4>
+        <pre><span class="kw">function</span> <span class="fn">Student</span>(<span class="prop">props</span>) {
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;&gt;</span>
+      <span class="tag-c">&lt;h1&gt;</span>{<span class="prop">props</span>.name}<span class="tag-c">&lt;/h1&gt;</span>
+      <span class="tag-c">&lt;h2&gt;</span>{<span class="prop">props</span>.age}<span class="tag-c">&lt;/h2&gt;</span>
+    <span class="tag-c">&lt;/&gt;</span>
+  );
+}</pre>
+      </div>
+    </div>
+    <div class="output-box">
+      <div class="out-label">▶ Output</div>
+      Pravin<br/>21
+    </div>
+
+    <h3>Props Flow Diagram</h3>
+    <div class="drill-chain">
+      <div class="drill-node" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">
+        App Component
+        <div class="drill-label">passes name="Pravin", age=21</div>
+      </div>
+      <div class="drill-arrow">↓</div>
+      <div class="drill-node" style="background:var(--blue-bg); border-color:#b8d0ff; color:var(--blue);">
+        Student Component
+        <div class="drill-label">receives via props object</div>
+      </div>
+      <div class="drill-arrow">↓</div>
+      <div class="drill-node" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">
+        Display Data
+        <div class="drill-label">props.name → props.age</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 4. TYPES OF PROPS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--purple);">4</div>
+    <h2>Types of Props (Data Types)</h2>
+  </div>
+  <div class="section-body">
+
+    <p>Props can hold <strong>any JavaScript data type</strong> as a value.</p>
+
+    <div class="type-grid">
+      <div class="type-card" style="background:var(--blue-bg); border-color:#b8d0ff;">
+        <div class="tc-type" style="color:var(--blue);">🔤 String</div>
+        <pre style="margin:0; font-size:12px;"><span class="tag-c">&lt;Student</span>
+  <span class="attr">name=</span><span class="str">"Pravin"</span>
+<span class="tag-c">/&gt;</span></pre>
+      </div>
+      <div class="type-card" style="background:var(--green-bg); border-color:#9ddbb9;">
+        <div class="tc-type" style="color:var(--green);">🔢 Number</div>
+        <pre style="margin:0; font-size:12px;"><span class="tag-c">&lt;Student</span>
+  <span class="attr">age=</span>{<span class="num">21</span>}
+<span class="tag-c">/&gt;</span></pre>
+      </div>
+      <div class="type-card" style="background:var(--purple-bg); border-color:#c9abf0;">
+        <div class="tc-type" style="color:var(--purple);">✅ Boolean</div>
+        <pre style="margin:0; font-size:12px;"><span class="tag-c">&lt;Student</span>
+  <span class="attr">isLogin=</span>{<span class="kw">true</span>}
+<span class="tag-c">/&gt;</span></pre>
+      </div>
+      <div class="type-card" style="background:var(--orange-bg); border-color:#ffc999;">
+        <div class="tc-type" style="color:var(--orange);">📋 Array</div>
+        <pre style="margin:0; font-size:12px;"><span class="tag-c">&lt;Student</span>
+  <span class="attr">hobbies=</span>{[<span class="str">"Cricket"</span>, <span class="str">"Coding"</span>]}
+<span class="tag-c">/&gt;</span></pre>
+      </div>
+      <div class="type-card" style="background:var(--teal-bg); border-color:#90d4d8;">
+        <div class="tc-type" style="color:var(--teal);">📦 Object</div>
+        <pre style="margin:0; font-size:12px;"><span class="tag-c">&lt;Student</span>
+  <span class="attr">address=</span>{{
+    city: <span class="str">"Mumbai"</span>,
+    state: <span class="str">"MH"</span>
+  }}
+<span class="tag-c">/&gt;</span></pre>
+      </div>
+      <div class="type-card" style="background:var(--pink-bg); border-color:#f0a0d4;">
+        <div class="tc-type" style="color:var(--pink);">⚙️ Function</div>
+        <pre style="margin:0; font-size:12px;"><span class="tag-c">&lt;Student</span>
+  <span class="attr">showData=</span>{display}
+<span class="tag-c">/&gt;</span>
+<span class="cmt">// pass callback fn</span></pre>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="ti">💡</span>
+      <span><strong>Syntax Rule:</strong> Strings use <code>name="value"</code> (no curly braces). All other types (numbers, booleans, arrays, objects, functions) must use <code>age={value}</code> (curly braces).</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 5. PRACTICAL EXAMPLE ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--teal);">5</div>
+    <h2>Practical Example — Multiple Students</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="compare-row">
+      <div>
+        <h4 style="color:var(--orange);">👨 App.jsx — Parent</h4>
+        <div class="example-wrap">
+          <div class="example-header">
+            <div class="dot-file" style="background:#ff5f57;"></div>
+            <div class="dot-file" style="background:#febc2e;"></div>
+            <div class="dot-file" style="background:#28c840;"></div>
+            &nbsp; App.jsx
+          </div>
+          <pre style="border-radius:0; margin:0;"><span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;&gt;</span>
+      <span class="tag-c">&lt;Student</span>
+        <span class="attr">name=</span><span class="str">"Pravin"</span>
+        <span class="attr">age=</span>{<span class="num">21</span>}
+        <span class="attr">city=</span><span class="str">"Mumbai"</span>
+      <span class="tag-c">/&gt;</span>
+      <span class="tag-c">&lt;Student</span>
+        <span class="attr">name=</span><span class="str">"Rahul"</span>
+        <span class="attr">age=</span>{<span class="num">22</span>}
+        <span class="attr">city=</span><span class="str">"Pune"</span>
+      <span class="tag-c">/&gt;</span>
+    <span class="tag-c">&lt;/&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+      <div>
+        <h4 style="color:var(--blue);">👶 Student.jsx — Child</h4>
+        <div class="example-wrap">
+          <div class="example-header">
+            <div class="dot-file" style="background:#ff5f57;"></div>
+            <div class="dot-file" style="background:#febc2e;"></div>
+            <div class="dot-file" style="background:#28c840;"></div>
+            &nbsp; Student.jsx
+          </div>
+          <pre style="border-radius:0; margin:0;"><span class="kw">function</span> <span class="fn">Student</span>(<span class="prop">props</span>) {
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;&gt;</span>
+      <span class="tag-c">&lt;h2&gt;</span>Name : {<span class="prop">props</span>.name}<span class="tag-c">&lt;/h2&gt;</span>
+      <span class="tag-c">&lt;h2&gt;</span>Age  : {<span class="prop">props</span>.age}<span class="tag-c">&lt;/h2&gt;</span>
+      <span class="tag-c">&lt;h2&gt;</span>City : {<span class="prop">props</span>.city}<span class="tag-c">&lt;/h2&gt;</span>
+      <span class="tag-c">&lt;hr/&gt;</span>
+    <span class="tag-c">&lt;/&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="output-box">
+      <div class="out-label">▶ Output</div>
+      Name : Pravin &nbsp;|&nbsp; Age : 21 &nbsp;|&nbsp; City : Mumbai<br/>
+      ────────────────────────────<br/>
+      Name : Rahul &nbsp;|&nbsp; Age : 22 &nbsp;|&nbsp; City : Pune
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 6. PROPS DRILLING ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--red);">6</div>
+    <h2>Props Drilling</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box red">
+      <div class="def-label">📘 Definition</div>
+      <p><strong>Props Drilling</strong> is the process of passing data through <strong>multiple nested components</strong> even when <strong>intermediate components do not need</strong> that data.</p>
+    </div>
+
+    <h3>Why is Props Drilling a Problem?</h3>
+    <p>Suppose <strong>Component D</strong> needs data from <strong>App</strong>. Data must travel through every component in between — even though A, B, and C don't need it.</p>
+
+    <div class="compare-row" style="align-items: start;">
+
+      <!-- The Problem Chain -->
+      <div>
+        <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--red); margin-bottom:10px;">❌ Props Drilling Problem</div>
+        <div class="drill-chain">
+          <div class="drill-node" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">App
+            <div class="drill-label">has data</div>
+          </div>
+          <div class="drill-arrow">↓ name</div>
+          <div class="drill-node" style="background:#f8f8f8; border-color:var(--border); color:var(--muted);">A
+            <div class="drill-label" style="color:var(--red);">doesn't need it</div>
+          </div>
+          <div class="drill-arrow">↓ name</div>
+          <div class="drill-node" style="background:#f8f8f8; border-color:var(--border); color:var(--muted);">B
+            <div class="drill-label" style="color:var(--red);">doesn't need it</div>
+          </div>
+          <div class="drill-arrow">↓ name</div>
+          <div class="drill-node" style="background:#f8f8f8; border-color:var(--border); color:var(--muted);">C
+            <div class="drill-label" style="color:var(--red);">doesn't need it</div>
+          </div>
+          <div class="drill-arrow">↓ name</div>
+          <div class="drill-node" style="background:var(--red-bg); border-color:#f0b0bb; color:var(--red);">D
+            <div class="drill-label">actually needs data</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code example -->
+      <div>
+        <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--red); margin-bottom:10px;">❌ Code — Passing Through All</div>
+        <pre style="font-size:12px;"><span class="cmt">// App.jsx</span>
+<span class="tag-c">&lt;A</span> <span class="attr">name=</span><span class="str">"Pravin"</span><span class="tag-c">/&gt;</span>
+
+<span class="cmt">// A.jsx — just passes it on</span>
+<span class="tag-c">&lt;B</span> <span class="attr">name=</span>{<span class="prop">props</span>.name}<span class="tag-c">/&gt;</span>
+
+<span class="cmt">// B.jsx — just passes it on</span>
+<span class="tag-c">&lt;C</span> <span class="attr">name=</span>{<span class="prop">props</span>.name}<span class="tag-c">/&gt;</span>
+
+<span class="cmt">// C.jsx — just passes it on</span>
+<span class="tag-c">&lt;D</span> <span class="attr">name=</span>{<span class="prop">props</span>.name}<span class="tag-c">/&gt;</span>
+
+<span class="cmt">// D.jsx — finally uses it</span>
+<span class="tag-c">&lt;h1&gt;</span>{<span class="prop">props</span>.name}<span class="tag-c">&lt;/h1&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="warn">
+      <span class="ti">⚠️</span>
+      <div>
+        <strong>Props Drilling makes code:</strong>
+        <ul style="margin-top:6px; font-size:13.5px;">
+          <li>❌ <strong>Complex</strong> — too many prop passes for simple data</li>
+          <li>❌ <strong>Hard to Maintain</strong> — renaming a prop requires changes everywhere</li>
+          <li>❌ <strong>Difficult to Debug</strong> — hard to track where data comes from</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Solution — Context API</h3>
+    <div class="solution-grid">
+      <div class="sol-box" style="background:var(--red-bg); border-color:#f0b0bb;">
+        <div class="sol-label" style="color:var(--red);">❌ Props Drilling — Data Passes Through All</div>
+        <div class="drill-chain" style="margin:8px auto;">
+          <div class="drill-node" style="background:#fff; border-color:#f0b0bb; color:var(--red); padding:6px 20px; font-size:13px; min-width:120px;">App</div>
+          <div class="drill-arrow" style="font-size:16px;">↓</div>
+          <div class="drill-node" style="background:#fff; border-color:var(--border); color:var(--muted); padding:6px 20px; font-size:13px; min-width:120px;">A</div>
+          <div class="drill-arrow" style="font-size:16px;">↓</div>
+          <div class="drill-node" style="background:#fff; border-color:var(--border); color:var(--muted); padding:6px 20px; font-size:13px; min-width:120px;">B → C → D</div>
+        </div>
+      </div>
+      <div class="sol-box" style="background:var(--green-bg); border-color:#9ddbb9;">
+        <div class="sol-label" style="color:var(--green);">✅ Context API — Direct Access</div>
+        <div class="drill-chain" style="margin:8px auto;">
+          <div class="drill-node" style="background:#fff; border-color:#9ddbb9; color:var(--green); padding:6px 20px; font-size:13px; min-width:120px;">Context Provider</div>
+          <div class="drill-arrow" style="font-size:16px;">↓</div>
+          <div class="drill-node" style="background:#fff; border-color:#9ddbb9; color:var(--green); padding:6px 20px; font-size:13px; min-width:120px;">Any Component</div>
+        </div>
+        <p style="font-size:13px; color:var(--green); text-align:center; margin-top:8px;">D gets data directly — no middle-men!</p>
+      </div>
+    </div>
+
+    <div class="def-box teal">
+      <div class="def-label">🔧 Solutions for Props Drilling</div>
+      <p>
+        <strong>1. Context API</strong> — Built into React. Best for most cases.<br/>
+        <strong>2. Redux</strong> — Popular state management library for large apps.<br/>
+        <strong>3. Zustand</strong> — Lightweight and simple state management.<br/>
+        <strong>4. Recoil / Jotai</strong> — Modern atom-based state managers.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 7. PROPS vs STATE ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--pink);">7</div>
+    <h2>Props vs State</h2>
+  </div>
+  <div class="section-body">
+
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>Props</th><th>State</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Source</strong></td><td>Received from Parent component</td><td>Managed inside the component</td></tr>
+        <tr><td><strong>Mutable?</strong></td><td>❌ Read-only / Immutable</td><td>✅ Mutable (can change)</td></tr>
+        <tr><td><strong>Who controls?</strong></td><td>Parent controls it</td><td>Component itself controls it</td></tr>
+        <tr><td><strong>Purpose</strong></td><td>Component-to-component communication</td><td>Storing dynamic/changing data</td></tr>
+        <tr><td><strong>How to update?</strong></td><td>Cannot be modified by child</td><td><code>setState()</code> / <code>setX()</code> (useState)</td></tr>
+        <tr><td><strong>Re-render?</strong></td><td>Yes — when parent passes new props</td><td>Yes — on every state change</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Quick Revision -->
+    <h3>Quick Revision</h3>
+    <div class="revision-grid">
+      <div class="rev-card" style="background:var(--orange-bg); border-color:#ffc999;">
+        <div class="rc-label" style="color:var(--orange);">📦 PROPS</div>
+        <div class="rev-item"><div class="rev-dot" style="background:var(--orange);"></div>Properties</div>
+        <div class="rev-item"><div class="rev-dot" style="background:var(--orange);"></div>Parent → Child</div>
+        <div class="rev-item"><div class="rev-dot" style="background:var(--orange);"></div>Read Only</div>
+        <div class="rev-item"><div class="rev-dot" style="background:var(--orange);"></div>Immutable</div>
+        <div class="rev-item"><div class="rev-dot" style="background:var(--orange);"></div>Internally an Object</div>
+        <div class="rev-item"><div class="rev-dot" style="background:var(--orange);"></div>Makes Components Reusable</div>
+      </div>
+      <div class="rev-card" style="background:var(--red-bg); border-color:#f0b0bb;">
+        <div class="rc-label" style="color:var(--red);">🔻 PROPS DRILLING</div>
+        <div class="rev-item"><div class="rev-dot" style="background:var(--red);"></div>Passing data through nested components</div>
+        <div class="rev-item"><div class="rev-dot" style="background:var(--red);"></div>Middle components don't need data</div>
+        <div class="rev-item"><div class="rev-dot" style="background:var(--red);"></div>Makes code complex</div>
+        <div class="rev-item" style="margin-top:8px;"><div class="rev-dot" style="background:var(--green);"></div><strong style="color:var(--green);">Solution: Context API</strong></div>
+        <div class="rev-item"><div class="rev-dot" style="background:var(--green);"></div><strong style="color:var(--green);">Solution: Redux</strong></div>
+        <div class="rev-item"><div class="rev-dot" style="background:var(--green);"></div><strong style="color:var(--green);">Solution: Zustand</strong></div>
+      </div>
+    </div>
+
+    <!-- Interview -->
+    <div class="interview-box">
+      <div class="ib-label">🎯 Interview Q&amp;A</div>
+      <div class="qa">
+        <div class="q">Q: What are Props in React?</div>
+        <div class="a">A: Props (Properties) are used to pass data from a parent component to a child component. Props are read-only and help make components reusable by allowing different data to be passed each time the component is used.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Why are Props immutable?</div>
+        <div class="a">A: Props are controlled by the parent component. Child components should only display or use the data — not modify it. This ensures predictable, one-directional data flow.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What is Props Drilling?</div>
+        <div class="a">A: Props Drilling is the process of passing data through multiple nested components even when intermediate components do not require that data — only the deeply nested component needs it.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: How can we avoid Props Drilling?</div>
+        <div class="a">A: Props Drilling can be avoided using <strong>Context API</strong> (built-in), <strong>Redux</strong>, <strong>Zustand</strong>, or other state management libraries that allow global data access without passing through each component.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What is the difference between Props and State?</div>
+        <div class="a">A: Props are external, read-only data passed from a parent. State is internal, mutable data managed by the component itself. Both trigger re-renders when changed.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="text-align:center; padding:20px; color:#aaa; font-size:12.5px; margin-top:10px;">
+  React.js Chapter 6 · Props &amp; Props Drilling · Study Notes
+</div>
+
+</body>
+</html>

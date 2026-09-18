@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Built-in Functional Interfaces</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; color:#e0e0e0; font-family:'Segoe UI',Arial,sans-serif; font-size:13.5px; line-height:1.65; }
+
+.header { background:#111; padding:28px 32px 8px; }
+.header h1 { font-size:28px; font-weight:800; color:#fff; margin-bottom:4px; }
+.header p  { font-size:13px; color:#aaa; }
+
+.sec-label {
+  font-size:11px; font-weight:700; letter-spacing:1.5px;
+  text-transform:uppercase; color:#888;
+  border-bottom:1px solid #333;
+  padding:18px 32px 6px;
+}
+
+.wrap { padding:10px 32px; }
+
+/* GRIDS */
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0; }
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:8px 0; }
+
+/* DEF CARDS */
+.def-card {
+  background:#1a1a2e; border-radius:10px;
+  border-left:4px solid #7c3aed;
+  padding:16px 18px; margin:8px 0;
+}
+.def-card.teal   { border-left-color:#14b8a6; }
+.def-card.orange { border-left-color:#f97316; }
+.def-card.green  { border-left-color:#22c55e; }
+.def-card.yellow { border-left-color:#eab308; }
+.def-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:6px; }
+.def-card p  { font-size:13px; color:#ccc; margin-bottom:4px; }
+
+/* DARK CARD */
+.dark-card {
+  background:#1e1e1e; border-radius:10px;
+  padding:18px 20px; margin:8px 0;
+}
+.dark-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:8px; }
+.dark-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; }
+.dark-card p  { font-size:13px; color:#ccc; margin-bottom:5px; }
+
+/* CODE */
+pre {
+  background:#2a2a2a; color:#d4d4d4;
+  border-radius:6px; padding:12px 14px;
+  font-family:'Courier New',Consolas,monospace;
+  font-size:11.5px; line-height:1.6;
+  margin:8px 0; white-space:pre-wrap;
+}
+.kw  { color:#569cd6; }
+.str { color:#ce9178; }
+.cm  { color:#6a9955; }
+.cls { color:#4ec9b0; }
+.num { color:#b5cea8; }
+
+/* OUTPUT */
+.output-box {
+  background:#2a2a2a; border-radius:6px; padding:12px 14px;
+  font-family:'Courier New',Consolas,monospace;
+  font-size:11.5px; color:#d4d4d4; margin:8px 0;
+}
+
+/* EXPLANATION */
+.expl-card {
+  background:#1a1a2e; border-left:4px solid #7c3aed;
+  border-radius:8px; padding:14px 16px; margin:8px 0;
+}
+.expl-card.teal   { border-left-color:#14b8a6; }
+.expl-card.orange { border-left-color:#f97316; }
+.expl-card.green  { border-left-color:#22c55e; }
+.expl-card.yellow { border-left-color:#eab308; }
+.expl-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:6px; }
+.expl-card p  { font-size:13px; color:#ccc; }
+
+ic { background:#333; padding:2px 6px; border-radius:4px;
+     font-family:'Courier New',monospace; font-size:11px; color:#d4d4d4; }
+
+/* STEP */
+.step-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:7px; font-size:13px; color:#ccc; }
+.step-circle {
+  width:22px; height:22px; border-radius:50%;
+  background:#333; border:1.5px solid #666;
+  color:#ccc; font-size:10.5px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
+}
+
+/* NOTE CARDS (3-col) */
+.note-card {
+  background:#1e1e1e; border-radius:8px; padding:14px 16px;
+  border-top:3px solid #444;
+}
+.note-card.purple { border-top-color:#7c3aed; }
+.note-card.teal   { border-top-color:#14b8a6; }
+.note-card.orange { border-top-color:#f97316; }
+.note-card.green  { border-top-color:#22c55e; }
+.note-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:6px; }
+.note-card p  { font-size:12.5px; color:#aaa; }
+
+/* TABLE */
+.cmp-table { width:100%; border-collapse:collapse; margin:8px 0; font-size:13px; }
+.cmp-table th { background:#2a2a2a; color:#aaa; font-size:11.5px; font-weight:700; padding:9px 14px; text-align:left; }
+.cmp-table td { padding:9px 14px; border-bottom:1px solid #2a2a2a; color:#ccc; }
+.cmp-table td:first-child { font-family:'Courier New',monospace; font-size:11.5px; }
+.cmp-table tr:last-child td { border-bottom:none; }
+
+/* GENERIC UNDERSTANDING */
+.gen-card {
+  background:#1e1e1e; border-radius:8px; padding:14px 16px; margin:8px 0;
+  border-left:3px solid #f97316;
+}
+.gen-card p { font-size:13px; color:#ccc; margin-bottom:5px; }
+
+/* BADGE PILLS */
+.badge-row { display:flex; flex-wrap:wrap; gap:7px; margin:8px 0; }
+.badge {
+  border:1.5px solid #b8860b; border-radius:20px;
+  padding:3px 14px; font-size:12px; font-weight:600;
+  color:#f5d76e; background:transparent;
+}
+
+/* KEY RULE */
+.key-card {
+  background:#1a1a2e; border-left:4px solid #7c3aed;
+  border-radius:10px; padding:16px 18px; margin:14px 0;
+}
+.key-card h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:5px; }
+.key-card p  { font-size:13px; color:#ccc; }
+
+/* INFO NOTE */
+.info-note {
+  background:#2a2a2a; border-radius:6px; padding:10px 14px;
+  font-size:12.5px; color:#aaa; margin-top:6px;
+}
+
+/* EXPL NUMBERED */
+.exp-item { display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; font-size:13px; color:#ccc; }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <h1>Built-in Functional Interfaces</h1>
+  <p>Complete notes — Predicate, Function, Consumer, Supplier, BiFunction</p>
+</div>
+
+<!-- ═══ INTRODUCTION ═══ -->
+<div class="sec-label">Introduction</div>
+<div class="wrap">
+
+  <div class="def-card">
+    <h3>What are Built-in Functional Interfaces?</h3>
+    <p>Java 8 introduced several predefined Functional Interfaces in the package <ic>java.util.function</ic> . These are called Built-in Functional Interfaces because Java already provides them. They are heavily used with Lambda Expressions, Method References, Stream API, and Functional Programming.</p>
+  </div>
+
+  <div class="def-card teal">
+    <h3>Why Built-in Functional Interfaces?</h3>
+    <p>Before Java 8, whenever we needed a Functional Interface, we created our own. For example:</p>
+    <pre>interface Calculator {
+  int calculate(int x, int y);
+}</pre>
+    <p>Java 8 provides many commonly used Functional Interfaces so we don't need to create them again and again. This reduces boilerplate code, development time, and maintenance effort.</p>
+  </div>
+
+</div>
+
+<!-- ═══ OVERVIEW TABLE ═══ -->
+<div class="sec-label">Important Functional Interfaces — Overview</div>
+<div class="wrap">
+  <div class="dark-card">
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Functional Interface</th><th>Abstract Method</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Predicate&lt;T&gt;</td><td><ic>boolean test(T t)</ic></td><td>Testing / Filtering</td></tr>
+        <tr><td>Function&lt;T,R&gt;</td><td><ic>R apply(T t)</ic></td><td>Transformation</td></tr>
+        <tr><td>Consumer&lt;T&gt;</td><td><ic>void accept(T t)</ic></td><td>Consuming Data</td></tr>
+        <tr><td>Supplier&lt;T&gt;</td><td><ic>T get()</ic></td><td>Supplying Data</td></tr>
+        <tr><td>BiFunction&lt;T,U,R&gt;</td><td><ic>R apply(T t, U u)</ic></td><td>Two Inputs → One Output</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gen-card">
+    <h4 style="font-size:13.5px;font-weight:700;color:#fff;margin-bottom:8px;">Understanding generic types</h4>
+    <p><ic>Predicate&lt;Integer&gt;</ic> — the type <ic>Integer</ic> represents the datatype Predicate will work on.</p>
+    <p><ic>Function&lt;String, Integer&gt;</ic> — Input: <ic>String</ic> , Output: <ic>Integer</ic></p>
+  </div>
+</div>
+
+<!-- ═══ 1 — PREDICATE<T> ═══ -->
+<div class="sec-label">1 — Predicate&lt;T&gt;</div>
+<div class="wrap">
+
+  <div class="def-card">
+    <h3>Definition</h3>
+    <p><ic>Predicate&lt;T&gt;</ic> is a Functional Interface used to test a condition on an input and return a boolean value.</p>
+  </div>
+
+  <div class="g3">
+    <div class="note-card purple">
+      <h4>Abstract method</h4>
+      <pre>boolean test(T t);</pre>
+    </div>
+    <div class="note-card teal">
+      <h4>Purpose</h4>
+      <div class="step-row"><div class="step-circle">1</div> Checking conditions</div>
+      <div class="step-row"><div class="step-circle">2</div> Filtering data</div>
+      <div class="step-row"><div class="step-circle">3</div> Used in Stream API's <ic>filter()</ic></div>
+    </div>
+    <div class="note-card green">
+      <h4>Memory trick</h4>
+      <p>Predicate = Prediction. It answers <strong>TRUE or FALSE</strong> / YES or NO.</p>
+    </div>
+  </div>
+
+  <div class="dark-card">
+    <h4>Example</h4>
+    <pre><span class="kw">import</span> java.util.function.Predicate;
+
+<span class="kw">public class</span> <span class="cls">DemoPredi</span> {
+  <span class="kw">public static void</span> main(String[] args) {
+
+    Predicate&lt;Integer&gt; p = t -> t%<span class="num">2</span>==<span class="num">0</span>;
+    System.out.println(p.test(<span class="num">20</span>));           <span class="cm">// true</span>
+
+    Predicate&lt;String&gt; p2 = t -> t.length()&gt;=<span class="num">5</span>;
+    System.out.println(p2.test(<span class="str">"programming"</span>)); <span class="cm">// true</span>
+    System.out.println(p2.test(<span class="str">"pro"</span>));         <span class="cm">// false</span>
+  }
+}</pre>
+    <div class="output-box">Output:
+true
+true
+false</div>
+  </div>
+
+  <div class="expl-card">
+    <h4>Explanation</h4>
+    <div class="exp-item"><div class="step-circle">1</div><span><ic>t%2==0</ic> checks if number is even. <ic>p.test(20)</ic> → 20%2=0 → <ic>true</ic></span></div>
+    <div class="exp-item"><div class="step-circle">2</div><span><ic>t.length()&gt;=5</ic> checks string length. <ic>p2.test("programming")</ic> → length 11 → <ic>true</ic></span></div>
+    <div class="exp-item"><div class="step-circle">3</div><span><ic>p2.test("pro")</ic> → length 3 → <ic>false</ic></span></div>
+  </div>
+
+  <div class="dark-card">
+    <h4>Real life examples of Predicate</h4>
+    <div class="badge-row">
+      <span class="badge">Age &gt;= 18</span>
+      <span class="badge">Salary &gt; 50000</span>
+      <span class="badge">Marks &gt;= 35</span>
+    </div>
+    <p style="font-size:13px;color:#ccc;margin-top:6px;">All these conditions return <ic>true</ic> or <ic>false</ic> — therefore Predicate is used.</p>
+  </div>
+
+</div>
+
+<!-- ═══ 2 — FUNCTION<T,R> ═══ -->
+<div class="sec-label">2 — Function&lt;T,R&gt;</div>
+<div class="wrap">
+
+  <div class="def-card teal">
+    <h3>Definition</h3>
+    <p><ic>Function&lt;T,R&gt;</ic> is a Functional Interface that takes one input and returns one output.</p>
+  </div>
+
+  <div class="g3">
+    <div class="note-card purple">
+      <h4>Abstract method</h4>
+      <pre>R apply(T t);</pre>
+    </div>
+    <div class="note-card teal">
+      <h4>Purpose</h4>
+      <div class="step-row"><div class="step-circle">1</div> Data Transformation</div>
+      <div class="step-row"><div class="step-circle">2</div> Data Conversion</div>
+      <div class="step-row"><div class="step-circle">3</div> Mapping Operations</div>
+      <div class="step-row"><div class="step-circle">4</div> Mostly used with Stream API's <ic>map()</ic></div>
+    </div>
+    <div class="note-card green">
+      <h4>Understanding T and R</h4>
+      <pre>Function&lt;String, Integer&gt;
+// Input → String
+// Output → Integer</pre>
+    </div>
+  </div>
+
+  <div class="dark-card">
+    <h4>Example</h4>
+    <pre><span class="kw">import</span> java.util.function.Function;
+
+<span class="kw">public class</span> <span class="cls">DemoFunction</span> {
+  <span class="kw">public static void</span> main(String[] args) {
+
+    Function&lt;String, Integer&gt; f1 = x -> x.length();
+    System.out.println(f1.apply(<span class="str">"hello"</span>));   <span class="cm">// 5</span>
+    System.out.println(f1.apply(<span class="str">"abcdef"</span>)); <span class="cm">// 6</span>
+  }
+}</pre>
+    <div class="output-box">Output:
+5
+6</div>
+  </div>
+
+  <div class="expl-card teal">
+    <h4>Explanation</h4>
+    <p><ic>Function&lt;String, Integer&gt;</ic> — Input: String, Output: Integer. <ic>f1.apply("hello")</ic> → length 5. <ic>f1.apply("abcdef")</ic> → length 6.</p>
+  </div>
+
+  <div class="dark-card">
+    <h4>Real life examples of Function</h4>
+    <div class="badge-row">
+      <span class="badge">Name → Length</span>
+      <span class="badge">Temperature → Fahrenheit</span>
+      <span class="badge">String → Uppercase</span>
+    </div>
+    <p style="font-size:13px;color:#ccc;margin-top:6px;">One value transformed into another.</p>
+  </div>
+
+</div>
+
+<!-- ═══ 3 — CONSUMER<T> ═══ -->
+<div class="sec-label">3 — Consumer&lt;T&gt;</div>
+<div class="wrap">
+
+  <div class="def-card orange">
+    <h3>Definition</h3>
+    <p><ic>Consumer&lt;T&gt;</ic> is a Functional Interface that accepts one input but returns nothing.</p>
+  </div>
+
+  <div class="g3">
+    <div class="note-card purple">
+      <h4>Abstract method</h4>
+      <pre>void accept(T t);</pre>
+    </div>
+    <div class="note-card teal">
+      <h4>Purpose</h4>
+      <div class="step-row"><div class="step-circle">1</div> Printing</div>
+      <div class="step-row"><div class="step-circle">2</div> Logging</div>
+      <div class="step-row"><div class="step-circle">3</div> Updating</div>
+      <div class="step-row"><div class="step-circle">4</div> Modifying Data</div>
+    </div>
+    <div class="note-card orange">
+      <h4>Memory trick</h4>
+      <p>Consumer = Consumes data, returns nothing.</p>
+    </div>
+  </div>
+
+  <div class="dark-card">
+    <h4>Example</h4>
+    <pre><span class="kw">import</span> java.util.function.Consumer;
+
+<span class="kw">public class</span> <span class="cls">DemoConsumer</span> {
+  <span class="kw">public static void</span> main(String[] args) {
+
+    Consumer&lt;String&gt; c = x -> {
+      System.out.println(<span class="str">"hello "</span> + x);
+    };
+
+    c.accept(<span class="str">"hemanth"</span>);  <span class="cm">// hello hemanth</span>
+    c.accept(<span class="str">"soham"</span>);    <span class="cm">// hello soham</span>
+    c.accept(<span class="str">"salaar"</span>);   <span class="cm">// hello salaar</span>
+  }
+}</pre>
+    <div class="output-box">Output:
+hello hemanth
+hello soham
+hello salaar</div>
+  </div>
+
+  <div class="expl-card orange">
+    <h4>Explanation</h4>
+    <p><ic>accept()</ic> receives the value and processes it. No value is returned.</p>
+  </div>
+
+  <div class="dark-card">
+    <h4>Real life examples of Consumer</h4>
+    <div class="badge-row">
+      <span class="badge">Print Data</span>
+      <span class="badge">Send Email</span>
+      <span class="badge">Write Log</span>
+      <span class="badge">Display Result</span>
+    </div>
+    <p style="font-size:13px;color:#ccc;margin-top:6px;">These operations don't return values — Consumer is used.</p>
+  </div>
+
+</div>
+
+<!-- ═══ 4 — SUPPLIER<T> ═══ -->
+<div class="sec-label">4 — Supplier&lt;T&gt;</div>
+<div class="wrap">
+
+  <div class="def-card green">
+    <h3>Definition</h3>
+    <p><ic>Supplier&lt;T&gt;</ic> is a Functional Interface that takes no input but returns a value.</p>
+  </div>
+
+  <div class="g3">
+    <div class="note-card purple">
+      <h4>Abstract method</h4>
+      <pre>T get();</pre>
+    </div>
+    <div class="note-card teal">
+      <h4>Purpose</h4>
+      <p style="font-size:13px;color:#ccc;margin-top:4px;">Used when data needs to be generated or supplied.</p>
+    </div>
+    <div class="note-card green">
+      <h4>Memory trick</h4>
+      <p>Supplier = Supply Data. Input: Nothing. Output: Something.</p>
+    </div>
+  </div>
+
+  <div class="dark-card">
+    <h4>Example</h4>
+    <pre><span class="kw">import</span> java.util.function.Supplier;
+
+<span class="kw">public class</span> <span class="cls">DemoSupplier</span> {
+  <span class="kw">public static void</span> main(String[] args) {
+
+    Supplier&lt;String&gt; s = () -> <span class="str">"hello every one im A DON"</span>;
+
+    System.out.println(s.get());
+    System.out.println(s.get());
+    System.out.println(s.get());
+  }
+}</pre>
+    <div class="output-box">Output:
+hello every one im A DON
+hello every one im A DON
+hello every one im A DON</div>
+  </div>
+
+  <div class="expl-card green">
+    <h4>Explanation</h4>
+    <p>Supplier accepts no input. Returns a <ic>String</ic> every time <ic>get()</ic> is called.</p>
+  </div>
+
+  <div class="dark-card">
+    <h4>Real life examples of Supplier</h4>
+    <div class="badge-row">
+      <span class="badge">Generate OTP</span>
+      <span class="badge">Random Number</span>
+      <span class="badge">Current Date</span>
+      <span class="badge">Current Time</span>
+    </div>
+    <p style="font-size:13px;color:#ccc;margin-top:6px;">No input required — Supplier generates the value.</p>
+  </div>
+
+</div>
+
+<!-- ═══ 5 — BIFUNCTION<T,U,R> ═══ -->
+<div class="sec-label">5 — BiFunction&lt;T,U,R&gt;</div>
+<div class="wrap">
+
+  <div class="def-card yellow">
+    <h3>Definition</h3>
+    <p><ic>BiFunction&lt;T,U,R&gt;</ic> is a Functional Interface that accepts two inputs and returns one output.</p>
+  </div>
+
+  <div class="g3">
+    <div class="note-card purple">
+      <h4>Abstract method</h4>
+      <pre>R apply(T t, U u);</pre>
+    </div>
+    <div class="note-card teal">
+      <h4>Purpose</h4>
+      <p style="font-size:13px;color:#ccc;margin-top:4px;">Used when two values need to be combined into one result.</p>
+    </div>
+    <div class="note-card orange">
+      <h4>Understanding generics</h4>
+      <pre>BiFunction&lt;Integer,Integer,Integer&gt;
+// Input1 → Integer
+// Input2 → Integer
+// Output → Integer</pre>
+    </div>
+  </div>
+
+  <div class="dark-card">
+    <h4>Example</h4>
+    <pre><span class="kw">import</span> java.util.function.BiFunction;
+
+<span class="kw">public class</span> <span class="cls">DemoBIfun</span> {
+  <span class="kw">public static void</span> main(String[] args) {
+
+    BiFunction&lt;Integer,Integer,Integer&gt; bi = (x,y) -> x+y;
+
+    System.out.println(bi.apply(<span class="num">10</span>, <span class="num">20</span>));  <span class="cm">// 30</span>
+    System.out.println(bi.apply(<span class="num">20</span>, <span class="num">30</span>));  <span class="cm">// 50</span>
+    System.out.println(bi.apply(<span class="num">40</span>, <span class="num">20</span>));  <span class="cm">// 60</span>
+  }
+}</pre>
+    <div class="output-box">Output:
+30
+50
+60</div>
+  </div>
+
+  <div class="expl-card yellow">
+    <h4>Explanation</h4>
+    <p><ic>(x,y) -&gt; x+y</ic> adds two numbers. <ic>bi.apply(10,20)</ic> → 30. <ic>bi.apply(20,30)</ic> → 50. <ic>bi.apply(40,20)</ic> → 60.</p>
+  </div>
+
+</div>
+
+<!-- ═══ QUICK REVISION TABLE ═══ -->
+<div class="sec-label">Quick Revision Table</div>
+<div class="wrap">
+  <div class="dark-card">
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Interface</th><th>Input</th><th>Output</th><th>Method</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Predicate&lt;T&gt;</td><td>1</td><td>boolean</td><td><ic>test()</ic></td></tr>
+        <tr><td>Function&lt;T,R&gt;</td><td>1</td><td>1</td><td><ic>apply()</ic></td></tr>
+        <tr><td>Consumer&lt;T&gt;</td><td>1</td><td>Nothing</td><td><ic>accept()</ic></td></tr>
+        <tr><td>Supplier&lt;T&gt;</td><td>Nothing</td><td>1</td><td><ic>get()</ic></td></tr>
+        <tr><td>BiFunction&lt;T,U,R&gt;</td><td>2</td><td>1</td><td><ic>apply()</ic></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="key-card">
+    <h4>Key rule to always remember</h4>
+    <p>All built-in Functional Interfaces are in <ic>java.util.function</ic> . Use <ic>Predicate</ic> to test a condition, <ic>Function</ic> to transform data, <ic>Consumer</ic> to consume without returning, <ic>Supplier</ic> to supply without input, and <ic>BiFunction</ic> when you have two inputs and need one output.</p>
+  </div>
+</div>
+
+</body>
+</html>

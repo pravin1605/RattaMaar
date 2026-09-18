@@ -1,0 +1,628 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servlet Container & Life Cycle — Notes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 18mm 15mm 20mm;
+    margin: 0 auto;
+    background: #fff;
+    page-break-after: always;
+    border-bottom: 2px dashed #bbb;
+  }
+
+  .page-header {
+    border-top: 3px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 5px 0;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-header .subject { font-size: 10.5px; font-weight: normal; letter-spacing: 1px; text-transform: uppercase; }
+  .page-header .topic-label { font-size: 10.5px; font-weight: bold; letter-spacing: 1px; }
+
+  .main-title {
+    font-size: 19px;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid #000;
+    padding: 9px 0;
+    margin-bottom: 16px;
+    background: #000;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-size: 13.5px;
+    font-weight: bold;
+    border-left: 5px solid #000;
+    padding-left: 10px;
+    margin: 14px 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .sub-title {
+    font-size: 12.5px;
+    font-weight: bold;
+    margin: 10px 0 4px 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+  }
+
+  .def-box {
+    border: 2px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .def-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .interview-box {
+    border: 2px solid #000;
+    padding: 10px 13px;
+    margin: 10px 0;
+    background: #f5f5f5;
+  }
+  .interview-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 8px; padding-bottom: 3px;
+  }
+  .interview-box .q { font-weight: bold; margin-top: 9px; }
+  .interview-box .a { margin-left: 14px; margin-top: 3px; }
+
+  .memory-box {
+    border: 2px dashed #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .memory-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  .example-box {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: #fafafa;
+  }
+  .example-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .tip-box {
+    border: 2px solid #000;
+    border-left: 6px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .tip-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  /* FLOW */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px auto;
+  }
+  .flow-box {
+    border: 2px solid #000;
+    padding: 6px 22px;
+    font-weight: bold;
+    font-size: 12px;
+    min-width: 190px;
+    text-align: center;
+    background: #fff;
+  }
+  .flow-box.dark { background: #000; color: #fff; }
+  .flow-arrow { font-size: 17px; font-weight: bold; color: #000; text-align: center; padding: 1px 0; }
+  .flow-label { font-size: 10px; color: #444; text-align: center; font-style: italic; }
+
+  /* STEP FLOW */
+  .step-grid {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 5px 10px;
+    margin: 10px 0;
+  }
+  .step-num {
+    background: #000; color: #fff; font-weight: bold;
+    font-size: 12px; text-align: center; padding: 5px 0;
+    height: fit-content; min-width: 30px;
+  }
+  .step-content {
+    border: 1px solid #000; padding: 5px 10px; font-size: 12px;
+  }
+  .step-content strong { display: block; margin-bottom: 2px; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+  th { background: #000; color: #fff; padding: 6px 9px; font-size: 12px; text-align: left; border: 1px solid #000; }
+  td { padding: 5px 9px; border: 1px solid #000; font-size: 12px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f6f6f6; }
+
+  /* BULLET */
+  ul.notes-list { list-style: none; margin: 5px 0 5px 10px; padding: 0; }
+  ul.notes-list li { padding: 2px 0 2px 16px; position: relative; }
+  ul.notes-list li::before { content: "▸"; position: absolute; left: 0; font-size: 11px; }
+
+  ol.notes-ol { margin: 5px 0 5px 22px; }
+  ol.notes-ol li { padding: 2px 0; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 8px 0; }
+
+  code {
+    font-family: 'Courier New', monospace; font-size: 11.5px;
+    background: #efefef; padding: 1px 5px; border: 1px solid #ccc;
+  }
+
+  p { margin: 5px 0; }
+  .highlight { font-weight: bold; }
+
+  /* LIFECYCLE VISUAL */
+  .lifecycle-bar {
+    display: flex;
+    align-items: stretch;
+    margin: 12px 0;
+    border: 2px solid #000;
+  }
+  .lc-cell {
+    flex: 1;
+    text-align: center;
+    padding: 7px 4px;
+    border-right: 2px solid #000;
+    font-size: 11px;
+    font-weight: bold;
+  }
+  .lc-cell:last-child { border-right: none; }
+  .lc-cell.dark { background: #000; color: #fff; }
+  .lc-cell .freq { font-size: 9.5px; font-weight: normal; margin-top: 3px; }
+
+  /* CONTAINER BOX GRID */
+  .container-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 8px 0;
+    border: 2px solid #000;
+    padding: 10px;
+  }
+  .container-grid .grid-label {
+    grid-column: 1 / -1;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    background: #000;
+    color: #fff;
+    padding: 4px;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .cg-item {
+    border: 1px solid #000;
+    padding: 6px 9px;
+    font-size: 11.5px;
+  }
+  .cg-item .cg-head { font-weight: bold; border-bottom: 1px solid #000; margin-bottom: 4px; padding-bottom: 2px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  @media print {
+    body { background: #fff; }
+    .page { border-bottom: none; margin: 0; page-break-after: always; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: SERVLET CONTAINER ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 4 : Servlet Container &amp; Life Cycle</span>
+  </div>
+
+  <div class="main-title">4. Servlet Container &amp; Life Cycle</div>
+
+  <!-- What is Servlet Container -->
+  <div class="section-title">What is a Servlet Container?</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Definition</div>
+    <p><strong>Servlet Container</strong> (also called <strong>Web Container</strong>) is a Java program inside a web server that:</p>
+    <ul class="notes-list">
+      <li><strong>Manages Servlets</strong> — your Java servlet classes</li>
+      <li><strong>Controls entire life cycle</strong> — when to create, run, and destroy</li>
+      <li><strong>Handles requests &amp; responses</strong> — receives from browser, sends back</li>
+    </ul>
+    <p style="margin-top:5px;">Think of it as: <strong>"The Manager that runs and controls all your servlets."</strong></p>
+  </div>
+
+  <div class="sub-title">Popular Servlet Containers</div>
+  <div class="three-col">
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">Apache Tomcat</div>
+      Most Popular — used in most Java web projects
+    </div>
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">Jetty</div>
+      Lightweight container — used for embedded servers
+    </div>
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">GlassFish</div>
+      Full Java EE container — supports more specifications
+    </div>
+  </div>
+
+  <!-- Why Needed -->
+  <div class="section-title">Why is Servlet Container Needed?</div>
+  <p>Servlets have <strong>no <code>main()</code> method</strong>. They cannot run on their own like a regular Java program.</p>
+  <div class="tip-box">
+    <div class="box-label">⚠️ Key Point</div>
+    <p>Servlets <strong>cannot run without a Container</strong>. Container provides the runtime environment, handles HTTP, creates threads, and calls lifecycle methods automatically.</p>
+  </div>
+
+  <!-- Uses of Servlet Container -->
+  <div class="section-title">Uses of Servlet Container</div>
+  <table>
+    <thead><tr><th>Use / Role</th><th>What It Does</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Creates servlet objects</strong></td><td>Makes instances of your servlet classes (<code>new PageA()</code>)</td></tr>
+      <tr><td><strong>Loads servlet classes</strong></td><td>Loads <code>.class</code> files into JVM memory when first needed</td></tr>
+      <tr><td><strong>Unloads servlets</strong></td><td>Removes servlet from memory when server stops or app is undeployed</td></tr>
+      <tr><td><strong>Creates request objects</strong></td><td>Creates <code>HttpServletRequest</code> for each incoming request</td></tr>
+      <tr><td><strong>Creates response objects</strong></td><td>Creates <code>HttpServletResponse</code> for each outgoing response</td></tr>
+      <tr><td><strong>URL mapping</strong></td><td>Maps URL → Servlet (e.g. <code>/login</code> → <code>LoginServlet</code>)</td></tr>
+      <tr><td><strong>Manages lifecycle</strong></td><td>Controls <code>init()</code>, <code>service()</code>, <code>destroy()</code> automatically</td></tr>
+      <tr><td><strong>Multithreading</strong></td><td>Creates separate thread for each request — multiple users served simultaneously</td></tr>
+      <tr><td><strong>Security</strong></td><td>Handles access control, SSL, authentication</td></tr>
+      <tr><td><strong>Session management</strong></td><td>Manages HTTP sessions and cookies across multiple requests</td></tr>
+    </tbody>
+  </table>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — Container Roles</div>
+    <p><strong>CLUR-MUTS</strong> → <strong>C</strong>reates objects, <strong>L</strong>oads classes, <strong>U</strong>RL mapping, <strong>R</strong>equest/Response creation, <strong>M</strong>ultithreading, <strong>U</strong>nloads servlets, <strong>T</strong>hread management, <strong>S</strong>ecurity</p>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 2: LIFE CYCLE OVERVIEW ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 4 : Servlet Container &amp; Life Cycle (continued)</span>
+  </div>
+
+  <div class="section-title">Servlet Life Cycle — Overview</div>
+  <p>The <strong>Servlet Life Cycle</strong> is the complete journey of a Servlet from creation to destruction — all managed automatically by the Servlet Container.</p>
+
+  <!-- Lifecycle Bar -->
+  <div class="lifecycle-bar">
+    <div class="lc-cell dark">Load Class<div class="freq">ONCE</div></div>
+    <div class="lc-cell">Create Object<div class="freq">ONCE</div></div>
+    <div class="lc-cell dark">init()<div class="freq">ONCE</div></div>
+    <div class="lc-cell">service()<div class="freq">★ MANY TIMES</div></div>
+    <div class="lc-cell dark">destroy()<div class="freq">ONCE</div></div>
+  </div>
+
+  <!-- Summary Table -->
+  <table>
+    <thead><tr><th>Step</th><th>Method</th><th>Called When</th><th>How Many Times</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Load Class</td><td>First request arrives</td><td><strong>Once</strong></td><td>Loads <code>.class</code> file into JVM memory</td></tr>
+      <tr><td>2</td><td>Create Object</td><td>After class loaded</td><td><strong>Once</strong></td><td>Creates servlet instance (<code>new PageA()</code>)</td></tr>
+      <tr><td>3</td><td><code>init()</code></td><td>After object created</td><td><strong>Once</strong></td><td>Initialize resources, DB connections, config</td></tr>
+      <tr><td>4</td><td><code>service()</code></td><td>Each HTTP request</td><td><strong>Multiple ★</strong></td><td>Routes to doGet() or doPost()</td></tr>
+      <tr><td>4a</td><td><code>doGet()</code></td><td>GET request</td><td><strong>Multiple</strong></td><td>Handles GET request — actual work</td></tr>
+      <tr><td>4b</td><td><code>doPost()</code></td><td>POST request</td><td><strong>Multiple</strong></td><td>Handles POST request — actual work</td></tr>
+      <tr><td>5</td><td><code>destroy()</code></td><td>Server/app stops</td><td><strong>Once</strong></td><td>Cleanup — close DB, release resources</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Request-wise Flow -->
+  <div class="section-title">Life Cycle — Request-by-Request Flow</div>
+
+  <div class="example-box">
+    <div class="box-label">📘 What Happens for Each Request</div>
+    <div style="display:grid; grid-template-columns:1fr 2fr; gap:6px; margin-top:4px;">
+      <div style="border:1px solid #000; padding:5px 8px; font-weight:bold; background:#000; color:#fff; text-align:center;">Request 1 (First ever)</div>
+      <div style="border:1px solid #000; padding:5px 8px;">Load Class → Create Object → <code>init()</code> → <code>service()</code> → Response</div>
+      <div style="border:1px solid #000; padding:5px 8px; font-weight:bold; text-align:center;">Request 2</div>
+      <div style="border:1px solid #000; padding:5px 8px;">✅ (already loaded) → <code>service()</code> → Response</div>
+      <div style="border:1px solid #000; padding:5px 8px; font-weight:bold; text-align:center;">Request 3 … N</div>
+      <div style="border:1px solid #000; padding:5px 8px;">✅ (already loaded) → <code>service()</code> → Response</div>
+      <div style="border:1px solid #000; padding:5px 8px; font-weight:bold; background:#000; color:#fff; text-align:center;">Server Stops</div>
+      <div style="border:1px solid #000; padding:5px 8px;"><code>destroy()</code> → Object removed from memory</div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="box-label">⭐ Most Important Points</div>
+    <ul class="notes-list">
+      <li><code>init()</code> and <code>destroy()</code> are called <strong>only ONCE</strong> in the entire servlet lifetime</li>
+      <li><code>service()</code>, <code>doGet()</code>, <code>doPost()</code> are called <strong>multiple times</strong> — once per request</li>
+      <li><code>service()</code> acts like the <strong><code>main()</code> method</strong> of a servlet — it handles all incoming requests</li>
+      <li>Container does <strong>NOT</strong> create new object for each request — same object is reused</li>
+      <li>Container creates a <strong>new thread</strong> for each request (multithreading)</li>
+    </ul>
+  </div>
+
+  <!-- Complete Visual Flow -->
+  <div class="section-title">Complete Visual Flow Diagram</div>
+
+  <div class="flow">
+    <div class="flow-box">User sends first request to <code>/login</code></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Container: Load LoginServlet.class into JVM</div>
+    <div class="flow-label">Only for first request — ONCE</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Container: Create object → <code>new LoginServlet()</code></div>
+    <div class="flow-label">Only once</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Container calls <code>init()</code> → Servlet initializes</div>
+    <div class="flow-label">Only once — DB connection, config loading</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Container calls <code>service(request, response)</code></div>
+    <div class="flow-label">Every request — checks GET or POST?</div>
+    <div class="flow-arrow">↓</div>
+    <div style="display:flex; gap:20px; justify-content:center; margin:4px 0;">
+      <div class="flow-box" style="min-width:130px;">GET → <code>doGet()</code></div>
+      <div class="flow-box dark" style="min-width:130px;">POST → <code>doPost()</code></div>
+    </div>
+    <div class="flow-label">Actual business logic — many times</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Response sent back to Browser</div>
+    <div class="flow-arrow">↓ (Server stops)</div>
+    <div class="flow-box dark">Container calls <code>destroy()</code> → Cleanup → Object removed</div>
+    <div class="flow-label">Only once — close DB, release memory</div>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 3: EACH STEP DETAIL ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 4 : Servlet Container &amp; Life Cycle (continued)</span>
+  </div>
+
+  <div class="section-title">Detailed Life Cycle — Each Step</div>
+
+  <!-- Step 1 -->
+  <div class="sub-title">Step 1 — Load Class</div>
+  <p>When the <strong>first request</strong> arrives for a servlet, the container checks if the servlet class is already loaded in JVM.</p>
+  <ul class="notes-list">
+    <li>If <strong>NOT loaded</strong> → Container loads <code>.class</code> file into JVM memory</li>
+    <li>Called <strong>only once</strong> per servlet</li>
+    <li>No method involved — done internally by the Container's ClassLoader</li>
+  </ul>
+
+  <!-- Step 2 -->
+  <div class="sub-title">Step 2 — Create Object</div>
+  <p>After class is loaded, Container creates <strong>one instance</strong> of the servlet class.</p>
+  <ul class="notes-list">
+    <li>Equivalent to: <code>LoginServlet obj = new LoginServlet();</code></li>
+    <li>Called <strong>only once</strong> — same object is reused for all future requests</li>
+    <li>No method involved — done automatically by Container</li>
+  </ul>
+
+  <!-- Step 3 -->
+  <div class="sub-title">Step 3 — <code>init()</code> Method</div>
+  <div class="def-box">
+    <div class="box-label">📌 init()</div>
+    <p>Called by Container <strong>once</strong> after object creation. Used to initialize resources that the servlet will use throughout its lifetime.</p>
+    <p><strong>When triggered:</strong> After object is created, before first request is served.</p>
+    <p><strong>Purpose:</strong> Load config data, connect to database, initialize variables.</p>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="sub-title">Step 4 — <code>service()</code> Method ⭐ Most Important</div>
+  <div class="def-box">
+    <div class="box-label">📌 service()</div>
+    <p>Called by Container for <strong>every single request</strong>. This is the main working method of Servlet — like <code>main()</code> in regular Java programs.</p>
+    <p><strong>What it does:</strong> Checks whether the request is GET or POST and internally calls <code>doGet()</code> or <code>doPost()</code> accordingly.</p>
+    <p><strong>doGet()</strong> — called for HTTP GET requests (e.g., opening a page, clicking a link)</p>
+    <p><strong>doPost()</strong> — called for HTTP POST requests (e.g., submitting a login form)</p>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="sub-title">Step 5 — <code>destroy()</code> Method</div>
+  <div class="def-box">
+    <div class="box-label">📌 destroy()</div>
+    <p>Called by Container <strong>once</strong> when the server is shutting down, application is undeployed, or the servlet is reloaded.</p>
+    <p><strong>Purpose:</strong> Close DB connections, release resources, save important data, free memory.</p>
+    <p><strong>After destroy():</strong> Object is eligible for garbage collection and removed from memory.</p>
+  </div>
+
+  <!-- What Container Contains -->
+  <div class="section-title">What Does Servlet Container Contain?</div>
+
+  <div class="container-grid">
+    <div class="grid-label">INSIDE THE SERVLET CONTAINER (Tomcat)</div>
+    <div class="cg-item">
+      <div class="cg-head">Servlet Classes</div>
+      <code>.class</code> files loaded into JVM<br>e.g. <code>LoginServlet.class</code>
+    </div>
+    <div class="cg-item">
+      <div class="cg-head">Servlet Objects</div>
+      Instances created from classes<br>e.g. <code>new LoginServlet()</code>
+    </div>
+    <div class="cg-item">
+      <div class="cg-head">Request Objects</div>
+      <code>HttpServletRequest</code><br>Created fresh for each request
+    </div>
+    <div class="cg-item">
+      <div class="cg-head">Response Objects</div>
+      <code>HttpServletResponse</code><br>Created fresh for each request
+    </div>
+    <div class="cg-item">
+      <div class="cg-head">Configuration</div>
+      <code>web.xml</code> or <code>@WebServlet</code><br>URL → Servlet mapping
+    </div>
+    <div class="cg-item">
+      <div class="cg-head">Session Management</div>
+      <code>HttpSession</code>, Cookies<br>User session tracking
+    </div>
+    <div class="cg-item">
+      <div class="cg-head">Thread Pool</div>
+      Thread 1 → Request 1<br>Thread 2 → Request 2 (parallel)
+    </div>
+    <div class="cg-item">
+      <div class="cg-head">Security</div>
+      SSL, access control<br>Authentication &amp; authorization
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 4: REAL LIFE + INTERVIEW Q&A ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 4 : Servlet Container &amp; Life Cycle (continued)</span>
+  </div>
+
+  <!-- Real-Life Analogy -->
+  <div class="section-title">Real-Life Analogy — Restaurant 🍽️</div>
+
+  <table>
+    <thead><tr><th>Restaurant Part</th><th>Servlet Container Part</th></tr></thead>
+    <tbody>
+      <tr><td>Owner</td><td>Web Server (Tomcat)</td></tr>
+      <tr><td>Restaurant Manager</td><td>Servlet Container</td></tr>
+      <tr><td>Chef</td><td>Servlet (your Java code)</td></tr>
+      <tr><td>Customer Order</td><td>HTTP Request</td></tr>
+      <tr><td>Food Served</td><td>HTTP Response</td></tr>
+      <tr><td>Menu Book</td><td><code>web.xml</code> or <code>@WebServlet</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="example-box">
+    <div class="box-label">📘 Life Cycle in Restaurant Terms</div>
+    <div class="step-grid" style="margin-top:6px;">
+      <div class="step-num">1</div>
+      <div class="step-content"><strong>First customer calls → Hire Chef (Load Class)</strong> — Container loads servlet class into JVM</div>
+      <div class="step-num">2</div>
+      <div class="step-content"><strong>Give Chef workspace → (Create Object)</strong> — Container creates servlet instance</div>
+      <div class="step-num">3</div>
+      <div class="step-content"><strong>Chef prepares kitchen → init()</strong> — One time setup: ingredients ready, tools ready (DB connection open)</div>
+      <div class="step-num">4</div>
+      <div class="step-content"><strong>Customer orders → service() + doGet()/doPost()</strong> — Chef cooks each order (called every time a request comes)</div>
+      <div class="step-num">5</div>
+      <div class="step-content"><strong>Restaurant closes → destroy()</strong> — Chef cleans kitchen and leaves (DB closed, resources released)</div>
+    </div>
+  </div>
+
+  <!-- Container vs You -->
+  <div class="section-title">Container Does vs. You Do</div>
+  <div class="two-col">
+    <div class="def-box">
+      <div class="box-label">Container Does (Automatically)</div>
+      <ul class="notes-list">
+        <li>Load class file</li>
+        <li>Create servlet object</li>
+        <li>Call <code>init()</code></li>
+        <li>Call <code>service()</code> per request</li>
+        <li>Create request/response objects</li>
+        <li>Manage threads</li>
+        <li>Call <code>destroy()</code></li>
+        <li>Remove from memory</li>
+      </ul>
+    </div>
+    <div class="def-box">
+      <div class="box-label">You Write (Business Logic)</div>
+      <ul class="notes-list">
+        <li>Override <code>init()</code> — setup logic</li>
+        <li>Override <code>doGet()</code> — GET handling</li>
+        <li>Override <code>doPost()</code> — POST handling</li>
+        <li>Override <code>destroy()</code> — cleanup logic</li>
+        <li>DB queries, validations, response content</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Summary Table -->
+  <div class="section-title">Method Frequency Summary</div>
+  <table>
+    <thead><tr><th>Method</th><th>Called By</th><th>How Many Times</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>Class Load</td><td>Container (ClassLoader)</td><td><strong>Once</strong></td><td>Load <code>.class</code> into JVM</td></tr>
+      <tr><td>Object Creation</td><td>Container (<code>new</code>)</td><td><strong>Once</strong></td><td>Create servlet instance</td></tr>
+      <tr><td><code>init()</code></td><td>Container</td><td><strong>Once</strong></td><td>Initialize resources</td></tr>
+      <tr><td><code>service()</code></td><td>Container</td><td><strong>★ Multiple</strong></td><td>Route GET/POST to doGet/doPost</td></tr>
+      <tr><td><code>doGet()</code></td><td>Container via service()</td><td><strong>Multiple</strong></td><td>Handle GET requests</td></tr>
+      <tr><td><code>doPost()</code></td><td>Container via service()</td><td><strong>Multiple</strong></td><td>Handle POST requests</td></tr>
+      <tr><td><code>destroy()</code></td><td>Container</td><td><strong>Once</strong></td><td>Cleanup &amp; release resources</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Interview Q&A -->
+  <div class="interview-box">
+    <div class="box-label">🎯 Interview Q&amp;A</div>
+
+    <div class="q">Q1. What is a Servlet Container?</div>
+    <div class="a">A Servlet Container (Web Container) is a runtime environment inside a web server (like Tomcat) that manages the complete lifecycle of servlets — loading, creating, initializing, executing, and destroying them.</div>
+
+    <div class="q">Q2. What are the steps of the Servlet Life Cycle?</div>
+    <div class="a">1. Load Class → 2. Create Object → 3. <code>init()</code> (once) → 4. <code>service()</code> / <code>doGet()</code> / <code>doPost()</code> (multiple times) → 5. <code>destroy()</code> (once)</div>
+
+    <div class="q">Q3. How many times is <code>init()</code> called?</div>
+    <div class="a"><code>init()</code> is called only <strong>once</strong> — after the servlet object is created, before the first request is processed.</div>
+
+    <div class="q">Q4. What is the role of <code>service()</code>?</div>
+    <div class="a"><code>service()</code> is called for <strong>every HTTP request</strong>. It acts like the <code>main()</code> method of the servlet. It checks whether the incoming request is GET or POST and delegates to <code>doGet()</code> or <code>doPost()</code> accordingly.</div>
+
+    <div class="q">Q5. When is <code>destroy()</code> called?</div>
+    <div class="a"><code>destroy()</code> is called <strong>once</strong> when the server shuts down, the application is undeployed, or the servlet is reloaded. Used to close DB connections and release resources.</div>
+
+    <div class="q">Q6. Does Container create a new servlet object for each request?</div>
+    <div class="a"><strong>No.</strong> Container creates only <strong>one servlet object</strong>. For each request, it creates a new <strong>thread</strong> (not a new object). This is why servlets are multithreaded and must handle thread safety.</div>
+
+    <div class="q">Q7. What is the difference between <code>init()</code> and <code>doGet()</code>?</div>
+    <div class="a"><code>init()</code> — called <strong>once</strong> for initialization (DB connect, config load). <code>doGet()</code> — called <strong>multiple times</strong> for each GET request to handle business logic.</div>
+
+    <div class="q">Q8. Who calls the lifecycle methods — programmer or container?</div>
+    <div class="a">The <strong>Servlet Container</strong> calls all lifecycle methods (<code>init()</code>, <code>service()</code>, <code>destroy()</code>) automatically. The programmer only <strong>overrides</strong> them to write business logic — never calls them manually.</div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — Life Cycle Order</div>
+    <p><strong>"Lovely Cars In Service Daily"</strong></p>
+    <p><strong>L</strong>oad class → <strong>C</strong>reate object → <strong>I</strong>nit() → <strong>S</strong>ervice() → <strong>D</strong>estroy()</p>
+    <p>init &amp; destroy = <strong>ONCE</strong> &nbsp;|&nbsp; service / doGet / doPost = <strong>MANY TIMES</strong></p>
+  </div>
+
+</div>
+
+</body>
+</html>

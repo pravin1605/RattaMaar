@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>React Lifecycle — Notes</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2333;
+      --border: #30363d;
+      --accent:  #58a6ff;
+      --accent2: #3fb950;
+      --accent3: #f78166;
+      --accent4: #d2a8ff;
+      --accent5: #ffa657;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --text-dim: #6e7681;
+      --code-bg: #010409;
+      /* phase colors */
+      --mount:   #3fb950;
+      --update:  #58a6ff;
+      --unmount: #f78166;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.7; padding: 0 1rem; }
+
+    /* ── HERO ── */
+    .hero { text-align: center; padding: 3.5rem 1rem 2.5rem; }
+    .hero-badge { display: inline-block; background: #1a1a30; border: 1px solid var(--accent4); color: var(--accent4); font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: .35rem .9rem; border-radius: 2rem; margin-bottom: 1.4rem; }
+    .hero h1 { font-size: clamp(2rem, 6vw, 3.2rem); font-weight: 800; background: linear-gradient(135deg, var(--mount) 0%, var(--update) 50%, var(--unmount) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.15; margin-bottom: .9rem; }
+    .hero p { color: var(--text-muted); font-size: 1rem; max-width: 560px; margin: 0 auto 1.8rem; }
+    .hero-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+    .hero-tag { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); font-size: .76rem; font-weight: 600; padding: .3rem .75rem; border-radius: .4rem; }
+
+    /* ── TOC ── */
+    .toc { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent4); border-radius: .6rem; padding: 1.4rem 1.6rem; max-width: 700px; margin: 0 auto 2.5rem; }
+    .toc h3 { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent4); margin-bottom: .9rem; }
+    .toc ol { padding-left: 1.2rem; }
+    .toc li { margin-bottom: .35rem; }
+    .toc a { color: var(--text-muted); text-decoration: none; font-size: .9rem; transition: color .2s; }
+    .toc a:hover { color: var(--accent4); }
+
+    .container { max-width: 860px; margin: 0 auto; }
+
+    /* ── SECTION ── */
+    .section { background: var(--surface); border: 1px solid var(--border); border-radius: .8rem; margin-bottom: 2rem; overflow: hidden; }
+    .section-header { display: flex; align-items: center; gap: .85rem; padding: 1.2rem 1.6rem; border-bottom: 1px solid var(--border); background: var(--surface2); }
+    .section-num { font-size: .78rem; font-weight: 800; width: 1.8rem; height: 1.8rem; border-radius: .4rem; display: grid; place-items: center; flex-shrink: 0; color: #0d1117; }
+    .nm { background: var(--mount); }
+    .nu { background: var(--update); }
+    .nun { background: var(--unmount); }
+    .ng  { background: var(--accent4); }
+    .section-header h2 { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+    .phase-pill { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: .2rem .7rem; border-radius: 2rem; margin-left: auto; }
+    .pm  { background: #0d2a1a; color: var(--mount);   border: 1px solid var(--mount); }
+    .pu  { background: #0d1a2a; color: var(--update);  border: 1px solid var(--update); }
+    .pun { background: #2a1a1a; color: var(--unmount); border: 1px solid var(--unmount); }
+    .section-body { padding: 1.4rem 1.6rem; }
+
+    /* ── DEF BOX ── */
+    .def-box { background: #1a1430; border: 1px solid var(--accent4); border-radius: .6rem; padding: 1rem 1.2rem; margin: 1rem 0; font-size: .9rem; color: var(--text); }
+    .def-box::before { content: '📌 Definition'; display: block; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent4); margin-bottom: .5rem; }
+
+    /* ── CALLOUTS ── */
+    .note { background: #1a2640; border-left: 3px solid var(--accent); border-radius: 0 .5rem .5rem 0; padding: .8rem 1.1rem; font-size: .88rem; color: var(--text-muted); margin: .8rem 0; }
+    .note strong { color: var(--accent); }
+    .tip  { background: #0d2a1a; border-left: 3px solid var(--accent2); border-radius: 0 .5rem .5rem 0; padding: .8rem 1.1rem; font-size: .88rem; color: var(--text-muted); margin: .8rem 0; }
+    .tip strong { color: var(--accent2); }
+    .warn { background: #2a1a0a; border-left: 3px solid var(--accent5); border-radius: 0 .5rem .5rem 0; padding: .8rem 1.1rem; font-size: .88rem; color: var(--text-muted); margin: .8rem 0; }
+    .warn strong { color: var(--accent5); }
+
+    /* ── CODE ── */
+    .code-wrap { background: var(--code-bg); border: 1px solid var(--border); border-radius: .6rem; margin: .8rem 0; overflow: hidden; }
+    .code-label { display: flex; align-items: center; justify-content: space-between; background: var(--surface2); border-bottom: 1px solid var(--border); padding: .45rem 1rem; }
+    .code-label span { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); }
+    .code-dots { display: flex; gap: .35rem; }
+    .code-dot { width: .55rem; height: .55rem; border-radius: 50%; }
+    .code-dot.r { background: #f78166; } .code-dot.y { background: #e3b341; } .code-dot.g { background: #3fb950; }
+    pre { padding: 1rem 1.2rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: .83rem; line-height: 1.65; color: #e6edf3; }
+    .kw { color: #ff7b72; } .fn { color: #d2a8ff; } .str { color: #a5d6ff; }
+    .cm { color: #6e7681; font-style: italic; } .tg { color: #7ee787; }
+    .at { color: #ffa657; } .nb { color: #79c0ff; } .lm { color: #3fb950; }
+
+    /* ── LIFECYCLE VISUAL ── */
+    .lifecycle-visual {
+      display: flex;
+      gap: 0;
+      margin: 1.2rem 0;
+      border: 1px solid var(--border);
+      border-radius: .7rem;
+      overflow: hidden;
+    }
+    .lc-phase {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .lc-phase-head {
+      padding: .65rem .8rem;
+      font-size: .78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      text-align: center;
+    }
+    .lc-phase-head.m  { background: #0d2a1a; color: var(--mount);   border-bottom: 1px solid #1a4a2a; }
+    .lc-phase-head.u  { background: #0d1a2a; color: var(--update);  border-bottom: 1px solid #1a2a4a; }
+    .lc-phase-head.un { background: #2a1a1a; color: var(--unmount); border-bottom: 1px solid #4a2a2a; }
+    .lc-phase-div  { border-right: 1px solid var(--border); }
+    .lc-methods { padding: .7rem .6rem; display: flex; flex-direction: column; gap: .35rem; }
+    .lc-method {
+      background: var(--surface2);
+      border-radius: .4rem;
+      padding: .35rem .7rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      font-weight: 600;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .lc-method.m  { color: var(--mount);   border-color: #1a4a2a; }
+    .lc-method.u  { color: var(--update);  border-color: #1a2a4a; }
+    .lc-method.un { color: var(--unmount); border-color: #4a2a2a; }
+    .lc-arr { text-align: center; color: var(--text-dim); font-size: .9rem; padding: .1rem 0; }
+
+    /* ── METHOD CARDS ── */
+    .method-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: .7rem;
+      margin: 1rem 0;
+      overflow: hidden;
+    }
+    .method-card-head {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      padding: .8rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .method-order {
+      font-size: .72rem;
+      font-weight: 800;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      color: #0d1117;
+    }
+    .method-card-head h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .95rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    .method-card-head h3.m  { color: var(--mount); }
+    .method-card-head h3.u  { color: var(--update); }
+    .method-card-head h3.un { color: var(--unmount); }
+    .method-card-body { padding: .9rem 1.1rem; }
+    .method-uses { display: flex; flex-wrap: wrap; gap: .4rem; margin: .6rem 0; }
+    .use-tag { background: var(--surface); border: 1px solid var(--border); border-radius: .35rem; font-size: .74rem; padding: .2rem .6rem; color: var(--text-muted); font-weight: 600; }
+
+    /* ── FLOW ── */
+    .flow { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 1rem 0; }
+    .flow-box { border: 1px solid var(--border); border-radius: .5rem; padding: .45rem 1.4rem; font-size: .84rem; font-weight: 600; text-align: center; min-width: 240px; background: var(--surface2); }
+    .flow-box.m  { border-color: var(--mount);   color: var(--mount); }
+    .flow-box.u  { border-color: var(--update);  color: var(--update); }
+    .flow-box.un { border-color: var(--unmount); color: var(--unmount); }
+    .flow-box.n  { color: var(--text); }
+    .flow-arr { color: var(--text-dim); font-size: 1.1rem; line-height: 1.4; }
+
+    /* ── HUMAN ANALOGY ── */
+    .analogy { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; margin: 1rem 0; }
+    .analogy-side { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; padding: 1rem; }
+    .analogy-side h4 { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin-bottom: .6rem; }
+    .analogy-item { display: flex; align-items: center; gap: .6rem; padding: .3rem 0; font-size: .88rem; }
+    .analogy-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .analogy-divider { color: var(--text-dim); font-size: 1.8rem; text-align: center; }
+
+    /* ── COMPARISON TABLE ── */
+    .cmp-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .85rem; }
+    .cmp-table th { background: var(--surface2); color: var(--accent4); font-weight: 700; text-align: left; padding: .6rem .9rem; font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; }
+    .cmp-table td { padding: .65rem .9rem; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: middle; }
+    .cmp-table tr:last-child td { border-bottom: none; }
+    .cmp-table td:first-child { font-family: 'JetBrains Mono', monospace; color: var(--mount); font-weight: 600; }
+    .cmp-table td:last-child  { font-family: 'JetBrains Mono', monospace; color: var(--update); font-weight: 600; }
+
+    /* ── REAL PROJECT DIAGRAM ── */
+    .project-flow { background: var(--code-bg); border: 1px solid var(--border); border-radius: .6rem; padding: 1.1rem 1.4rem; margin: 1rem 0; display: flex; flex-direction: column; gap: .15rem; }
+    .pf-row { display: flex; gap: .6rem; align-items: baseline; }
+    .pf-icon { flex-shrink: 0; font-size: .85rem; }
+    .pf-text { font-size: .85rem; }
+    .pf-method { font-family: 'JetBrains Mono', monospace; font-size: .82rem; }
+    .pf-indent { padding-left: 1.4rem; }
+    .pf-divider { border-top: 1px solid var(--border); margin: .5rem 0; }
+
+    /* ── QA ── */
+    .qa-list { display: flex; flex-direction: column; gap: .8rem; margin: 1rem 0; }
+    .qa-item { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; overflow: hidden; }
+    .qa-q { background: #1a1430; padding: .65rem 1rem; font-size: .88rem; font-weight: 700; color: var(--accent4); }
+    .qa-q::before { content: 'Q: '; color: var(--text-dim); }
+    .qa-a { padding: .7rem 1rem; font-size: .87rem; color: var(--text-muted); }
+    .qa-a strong { color: var(--text); }
+
+    /* ── QUICK REV ── */
+    .rev-phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: .7rem; margin: 1rem 0; }
+    .rev-phase { border-radius: .6rem; overflow: hidden; border: 1px solid var(--border); }
+    .rev-phase-head { padding: .55rem .9rem; font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; text-align: center; }
+    .rev-phase-head.m  { background: #0d2a1a; color: var(--mount);   border-bottom: 1px solid #1a4a2a; }
+    .rev-phase-head.u  { background: #0d1a2a; color: var(--update);  border-bottom: 1px solid #1a2a4a; }
+    .rev-phase-head.un { background: #2a1a1a; color: var(--unmount); border-bottom: 1px solid #4a2a2a; }
+    .rev-phase-body { padding: .6rem .8rem; background: var(--code-bg); }
+    .rev-method { font-family: 'JetBrains Mono', monospace; font-size: .76rem; padding: .2rem 0; }
+    .rev-method.m  { color: var(--mount); }
+    .rev-method.u  { color: var(--update); }
+    .rev-method.un { color: var(--unmount); }
+    .rev-arr { color: var(--text-dim); font-size: .8rem; }
+
+    /* ── CLEANUP SPLIT ── */
+    .cleanup-split { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: 1rem 0; }
+    .cs-box { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; overflow: hidden; }
+    .cs-head { padding: .45rem .85rem; font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+    .cs-head.setup   { background: #0d2a1a; color: var(--mount); }
+    .cs-head.cleanup { background: #2a1a1a; color: var(--unmount); }
+
+    p { font-size: .92rem; color: var(--text-muted); margin-bottom: .5rem; }
+    h3 { font-size: .95rem; font-weight: 700; color: var(--text); margin: 1.1rem 0 .5rem; }
+    code { background: var(--surface2); border: 1px solid var(--border); color: var(--accent4); font-family: 'JetBrains Mono', monospace; font-size: .82em; padding: .1em .4em; border-radius: .3rem; }
+    footer { text-align: center; padding: 2.5rem 1rem; color: var(--text-dim); font-size: .8rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+
+    @media (max-width: 600px) {
+      .lifecycle-visual { flex-direction: column; }
+      .lc-phase-div { border-right: none; border-bottom: 1px solid var(--border); }
+      .analogy { grid-template-columns: 1fr; }
+      .analogy-divider { display: none; }
+      .rev-phases { grid-template-columns: 1fr; }
+      .cleanup-split { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">React.js — Class Component</div>
+  <h1>Component Lifecycle</h1>
+  <p>Mounting → Updating → Unmounting — every phase, every method, explained with examples and real-world usage.</p>
+  <div class="hero-tags">
+    <span class="hero-tag" style="color:var(--mount)">Mounting</span>
+    <span class="hero-tag" style="color:var(--update)">Updating</span>
+    <span class="hero-tag" style="color:var(--unmount)">Unmounting</span>
+    <span class="hero-tag">constructor()</span>
+    <span class="hero-tag">componentDidMount()</span>
+    <span class="hero-tag">componentDidUpdate()</span>
+    <span class="hero-tag">componentWillUnmount()</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- <nav class="toc">
+    <h3>📋 Table of Contents</h3>
+    <ol>
+      <li><a href="#s0">What is Lifecycle?</a></li>
+      <li><a href="#s1">Mounting Phase</a> — constructor · getDerivedStateFromProps · render · componentDidMount</li>
+      <li><a href="#s2">Updating Phase</a> — shouldComponentUpdate · getSnapshotBeforeUpdate · componentDidUpdate</li>
+      <li><a href="#s3">Unmounting Phase</a> — componentWillUnmount</li>
+      <li><a href="#s4">Real Project Example</a></li>
+      <li><a href="#s5">Lifecycle vs Hooks</a></li>
+      <li><a href="#s6">Interview Questions</a></li>
+      <li><a href="#s7">Quick Revision</a></li>
+    </ol>
+  </nav> -->
+
+
+  <!-- ── S0 — INTRO ── -->
+  <div class="section" id="s0">
+    <div class="section-header">
+      <div class="section-num ng">0</div>
+      <h2>What is Lifecycle?</h2>
+    </div>
+    <div class="section-body">
+      <p>A <strong>Lifecycle</strong> is the sequence of phases a React component goes through from its <strong>creation to its removal</strong> from the DOM. React provides special <strong>Lifecycle Methods</strong> to run code at each stage.</p>
+
+      <div class="analogy">
+        <div class="analogy-side">
+          <h4>👤 Human Life</h4>
+          <div class="analogy-item"><span class="analogy-icon">👶</span> <span>Birth</span></div>
+          <div class="analogy-item"><span class="analogy-icon">🧑</span> <span>Growth / Changes</span></div>
+          <div class="analogy-item"><span class="analogy-icon">⚰️</span> <span>Death</span></div>
+        </div>
+        <div class="analogy-divider">≈</div>
+        <div class="analogy-side">
+          <h4>⚛️ React Component</h4>
+          <div class="analogy-item"><span class="analogy-icon" style="color:var(--mount)">🟢</span> <span style="color:var(--mount);font-weight:700">Mounting</span> — Creation</div>
+          <div class="analogy-item"><span class="analogy-icon" style="color:var(--update)">🔵</span> <span style="color:var(--update);font-weight:700">Updating</span> — State/Props change</div>
+          <div class="analogy-item"><span class="analogy-icon" style="color:var(--unmount)">🔴</span> <span style="color:var(--unmount);font-weight:700">Unmounting</span> — Removal</div>
+        </div>
+      </div>
+
+      
+
+      <h3>Why Do We Need Lifecycle Methods?</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:.6rem;margin:.8rem 0">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem;color:var(--text-muted)">🌐 <strong style="color:var(--text)">API Calls</strong><br>Fetch data when component loads</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem;color:var(--text-muted)">🗃️ <strong style="color:var(--text)">Database Ops</strong><br>Load and sync data</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem;color:var(--text-muted)">👂 <strong style="color:var(--text)">Event Listeners</strong><br>Add and remove cleanly</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem;color:var(--text-muted)">⏱️ <strong style="color:var(--text)">Timers</strong><br>Start and clear safely</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem;color:var(--text-muted)">⚡ <strong style="color:var(--text)">Performance</strong><br>Prevent unnecessary renders</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.84rem;color:var(--text-muted)">🧹 <strong style="color:var(--text)">Cleanup</strong><br>Avoid memory leaks</div>
+      </div>
+
+      <h3>All Three Phases at a Glance</h3>
+      <div class="lifecycle-visual">
+        <div class="lc-phase lc-phase-div">
+          <div class="lc-phase-head m">🟢 Mounting</div>
+          <div class="lc-methods">
+            <div class="lc-method m">constructor()</div>
+            <div class="lc-arr">↓</div>
+            <div class="lc-method m">getDerivedStateFromProps()</div>
+            <div class="lc-arr">↓</div>
+            <div class="lc-method m">render()</div>
+            <div class="lc-arr">↓</div>
+            <div class="lc-method m">componentDidMount()</div>
+          </div>
+        </div>
+        <div class="lc-phase lc-phase-div">
+          <div class="lc-phase-head u">🔵 Updating</div>
+          <div class="lc-methods">
+            <div class="lc-method u">getDerivedStateFromProps()</div>
+            <div class="lc-arr">↓</div>
+            <div class="lc-method u">shouldComponentUpdate()</div>
+            <div class="lc-arr">↓</div>
+            <div class="lc-method u">render()</div>
+            <div class="lc-arr">↓</div>
+            <div class="lc-method u">getSnapshotBeforeUpdate()</div>
+            <div class="lc-arr">↓</div>
+            <div class="lc-method u">componentDidUpdate()</div>
+          </div>
+        </div>
+        <div class="lc-phase">
+          <div class="lc-phase-head un">🔴 Unmounting</div>
+          <div class="lc-methods">
+            <div class="lc-method un">componentWillUnmount()</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S1 — MOUNTING ── -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num nm">1</div>
+      <h2>Mounting Phase</h2>
+      <span class="phase-pill pm">🟢 Mounting</span>
+    </div>
+    <div class="section-body">
+      <p><strong>Mounting</strong> is the process of <strong>creating a component and inserting it into the DOM</strong> for the first time. Happens once when the user first visits the page/route.</p>
+
+      <h3>Execution Order</h3>
+      <div class="flow">
+        <div class="flow-box m">1. constructor()</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box m">2. getDerivedStateFromProps()</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box m">3. render()</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box m">4. componentDidMount()</div>
+      </div>
+
+      <!-- constructor -->
+      <div class="method-card">
+        <div class="method-card-head" style="background:#0a1e10">
+          <div class="method-order nm" style="background:var(--mount)">1</div>
+          <h3 class="m">constructor(props)</h3>
+        </div>
+        <div class="method-card-body">
+          <p>The <strong>first method called</strong> when the component object is created. Used to initialize state and bind methods.</p>
+          <div class="method-uses">
+            <span class="use-tag">Initialize State</span>
+            <span class="use-tag">Bind Methods</span>
+            <span class="use-tag">Initial Setup</span>
+          </div>
+          <div class="code-wrap">
+            <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Syntax</span></div>
+            <pre><span class="lm">constructor</span>(props) {
+  <span class="kw">super</span>(props);   <span class="cm">// Must call super() first!</span>
+  <span class="kw">this</span>.state = {
+    count: <span class="nb">0</span>      <span class="cm">// Initialize state here</span>
+  };
+}</pre>
+          </div>
+          <div class="note"><strong>Rule:</strong> Always call <code>super(props)</code> as the first line inside constructor. Without it, <code>this.props</code> will be undefined.</div>
+        </div>
+      </div>
+
+      <!-- getDerivedStateFromProps -->
+      <div class="method-card">
+        <div class="method-card-head" style="background:#0a1e10">
+          <div class="method-order nm" style="background:var(--mount)">2</div>
+          <h3 class="m">static getDerivedStateFromProps()</h3>
+        </div>
+        <div class="method-card-body">
+          <p>Called <strong>before every render</strong>. Syncs state with incoming props. Rarely used in real-world projects.</p>
+          <div class="code-wrap">
+            <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Example</span></div>
+            <pre><span class="kw">static</span> <span class="lm">getDerivedStateFromProps</span>(props, state) {
+  <span class="cm">// Return updated state based on props, or null for no change</span>
+  <span class="kw">return</span> { username: props.username };
+}</pre>
+          </div>
+          <div class="warn"><strong>Note:</strong> This is a <code>static</code> method — it cannot access <code>this</code>. Rarely used. Usually you can derive the value directly inside render instead.</div>
+        </div>
+      </div>
+
+      <!-- render -->
+      <div class="method-card">
+        <div class="method-card-head" style="background:#0a1e10">
+          <div class="method-order nm" style="background:var(--mount)">3</div>
+          <h3 class="m">render()</h3>
+        </div>
+        <div class="method-card-body">
+          <p>The <strong>only required method</strong> in a class component. Returns JSX that describes what to display on screen.</p>
+          <div class="code-wrap">
+            <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Syntax</span></div>
+            <pre><span class="lm">render</span>() {
+  <span class="kw">return</span> (
+    <span class="tg">&lt;h1&gt;</span>Hello React<span class="tg">&lt;/h1&gt;</span>
+  );
+}</pre>
+          </div>
+          <div class="tip"><strong>Important:</strong> Every class component MUST have <code>render()</code>. Without it → No UI, No Output. Also runs again during every update.</div>
+        </div>
+      </div>
+
+      <!-- componentDidMount -->
+      <div class="method-card">
+        <div class="method-card-head" style="background:#0a1e10">
+          <div class="method-order nm" style="background:var(--mount)">4</div>
+          <h3 class="m">componentDidMount()</h3>
+        </div>
+        <div class="method-card-body">
+          <p>Executed <strong>immediately after the component is inserted into the DOM</strong>. The most commonly used lifecycle method. Component is fully visible and ready.</p>
+          <div class="method-uses">
+            <span class="use-tag">⭐ API Calls</span>
+            <span class="use-tag">Database Calls</span>
+            <span class="use-tag">Event Listeners</span>
+            <span class="use-tag">Timers</span>
+          </div>
+          <div class="code-wrap">
+            <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Real-World API Example</span></div>
+            <pre><span class="lm">componentDidMount</span>() {
+  <span class="cm">// Component is ready in DOM — safe to fetch data!</span>
+  <span class="fn">fetch</span>(<span class="str">"https://api.example.com/users"</span>)
+    .<span class="fn">then</span>(res => res.<span class="fn">json</span>())
+    .<span class="fn">then</span>(data => <span class="kw">this</span>.<span class="fn">setState</span>({ users: data }));
+}</pre>
+          </div>
+          <div class="note"><strong>Why here?</strong> Because the component is already displayed and ready to receive and show data. Calling API in <code>constructor</code> or <code>render</code> is risky since DOM isn't ready yet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S2 — UPDATING ── -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num nu">2</div>
+      <h2>Updating Phase</h2>
+      <span class="phase-pill pu">🔵 Updating</span>
+    </div>
+    <div class="section-body">
+      <p><strong>Updating</strong> occurs whenever <strong>State changes</strong> OR <strong>Props change</strong>. React re-renders the component with fresh data.</p>
+
+      <h3>Execution Order</h3>
+      <div class="flow">
+        <div class="flow-box u">1. getDerivedStateFromProps()</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box u">2. shouldComponentUpdate()</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box u">3. render()</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box u">4. getSnapshotBeforeUpdate()</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box u">5. componentDidUpdate()</div>
+      </div>
+
+      <!-- shouldComponentUpdate -->
+      <div class="method-card">
+        <div class="method-card-head" style="background:#0a0d1e">
+          <div class="method-order nu" style="background:var(--update)">1</div>
+          <h3 class="u">shouldComponentUpdate()</h3>
+        </div>
+        <div class="method-card-body">
+          <p>Decides whether React should <strong>re-render the component or skip it</strong>. Returns <code>true</code> (update) or <code>false</code> (skip).</p>
+          <div class="method-uses">
+            <span class="use-tag">⚡ Performance Optimization</span>
+            <span class="use-tag">Skip Expensive Renders</span>
+            <span class="use-tag">Conditional Updates</span>
+          </div>
+          <div class="code-wrap">
+            <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Real Example — Stop after count &gt; 5</span></div>
+            <pre><span class="lm">shouldComponentUpdate</span>(nextProps, nextState) {
+  <span class="kw">if</span> (nextState.count > <span class="nb">5</span>) {
+    <span class="kw">return false</span>;   <span class="cm">// Stop re-rendering when count exceeds 5</span>
+  }
+  <span class="kw">return true</span>;     <span class="cm">// Otherwise allow update</span>
+}</pre>
+          </div>
+          <div class="tip"><strong>Result:</strong> Counter will show 1, 2, 3, 4, 5 — then stop updating even if button is clicked.</div>
+        </div>
+      </div>
+
+      <!-- getSnapshotBeforeUpdate -->
+      <div class="method-card">
+        <div class="method-card-head" style="background:#0a0d1e">
+          <div class="method-order nu" style="background:var(--update)">2</div>
+          <h3 class="u">getSnapshotBeforeUpdate()</h3>
+        </div>
+        <div class="method-card-body">
+          <p>Runs <strong>just before DOM updates</strong>. Captures information from the DOM before it changes. The returned value is passed to <code>componentDidUpdate</code>.</p>
+          <div class="method-uses">
+            <span class="use-tag">Scroll Position</span>
+            <span class="use-tag">Chat Applications</span>
+            <span class="use-tag">Previous Screen State</span>
+          </div>
+          <div class="code-wrap">
+            <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Syntax</span></div>
+            <pre><span class="lm">getSnapshotBeforeUpdate</span>(prevProps, prevState) {
+  <span class="cm">// Capture DOM info before update happens</span>
+  <span class="kw">return</span> prevState.count;   <span class="cm">// passed to componentDidUpdate</span>
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- componentDidUpdate -->
+      <div class="method-card">
+        <div class="method-card-head" style="background:#0a0d1e">
+          <div class="method-order nu" style="background:var(--update)">3</div>
+          <h3 class="u">componentDidUpdate()</h3>
+        </div>
+        <div class="method-card-body">
+          <p>Executed <strong>immediately after the component re-renders</strong>. Use for side effects that depend on the updated DOM or props.</p>
+          <div class="method-uses">
+            <span class="use-tag">API Calls on Change</span>
+            <span class="use-tag">State Monitoring</span>
+            <span class="use-tag">Side Effects</span>
+          </div>
+          <div class="code-wrap">
+            <div class="code-label"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span>Real-World Example — Fetch when ID changes</span></div>
+            <pre><span class="lm">componentDidUpdate</span>(prevProps) {
+  <span class="cm">// Only fetch if ID actually changed — avoid infinite loop!</span>
+  <span class="kw">if</span> (prevProps.id !== <span class="kw">this</span>.props.id) {
+    <span class="fn">fetch</span>(<span class="str">`/api/user/${this.props.id}`</span>)
+      .<span class="fn">then</span>(res => res.<span class="fn">json</span>())
+      .<span class="fn">then</span>(data => <span class="kw">this</span>.<span class="fn">setState</span>({ user: data }));
+  }
+}</pre>
+          </div>
+          <div class="warn"><strong>⚠️ Avoid Infinite Loop:</strong> Always compare <code>prevProps</code> or <code>prevState</code> before calling <code>setState()</code> inside <code>componentDidUpdate</code>, or you'll trigger an infinite re-render loop!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S3 — UNMOUNTING ── -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num nun">3</div>
+      <h2>Unmounting Phase</h2>
+      <span class="phase-pill pun">🔴 Unmounting</span>
+    </div>
+    <div class="section-body">
+      <p><strong>Unmounting</strong> occurs when a component is <strong>removed from the DOM</strong> — e.g., user navigates to a different page, a conditional renders it away, etc.</p>
+
+      <div class="flow">
+        <div class="flow-box n">Component Removed from Screen</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box un">componentWillUnmount()</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box un">Cleanup Resources</div>
+      </div>
+
+      <!-- componentWillUnmount -->
+      <div class="method-card">
+        <div class="method-card-head" style="background:#1e0a0a">
+          <div class="method-order nun" style="background:var(--unmount)">1</div>
+          <h3 class="un">componentWillUnmount()</h3>
+        </div>
+        <div class="method-card-body">
+          <p>Runs <strong>just before the component is removed</strong>. Use it to clean up everything the component created — timers, listeners, subscriptions, etc.</p>
+
+          <div class="warn">
+            <strong>❌ Without cleanup you get:</strong><br>
+            Memory Leaks &nbsp;·&nbsp; Running timers on dead components &nbsp;·&nbsp;
+            Unnecessary API calls &nbsp;·&nbsp; Orphaned event listeners
+          </div>
+
+          <div class="method-uses">
+            <span class="use-tag">🧹 Clear Timers</span>
+            <span class="use-tag">Cancel API Requests</span>
+            <span class="use-tag">Remove Event Listeners</span>
+            <span class="use-tag">Close WebSockets</span>
+          </div>
+
+          <h3>Timer — Setup & Cleanup</h3>
+          <div class="cleanup-split">
+            <div class="cs-box">
+              <div class="cs-head setup">componentDidMount — Setup Timer</div>
+              <pre style="font-size:.8rem;padding:.8rem"><span class="lm">componentDidMount</span>() {
+  <span class="kw">this</span>.timer = <span class="fn">setInterval</span>(
+    () => console.<span class="fn">log</span>(<span class="str">"Running"</span>),
+    <span class="nb">1000</span>
+  );
+}</pre>
+            </div>
+            <div class="cs-box">
+              <div class="cs-head cleanup">componentWillUnmount — Clear Timer</div>
+              <pre style="font-size:.8rem;padding:.8rem"><span class="lm">componentWillUnmount</span>() {
+  <span class="cm">// Stop the timer when component dies</span>
+  <span class="fn">clearInterval</span>(<span class="kw">this</span>.timer);
+}</pre>
+            </div>
+          </div>
+
+          <h3>Event Listener — Setup & Cleanup</h3>
+          <div class="cleanup-split">
+            <div class="cs-box">
+              <div class="cs-head setup">componentDidMount — Add Listener</div>
+              <pre style="font-size:.8rem;padding:.8rem"><span class="lm">componentDidMount</span>() {
+  window.<span class="fn">addEventListener</span>(
+    <span class="str">"resize"</span>,
+    <span class="kw">this</span>.handleResize
+  );
+}</pre>
+            </div>
+            <div class="cs-box">
+              <div class="cs-head cleanup">componentWillUnmount — Remove Listener</div>
+              <pre style="font-size:.8rem;padding:.8rem"><span class="lm">componentWillUnmount</span>() {
+  window.<span class="fn">removeEventListener</span>(
+    <span class="str">"resize"</span>,
+    <span class="kw">this</span>.handleResize
+  );
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S4 — REAL PROJECT ── -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num ng">4</div>
+      <h2>Real Project Example — Employee Dashboard</h2>
+    </div>
+    <div class="section-body">
+      <p>How all three lifecycle phases work together in a real-world dashboard component:</p>
+      <div class="project-flow">
+        <div class="pf-row"><span class="pf-icon">📊</span><span class="pf-text" style="font-weight:700;color:var(--text)">Employee Dashboard Component</span></div>
+        <div class="pf-divider"></div>
+        <div class="pf-row"><span class="pf-icon" style="color:var(--mount)">🟢</span><span class="pf-text" style="color:var(--mount);font-weight:700">User opens the Dashboard</span></div>
+        <div class="pf-row pf-indent"><span class="pf-icon">↳</span><span class="pf-method" style="color:var(--mount)">componentDidMount()</span><span class="pf-text"> &nbsp;— Load employee list from API</span></div>
+        <div class="pf-divider"></div>
+        <div class="pf-row"><span class="pf-icon" style="color:var(--update)">🔵</span><span class="pf-text" style="color:var(--update);font-weight:700">Employee updates their data</span></div>
+        <div class="pf-row pf-indent"><span class="pf-icon">↳</span><span class="pf-method" style="color:var(--update)">componentDidUpdate()</span><span class="pf-text"> &nbsp;— Detect change, refresh dashboard data</span></div>
+        <div class="pf-divider"></div>
+        <div class="pf-row"><span class="pf-icon" style="color:var(--unmount)">🔴</span><span class="pf-text" style="color:var(--unmount);font-weight:700">User navigates away</span></div>
+        <div class="pf-row pf-indent"><span class="pf-icon">↳</span><span class="pf-method" style="color:var(--unmount)">componentWillUnmount()</span><span class="pf-text"> &nbsp;— Clear timers, cancel API requests, remove listeners</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S5 — HOOKS COMPARISON ── -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num ng">5</div>
+      <h2>Lifecycle Methods vs Hooks</h2>
+    </div>
+    <div class="section-body">
+      <p>Modern React uses <strong>Functional Components + Hooks</strong> instead of Class Component lifecycle methods. Here's the mapping:</p>
+      <table class="cmp-table">
+        <tr>
+          <th>Class Component Method</th>
+          <th>Functional Component Hook</th>
+        </tr>
+        <tr>
+          <td>constructor()</td>
+          <td>useState()</td>
+        </tr>
+        <tr>
+          <td>componentDidMount()</td>
+          <td>useEffect(() =&gt; {}, [])</td>
+        </tr>
+        <tr>
+          <td>componentDidUpdate()</td>
+          <td>useEffect(() =&gt; {}, [dependency])</td>
+        </tr>
+        <tr>
+          <td>componentWillUnmount()</td>
+          <td>useEffect cleanup function</td>
+        </tr>
+        <tr>
+          <td>shouldComponentUpdate()</td>
+          <td>React.memo() / useMemo()</td>
+        </tr>
+      </table>
+      <div class="note"><strong>Trend:</strong> Modern React apps prefer Functional Components + Hooks. But Class Component lifecycle is still heavily tested in interviews and found in older codebases.</div>
+    </div>
+  </div>
+
+
+  <!-- ── S6 — INTERVIEW ── -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num ng">6</div>
+      <h2>Interview Questions 🎯</h2>
+    </div>
+    <div class="section-body">
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q">What is React Component Lifecycle?</div>
+          <div class="qa-a">The <strong>series of phases</strong> a React component passes through — <strong>Mounting</strong> (creation), <strong>Updating</strong> (state/props change), and <strong>Unmounting</strong> (removal). React provides lifecycle methods to run code at each specific stage.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What are the three phases of React lifecycle?</div>
+          <div class="qa-a"><strong>1. Mounting</strong> — Component is created and added to DOM<br><strong>2. Updating</strong> — Component re-renders due to state/props change<br><strong>3. Unmounting</strong> — Component is removed from DOM</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">Where should API calls be made?</div>
+          <div class="qa-a">In <strong><code>componentDidMount()</code></strong> — because the component is fully inserted into the DOM and ready to display data. Never in <code>constructor()</code> or <code>render()</code>.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What is componentWillUnmount() used for?</div>
+          <div class="qa-a"><strong>Cleanup</strong> — clearing timers (<code>clearInterval</code>), removing event listeners (<code>removeEventListener</code>), cancelling API requests, closing WebSocket connections. Without cleanup → memory leaks.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What is shouldComponentUpdate()?</div>
+          <div class="qa-a">A method that <strong>controls whether a component should re-render</strong>. Returns <code>true</code> to allow re-render or <code>false</code> to skip it. Used for performance optimization to prevent expensive unnecessary renders.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What is the order of mounting lifecycle methods?</div>
+          <div class="qa-a"><strong>constructor()</strong> → <strong>getDerivedStateFromProps()</strong> → <strong>render()</strong> → <strong>componentDidMount()</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S7 — QUICK REVISION ── -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <div class="section-num ng">7</div>
+      <h2>Quick Revision ⚡</h2>
+    </div>
+    <div class="section-body">
+      <div class="rev-phases">
+        <div class="rev-phase">
+          <div class="rev-phase-head m">🟢 Mounting</div>
+          <div class="rev-phase-body">
+            <div class="rev-method m">constructor()</div>
+            <div class="rev-arr">↓</div>
+            <div class="rev-method m">getDerivedStateFromProps()</div>
+            <div class="rev-arr">↓</div>
+            <div class="rev-method m">render()</div>
+            <div class="rev-arr">↓</div>
+            <div class="rev-method m">componentDidMount() ⭐</div>
+          </div>
+        </div>
+        <div class="rev-phase">
+          <div class="rev-phase-head u">🔵 Updating</div>
+          <div class="rev-phase-body">
+            <div class="rev-method u">getDerivedStateFromProps()</div>
+            <div class="rev-arr">↓</div>
+            <div class="rev-method u">shouldComponentUpdate()</div>
+            <div class="rev-arr">↓</div>
+            <div class="rev-method u">render()</div>
+            <div class="rev-arr">↓</div>
+            <div class="rev-method u">getSnapshotBeforeUpdate()</div>
+            <div class="rev-arr">↓</div>
+            <div class="rev-method u">componentDidUpdate() ⭐</div>
+          </div>
+        </div>
+        <div class="rev-phase">
+          <div class="rev-phase-head un">🔴 Unmounting</div>
+          <div class="rev-phase-body">
+            <div class="rev-method un">componentWillUnmount() ⭐</div>
+            <br>
+            <div style="font-size:.78rem;color:var(--text-dim);line-height:1.5">Clear timers<br>Remove listeners<br>Cancel API calls<br>Close WebSockets</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note" style="margin-top:.5rem">
+        <strong>⭐ Most Important for Interviews:</strong> <code>constructor()</code> · <code>render()</code> · <code>componentDidMount()</code> · <code>shouldComponentUpdate()</code> · <code>componentDidUpdate()</code> · <code>componentWillUnmount()</code>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  React.js Notes — Class Component Lifecycle &nbsp;·&nbsp; Mounting · Updating · Unmounting &nbsp;·&nbsp; Made with ❤️
+</footer>
+
+</body>
+</html>

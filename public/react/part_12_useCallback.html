@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>useCallback Hook — React Notes</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2333;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --accent3: #f78166;
+      --accent4: #d2a8ff;
+      --accent5: #ffa657;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --text-dim: #6e7681;
+      --code-bg: #010409;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.7;
+      padding: 0 1rem;
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 3.5rem 1rem 2.5rem;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: #1f1a3f;
+      border: 1px solid var(--accent4);
+      color: var(--accent4);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: .35rem .9rem;
+      border-radius: 2rem;
+      margin-bottom: 1.4rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent4) 0%, var(--accent) 50%, var(--accent5) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.15;
+      margin-bottom: .9rem;
+    }
+    .hero p { color: var(--text-muted); font-size: 1rem; max-width: 540px; margin: 0 auto 1.8rem; }
+    .hero-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+    .hero-tag {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: .76rem;
+      font-weight: 600;
+      padding: .3rem .75rem;
+      border-radius: .4rem;
+    }
+
+    /* TOC */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent4);
+      border-radius: .6rem;
+      padding: 1.4rem 1.6rem;
+      max-width: 700px;
+      margin: 0 auto 2.5rem;
+    }
+    .toc h3 { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent4); margin-bottom: .9rem; }
+    .toc ol { padding-left: 1.2rem; }
+    .toc li { margin-bottom: .35rem; }
+    .toc a { color: var(--text-muted); text-decoration: none; font-size: .9rem; transition: color .2s; }
+    .toc a:hover { color: var(--accent4); }
+
+    /* LAYOUT */
+    .container { max-width: 820px; margin: 0 auto; }
+
+    /* SECTION */
+    .section { background: var(--surface); border: 1px solid var(--border); border-radius: .8rem; margin-bottom: 2rem; overflow: hidden; }
+    .section-header { display: flex; align-items: center; gap: .85rem; padding: 1.2rem 1.6rem; border-bottom: 1px solid var(--border); background: var(--surface2); }
+    .section-num { background: var(--accent4); color: #0d1117; font-size: .78rem; font-weight: 800; width: 1.8rem; height: 1.8rem; border-radius: .4rem; display: grid; place-items: center; flex-shrink: 0; }
+    .section-header h2 { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+    .section-body { padding: 1.4rem 1.6rem; }
+
+    /* DEF BOX */
+    .def-box {
+      background: #1a1430;
+      border: 1px solid var(--accent4);
+      border-radius: .6rem;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      font-size: .9rem;
+      color: var(--text);
+    }
+    .def-box::before {
+      content: '📌 Definition';
+      display: block;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--accent4);
+      margin-bottom: .5rem;
+    }
+
+    /* NOTE / WARN */
+    .note { background: #1a2640; border-left: 3px solid var(--accent); border-radius: 0 .5rem .5rem 0; padding: .8rem 1.1rem; font-size: .88rem; color: var(--text-muted); margin: .8rem 0; }
+    .note strong { color: var(--accent); }
+    .warn { background: #2a1a0a; border-left: 3px solid var(--accent5); border-radius: 0 .5rem .5rem 0; padding: .8rem 1.1rem; font-size: .88rem; color: var(--text-muted); margin: .8rem 0; }
+    .warn strong { color: var(--accent5); }
+    .tip { background: #0d2a1a; border-left: 3px solid var(--accent2); border-radius: 0 .5rem .5rem 0; padding: .8rem 1.1rem; font-size: .88rem; color: var(--text-muted); margin: .8rem 0; }
+    .tip strong { color: var(--accent2); }
+
+    /* CODE BLOCK */
+    .code-wrap { background: var(--code-bg); border: 1px solid var(--border); border-radius: .6rem; margin: 1rem 0; overflow: hidden; }
+    .code-label { display: flex; align-items: center; justify-content: space-between; background: var(--surface2); border-bottom: 1px solid var(--border); padding: .45rem 1rem; }
+    .code-label span { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); }
+    .code-dots { display: flex; gap: .35rem; }
+    .code-dot { width: .55rem; height: .55rem; border-radius: 50%; }
+    .code-dot.r { background: #f78166; }
+    .code-dot.y { background: #e3b341; }
+    .code-dot.g { background: #3fb950; }
+    pre { padding: 1.1rem 1.2rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: .84rem; line-height: 1.65; color: #e6edf3; }
+    .kw  { color: #ff7b72; }
+    .fn  { color: #d2a8ff; }
+    .str { color: #a5d6ff; }
+    .cm  { color: #6e7681; font-style: italic; }
+    .tg  { color: #7ee787; }
+    .at  { color: #ffa657; }
+    .nb  { color: #79c0ff; }
+    .hk  { color: #58a6ff; }  /* hook name */
+
+    /* OUTPUT BOX */
+    .output-box { background: #0a1a0a; border: 1px solid var(--accent2); border-radius: .5rem; padding: .7rem 1.1rem; margin: .5rem 0 1.2rem; font-family: 'JetBrains Mono', monospace; font-size: .84rem; color: var(--accent2); }
+    .output-box::before { content: '▶ Result'; display: block; font-size: .7rem; color: var(--text-dim); margin-bottom: .4rem; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+
+    /* FLOW */
+    .flow { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 1.2rem 0; }
+    .flow-box { background: var(--surface2); border: 1px solid var(--border); border-radius: .5rem; padding: .5rem 1.6rem; font-size: .85rem; color: var(--text); font-weight: 600; text-align: center; min-width: 200px; }
+    .flow-box.purple { border-color: var(--accent4); color: var(--accent4); }
+    .flow-box.blue   { border-color: var(--accent);  color: var(--accent); }
+    .flow-box.green  { border-color: var(--accent2); color: var(--accent2); }
+    .flow-box.orange { border-color: var(--accent5); color: var(--accent5); }
+    .flow-box.red    { border-color: var(--accent3); color: var(--accent3); }
+    .flow-arr { color: var(--text-dim); font-size: 1.1rem; line-height: 1.5; }
+
+    /* COMPARE SIDE-BY-SIDE */
+    .side-by-side { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: 1rem 0; }
+    .sbs-box { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; overflow: hidden; }
+    .sbs-head { padding: .5rem 1rem; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+    .sbs-head.bad   { background: #2d1a1a; color: var(--accent3); }
+    .sbs-head.good  { background: #0d2a1a; color: var(--accent2); }
+    .sbs-head.plain { background: var(--surface); color: var(--text-muted); }
+    .sbs-head.hook  { background: #1a1430; color: var(--accent4); }
+    .sbs-body { padding: .7rem .9rem; }
+    .sbs-body p { font-size: .84rem; color: var(--text-muted); margin-bottom: .3rem; }
+    .sbs-body .flow { margin: .5rem 0; }
+    .sbs-body .flow-box { min-width: unset; font-size: .78rem; padding: .4rem 1rem; }
+
+    /* PROS/CONS */
+    .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: 1rem 0; }
+    .pc-box { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; padding: 1rem; }
+    .pc-box h4 { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; margin-bottom: .7rem; }
+    .pc-box.pros h4 { color: var(--accent2); }
+    .pc-box.cons h4 { color: var(--accent3); }
+    .pc-box ul { list-style: none; }
+    .pc-box li { font-size: .85rem; color: var(--text-muted); padding: .25rem 0; display: flex; gap: .5rem; }
+    .pc-box.pros li::before { content: '✅'; }
+    .pc-box.cons li::before { content: '❌'; }
+
+    /* INTERVIEW Q&A */
+    .qa-list { display: flex; flex-direction: column; gap: .8rem; margin: 1rem 0; }
+    .qa-item { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; overflow: hidden; }
+    .qa-q { background: #1a1430; padding: .65rem 1rem; font-size: .88rem; font-weight: 700; color: var(--accent4); }
+    .qa-q::before { content: 'Q: '; color: var(--text-dim); }
+    .qa-a { padding: .7rem 1rem; font-size: .87rem; color: var(--text-muted); }
+    .qa-a strong { color: var(--text); }
+
+    /* COMPARISON TABLE */
+    .cmp-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .88rem; }
+    .cmp-table th { background: var(--surface2); color: var(--accent4); font-weight: 700; text-align: left; padding: .65rem 1rem; font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; }
+    .cmp-table td { padding: .65rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+    .cmp-table tr:last-child td { border-bottom: none; }
+    .cmp-table td:first-child { color: var(--accent); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+    /* QUICK REVISION CARD */
+    .revision-card {
+      background: linear-gradient(135deg, #1a1430 0%, #0d1a30 100%);
+      border: 1px solid var(--accent4);
+      border-radius: .8rem;
+      padding: 1.4rem 1.6rem;
+      margin: 1rem 0;
+    }
+    .revision-card h3 { color: var(--accent4); font-size: .95rem; margin-bottom: 1rem; }
+    .rev-row { display: flex; gap: .6rem; align-items: baseline; padding: .4rem 0; border-bottom: 1px solid var(--border); }
+    .rev-row:last-child { border-bottom: none; }
+    .rev-label { color: var(--text-dim); font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; min-width: 120px; flex-shrink: 0; }
+    .rev-val { color: var(--text); font-size: .86rem; font-family: 'JetBrains Mono', monospace; }
+
+    /* HOOKS SUMMARY TABLE */
+    .hooks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: .7rem; margin: 1rem 0; }
+    .hook-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: .6rem; padding: .75rem 1rem; }
+    .hook-pill .hname { font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: var(--hk); font-weight: 600; margin-bottom: .25rem; }
+    .hook-pill .hdesc { font-size: .78rem; color: var(--text-muted); }
+    .hook-pill.active { border-color: var(--accent4); background: #1a1430; }
+    .hook-pill.active .hname { color: var(--accent4); }
+
+    /* EX HEADER */
+    .ex-header { display: flex; align-items: center; gap: .6rem; margin: 1.3rem 0 .3rem; }
+    .ex-badge { background: #1f2d3f; border: 1px solid var(--accent); color: var(--accent); font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; padding: .2rem .65rem; border-radius: .35rem; }
+    .ex-header h3 { font-size: .95rem; font-weight: 700; color: var(--text); }
+
+    p { font-size: .92rem; color: var(--text-muted); margin-bottom: .5rem; }
+    h3 { font-size: .95rem; font-weight: 700; color: var(--text); margin: 1.1rem 0 .5rem; }
+    code { background: var(--surface2); border: 1px solid var(--border); color: var(--accent4); font-family: 'JetBrains Mono', monospace; font-size: .82em; padding: .1em .4em; border-radius: .3rem; }
+
+    footer { text-align: center; padding: 2.5rem 1rem; color: var(--text-dim); font-size: .8rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+
+    @media (max-width: 520px) {
+      .side-by-side, .pros-cons, .pros-cons { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">React Hooks — Performance</div>
+  <h1>useCallback Hook</h1>
+  <p>Memoize functions, prevent unnecessary re-renders, and optimize React app performance.</p>
+  <div class="hero-tags">
+    <span class="hero-tag">Memoization</span>
+    <span class="hero-tag">Performance</span>
+    <span class="hero-tag">Dependencies</span>
+    <span class="hero-tag">React.memo</span>
+    <span class="hero-tag">useMemo vs useCallback</span>
+    <span class="hero-tag">Child Re-renders</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TOC -->
+  <nav class="toc">
+    <h3>📋 Table of Contents</h3>
+    <ol>
+      <li><a href="#s1">What is useCallback?</a></li>
+      <li><a href="#s2">The Problem — Why We Need It</a></li>
+      <li><a href="#s3">Syntax & Import</a></li>
+      <li><a href="#s4">Examples</a></li>
+      <li><a href="#s5">useCallback with Dependency</a></li>
+      <li><a href="#s6">useMemo vs useCallback</a></li>
+      <li><a href="#s7">Pros, Cons & When to Use</a></li>
+      <li><a href="#s8">Interview Questions</a></li>
+      <li><a href="#s9">Quick Revision</a></li>
+    </ol>
+  </nav>
+
+
+  <!-- ── S1 — WHAT IS ── -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>What is useCallback?</h2>
+    </div>
+    <div class="section-body">
+      <p><code>useCallback</code> is a built-in React Hook used to <strong>memoize (cache) a function</strong> and prevent it from being unnecessarily recreated on every component re-render.</p>
+
+      <div class="def-box">
+        <code>useCallback</code> is a React Hook that returns a <strong>memoized version of a function</strong> and only recreates it when its <strong>dependencies change</strong>.
+      </div>
+
+      <div class="note">
+        <strong>Key idea:</strong> In JavaScript, every time a function is declared, it creates a <em>new object in memory</em>. useCallback prevents this from happening on every render by caching and reusing the same function reference.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S2 — THE PROBLEM ── -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>The Problem — Why We Need It</h2>
+    </div>
+    <div class="section-body">
+      <p>Every time a React component re-renders, <strong>all functions inside it are recreated as new objects</strong>, even if their logic didn't change at all.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">
+          <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+          <span>Without useCallback — Problem</span>
+        </div>
+        <pre><span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="cm">// This function is RE-CREATED on every render! ⚠️</span>
+  <span class="kw">const</span> <span class="fn">handleClick</span> = () => {
+    console.<span class="fn">log</span>(<span class="str">"Clicked"</span>);
+  };
+}</pre>
+      </div>
+
+      <h3>What Actually Happens on Each Render</h3>
+      <div class="flow">
+        <div class="flow-box blue">Render 1 → handleClick <em>created</em></div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box orange">Render 2 → NEW handleClick <em>created</em></div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box orange">Render 3 → NEW handleClick <em>created</em></div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box red">Child receives new function → Child re-renders ❌</div>
+      </div>
+
+      <h3>The Real Pain Point — Parent → Child</h3>
+      <div class="side-by-side">
+        <div class="sbs-box">
+          <div class="sbs-head bad">❌ Without useCallback</div>
+          <div class="sbs-body">
+            <div class="flow">
+              <div class="flow-box">Count Changes</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box orange">Parent Re-renders</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box orange">showMessage Recreated</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box red">Child Re-renders ❌</div>
+            </div>
+            <p style="margin-top:.5rem">Even though child data didn't change at all!</p>
+          </div>
+        </div>
+        <div class="sbs-box">
+          <div class="sbs-head good">✅ With useCallback</div>
+          <div class="sbs-body">
+            <div class="flow">
+              <div class="flow-box">Count Changes</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box orange">Parent Re-renders</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box green">Function SAME (cached)</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box green">Child Skips Re-render ✅</div>
+            </div>
+            <p style="margin-top:.5rem">Used together with <code>React.memo</code>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S3 — SYNTAX ── -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>Syntax & Import</h2>
+    </div>
+    <div class="section-body">
+
+      <h3>Import</h3>
+      <div class="code-wrap">
+        <div class="code-label">
+          <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+          <span>Import</span>
+        </div>
+        <pre><span class="kw">import</span> { <span class="hk">useCallback</span> } <span class="kw">from</span> <span class="str">"react"</span>;</pre>
+      </div>
+
+      <h3>Full Syntax</h3>
+      <div class="code-wrap">
+        <div class="code-label">
+          <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+          <span>Syntax</span>
+        </div>
+        <pre><span class="kw">const</span> memoizedFunction = <span class="hk">useCallback</span>(
+  () => {
+    <span class="cm">// your function logic here</span>
+  },
+  [dependencies]   <span class="cm">// recreate only when these change</span>
+);</pre>
+      </div>
+
+      <h3>How the Flow Works</h3>
+      <div class="flow">
+        <div class="flow-box blue">Component Renders</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box">Dependency Changed?</div>
+        <div class="flow-arr">↓</div>
+        <div class="flow-box orange">YES → Create New Function</div>
+        <div class="flow-arr" style="opacity:.3">─ OR ─</div>
+        <div class="flow-box green">NO → Reuse Existing (Cached) Function</div>
+      </div>
+
+      <div class="note">
+        <strong>Empty dependency array <code>[]</code>:</strong> The function is created only <em>once</em> — on the first render — and reused forever after.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S4 — EXAMPLES ── -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>Examples</h2>
+    </div>
+    <div class="section-body">
+
+      <!-- EX 1 -->
+      <div class="ex-header">
+        <span class="ex-badge">Example 1</span>
+        <h3>Normal Function — The Problem</h3>
+      </div>
+      <div class="code-wrap">
+        <div class="code-label">
+          <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+          <span>App.jsx — Without useCallback</span>
+        </div>
+        <pre><span class="kw">import</span> { <span class="hk">useState</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="nb">0</span>);
+
+  <span class="cm">// ⚠️ Recreated on EVERY render</span>
+  <span class="kw">const</span> <span class="fn">showMessage</span> = () => {
+    console.<span class="fn">log</span>(<span class="str">"Hello"</span>);
+  };
+
+  <span class="kw">return</span> (
+    <span class="tg">&lt;&gt;</span>
+      <span class="tg">&lt;h1&gt;</span>{count}<span class="tg">&lt;/h1&gt;</span>
+      <span class="tg">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">setCount</span>(count + <span class="nb">1</span>)}<span class="tg">&gt;</span>Increment<span class="tg">&lt;/button&gt;</span>
+    <span class="tg">&lt;/&gt;</span>
+  );
+}</pre>
+      </div>
+      <div class="warn"><strong>⚠️ Problem:</strong> Every time count changes → <code>showMessage</code> is recreated as a brand new function object in memory.</div>
+
+      <!-- EX 2 -->
+      <div class="ex-header">
+        <span class="ex-badge">Example 2</span>
+        <h3>Using useCallback — The Fix</h3>
+      </div>
+      <div class="code-wrap">
+        <div class="code-label">
+          <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+          <span>App.jsx — With useCallback</span>
+        </div>
+        <pre><span class="kw">import</span> { <span class="hk">useState</span>, <span class="hk">useCallback</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="nb">0</span>);
+
+  <span class="cm">// ✅ Cached — not recreated unless dependencies change</span>
+  <span class="kw">const</span> <span class="fn">showMessage</span> = <span class="hk">useCallback</span>(() => {
+    console.<span class="fn">log</span>(<span class="str">"Hello"</span>);
+  }, []);  <span class="cm">// Empty [] = create once only</span>
+
+  <span class="kw">return</span> (
+    <span class="tg">&lt;&gt;</span>
+      <span class="tg">&lt;h1&gt;</span>{count}<span class="tg">&lt;/h1&gt;</span>
+      <span class="tg">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">setCount</span>(count + <span class="nb">1</span>)}<span class="tg">&gt;</span>Increment<span class="tg">&lt;/button&gt;</span>
+    <span class="tg">&lt;/&gt;</span>
+  );
+}</pre>
+      </div>
+      <div class="output-box">showMessage is NOT recreated on count change ✅<br>Same function reference reused across renders</div>
+
+      <!-- EX 3 — PARENT CHILD -->
+      <div class="ex-header">
+        <span class="ex-badge">Example 3</span>
+        <h3>Real Scenario — Parent Passing Function to Child</h3>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">
+          <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+          <span>Child.jsx</span>
+        </div>
+        <pre><span class="kw">function</span> <span class="fn">Child</span>({ showMessage }) {
+  console.<span class="fn">log</span>(<span class="str">"Child Rendered"</span>);   <span class="cm">// Watch how often this runs!</span>
+
+  <span class="kw">return</span> (
+    <span class="tg">&lt;button</span> <span class="at">onClick</span>={showMessage}<span class="tg">&gt;</span>
+      Click Me
+    <span class="tg">&lt;/button&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> Child;</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">
+          <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+          <span>App.jsx — Optimized Parent</span>
+        </div>
+        <pre><span class="kw">import</span> { <span class="hk">useState</span>, <span class="hk">useCallback</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+<span class="kw">import</span> Child <span class="kw">from</span> <span class="str">"./Child"</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="nb">0</span>);
+
+  <span class="cm">// ✅ Same function reference every render (unless deps change)</span>
+  <span class="kw">const</span> <span class="fn">showMessage</span> = <span class="hk">useCallback</span>(() => {
+    console.<span class="fn">log</span>(<span class="str">"Hello from Parent"</span>);
+  }, []);
+
+  <span class="kw">return</span> (
+    <span class="tg">&lt;&gt;</span>
+      <span class="tg">&lt;h1&gt;</span>{count}<span class="tg">&lt;/h1&gt;</span>
+      <span class="tg">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">setCount</span>(count + <span class="nb">1</span>)}<span class="tg">&gt;</span>
+        Increment
+      <span class="tg">&lt;/button&gt;</span>
+
+      <span class="tg">&lt;Child</span> <span class="at">showMessage</span>={showMessage} <span class="tg">/&gt;</span>
+    <span class="tg">&lt;/&gt;</span>
+  );
+}</pre>
+      </div>
+      <div class="tip"><strong>💡 Best Practice:</strong> Pair <code>useCallback</code> with <code>React.memo</code> on the Child component. Without <code>React.memo</code>, the child will still re-render even with the same function reference.</div>
+    </div>
+  </div>
+
+
+  <!-- ── S5 — DEPENDENCY ── -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>useCallback with Dependency</h2>
+    </div>
+    <div class="section-body">
+      <p>When your function <strong>uses a value from state or props</strong>, you must add it to the dependency array so the function gets the latest value.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">
+          <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+          <span>With Dependency — count</span>
+        </div>
+        <pre><span class="kw">const</span> <span class="fn">showData</span> = <span class="hk">useCallback</span>(() => {
+  console.<span class="fn">log</span>(count);   <span class="cm">// uses count → must be in deps</span>
+}, [count]);             <span class="cm">// recreate when count changes</span></pre>
+      </div>
+
+      <div class="side-by-side">
+        <div class="sbs-box">
+          <div class="sbs-head plain">Count Changes</div>
+          <div class="sbs-body">
+            <div class="flow">
+              <div class="flow-box orange">Dependency Changed</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box orange">Function Recreated</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box blue">Gets fresh count value</div>
+            </div>
+          </div>
+        </div>
+        <div class="sbs-box">
+          <div class="sbs-head plain">Count Doesn't Change</div>
+          <div class="sbs-body">
+            <div class="flow">
+              <div class="flow-box">Dependency Same</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box green">Existing Function Reused ✅</div>
+              <div class="flow-arr">↓</div>
+              <div class="flow-box green">No unnecessary re-render</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="warn">
+        <strong>⚠️ Stale Closure Bug:</strong> If you use <code>count</code> inside the function but forget to add it to the dependency array, the function will always see the <em>old value</em> of count from when it was first created. Always add used values to deps!
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S6 — useMemo vs useCallback ── -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <h2>useMemo vs useCallback</h2>
+    </div>
+    <div class="section-body">
+      <p>These two hooks look similar but serve different purposes. A common interview topic!</p>
+
+      <div class="side-by-side">
+        <div class="sbs-box">
+          <div class="sbs-head hook">useMemo — Stores a VALUE</div>
+          <div class="sbs-body">
+            <div class="code-wrap" style="margin:0">
+              <pre style="font-size:.8rem;padding:.8rem"><span class="kw">const</span> result = <span class="hk">useMemo</span>(() => {
+  <span class="kw">return</span> count * count;
+}, [count]);
+
+<span class="cm">// Returns: 25 (a number)</span>
+<span class="cm">// → A VALUE, not a function</span></pre>
+            </div>
+          </div>
+        </div>
+        <div class="sbs-box">
+          <div class="sbs-head hook">useCallback — Stores a FUNCTION</div>
+          <div class="sbs-body">
+            <div class="code-wrap" style="margin:0">
+              <pre style="font-size:.8rem;padding:.8rem"><span class="kw">const</span> <span class="fn">handleClick</span> = <span class="hk">useCallback</span>(
+  () => { <span class="cm">/* logic */</span> },
+  []
+);
+
+<span class="cm">// Returns: () => {...}</span>
+<span class="cm">// → A FUNCTION, not a value</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table class="cmp-table">
+        <tr><th>Feature</th><th>useMemo</th><th>useCallback</th></tr>
+        <tr><td>Returns</td><td>A computed value</td><td>A memoized function</td></tr>
+        <tr><td>Memoizes</td><td>Result of a calculation</td><td>The function itself</td></tr>
+        <tr><td>Used for</td><td>Expensive calculations</td><td>Functions passed to children</td></tr>
+        <tr><td>Example</td><td><code>count * count</code></td><td><code>() =&gt; handleClick()</code></td></tr>
+      </table>
+
+      <div class="tip">
+        <strong>🧠 Easy Memory Trick:</strong><br>
+        <code>useMemo</code> → Memoize a <strong>VALUE</strong><br>
+        <code>useCallback</code> → Memoize a <strong>FUNCTION</strong>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S7 — PROS CONS WHEN ── -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <h2>Pros, Cons & When to Use</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="pros-cons">
+        <div class="pc-box pros">
+          <h4>✅ Advantages</h4>
+          <ul>
+            <li>Prevents unnecessary function recreation</li>
+            <li>Improves performance in large trees</li>
+            <li>Works perfectly with React.memo</li>
+            <li>Reduces child component re-renders</li>
+          </ul>
+        </div>
+        <div class="pc-box cons">
+          <h4>❌ Disadvantages</h4>
+          <ul>
+            <li>Uses extra memory to cache function</li>
+            <li>Not needed for simple components</li>
+            <li>Overuse can actually reduce performance</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>✅ When Should You Use useCallback?</h3>
+      <div class="note">
+        <strong>Use it when:</strong><br><br>
+        • Passing a function as a prop to a <strong>child component</strong><br>
+        • The child is wrapped with <strong>React.memo</strong><br>
+        • You have <strong>expensive component trees</strong> that re-render often<br>
+        • You specifically need to <strong>optimize performance</strong>
+      </div>
+      <div class="warn">
+        <strong>Don't use it everywhere!</strong> Adding useCallback to every function is premature optimization and wastes memory. Profile first, optimize second.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S8 — INTERVIEW Q&A ── -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <h2>Interview Questions 🎯</h2>
+    </div>
+    <div class="section-body">
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q">What is useCallback?</div>
+          <div class="qa-a"><strong>useCallback</strong> is a React Hook that memoizes a function and only recreates it when its dependencies change — preventing unnecessary re-creation on every render.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">Why is useCallback used?</div>
+          <div class="qa-a">It prevents <strong>unnecessary function recreation</strong> on each render, which improves performance — especially when passing functions to child components.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What does useCallback return?</div>
+          <div class="qa-a">It returns a <strong>memoized function</strong> — the same function reference until the dependency array changes.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">Difference between useMemo and useCallback?</div>
+          <div class="qa-a">
+            <strong>useMemo</strong> returns a memoized <em>value</em> (result of a computation).<br>
+            <strong>useCallback</strong> returns a memoized <em>function</em>.<br>
+            Simple rule: useMemo = store value | useCallback = store function.
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">Does useCallback improve performance?</div>
+          <div class="qa-a">Yes — especially when passing functions to child components wrapped with <strong>React.memo</strong>. It prevents child re-renders when parent state changes but the function logic didn't.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What is the interview keyword for useCallback?</div>
+          <div class="qa-a"><strong>"Prevent Unnecessary Function Recreation"</strong> — Say this in every interview answer about useCallback!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── S9 — QUICK REVISION ── -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <h2>Quick Revision ⚡</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="revision-card">
+        <h3>useCallback — At a Glance</h3>
+        <div class="rev-row">
+          <span class="rev-label">Purpose</span>
+          <span class="rev-val">Memoize (cache) a function</span>
+        </div>
+        <div class="rev-row">
+          <span class="rev-label">Syntax</span>
+          <span class="rev-val">const fn = useCallback(() =&gt; {}, [deps])</span>
+        </div>
+        <div class="rev-row">
+          <span class="rev-label">Returns</span>
+          <span class="rev-val">A memoized function</span>
+        </div>
+        <div class="rev-row">
+          <span class="rev-label">Use when</span>
+          <span class="rev-val">Passing fn to child | using React.memo | optimizing</span>
+        </div>
+        <div class="rev-row">
+          <span class="rev-label">vs useMemo</span>
+          <span class="rev-val">useMemo = value | useCallback = function</span>
+        </div>
+        <div class="rev-row">
+          <span class="rev-label">Interview word</span>
+          <span class="rev-val">"Prevent Unnecessary Function Recreation"</span>
+        </div>
+      </div>
+
+      <h3>All Hooks — Quick Summary</h3>
+      <div class="hooks-grid">
+        <div class="hook-pill">
+          <div class="hname">useState</div>
+          <div class="hdesc">Store and update component state</div>
+        </div>
+        <div class="hook-pill">
+          <div class="hname">useRef</div>
+          <div class="hdesc">Store a DOM reference or mutable value</div>
+        </div>
+        <div class="hook-pill">
+          <div class="hname">useEffect</div>
+          <div class="hdesc">Handle side effects (API calls, timers)</div>
+        </div>
+        <div class="hook-pill">
+          <div class="hname">useMemo</div>
+          <div class="hdesc">Memoize an expensive calculated value</div>
+        </div>
+        <div class="hook-pill active">
+          <div class="hname">useCallback ⭐</div>
+          <div class="hdesc">Memoize a function to prevent recreation</div>
+        </div>
+      </div>
+
+      <div class="tip" style="margin-top:1rem">
+        <strong>🔜 Next Topic:</strong> <strong>React.memo()</strong> — usually asked together with useMemo and useCallback since all three are used for React Performance Optimization.
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  React.js Notes — useCallback Hook &nbsp;·&nbsp; Performance Optimization &nbsp;·&nbsp; Made with ❤️
+</footer>
+
+</body>
+</html>

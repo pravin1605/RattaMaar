@@ -1,0 +1,563 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+.warn-box{background:#fce4ec;border-left:5px solid #c62828;padding:10px 14px;margin-top:10px}
+.warn-box .lbl{font-size:10px;font-weight:700;color:#c62828;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.warn-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:4px}
+.mini-card p,.mini-card li{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+.prog-wrap{margin:10px 0}
+.prog-header{background:#2c2c2c;padding:6px 14px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.prog-label{color:#bbb;font-size:11px;margin-left:6px;font-family:Arial,sans-serif;font-weight:700;letter-spacing:.3px}
+.prog-body{background:#1e1e1e;border-radius:0 0 6px 6px;padding:13px 16px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.9;white-space:pre;overflow-x:auto;color:#d4d4d4}
+.kw{color:#569cd6;font-weight:700}
+.cm{color:#6a9955;font-style:italic}
+.str{color:#ce9178}
+.fn{color:#dcdcaa}
+.tp{color:#4ec9b0}
+.num{color:#b5cea8}
+.out-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:0 0 5px 5px;padding:6px 14px;font-family:'Courier New',monospace;font-size:12.5px;color:#1b5e20;margin-bottom:12px}
+.err-bar{background:#fce4ec;border:1px solid #f48fb1;border-radius:0 0 5px 5px;padding:6px 14px;font-family:'Courier New',monospace;font-size:12px;color:#880e4f;margin-bottom:12px}
+.ex-block{border:1px solid #ccc;border-radius:6px;margin-bottom:14px;overflow:hidden}
+.ex-head{background:#1a1a6e;color:#fff;padding:7px 14px;font-size:13px;font-weight:700}
+.ex-logic{background:#f5f6ff;padding:8px 14px;font-size:12.5px;color:#333;border-bottom:1px solid #ddd}
+.flow-box{background:#f5f6ff;border:1px solid #b0bfff;border-radius:6px;padding:10px 14px;text-align:center;font-size:13px;color:#111;margin:8px 0;line-height:2.2}
+.flow-box b{color:#1a1a6e}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.tag{background:#eef0ff;color:#1a1a6e;font-size:12px;padding:3px 10px;border-radius:12px;border:1px solid #b0bfff}
+.idx-card{border:1px solid #ccc;border-radius:6px;overflow:hidden;margin-bottom:12px}
+.idx-head{background:#1a1a6e;color:#fff;padding:7px 14px;font-size:13px;font-weight:700}
+.idx-body{padding:10px 14px;font-size:13px;color:#111}
+.idx-body p{margin-bottom:5px}
+.btree-box{background:#1e1e1e;border-radius:5px;padding:12px 16px;font-family:'Courier New',monospace;font-size:12px;color:#d4d4d4;margin:8px 0;white-space:pre;overflow-x:auto;line-height:1.8}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">SQL — Indexes in Oracle</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; B-Tree, Bitmap, Composite, Unique, Function-Based &nbsp;|&nbsp; Orange tag = Extra content</div>
+</div>
+
+<!-- ===== 1 ===== -->
+<div class="sec-label">1. What is an Index?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition — One Line</div>
+    <p>An Index is a database object that stores column values and ROWIDs to speed up data retrieval operations by reducing full table scans on large tables.</p>
+  </div>
+  <ul>
+    <li>Works like the index of a book — instead of reading every page, you jump directly to the required page</li>
+    <li>Oracle uses indexes to quickly locate rows without scanning the entire table</li>
+    <li>Stored as a separate database object — independent of the table</li>
+    <li>Automatically maintained by Oracle when DML (INSERT, UPDATE, DELETE) occurs</li>
+    <li>Can be created on one column (Single) or multiple columns (Composite)</li>
+  </ul>
+  <div class="flow-box">
+    <b>Without Index</b>: Full Table Scan → check every row → slow for large tables<br>
+    <b>With Index</b>: Search index → get ROWID → jump directly to the row → fast
+  </div>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Index = Book's index page — instead of reading all 1000 pages to find "Database", the index says "Database → Page 450" and you go directly there</p>
+    <p>ROWID = Physical address of a row in Oracle — like a GPS coordinate for the exact row location</p>
+  </div>
+</div>
+
+<!-- ===== 2 ===== -->
+<div class="sec-label">2. How Index Works Internally</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:8px">Oracle stores the index as a separate structure containing the indexed column value paired with the ROWID of each matching row.</p>
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">Index Structure (Simplified)</div>
+      <p style="font-family:'Courier New',monospace;font-size:12px;margin-top:4px">EMPNO &nbsp;&nbsp; ROWID<br>101 &nbsp;&nbsp;→ AA123<br>102 &nbsp;&nbsp;→ AA124<br>103 &nbsp;&nbsp;→ AA125</p>
+    </div>
+    <div class="mini-card">
+      <div class="mct">Query Execution with Index</div>
+      <ul style="margin-top:4px">
+        <li>Step 1: Oracle searches the index for EMPNO = 102</li>
+        <li>Step 2: Gets ROWID = AA124</li>
+        <li>Step 3: Directly fetches that row from the table</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tip-box">
+    <div class="lbl">Extra — What is ROWID?</div>
+    <p>ROWID is the physical address of a row inside Oracle's storage. It uniquely identifies each row's exact location on disk (file number, block number, row number within the block). Oracle uses ROWID to directly fetch a row without scanning other rows.</p>
+    <p>Example: SELECT ROWID, EMPNO, ENAME FROM EMP; → shows each row's physical address.</p>
+  </div>
+</div>
+
+<!-- ===== 3 ===== -->
+<div class="sec-label">3. B-Tree Index Structure (Oracle Default)</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:8px">Most Oracle indexes use a <strong>B-Tree (Balanced Tree)</strong> structure with three levels:</p>
+  <div class="btree-box">                    ROOT
+                     |
+         -------------------------
+         |                       |
+      BRANCH                  BRANCH
+         |                       |
+    -----------           -------------
+    |    |    |           |    |      |
+  LEAF LEAF LEAF        LEAF LEAF  LEAF
+
+Each LEAF contains: Index Value + ROWID</div>
+  <table style="margin-top:10px">
+    <tr><th>Level</th><th>Name</th><th>Contains</th></tr>
+    <tr><td>Top</td><td>Root Block</td><td>Entry point — pointers to Branch blocks</td></tr>
+    <tr><td>Middle</td><td>Branch Block</td><td>Intermediate — pointers to Leaf blocks</td></tr>
+    <tr><td>Bottom</td><td>Leaf Block</td><td>Actual data — Index Value + ROWID pairs</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — Why Balanced Tree?</div>
+    <p>B-Tree is "balanced" — every leaf is at the same depth from the root. This means every search takes the same number of steps regardless of which value you search for. Oracle can find any value in O(log n) time instead of O(n) for full table scan.</p>
+  </div>
+</div>
+
+<!-- ===== 4 ===== -->
+<div class="sec-label">4. Advantages and Disadvantages of Indexes</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct" style="color:#2e7d32">Advantages</div>
+      <ul style="margin-top:4px">
+        <li>Faster query execution — WHERE clause searches</li>
+        <li>Reduces disk I/O — fewer blocks read</li>
+        <li>Improves JOIN performance</li>
+        <li>Improves ORDER BY and GROUP BY performance</li>
+        <li>Automatically used by Oracle's query optimizer</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct" style="color:#c62828">Disadvantages</div>
+      <ul style="margin-top:4px">
+        <li>Extra storage space required for index structure</li>
+        <li>INSERT is slower — table AND index both updated</li>
+        <li>UPDATE is slower — index must be updated</li>
+        <li>DELETE is slower — entries removed from both table and index</li>
+        <li>Over-indexing can hurt DML performance</li>
+      </ul>
+    </div>
+  </div>
+  <div class="warn-box">
+    <div class="lbl">Important — Index Does NOT Help All Queries</div>
+    <p>Index helps: WHERE col = value, WHERE col > value, JOIN on indexed col, ORDER BY indexed col.</p>
+    <p>Index may NOT help: queries returning most rows (full scan is faster), functions on indexed column without function-based index, OR conditions on non-indexed columns.</p>
+  </div>
+</div>
+
+<!-- ===== 5 ===== -->
+<div class="sec-label">5. Classification of Indexes</div>
+<div class="card">
+  <table>
+    <tr><th>Category</th><th>Type</th><th>Oracle Default?</th></tr>
+    <tr><td>Clustered Index</td><td>Rows stored in same order as index key</td><td>Not standard in Oracle</td></tr>
+    <tr><td rowspan="6">Non-Clustered Index</td><td>Single Column Index</td><td>Yes — most common</td></tr>
+    <tr><td>Composite Index (Multi-Column)</td><td>Yes</td></tr>
+    <tr><td>Unique Index</td><td>Auto-created with PRIMARY KEY and UNIQUE constraints</td></tr>
+    <tr><td>Reverse Key Index</td><td>No — created manually</td></tr>
+    <tr><td>Bitmap Index</td><td>No — created manually for low-cardinality columns</td></tr>
+    <tr><td>Function-Based Index</td><td>No — created manually for expression-based queries</td></tr>
+  </table>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>S-C-U-R-B-F → Single → Composite → Unique → Reverse → Bitmap → Function-Based</p>
+    <p>"Some Columns Use Reverse Bitmap Functions"</p>
+  </div>
+</div>
+
+<!-- ===== 6 ===== -->
+<div class="sec-label">6. Clustered vs Non-Clustered Index</div>
+<div class="card">
+  <table>
+    <tr><th>Feature</th><th>Clustered Index</th><th>Non-Clustered Index</th></tr>
+    <tr><td>Data Storage</td><td>Table data stored in index order</td><td>Index stored separately from table data</td></tr>
+    <tr><td>Number Allowed</td><td>Only one per table</td><td>Multiple allowed per table</td></tr>
+    <tr><td>Contains ROWID</td><td>No — data is the index</td><td>Yes — stores ROWID pointer</td></tr>
+    <tr><td>Range Search</td><td>Faster — data already ordered</td><td>Good performance</td></tr>
+    <tr><td>Extra Storage</td><td>Less — no separate index storage</td><td>Extra storage needed</td></tr>
+    <tr><td>Oracle Default</td><td>Not standard in Oracle</td><td>Yes — all Oracle indexes are Non-Clustered</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — Oracle Clustered Index Note</div>
+    <p>Oracle does not use SQL Server-style Clustered Indexes. Oracle's equivalent is an "Index Organized Table (IOT)" where table data is stored in B-Tree index order. A normal CREATE INDEX in Oracle always creates a Non-Clustered B-Tree index.</p>
+  </div>
+</div>
+
+<!-- ===== 7 ===== -->
+<div class="sec-label">7. Types of Non-Clustered Indexes — Detailed</div>
+<div class="card">
+
+  <!-- Single Column -->
+  <div class="idx-card">
+    <div class="idx-head">1. Single Column Index</div>
+    <div class="idx-body">
+      <p>Created on a single column. Most basic and commonly used type of index.</p>
+      <p>Best used on columns frequently used in WHERE clauses with high cardinality (many distinct values).</p>
+      <div class="prog-wrap" style="margin:0">
+        <div class="prog-header">
+          <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+          <span class="prog-label">SINGLE COLUMN INDEX</span>
+        </div>
+        <div class="prog-body"><span class="cm">-- Create index on SAL column</span>
+<span class="kw">CREATE INDEX</span> IDX_SAL
+<span class="kw">ON</span> EMP(SAL);
+
+<span class="cm">-- This query now uses the index</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> EMP <span class="kw">WHERE</span> SAL = <span class="num">5000</span>;</div>
+      </div>
+      <div class="out-bar">Index IDX_SAL used → Oracle jumps directly to rows with SAL = 5000</div>
+    </div>
+  </div>
+
+  <!-- Composite -->
+  <div class="idx-card">
+    <div class="idx-head">2. Composite Index (Multi-Column Index)</div>
+    <div class="idx-body">
+      <p>Created on two or more columns together. Column order in the index matters — the first column listed is the leading column.</p>
+      <p>Most effective when all indexed columns are used in WHERE clause. Less effective when only a non-leading column is used alone.</p>
+      <div class="prog-wrap" style="margin:0">
+        <div class="prog-header">
+          <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+          <span class="prog-label">COMPOSITE INDEX (MULTI-COLUMN)</span>
+        </div>
+        <div class="prog-body"><span class="cm">-- Create composite index on ENAME and DEPTNO</span>
+<span class="kw">CREATE INDEX</span> IDX_ENAME_DNO
+<span class="kw">ON</span> EMP(ENAME, DEPTNO);
+
+<span class="cm">-- Best: both columns used → full index scan</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> EMP <span class="kw">WHERE</span> ENAME = <span class="str">'SMITH'</span> <span class="kw">AND</span> DEPTNO = <span class="num">10</span>;
+
+<span class="cm">-- Also works: leading column used → partial index scan</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> EMP <span class="kw">WHERE</span> ENAME = <span class="str">'SMITH'</span>;
+
+<span class="cm">-- Less effective: only non-leading column → may skip index</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> EMP <span class="kw">WHERE</span> DEPTNO = <span class="num">10</span>;</div>
+      </div>
+      <div class="out-bar">Best performance when ENAME (leading column) is included in WHERE clause</div>
+    </div>
+  </div>
+
+  <!-- Unique -->
+  <div class="idx-card">
+    <div class="idx-head">3. Unique Index</div>
+    <div class="idx-body">
+      <p>Ensures all values in the indexed column are unique. No two rows can have the same value for the indexed column.</p>
+      <p>Oracle automatically creates a Unique Index when you add a PRIMARY KEY or UNIQUE constraint to a column.</p>
+      <div class="prog-wrap" style="margin:0">
+        <div class="prog-header">
+          <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+          <span class="prog-label">UNIQUE INDEX — PREVENT DUPLICATE VALUES</span>
+        </div>
+        <div class="prog-body"><span class="cm">-- Create table</span>
+<span class="kw">CREATE TABLE</span> CUST
+(
+   CID     <span class="tp">NUMBER</span>,
+   CNAME   <span class="tp">VARCHAR2</span>(20),
+   ADDRESS <span class="tp">VARCHAR2</span>(50)
+);
+
+<span class="cm">-- Create unique index on CID</span>
+<span class="kw">CREATE UNIQUE INDEX</span> IDX_CUST_ID
+<span class="kw">ON</span> CUST(CID);
+
+<span class="cm">-- Insert valid rows</span>
+<span class="kw">INSERT INTO</span> CUST <span class="kw">VALUES</span>(<span class="num">1</span>, <span class="str">'AMIT'</span>,  <span class="str">'BANGALORE'</span>);
+<span class="kw">INSERT INTO</span> CUST <span class="kw">VALUES</span>(<span class="num">2</span>, <span class="str">'RAHUL'</span>, <span class="str">'PUNE'</span>);
+
+<span class="cm">-- Try to insert duplicate CID = 1</span>
+<span class="kw">INSERT INTO</span> CUST <span class="kw">VALUES</span>(<span class="num">1</span>, <span class="str">'SURESH'</span>, <span class="str">'MUMBAI'</span>);</div>
+      </div>
+      <div class="err-bar">Error: ORA-00001: Unique Constraint Violated → CID = 1 already exists</div>
+    </div>
+  </div>
+
+  <!-- Reverse Key -->
+  <div class="idx-card">
+    <div class="idx-head">4. Reverse Key Index</div>
+    <div class="idx-body">
+      <p>Stores the bytes of each index value in reverse order. Used to prevent "hot blocks" — when sequence-generated IDs cause all INSERTs to go to the same index block.</p>
+      <p>Normal: 1001, 1002, 1003, 1004 → all stored at same end of index → contention</p>
+      <p>Reverse: 1001→1001, 1002→2001, 1003→3001, 1004→4001 → values spread across index blocks → less contention</p>
+      <div class="prog-wrap" style="margin:0">
+        <div class="prog-header">
+          <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+          <span class="prog-label">REVERSE KEY INDEX</span>
+        </div>
+        <div class="prog-body"><span class="cm">-- Create reverse key index on EMPNO</span>
+<span class="kw">CREATE INDEX</span> IDX_EMP_REV
+<span class="kw">ON</span> EMP(EMPNO)
+<span class="kw">REVERSE</span>;
+
+<span class="cm">-- Best used when EMPNO is generated by a sequence</span>
+<span class="cm">-- Values: 1001, 1002, 1003 get distributed across blocks</span></div>
+      </div>
+      <div class="out-bar">Reverse Key distributes sequential values across different index blocks → reduces hot block contention</div>
+      <div class="warn-box" style="margin-top:8px">
+        <div class="lbl">Important Limitation</div>
+        <p>Reverse Key Indexes do NOT support range queries (BETWEEN, >, <). Because the reversed values are no longer in sequential order, Oracle cannot use the index for range searches efficiently.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bitmap -->
+  <div class="idx-card">
+    <div class="idx-head">5. Bitmap Index</div>
+    <div class="idx-body">
+      <p>Stores index data as bitmaps (sequences of 0s and 1s). Best for columns with low cardinality — meaning very few distinct values.</p>
+      <p>For each distinct value, Oracle maintains a bit vector (bitmap) — one bit per row. 1 = row has this value, 0 = row does not.</p>
+      <div class="two-col" style="margin:8px 0">
+        <div class="mini-card">
+          <div class="mct">Best For (Low Cardinality)</div>
+          <ul style="margin-top:4px"><li>GENDER (M / F)</li><li>STATUS (ACTIVE / INACTIVE)</li><li>MARITAL STATUS (Y / N)</li><li>DEPT TYPE (IT / HR / SALES)</li></ul>
+        </div>
+        <div class="mini-card">
+          <div class="mct">NOT For (High Cardinality)</div>
+          <ul style="margin-top:4px"><li>EMPNO (unique per row)</li><li>ENAME (many distinct names)</li><li>SAL (many distinct values)</li><li>EMAIL (unique per person)</li></ul>
+        </div>
+      </div>
+      <div class="prog-wrap" style="margin:0">
+        <div class="prog-header">
+          <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+          <span class="prog-label">BITMAP INDEX — GENDER COLUMN</span>
+        </div>
+        <div class="prog-body"><span class="cm">-- Create bitmap index on GENDER column</span>
+<span class="kw">CREATE BITMAP INDEX</span> IDX_GENDER
+<span class="kw">ON</span> EMP(GENDER);
+
+<span class="cm">-- Bitmap internally:</span>
+<span class="cm">-- GENDER M → 1 0 1 0 1 1 0 1  (1 = row is Male)</span>
+<span class="cm">-- GENDER F → 0 1 0 1 0 0 1 0  (1 = row is Female)</span>
+
+<span class="cm">-- Very fast for this query</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> EMP <span class="kw">WHERE</span> GENDER = <span class="str">'M'</span>;</div>
+      </div>
+      <div class="out-bar">Bitmap Index instantly identifies all rows where GENDER = 'M' using bit operations</div>
+    </div>
+  </div>
+
+  <!-- Function Based -->
+  <div class="idx-card">
+    <div class="idx-head">6. Function-Based Index</div>
+    <div class="idx-body">
+      <p>Created on a function or expression rather than a plain column. When a query applies a function to a column in the WHERE clause, a normal index on that column is NOT used. A Function-Based Index solves this.</p>
+      <div class="prog-wrap" style="margin:0">
+        <div class="prog-header">
+          <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+          <span class="prog-label">FUNCTION-BASED INDEX — UPPER(ENAME)</span>
+        </div>
+        <div class="prog-body"><span class="cm">-- Problem: normal index on ENAME is NOT used here</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> EMP <span class="kw">WHERE</span> <span class="fn">UPPER</span>(ENAME) = <span class="str">'SCOTT'</span>;
+<span class="cm">-- Oracle cannot use IDX_ENAME because UPPER() is applied</span>
+
+<span class="cm">-- Solution: create a function-based index</span>
+<span class="kw">CREATE INDEX</span> IDX_UPPER_NAME
+<span class="kw">ON</span> EMP(<span class="fn">UPPER</span>(ENAME));
+
+<span class="cm">-- Now this query uses the function-based index</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> EMP <span class="kw">WHERE</span> <span class="fn">UPPER</span>(ENAME) = <span class="str">'SCOTT'</span>;</div>
+      </div>
+      <div class="out-bar">IDX_UPPER_NAME is now used → fast case-insensitive search on ENAME</div>
+      <div class="tip-box" style="margin-top:8px">
+        <div class="lbl">Extra — Other Function-Based Index Examples</div>
+        <p>CREATE INDEX IDX_LOWER ON EMP(LOWER(ENAME)); → for LOWER() queries</p>
+        <p>CREATE INDEX IDX_SAL_TAX ON EMP(SAL * 0.1); → for calculated value queries</p>
+        <p>CREATE INDEX IDX_TRUNC ON EMP(TRUNC(HIREDATE)); → for date-truncated queries</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== 8 ===== -->
+<div class="sec-label">8. View Indexes</div>
+<div class="card">
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+      <span class="prog-label">VIEW, DROP, REBUILD INDEXES</span>
+    </div>
+    <div class="prog-body"><span class="cm">-- View all indexes in your schema</span>
+<span class="kw">SELECT</span> INDEX_NAME, TABLE_NAME
+<span class="kw">FROM</span>   USER_INDEXES;
+
+<span class="cm">-- View indexes of a specific table</span>
+<span class="kw">SELECT</span> INDEX_NAME, TABLE_NAME
+<span class="kw">FROM</span>   USER_INDEXES
+<span class="kw">WHERE</span>  TABLE_NAME = <span class="str">'EMP'</span>;
+
+<span class="cm">-- View which columns are indexed</span>
+<span class="kw">SELECT</span> INDEX_NAME, COLUMN_NAME
+<span class="kw">FROM</span>   USER_IND_COLUMNS
+<span class="kw">WHERE</span>  TABLE_NAME = <span class="str">'EMP'</span>;
+
+<span class="cm">-- Drop an index permanently</span>
+<span class="kw">DROP INDEX</span> IDX_SAL;
+
+<span class="cm">-- Rebuild a fragmented index</span>
+<span class="kw">ALTER INDEX</span> IDX_SAL <span class="kw">REBUILD</span>;
+
+<span class="cm">-- Monitor index usage</span>
+<span class="kw">ALTER INDEX</span> IDX_SAL <span class="kw">MONITORING USAGE</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> V$OBJECT_USAGE;  <span class="cm">-- Check if index is being used by queries</span></div>
+  </div>
+  <div class="tip-box">
+    <div class="lbl">Extra — When to Rebuild an Index?</div>
+    <p>Over time, after many INSERTs, UPDATEs, and DELETEs, an index can become fragmented — wasting space and reducing performance. ALTER INDEX ... REBUILD recreates the index from scratch in an optimized structure. It is recommended to rebuild when the index has many deleted entries or has grown significantly in size.</p>
+  </div>
+</div>
+
+<!-- ===== 9 ===== -->
+<div class="sec-label">9. Automatically Created Indexes <span class="extra">Extra</span></div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:8px">Oracle automatically creates indexes when certain constraints are added:</p>
+  <table>
+    <tr><th>Constraint</th><th>Index Type Created</th><th>Automatically?</th></tr>
+    <tr><td>PRIMARY KEY</td><td>Unique Index on primary key column</td><td>Yes — always automatic</td></tr>
+    <tr><td>UNIQUE</td><td>Unique Index on unique column</td><td>Yes — always automatic</td></tr>
+    <tr><td>FOREIGN KEY</td><td>No index created</td><td>No — must create manually for performance</td></tr>
+    <tr><td>CHECK</td><td>No index created</td><td>No</td></tr>
+    <tr><td>NOT NULL</td><td>No index created</td><td>No</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — Foreign Key and Index</div>
+    <p>Oracle does NOT automatically create an index on a Foreign Key column. However, it is best practice to manually create an index on foreign key columns — because JOIN queries between parent and child tables frequently filter on the FK column. Without an index, Oracle performs a full table scan on the child table for each parent row.</p>
+  </div>
+</div>
+
+<!-- ===== 10 ===== -->
+<div class="sec-label">10. When to Use and When NOT to Use an Index <span class="extra">Extra</span></div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct" style="color:#2e7d32">Use Index When</div>
+      <ul style="margin-top:4px">
+        <li>Column is frequently used in WHERE clause</li>
+        <li>Column has high cardinality (many distinct values)</li>
+        <li>Table is large (thousands or millions of rows)</li>
+        <li>Column used in JOINs (especially FK columns)</li>
+        <li>Column used in ORDER BY or GROUP BY</li>
+        <li>Queries return a small percentage of rows</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct" style="color:#c62828">Avoid Index When</div>
+      <ul style="margin-top:4px">
+        <li>Table is small (few rows — full scan is faster)</li>
+        <li>Column has low cardinality (few distinct values — use Bitmap instead)</li>
+        <li>Column is rarely used in WHERE clause</li>
+        <li>Table has heavy INSERT/UPDATE/DELETE operations</li>
+        <li>Query returns most rows of the table</li>
+        <li>Column values change frequently</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 11 ===== -->
+<div class="sec-label">11. Quick Revision — All Index Commands</div>
+<div class="card">
+  <table>
+    <tr><th>Operation</th><th>Syntax</th></tr>
+    <tr><td>Create Single Index</td><td>CREATE INDEX idx_name ON table(column);</td></tr>
+    <tr><td>Create Composite Index</td><td>CREATE INDEX idx_name ON table(col1, col2);</td></tr>
+    <tr><td>Create Unique Index</td><td>CREATE UNIQUE INDEX idx_name ON table(column);</td></tr>
+    <tr><td>Create Reverse Key Index</td><td>CREATE INDEX idx_name ON table(column) REVERSE;</td></tr>
+    <tr><td>Create Bitmap Index</td><td>CREATE BITMAP INDEX idx_name ON table(column);</td></tr>
+    <tr><td>Create Function-Based Index</td><td>CREATE INDEX idx_name ON table(UPPER(column));</td></tr>
+    <tr><td>View all indexes</td><td>SELECT INDEX_NAME FROM USER_INDEXES;</td></tr>
+    <tr><td>View indexed columns</td><td>SELECT INDEX_NAME, COLUMN_NAME FROM USER_IND_COLUMNS WHERE TABLE_NAME='EMP';</td></tr>
+    <tr><td>Drop index</td><td>DROP INDEX idx_name;</td></tr>
+    <tr><td>Rebuild index</td><td>ALTER INDEX idx_name REBUILD;</td></tr>
+  </table>
+  <div class="warn-box">
+    <div class="lbl">Common Mistakes with Indexes</div>
+    <p>1. Creating index on every column → slows all DML operations — index only columns used in WHERE / JOIN / ORDER BY</p>
+    <p>2. Using function on indexed column without function-based index → Oracle skips the index</p>
+    <p>3. Using Bitmap Index on high-cardinality column (like EMPNO) → very inefficient — use B-Tree instead</p>
+    <p>4. Not indexing Foreign Key columns → causes full table scan on child table during JOINs</p>
+    <p>5. Expecting index on small tables to help → full table scan is often faster for small tables</p>
+  </div>
+</div>
+
+<!-- ===== 12 ===== -->
+<div class="sec-label">12. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What is an index in Oracle?</div>
+  <div class="qa-a">An index is a database object that stores column values and ROWIDs to speed up data retrieval. It works like a book's index — instead of reading every row (full table scan), Oracle jumps directly to the required rows using the index.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. Does an index improve INSERT performance?</div>
+  <div class="qa-a">No. An index slows INSERT, UPDATE, and DELETE operations because Oracle must update both the table and all associated indexes whenever data changes. Index improves only SELECT (read) performance.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. Which queries benefit most from indexes?</div>
+  <div class="qa-a">Queries using WHERE clause (equality and range), JOIN on indexed columns, ORDER BY on indexed column, and GROUP BY on indexed column benefit most from indexes.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. What is ROWID in Oracle?</div>
+  <div class="qa-a">ROWID is the physical address of a row inside Oracle's storage. It uniquely identifies the exact disk location of a row (file, block, row within block). Oracle indexes store ROWID alongside the indexed value to directly fetch the matching row.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. Which indexes are created automatically?</div>
+  <div class="qa-a">Oracle automatically creates a Unique Index when a PRIMARY KEY or UNIQUE constraint is defined on a column. Foreign Key, CHECK, and NOT NULL constraints do NOT create indexes automatically.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. What is the default index type in Oracle?</div>
+  <div class="qa-a">B-Tree (Balanced Tree) Non-Clustered Index is the default index type in Oracle. Every CREATE INDEX statement in Oracle creates a B-Tree Non-Clustered index unless otherwise specified (BITMAP or REVERSE keywords).</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q7. What is cardinality and how does it affect index choice? <span class="extra">Extra</span></div>
+  <div class="qa-a">Cardinality is the number of distinct values in a column. High cardinality (many distinct values, like EMPNO) → use B-Tree Index. Low cardinality (few distinct values, like GENDER with M/F) → use Bitmap Index. Using the wrong index type for the cardinality wastes space and hurts performance.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q8. Why does a Bitmap Index NOT suit high-cardinality columns? <span class="extra">Extra</span></div>
+  <div class="qa-a">Bitmap Index stores one bitmap (bit vector) per distinct value. For high-cardinality columns like EMPNO (thousands of unique values), it would need thousands of bitmaps — each nearly the size of the table. This wastes enormous space and makes DML operations very slow due to locking entire bitmaps.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q9. What is a Function-Based Index and when is it used? <span class="extra">Extra</span></div>
+  <div class="qa-a">A Function-Based Index is created on an expression or function applied to a column. When a query applies UPPER(), LOWER(), TRUNC(), or any function to a column in WHERE clause, a normal index is skipped. A Function-Based Index on the same expression allows Oracle to use the index for such queries.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q10. What is a Composite Index and what is the leading column rule? <span class="extra">Extra</span></div>
+  <div class="qa-a">A Composite Index is created on multiple columns together. The first column listed is the leading column. Oracle can use the index when the WHERE clause includes the leading column — either alone or with other indexed columns. If only non-leading columns are used in WHERE, Oracle may skip the index entirely.</div>
+</div>
+
+<div class="divider"></div>
+<footer>SQL — Indexes in Oracle &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>

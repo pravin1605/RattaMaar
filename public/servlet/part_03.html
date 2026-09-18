@@ -1,0 +1,737 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request & Response in Servlet — Notes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 16mm 18mm 16mm 20mm;
+    margin: 0 auto;
+    background: #fff;
+    page-break-after: always;
+    border-bottom: 2px dashed #bbb;
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    border-top: 3px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 5px 0;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-header .subject {
+    font-size: 10.5px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .page-header .topic-label {
+    font-size: 10.5px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  /* MAIN TITLE */
+  .main-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid #000;
+    padding: 9px 0;
+    margin-bottom: 18px;
+    background: #000;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* SECTION HEADING */
+  .section-title {
+    font-size: 14px;
+    font-weight: bold;
+    border-left: 5px solid #000;
+    padding-left: 10px;
+    margin: 16px 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* SUB HEADING */
+  .sub-title {
+    font-size: 12.5px;
+    font-weight: bold;
+    margin: 10px 0 5px 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+  }
+
+  /* DEFINITION BOX */
+  .def-box {
+    border: 2px solid #000;
+    padding: 9px 13px;
+    margin: 10px 0;
+  }
+  .def-box .box-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #000;
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+  }
+
+  /* INTERVIEW BOX */
+  .interview-box {
+    border: 2px solid #000;
+    padding: 10px 14px;
+    margin: 10px 0;
+    background: #f5f5f5;
+  }
+  .interview-box .box-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #000;
+    margin-bottom: 8px;
+    padding-bottom: 3px;
+  }
+  .interview-box .q { font-weight: bold; margin-top: 10px; }
+  .interview-box .a { margin-left: 14px; margin-top: 3px; }
+
+  /* MEMORY BOX */
+  .memory-box {
+    border: 2px dashed #000;
+    padding: 8px 13px;
+    margin: 10px 0;
+  }
+  .memory-box .box-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  /* EXAMPLE BOX */
+  .example-box {
+    border: 1px solid #000;
+    padding: 8px 13px;
+    margin: 10px 0;
+    background: #fafafa;
+  }
+  .example-box .box-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #000;
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+  }
+
+  /* TIP BOX */
+  .tip-box {
+    border: 2px solid #000;
+    border-left: 6px solid #000;
+    padding: 8px 13px;
+    margin: 10px 0;
+  }
+  .tip-box .box-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  /* FLOW */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px auto;
+    gap: 0;
+  }
+  .flow-box {
+    border: 2px solid #000;
+    padding: 6px 26px;
+    font-weight: bold;
+    font-size: 12px;
+    min-width: 200px;
+    text-align: center;
+    background: #fff;
+  }
+  .flow-box.dark {
+    background: #000;
+    color: #fff;
+  }
+  .flow-arrow {
+    font-size: 17px;
+    line-height: 1.2;
+    font-weight: bold;
+    color: #000;
+    text-align: center;
+    padding: 1px 0;
+  }
+  .flow-label {
+    font-size: 10px;
+    color: #444;
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 2px;
+  }
+
+  /* STEP FLOW */
+  .step-flow {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 6px 10px;
+    margin: 10px 0;
+  }
+  .step-num {
+    background: #000;
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    padding: 5px 0;
+    height: fit-content;
+    min-width: 28px;
+  }
+  .step-content {
+    border: 1px solid #000;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+  .step-content strong { display: block; margin-bottom: 2px; }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  th {
+    background: #000;
+    color: #fff;
+    padding: 7px 10px;
+    font-size: 12px;
+    text-align: left;
+    border: 1px solid #000;
+  }
+  td {
+    padding: 6px 10px;
+    border: 1px solid #000;
+    font-size: 12px;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f6f6f6; }
+
+  /* BULLET */
+  ul.notes-list {
+    list-style: none;
+    margin: 6px 0 6px 10px;
+    padding: 0;
+  }
+  ul.notes-list li {
+    padding: 2px 0 2px 16px;
+    position: relative;
+  }
+  ul.notes-list li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    font-size: 11px;
+  }
+
+  /* TWO COL */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 10px 0;
+  }
+
+  /* THREE COL */
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  code {
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px;
+    background: #efefef;
+    padding: 1px 5px;
+    border: 1px solid #ccc;
+  }
+
+  p { margin: 5px 0; }
+  .highlight { font-weight: bold; }
+
+  .h-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin: 12px 0;
+    justify-content: center;
+  }
+  .h-flow-box {
+    border: 2px solid #000;
+    padding: 6px 10px;
+    font-size: 11.5px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .h-flow-box.dark { background: #000; color: #fff; }
+  .h-flow-arrow {
+    font-size: 15px;
+    padding: 0 5px;
+    font-weight: bold;
+  }
+
+  @media print {
+    body { background: #fff; }
+    .page { border-bottom: none; margin: 0; page-break-after: always; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: CLIENT-SERVER + REQUEST ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 3 : Request &amp; Response in Servlet</span>
+  </div>
+
+  <div class="main-title">3. Request &amp; Response in Servlet</div>
+
+  <div class="tip-box">
+    <div class="box-label">⚠️ Before Learning Servlet Interface — Understand This First</div>
+    <ul class="notes-list">
+      <li>What exactly is sent inside a <strong>Request</strong>?</li>
+      <li>What exactly is sent inside a <strong>Response</strong>?</li>
+      <li>How does Servlet use <strong>Request and Response objects</strong>?</li>
+    </ul>
+  </div>
+
+  <!-- Client Server Communication -->
+  <div class="section-title">Client-Server Communication</div>
+  <p>Whenever a user opens a website (e.g. <code>www.google.com</code>) or submits a form, the browser sends a <strong>Request</strong> to the server. The server processes it and sends back a <strong>Response</strong>.</p>
+
+  <div class="flow" style="margin-top:12px;">
+    <div class="flow-box dark">Client (Browser)</div>
+    <div class="flow-arrow">↓ Request</div>
+    <div class="flow-box">Server</div>
+    <div class="flow-arrow">↓ Response</div>
+    <div class="flow-box dark">Client (Browser)</div>
+  </div>
+
+  <!-- What is Request -->
+  <div class="section-title">What is a Request?</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Definition</div>
+    <p>A <strong>Request</strong> is a message sent by the client to the server asking for something.</p>
+    <p>Think of it as: <em>"Hello Server, please give me this resource."</em></p>
+  </div>
+
+  <div class="example-box">
+    <div class="box-label">📘 Examples of Requests</div>
+    <ul class="notes-list">
+      <li>Open Home Page</li>
+      <li>Login User</li>
+      <li>Show Employee Data</li>
+      <li>Calculate Salary</li>
+    </ul>
+  </div>
+
+  <!-- What is inside Request -->
+  <div class="section-title">What Information is Present in Request?</div>
+
+  <div class="sub-title">1. URL</div>
+  <p>Example: <code>http://localhost:8080/login</code> → tells the server <strong>which resource is requested</strong>.</p>
+
+  <div class="sub-title">2. Request Method</div>
+  <table>
+    <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>GET</code></td><td>Fetch / retrieve data from server</td></tr>
+      <tr><td><code>POST</code></td><td>Send / submit data to server</td></tr>
+      <tr><td><code>PUT</code></td><td>Update existing data on server</td></tr>
+      <tr><td><code>DELETE</code></td><td>Delete data from server</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sub-title">3. Form Data</div>
+  <p>When user enters data in a form, browser sends it inside the request body.</p>
+  <div class="example-box">
+    <div class="box-label">📘 Example</div>
+    <p>User enters: <code>Username = Pravin</code> &nbsp; <code>Password = 123</code></p>
+    <p>Browser sends: <code>username=Pravin&amp;password=123</code> inside the request.</p>
+  </div>
+
+  <div class="sub-title">4. Headers</div>
+  <p>Additional information automatically sent by the browser with every request.</p>
+  <ul class="notes-list">
+    <li>Browser Name &amp; Version</li>
+    <li>Language preference</li>
+    <li>Operating System</li>
+    <li>Cookies</li>
+  </ul>
+
+  <div class="example-box">
+    <div class="box-label">📘 Complete Request Example</div>
+    <p><code>POST /login</code></p>
+    <p><code>username=Pravin&amp;password=123</code></p>
+    <p><em>Meaning: "Please login user Pravin with password 123"</em></p>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 2: RESPONSE + SERVLET ROLE ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 3 : Request &amp; Response in Servlet (continued)</span>
+  </div>
+
+  <!-- What is Response -->
+  <div class="section-title">What is a Response?</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Definition</div>
+    <p>A <strong>Response</strong> is a message sent by the server back to the client.</p>
+    <p>Think of it as: <em>"Here is the result you requested."</em></p>
+  </div>
+
+  <!-- What is inside Response -->
+  <div class="section-title">What Information is Present in Response?</div>
+
+  <div class="sub-title">1. Status Code</div>
+  <p>Tells whether the request succeeded or failed.</p>
+  <table>
+    <thead><tr><th>Status Code</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>200 OK</code></td><td>Request was successful</td></tr>
+      <tr><td><code>404 Not Found</code></td><td>Requested resource not found</td></tr>
+      <tr><td><code>500 Internal Server Error</code></td><td>Server encountered an error</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sub-title">2. Headers</div>
+  <p>Extra information about the response sent along with the body.</p>
+  <ul class="notes-list">
+    <li>Content-Type (e.g. text/html)</li>
+    <li>Content-Length</li>
+    <li>Cookies</li>
+  </ul>
+
+  <div class="sub-title">3. Response Body</div>
+  <p>The actual data sent back to the browser.</p>
+  <div class="example-box">
+    <div class="box-label">📘 Example</div>
+    <p><code>&lt;h1&gt;Welcome Pravin&lt;/h1&gt;</code> — an HTML page</p>
+    <p><code>&lt;table&gt;&lt;tr&gt;&lt;td&gt;Employee Data&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</code> — table data</p>
+    <p>Or simply plain text: <code>Login Successful</code></p>
+  </div>
+
+  <div class="example-box">
+    <div class="box-label">📘 Complete Response Example</div>
+    <p><code>200 OK</code></p>
+    <p><code>Welcome Pravin</code></p>
+  </div>
+
+  <!-- Real Life Example -->
+  <div class="section-title">Real-Life Example — Instagram Login</div>
+
+  <div class="three-col">
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">Step 1 — User Action</div>
+      <p><code>Username: Pravin</code></p>
+      <p><code>Password: 123</code></p>
+      <p>Click Login</p>
+    </div>
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">Step 2 — Request Sent</div>
+      <p><code>POST /login</code></p>
+      <p><code>username=Pravin</code></p>
+      <p><code>password=123</code></p>
+    </div>
+    <div class="def-box" style="text-align:center;">
+      <div class="box-label">Step 3 — Response Sent</div>
+      <p><code>200 OK</code></p>
+      <p><strong>Login Successful</strong></p>
+    </div>
+  </div>
+
+  <!-- Where Servlet Comes In -->
+  <div class="section-title">Where Does Servlet Come Into This?</div>
+  <p>Servlet acts as a <strong>middleman</strong> between Client and Server.</p>
+
+  <div class="two-col" style="margin-top:10px;">
+    <div class="example-box">
+      <div class="box-label">Without Servlet</div>
+      <div class="flow" style="margin-top:6px;">
+        <div class="flow-box" style="min-width:120px;">Client</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box" style="min-width:120px;">Server</div>
+      </div>
+      <p style="text-align:center; font-size:11px; margin-top:5px;">No processing possible</p>
+    </div>
+    <div class="example-box">
+      <div class="box-label">With Servlet</div>
+      <div class="flow" style="margin-top:6px;">
+        <div class="flow-box" style="min-width:120px;">Client</div>
+        <div class="flow-arrow">↓ Request</div>
+        <div class="flow-box dark" style="min-width:120px;">Servlet</div>
+        <div class="flow-arrow">↓ Processing</div>
+        <div class="flow-box" style="min-width:120px;">Server Logic</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick</div>
+    <p><strong>Servlet = Receptionist of a Hotel</strong></p>
+    <p>Guest (Client) → Receptionist (Servlet) → Kitchen/Management (Business Logic/DB) → Back to Guest (Response)</p>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 3: HOW SERVLET USES REQUEST & RESPONSE ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 3 : Request &amp; Response in Servlet (continued)</span>
+  </div>
+
+  <!-- How Servlet Reads Request -->
+  <div class="section-title">How Servlet Reads Request?</div>
+  <p>Servlet receives a Request object of type <code>HttpServletRequest</code>. This object contains <strong>everything sent by the client</strong>.</p>
+
+  <div class="def-box">
+    <div class="box-label">📌 Reading Request Data</div>
+    <p>Method: <code>request.getParameter("username")</code></p>
+    <p>If browser sends <code>username=Pravin</code>, Servlet reads it as:</p>
+    <p><code>String name = "Pravin";</code></p>
+  </div>
+
+  <!-- How Servlet Creates Response -->
+  <div class="section-title">How Servlet Creates Response?</div>
+  <p>Servlet uses the <code>HttpServletResponse</code> object to send data back to client.</p>
+
+  <div class="def-box">
+    <div class="box-label">📌 Sending Response Data</div>
+    <p><code>PrintWriter pw = response.getWriter();</code></p>
+    <p><code>pw.print("Welcome Pravin");</code></p>
+    <p>Browser receives and displays: <strong>Welcome Pravin</strong></p>
+  </div>
+
+  <!-- Complete Servlet Flow -->
+  <div class="section-title">Complete Servlet Flow — Step by Step</div>
+
+  <div class="step-flow">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <strong>User Enters Data</strong>
+      Username = Pravin &nbsp;&nbsp; Password = 123
+    </div>
+
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <strong>Browser Sends Request</strong>
+      <code>POST /login</code> with body: <code>username=Pravin&amp;password=123</code>
+    </div>
+
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <strong>Servlet Receives Request</strong>
+      Reads data via <code>request.getParameter("username")</code> and <code>request.getParameter("password")</code>
+    </div>
+
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <strong>Servlet Processes Data</strong>
+      Checks credentials — business logic / database interaction
+    </div>
+
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <strong>Servlet Creates Response</strong>
+      Gets writer via <code>response.getWriter()</code> and writes: <code>"Login Successful"</code>
+    </div>
+
+    <div class="step-num">6</div>
+    <div class="step-content">
+      <strong>Browser Displays</strong>
+      <strong>Login Successful</strong> shown to user
+    </div>
+  </div>
+
+  <!-- Full Diagram -->
+  <div class="section-title">Full Flow Diagram</div>
+
+  <div class="flow">
+    <div class="flow-box">User</div>
+    <div class="flow-label">Enter Username &amp; Password</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Browser</div>
+    <div class="flow-label">POST /login → username=Pravin, password=123</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">HttpServletRequest</div>
+    <div class="flow-label">request.getParameter("username") → "Pravin"</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Servlet</div>
+    <div class="flow-label">Business Logic / DB Check</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">HttpServletResponse</div>
+    <div class="flow-label">response.getWriter().print("Welcome Pravin")</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Browser</div>
+    <div class="flow-label">Displays: Welcome Pravin</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">User</div>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 4: API SUMMARY + INTERVIEW Q&A ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 3 : Request &amp; Response in Servlet (continued)</span>
+  </div>
+
+  <!-- Servlet API Help -->
+  <div class="section-title">How Servlet API Helps Here?</div>
+  <p>Servlet API provides <strong>two very important interfaces</strong> for Request-Response handling:</p>
+
+  <div class="two-col">
+    <div class="def-box">
+      <div class="box-label">ServletRequest / HttpServletRequest</div>
+      <p><strong>Purpose:</strong> Read client request data</p>
+      <ul class="notes-list">
+        <li><code>getParameter("name")</code> — read form field</li>
+        <li><code>getMethod()</code> — GET or POST?</li>
+        <li><code>getHeader("name")</code> — read headers</li>
+        <li><code>getSession()</code> — get session</li>
+      </ul>
+    </div>
+    <div class="def-box">
+      <div class="box-label">ServletResponse / HttpServletResponse</div>
+      <p><strong>Purpose:</strong> Send response back to client</p>
+      <ul class="notes-list">
+        <li><code>getWriter()</code> — get PrintWriter to write</li>
+        <li><code>setContentType("text/html")</code> — set type</li>
+        <li><code>setStatus(200)</code> — set status code</li>
+        <li><code>sendRedirect("url")</code> — redirect client</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Summary Table -->
+  <div class="section-title">Summary Table</div>
+  <table>
+    <thead>
+      <tr><th>Component</th><th>Role</th><th>Key Method / Example</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Request</strong></td>
+        <td>Message from client to server</td>
+        <td><code>POST /login username=Pravin</code></td>
+      </tr>
+      <tr>
+        <td><strong>Response</strong></td>
+        <td>Message from server to client</td>
+        <td><code>200 OK — Welcome Pravin</code></td>
+      </tr>
+      <tr>
+        <td><strong>HttpServletRequest</strong></td>
+        <td>Object to read client request</td>
+        <td><code>request.getParameter("username")</code></td>
+      </tr>
+      <tr>
+        <td><strong>HttpServletResponse</strong></td>
+        <td>Object to send response</td>
+        <td><code>response.getWriter().print(...)</code></td>
+      </tr>
+      <tr>
+        <td><strong>Status Code</strong></td>
+        <td>Tells success/failure of request</td>
+        <td>200 OK, 404 Not Found, 500 Error</td>
+      </tr>
+      <tr>
+        <td><strong>Servlet</strong></td>
+        <td>Middleman — processes request, sends response</td>
+        <td>Reads request → business logic → writes response</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Interview Q&A -->
+  <div class="interview-box">
+    <div class="box-label">🎯 Interview Q&amp;A</div>
+
+    <div class="q">Q1. What is the role of Servlet in Request and Response processing?</div>
+    <div class="a">Servlet acts as an intermediary between the client and the server. It receives the client request through the <code>HttpServletRequest</code> object, processes the request, interacts with databases or business logic if required, and sends the result back to the client using the <code>HttpServletResponse</code> object.</div>
+
+    <div class="q">Q2. Which objects are used by a Servlet to handle Request and Response?</div>
+    <div class="a"><strong>HttpServletRequest</strong> — used to read data sent by the client. <strong>HttpServletResponse</strong> — used to send data back to the client.</div>
+
+    <div class="q">Q3. What is a Status Code? Name 3 important ones.</div>
+    <div class="a"><strong>200 OK</strong> — request succeeded. <strong>404 Not Found</strong> — resource not found. <strong>500 Internal Server Error</strong> — server-side error occurred.</div>
+
+    <div class="q">Q4. What is the difference between GET and POST?</div>
+    <div class="a"><strong>GET</strong> — sends data in URL, used for fetching data, data visible in browser. <strong>POST</strong> — sends data in request body, used for submitting sensitive data (login, forms), data not visible in URL.</div>
+
+    <div class="q">Q5. What is a Request Header?</div>
+    <div class="a">A Request Header is additional metadata automatically sent by the browser along with the request — such as browser name, accepted language, content type, and cookies.</div>
+
+    <div class="q">Q6. What method is used to read form data in Servlet?</div>
+    <div class="a"><code>request.getParameter("fieldName")</code> — reads a single form field value sent by the client.</div>
+
+    <div class="q">Q7. What method is used to send response from Servlet?</div>
+    <div class="a"><code>response.getWriter()</code> — returns a PrintWriter object, used to write text/HTML response back to the client.</div>
+
+    <div class="q">Q8. What does <code>setContentType()</code> do?</div>
+    <div class="a"><code>response.setContentType("text/html")</code> — tells the browser what type of content is being sent in the response, so it can render it correctly.</div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — Request vs Response</div>
+    <p><strong>Request</strong> → <strong>R</strong>eaches server | <strong>Response</strong> → <strong>R</strong>eturns to client</p>
+    <p>Request = <em>Question to server</em> &nbsp;|&nbsp; Response = <em>Answer from server</em></p>
+    <p><strong>GET</strong> = <strong>G</strong>rab data (visible in URL) &nbsp;|&nbsp; <strong>POST</strong> = <strong>P</strong>ush data (hidden in body)</p>
+  </div>
+
+</div>
+
+</body>
+</html>

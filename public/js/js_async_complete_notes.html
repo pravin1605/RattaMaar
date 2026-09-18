@@ -1,0 +1,291 @@
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Asynchronous JavaScript — Complete Study Notes</h2>
+<style>
+  .w{padding:1rem 0;font-family:var(--font-sans);}
+  .hero{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.5rem;margin-bottom:1.25rem;border:0.5px solid var(--color-border-tertiary);}
+  .hero-title{font-size:22px;font-weight:500;color:var(--color-text-primary);margin:0 0 6px;}
+  .hero-def{font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin:0 0 14px;}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+  .mbox{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;}
+  .ml{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px;}
+  .mv{font-size:13px;color:var(--color-text-primary);line-height:1.55;margin:0;}
+  .sh{font-size:12px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.07em;margin:1.75rem 0 .75rem;border-bottom:.5px solid var(--color-border-tertiary);padding-bottom:6px;}
+  .card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.1rem 1.4rem;margin-bottom:1rem;}
+  .ctag{display:inline-block;font-size:11px;font-weight:500;padding:2px 9px;border-radius:var(--border-radius-md);margin-bottom:8px;}
+  .ctitle{font-size:16px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px;}
+  .cdef{font-size:13px;color:var(--color-text-secondary);line-height:1.65;margin:0 0 10px;}
+  .cl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px;}
+  pre{background:var(--color-background-tertiary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 13px;font-family:var(--font-mono);font-size:12.5px;line-height:1.6;margin:0 0 8px;color:var(--color-text-primary);white-space:pre-wrap;word-break:break-word;}
+  .out{background:var(--color-background-secondary);border-left:3px solid;border-radius:0;padding:7px 13px;font-family:var(--font-mono);font-size:12.5px;color:var(--color-text-primary);white-space:pre-wrap;word-break:break-word;}
+  .pts{margin:0;padding:0;list-style:none;}
+  .pts li{font-size:13px;color:var(--color-text-secondary);line-height:1.6;padding:3px 0 3px 18px;position:relative;border-bottom:.5px solid var(--color-border-tertiary);}
+  .pts li:last-child{border-bottom:none;}
+  .pts li::before{content:"→";position:absolute;left:0;color:var(--color-text-tertiary);font-size:11px;top:5px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md);margin-left:6px;font-weight:500;vertical-align:middle;}
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .quote{background:var(--color-background-tertiary);border-left:3px solid var(--color-border-secondary);border-radius:0;padding:10px 14px;font-size:13px;color:var(--color-text-secondary);line-height:1.65;margin:0 0 10px;font-style:italic;}
+  .flow-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0;}
+  .flow-box{background:var(--color-background-tertiary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:6px 12px;font-size:12.5px;color:var(--color-text-primary);font-family:var(--font-mono);}
+  .flow-arrow{color:var(--color-text-tertiary);font-size:14px;}
+  .use-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:8px;}
+  .use-pill{background:var(--color-background-tertiary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:5px 10px;font-size:12px;color:var(--color-text-secondary);text-align:center;}
+</style>
+
+<div class="w">
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-title">Asynchronous JavaScript</p>
+    <p class="hero-def">JavaScript is <strong style="font-weight:500">single-threaded</strong> — it can only do one thing at a time. By default it runs code line by line (synchronous). But some tasks take time — API calls, file reading, timers. Async JS lets these run <strong style="font-weight:500">in the background</strong> while the rest of the code keeps moving.</p>
+    <div class="mgrid">
+      <div class="mbox">
+        <p class="ml">Synchronous</p>
+        <p class="mv">Code runs line by line. Next line waits for the current one to finish. Like a queue — one person at a time.</p>
+      </div>
+      <div class="mbox">
+        <p class="ml">Asynchronous</p>
+        <p class="mv">Long tasks run in the background. Other code keeps executing. Like ordering food and watching TV while it cooks.</p>
+      </div>
+      <div class="mbox">
+        <p class="ml">Why needed</p>
+        <p class="mv">API calls, DB operations, file reading, timers, user events — all take time and would freeze the app if waited on.</p>
+      </div>
+      <div class="mbox">
+        <p class="ml">Interview line</p>
+        <p class="mv">"Async JS allows long-running operations to run independently without blocking the main thread."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYNC vs ASYNC FLOW -->
+  <p class="sh">Synchronous vs Asynchronous — the flow</p>
+  <div class="two">
+    <div class="card">
+      <span class="ctag" style="background:#FCEBEB;color:#A32D2D;">Without Async — Bad</span>
+      <p class="ctitle">Everything waits</p>
+      <div class="flow-row"><div class="flow-box">Task 1</div><div class="flow-arrow">→</div><div class="flow-box">Wait 10 sec</div><div class="flow-arrow">→</div><div class="flow-box">Task 2</div><div class="flow-arrow">→</div><div class="flow-box">Task 3</div></div>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin:8px 0 0;">User sees a frozen, unresponsive screen until the slow task is done.</p>
+    </div>
+    <div class="card">
+      <span class="ctag" style="background:#EAF3DE;color:#3B6D11;">With Async — Good</span>
+      <p class="ctitle">Code keeps moving</p>
+      <div class="flow-row"><div class="flow-box">Task 1</div><div class="flow-arrow">→</div><div class="flow-box">Start long task</div><div class="flow-arrow">→</div><div class="flow-box">Task 2</div><div class="flow-arrow">→</div><div class="flow-box">Task 3</div><div class="flow-arrow">→</div><div class="flow-box">Long task done ✓</div></div>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin:8px 0 0;">App stays responsive. Long task finishes quietly in the background.</p>
+    </div>
+  </div>
+
+  <!-- REAL LIFE ANALOGY -->
+  <div class="card" style="background:var(--color-background-secondary);">
+    <span class="ctag" style="background:#EEEDFE;color:#3C3489;">Real life analogy</span>
+    <p class="ctitle">Ordering food online</p>
+    <div class="flow-row">
+      <div class="flow-box">Order food</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Food preparing (20 min)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">You watch movie</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Food delivered ✓</div>
+    </div>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin:8px 0 0;">You don't sit idle waiting. You do other things while the kitchen works in the background. This is exactly how async JS works.</p>
+  </div>
+
+  <!-- TIME FUNCTIONS INTRO -->
+  <p class="sh">Time functions in JavaScript</p>
+  <div class="card" style="background:var(--color-background-secondary);">
+    <p class="ctitle">What are time functions?</p>
+    <p class="cdef">Time functions are built-in JavaScript functions used to execute code <strong style="font-weight:500">after a delay</strong> or <strong style="font-weight:500">repeatedly at a fixed interval</strong>. There are 4 time functions — 2 pairs that work together.</p>
+    <div class="two" style="margin-top:8px;">
+      <div style="background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;">
+        <p style="font-size:12px;font-weight:500;color:#085041;margin:0 0 6px;">One-time execution</p>
+        <p style="font-size:13px;color:var(--color-text-secondary);margin:0;"><code>setTimeout()</code> — run once after a delay<br><code>clearTimeout()</code> — cancel it before it runs</p>
+      </div>
+      <div style="background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;">
+        <p style="font-size:12px;font-weight:500;color:#3C3489;margin:0 0 6px;">Repeated execution</p>
+        <p style="font-size:13px;color:var(--color-text-secondary);margin:0;"><code>setInterval()</code> — run repeatedly at fixed gap<br><code>clearInterval()</code> — stop it</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 TIME FUNCTIONS -->
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">01</span>
+      <p class="ctitle"><code>setTimeout(fn, ms)</code> <span class="badge" style="background:#E1F5EE;color:#085041;">runs once</span></p>
+      <p class="cdef">Executes a callback function <strong style="font-weight:500">once</strong> after a specified delay in milliseconds. After that it stops — it does not repeat.</p>
+      <div class="quote">"setTimeout() is a built-in timer function that executes a callback once after a specified delay."</div>
+      <ul class="pts">
+        <li>1000 ms = 1 second. So 3000 ms = 3 seconds.</li>
+        <li>Does not block other code — JS keeps running while waiting.</li>
+        <li>Returns a timer ID that can be used to cancel it with <code>clearTimeout()</code>.</li>
+        <li>Memory tip: "setTimeout = set an alarm — rings once and that's it."</li>
+      </ul>
+      <p class="cl">Syntax</p>
+      <pre>setTimeout(function, timeInMilliseconds);</pre>
+      <p class="cl">Use cases</p>
+      <div class="use-grid">
+        <div class="use-pill">Delay execution</div>
+        <div class="use-pill">Show notification</div>
+        <div class="use-pill">Loading screen</div>
+        <div class="use-pill">Future message</div>
+      </div>
+      <p class="cl">Example</p>
+      <pre>setTimeout(() => {
+  console.log("Welcome");
+}, 3000);</pre>
+      <p class="cl">Output — after 3 seconds</p>
+      <div class="out" style="border-color:#1D9E75;">Welcome</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAECE7;color:#993C1D;">02</span>
+      <p class="ctitle"><code>clearTimeout(id)</code> <span class="badge" style="background:#FCEBEB;color:#A32D2D;">cancels setTimeout</span></p>
+      <p class="cdef">Cancels a timeout before it fires. You must pass the timer ID returned by <code>setTimeout()</code>. If called before the delay ends, the callback never runs.</p>
+      <div class="quote">"clearTimeout() stops or cancels a timeout created by setTimeout() before it executes."</div>
+      <ul class="pts">
+        <li>Must store the return value of <code>setTimeout()</code> to cancel it.</li>
+        <li>If called after the timeout already fired — it has no effect.</li>
+        <li>Memory tip: "clearTimeout = cancel the alarm before it rings."</li>
+      </ul>
+      <p class="cl">Use cases</p>
+      <div class="use-grid">
+        <div class="use-pill">User cancels action</div>
+        <div class="use-pill">Timer no longer needed</div>
+        <div class="use-pill">Prevent delayed run</div>
+      </div>
+      <p class="cl">Example</p>
+      <pre>let timer = setTimeout(() => {
+  console.log("Hello");
+}, 5000);
+
+clearTimeout(timer); // cancelled before 5s</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#D85A30;">// Nothing prints — timer was cancelled</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">03</span>
+      <p class="ctitle"><code>setInterval(fn, ms)</code> <span class="badge" style="background:#EEEDFE;color:#3C3489;">repeats forever</span></p>
+      <p class="cdef">Executes a callback function <strong style="font-weight:500">repeatedly</strong> at a fixed time interval. It keeps running until you stop it with <code>clearInterval()</code>.</p>
+      <div class="quote">"setInterval() repeatedly executes a callback function at specified time intervals until stopped."</div>
+      <ul class="pts">
+        <li>Runs indefinitely — you MUST call <code>clearInterval()</code> to stop it.</li>
+        <li>Returns a timer ID used to stop it.</li>
+        <li>Memory tip: "setInterval = set a repeating alarm — rings every N seconds forever."</li>
+      </ul>
+      <p class="cl">Syntax</p>
+      <pre>setInterval(function, timeInMilliseconds);</pre>
+      <p class="cl">Use cases</p>
+      <div class="use-grid">
+        <div class="use-pill">Digital clock</div>
+        <div class="use-pill">Countdown timer</div>
+        <div class="use-pill">Auto refresh</div>
+        <div class="use-pill">Live score</div>
+        <div class="use-pill">Notifications</div>
+      </div>
+      <p class="cl">Example</p>
+      <pre>setInterval(() => {
+  console.log("Hello");
+}, 2000);</pre>
+      <p class="cl">Output — every 2 seconds</p>
+      <div class="out" style="border-color:#7F77DD;">Hello
+Hello
+Hello
+... (keeps going)</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAEEDA;color:#633806;">04</span>
+      <p class="ctitle"><code>clearInterval(id)</code> <span class="badge" style="background:#FCEBEB;color:#A32D2D;">stops setInterval</span></p>
+      <p class="cdef">Stops the repeated execution started by <code>setInterval()</code>. Pass the timer ID to tell JS which interval to stop.</p>
+      <div class="quote">"clearInterval() stops an interval that was started using setInterval()."</div>
+      <ul class="pts">
+        <li>Must store the return value of <code>setInterval()</code> to stop it.</li>
+        <li>Commonly called inside the interval itself once a condition is met (e.g. countdown = 0).</li>
+        <li>Memory tip: "clearInterval = hit snooze forever — make the repeating alarm stop."</li>
+      </ul>
+      <p class="cl">Use cases</p>
+      <div class="use-grid">
+        <div class="use-pill">Countdown hits 0</div>
+        <div class="use-pill">User stops timer</div>
+        <div class="use-pill">Task completed</div>
+        <div class="use-pill">Stop auto-refresh</div>
+      </div>
+      <p class="cl">Example — count to 5 then stop</p>
+      <pre>let count = 0;
+
+let timer = setInterval(() => {
+  count++;
+  console.log(count);
+
+  if (count === 5) {
+    clearInterval(timer);
+  }
+}, 1000);</pre>
+      <p class="cl">Output — one per second, then stops</p>
+      <div class="out" style="border-color:#EF9F27;">1
+2
+3
+4
+5
+// Stops here</div>
+    </div>
+
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <p class="sh">setTimeout vs setInterval — most asked interview comparison</p>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.1rem 1.4rem;border:.5px solid var(--color-border-tertiary);margin-bottom:1rem;">
+    <table style="width:100%;font-size:13px;border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+          <th style="text-align:left;padding:6px 8px;font-weight:500;color:var(--color-text-secondary);">Feature</th>
+          <th style="text-align:left;padding:6px 8px;font-weight:500;color:#085041;">setTimeout()</th>
+          <th style="text-align:left;padding:6px 8px;font-weight:500;color:#3C3489;">setInterval()</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+          <td style="padding:6px 8px;color:var(--color-text-secondary);">Execution</td>
+          <td style="padding:6px 8px;color:var(--color-text-primary);">Once only</td>
+          <td style="padding:6px 8px;color:var(--color-text-primary);">Repeatedly</td>
+        </tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+          <td style="padding:6px 8px;color:var(--color-text-secondary);">When it runs</td>
+          <td style="padding:6px 8px;color:var(--color-text-primary);">After delay (once)</td>
+          <td style="padding:6px 8px;color:var(--color-text-primary);">Every delay (forever)</td>
+        </tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+          <td style="padding:6px 8px;color:var(--color-text-secondary);">Stop function</td>
+          <td style="padding:6px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">clearTimeout()</td>
+          <td style="padding:6px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">clearInterval()</td>
+        </tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+          <td style="padding:6px 8px;color:var(--color-text-secondary);">Alarm analogy</td>
+          <td style="padding:6px 8px;color:var(--color-text-primary);">Alarm rings once</td>
+          <td style="padding:6px 8px;color:var(--color-text-primary);">Alarm rings every morning</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 8px;color:var(--color-text-secondary);">Use case</td>
+          <td style="padding:6px 8px;color:var(--color-text-primary);">Delay a task</td>
+          <td style="padding:6px 8px;color:var(--color-text-primary);">Repeat a task</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- GOLDEN RULES -->
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:.5rem;border:.5px solid var(--color-border-tertiary);">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 8px;"><i class="ti ti-star" aria-hidden="true" style="margin-right:6px;"></i>Golden rules — say these in an interview</p>
+    <ul class="pts">
+      <li>JavaScript is <strong style="font-weight:500">single-threaded</strong> — it has one call stack and executes one thing at a time.</li>
+      <li>Async JS does NOT make JS multi-threaded — it uses the <strong style="font-weight:500">event loop</strong> to handle tasks in the background via Web APIs.</li>
+      <li>Time in <code>setTimeout</code> and <code>setInterval</code> is in <strong style="font-weight:500">milliseconds</strong> — 1000ms = 1 second.</li>
+      <li>Always store the return value of <code>setTimeout</code> / <code>setInterval</code> if you may need to cancel it later.</li>
+      <li><code>setTimeout(fn, 0)</code> does not run immediately — it still goes to the task queue and runs after the current code finishes.</li>
+      <li>A frozen setInterval that is never cleared causes a <strong style="font-weight:500">memory leak</strong> — always clear it when done.</li>
+    </ul>
+  </div>
+
+</div>

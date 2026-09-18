@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>React.js – Chapter 4 Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --text: #111111;
+    --muted: #555555;
+    --border: #e0e0e0;
+
+    --blue:      #1a6bff;
+    --blue-bg:   #e8f0ff;
+    --green:     #0a8a3c;
+    --green-bg:  #e4f5ec;
+    --orange:    #d95f00;
+    --orange-bg: #fff0e4;
+    --purple:    #6b2fbd;
+    --purple-bg: #f0eaff;
+    --red:       #c4001a;
+    --red-bg:    #fff0f2;
+    --teal:      #006d77;
+    --teal-bg:   #e0f4f5;
+    --pink:      #b5006e;
+    --pink-bg:   #ffe8f5;
+    --yellow:    #a06000;
+    --yellow-bg: #fff8e1;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 20px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: linear-gradient(135deg, #006d77 0%, #0a8a3c 50%, #1a6bff 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 36px 40px;
+    margin-bottom: 36px;
+  }
+  .page-header .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 4px 14px; margin-bottom: 14px;
+  }
+  .page-header h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+  .page-header p  { font-size: 14px; opacity: .88; }
+
+  /* ── SECTION CARD ── */
+  .section {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .sec-num {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0; color: #fff;
+  }
+  .section-header h2 { font-size: 18px; font-weight: 700; color: var(--text); }
+  .section-body { padding: 22px 24px; }
+
+  /* ── DEF BOX ── */
+  .def-box {
+    border-left: 4px solid var(--blue);
+    background: var(--blue-bg);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px; margin: 14px 0;
+  }
+  .def-box.green  { border-color: var(--green);  background: var(--green-bg);  }
+  .def-box.teal   { border-color: var(--teal);   background: var(--teal-bg);   }
+  .def-box.purple { border-color: var(--purple); background: var(--purple-bg); }
+  .def-box .def-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--blue); margin-bottom: 4px;
+  }
+  .def-box.green  .def-label { color: var(--green);  }
+  .def-box.teal   .def-label { color: var(--teal);   }
+  .def-box.purple .def-label { color: var(--purple); }
+  .def-box p { font-size: 14.5px; }
+
+  /* ── CODE ── */
+  pre {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px; line-height: 1.6;
+    overflow-x: auto; margin: 10px 0;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .kw   { color: #c792ea; }
+  .fn   { color: #82aaff; }
+  .str  { color: #c3e88d; }
+  .tag-c{ color: #f07178; }
+  .attr { color: #ffcb6b; }
+  .cmt  { color: #546e7a; }
+  .num  { color: #f78c6c; }
+  .this { color: #89ddff; }
+  code  {
+    font-family: 'Fira Code', monospace; font-size: 13px;
+    background: #f0f0f0; padding: 1px 6px;
+    border-radius: 4px; color: var(--purple);
+  }
+
+  /* ── COMPARE ── */
+  .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .compare-box { border-radius: 8px; padding: 14px 16px; font-size: 13.5px; }
+  .compare-box .cb-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing:.08em; margin-bottom: 6px;
+  }
+  .cb-old  { background: var(--red-bg);    border-left: 4px solid var(--red);    }
+  .cb-new  { background: var(--green-bg);  border-left: 4px solid var(--green);  }
+  .cb-fn   { background: var(--green-bg);  border-left: 4px solid var(--green);  }
+  .cb-cls  { background: var(--orange-bg); border-left: 4px solid var(--orange); }
+  .cb-old  .cb-label { color: var(--red);    }
+  .cb-new  .cb-label { color: var(--green);  }
+  .cb-fn   .cb-label { color: var(--green);  }
+  .cb-cls  .cb-label { color: var(--orange); }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px; margin-top: 14px;
+  }
+  .feature-card { border-radius: 10px; padding: 16px 18px; border: 1.5px solid transparent; }
+  .feature-card .fc-title {
+    font-weight: 700; font-size: 14px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .feature-card p  { font-size: 13.5px; color: var(--muted); }
+  .feature-card pre { font-size: 12px; margin: 6px 0 0; }
+  .fc-blue   { background: var(--blue-bg);   border-color: #b8d0ff; }
+  .fc-green  { background: var(--green-bg);  border-color: #9ddbb9; }
+  .fc-orange { background: var(--orange-bg); border-color: #ffc999; }
+  .fc-purple { background: var(--purple-bg); border-color: #c9abf0; }
+  .fc-teal   { background: var(--teal-bg);   border-color: #90d4d8; }
+  .fc-pink   { background: var(--pink-bg);   border-color: #f0a0d4; }
+  .fc-blue   .fc-title { color: var(--blue);   }
+  .fc-green  .fc-title { color: var(--green);  }
+  .fc-orange .fc-title { color: var(--orange); }
+  .fc-purple .fc-title { color: var(--purple); }
+  .fc-teal   .fc-title { color: var(--teal);   }
+  .fc-pink   .fc-title { color: var(--pink);   }
+
+  /* ── TIP / WARN ── */
+  .tip {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--teal-bg); border-left: 4px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 14px; color: var(--teal);
+  }
+  .tip .ti { font-size: 18px; flex-shrink: 0; }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th {
+    background: var(--purple-bg); color: var(--purple);
+    font-weight: 700; text-align: left;
+    padding: 10px 14px; border: 1px solid #d6c4f4;
+  }
+  td { padding: 9px 14px; border: 1px solid var(--border); }
+  tr:nth-child(even) td { background: #fafafa; }
+
+  /* ── EXAMPLE WRAP ── */
+  .example-wrap { border: 1.5px solid var(--border); border-radius: 0 8px 8px 8px; overflow: hidden; margin: 12px 0; }
+  .example-wrap pre { border-radius: 0; margin: 0; }
+  .example-header {
+    display: flex; align-items: center; gap: 6px;
+    background: #f5f5f5; border-radius: 8px 8px 0 0;
+    padding: 10px 16px;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    border: 1.5px solid var(--border); border-bottom: none;
+  }
+  .dot-file { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ── OUTPUT BOX ── */
+  .output-box {
+    background: var(--green-bg); border: 1.5px solid #9ddbb9;
+    border-radius: 8px; padding: 12px 16px; margin: 10px 0;
+    font-family: 'Fira Code', monospace; font-size: 13px; color: var(--green);
+  }
+  .output-box .out-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing:.08em; color: var(--green); margin-bottom: 6px;
+  }
+
+  /* ── INTERVIEW BOX ── */
+  .interview-box {
+    background: var(--orange-bg); border: 1.5px solid #ffc999;
+    border-radius: 10px; padding: 16px 18px; margin: 14px 0;
+  }
+  .interview-box .ib-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--orange); margin-bottom: 8px;
+  }
+  .interview-box .qa { margin-bottom: 10px; }
+  .interview-box .qa:last-child { margin-bottom: 0; }
+  .interview-box .q { font-weight: 600; font-size: 13.5px; color: var(--text); }
+  .interview-box .a { font-size: 13.5px; color: var(--muted); margin-left: 14px; margin-top: 2px; }
+
+  /* ── TREE ── */
+  .tree-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .tree-box {
+    border-radius: 10px; padding: 16px 20px;
+    font-family: 'Fira Code', monospace; font-size: 13.5px;
+    line-height: 1.9;
+  }
+  .tree-box .tb-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing:.08em; margin-bottom: 8px;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline { margin: 14px 0; }
+  .tl-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .tl-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+    color: #fff; margin-top: 2px;
+  }
+  .tl-body h4 { font-size: 14.5px; font-weight: 700; margin-bottom: 4px; }
+  .tl-body p  { font-size: 13.5px; color: var(--muted); margin: 0; }
+
+  /* ── CHECK LIST ── */
+  .check-list { list-style: none; margin: 10px 0; }
+  .check-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; margin-bottom: 7px;
+  }
+  .chk {
+    width: 22px; height: 22px; border-radius: 6px;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+  }
+  .chk-green  { background: var(--green-bg);  color: var(--green);  }
+  .chk-red    { background: var(--red-bg);    color: var(--red);    }
+  .chk-blue   { background: var(--blue-bg);   color: var(--blue);   }
+
+  /* ── HOOKS GRID ── */
+  .hooks-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 12px 0;
+  }
+  .hook-item {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--green-bg); border: 1.5px solid #9ddbb9;
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 13.5px; font-weight: 600; color: var(--green);
+  }
+
+  h3 { font-size: 16px; font-weight: 700; margin: 18px 0 8px; color: var(--text); }
+  h4 { font-size: 14px; font-weight: 700; margin: 12px 0 6px; color: var(--muted); }
+  p  { margin-bottom: 8px; font-size: 14.5px; }
+  ul, ol { padding-left: 20px; margin-bottom: 10px; }
+  li { font-size: 14.5px; margin-bottom: 4px; }
+
+  @media print { body { padding: 10px; } .section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="page-header">
+  <div class="tag">React.js · Chapter 4</div>
+  <h1>Function Based Components</h1>
+  <p>Definition · Why FBC · Stateless Era · React Hooks · Syntax · Examples · Advantages · FBC vs Class</p>
+</div>
+
+
+<!-- ═══ 1. WHAT ARE FUNCTION COMPONENTS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--teal);">1</div>
+    <h2>What are Function Based Components?</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box">
+      <div class="def-label">📘 Definition</div>
+      <p>Function Based Components (FBC) are <strong>normal JavaScript functions</strong> that return <strong>JSX</strong> elements. React uses these functions to create and display UI components on the screen.</p>
+    </div>
+
+    <div class="def-box green">
+      <div class="def-label">⚡ Simple Definition</div>
+      <p>A Function Component is a <strong>JavaScript function</strong> that returns JSX and is used to create <strong>reusable user interface elements</strong> in React.</p>
+    </div>
+
+    <h3>Syntax</h3>
+    <pre><span class="kw">function</span> <span class="fn">ComponentName</span>() {
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;h1&gt;</span>Hello React<span class="tag-c">&lt;/h1&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> ComponentName;</pre>
+
+    <div class="tip">
+      <span class="ti">💡</span>
+      <span><strong>Rule:</strong> Component name must start with a <strong>Capital Letter</strong>. React treats lowercase names as HTML tags and Uppercase as Components.</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 2. WHY FUNCTION COMPONENTS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--blue);">2</div>
+    <h2>Why Use Function Components?</h2>
+  </div>
+  <div class="section-body">
+
+    <h3>Without Components vs With Function Components</h3>
+    <div class="tree-grid">
+      <div class="tree-box" style="background:var(--red-bg); border:1.5px solid #f0b0bb;">
+        <div class="tb-label" style="color:var(--red);">❌ Without Components</div>
+        <span style="color:var(--red);">Home Page<br/>
+├── Navbar<br/>
+├── Sidebar<br/>
+├── Product Section<br/>
+└── Footer</span>
+        <p style="font-size:13px; color:var(--muted); font-family:Inter,sans-serif; margin-top:8px;">Everything in one file → difficult to manage, hard to maintain.</p>
+      </div>
+      <div class="tree-box" style="background:var(--green-bg); border:1.5px solid #9ddbb9;">
+        <div class="tb-label" style="color:var(--green);">✅ With Function Components</div>
+        <span style="color:var(--green);">App<br/>
+│<br/>
+├── Navbar Component<br/>
+├── Sidebar Component<br/>
+├── Product Component<br/>
+└── Footer Component</span>
+        <p style="font-size:13px; color:var(--muted); font-family:Inter,sans-serif; margin-top:8px;">Each component has its own responsibility — clean and organized.</p>
+      </div>
+    </div>
+
+    <h3>Benefits</h3>
+    <ul class="check-list">
+      <li><span class="chk chk-green">✓</span> <strong>Reusable</strong> — Write once, use anywhere in the project</li>
+      <li><span class="chk chk-green">✓</span> <strong>Readable</strong> — Clean, short code that's easy to understand</li>
+      <li><span class="chk chk-green">✓</span> <strong>Maintainable</strong> — Update one component without breaking others</li>
+      <li><span class="chk chk-green">✓</span> <strong>Easy to Debug</strong> — Isolate and test components independently</li>
+    </ul>
+
+    <h3>Why Function Components Are Popular</h3>
+    <div class="feature-grid">
+
+      <div class="feature-card fc-green">
+        <div class="fc-title">✍️ Easy to Write</div>
+        <p>Much shorter and cleaner than Class Components — no <code>extends</code>, no <code>render()</code>.</p>
+      </div>
+
+      <div class="feature-card fc-blue">
+        <div class="fc-title">👁️ Better Readability</div>
+        <p>Less code means faster understanding. Developers can focus on business logic.</p>
+      </div>
+
+      <div class="feature-card fc-orange">
+        <div class="fc-title">⚡ Better Performance</div>
+        <p>Lightweight — no class instances created. Slightly faster rendering than Class Components.</p>
+      </div>
+
+      <div class="feature-card fc-purple">
+        <div class="fc-title">🏆 Modern React Standard</div>
+        <p>React officially recommends Function Components with Hooks. Almost all new projects use FBC.</p>
+      </div>
+
+    </div>
+
+    <h3>Code Size Comparison</h3>
+    <div class="compare-row">
+      <div class="compare-box cb-cls">
+        <div class="cb-label">🔴 Class Component — More Code</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:10px; font-size:12.5px; margin:6px 0 0;"><span class="kw">class</span> <span class="fn">Welcome</span> <span class="kw">extends</span> React.Component {
+  <span class="fn">render</span>() {
+    <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Hello<span class="tag-c">&lt;/h1&gt;</span>;
+  }
+}</pre>
+      </div>
+      <div class="compare-box cb-fn">
+        <div class="cb-label">🟢 Function Component — Less Code</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:10px; font-size:12.5px; margin:6px 0 0;"><span class="kw">function</span> <span class="fn">Welcome</span>() {
+  <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Hello<span class="tag-c">&lt;/h1&gt;</span>;
+}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 3. HISTORY — BEFORE AND AFTER HOOKS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--orange);">3</div>
+    <h2>Before Hooks vs After Hooks</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="timeline">
+
+      <!-- Before -->
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--red);">1</div>
+        <div class="tl-body">
+          <h4 style="color:var(--red);">Before React 16.8 — "Stateless Components"</h4>
+          <p>Function Components were called <strong>Stateless Components</strong> because they could NOT:</p>
+          <ul class="check-list" style="margin-top:6px;">
+            <li><span class="chk chk-red">✗</span> Store State</li>
+            <li><span class="chk chk-red">✗</span> Use Lifecycle Methods</li>
+            <li><span class="chk chk-red">✗</span> Manage Complex Logic</li>
+          </ul>
+          <pre style="margin-top:8px;"><span class="cmt">// Only UI rendering was possible</span>
+<span class="kw">function</span> <span class="fn">Demo</span>() {
+  <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Hello React<span class="tag-c">&lt;/h1&gt;</span>;
+}</pre>
+        </div>
+      </div>
+
+      <!-- Problem -->
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--orange);">2</div>
+        <div class="tl-body">
+          <h4 style="color:var(--orange);">The Problem</h4>
+          <p>For a Counter app, developers HAD to use Class Components — increasing complexity.</p>
+          <div class="compare-row" style="margin-top:8px;">
+            <div class="compare-box cb-old">
+              <div class="cb-label">❌ Function Component (Before) — Could Not</div>
+              <pre style="background:#fff0f2; color:#555; border-radius:6px; padding:8px; font-size:12px; margin:4px 0 0;"><span style="color:#888;">// Not possible before Hooks</span>
+<span style="color:var(--blue);">function</span> <span style="color:var(--purple);">Counter</span>() {
+  <span style="color:#888;">// state here??? ❌</span>
+}</pre>
+            </div>
+            <div class="compare-box cb-cls">
+              <div class="cb-label">⚠️ Had to use Class Component</div>
+              <pre style="background:#fff0e4; color:#555; border-radius:6px; padding:8px; font-size:12px; margin:4px 0 0;"><span style="color:var(--blue);">class</span> <span style="color:var(--purple);">Counter</span> <span style="color:var(--blue);">extends</span> Component {
+  state = { count: <span style="color:var(--orange);">0</span> }
+  <span style="color:#888;">// lots of boilerplate...</span>
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- After Hooks -->
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--green);">3</div>
+        <div class="tl-body">
+          <h4 style="color:var(--green);">React 16.8 — Hooks Changed Everything ✅</h4>
+          <p>Now Function Components can do <strong>everything Class Components can</strong>:</p>
+          <div class="hooks-grid" style="margin-top:8px;">
+            <div class="hook-item">✅ Manage State</div>
+            <div class="hook-item">✅ Use Lifecycle Features</div>
+            <div class="hook-item">✅ Handle Side Effects</div>
+            <div class="hook-item">✅ Access Context</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Hooks Counter Example -->
+    <h3>Counter App — Now Possible with Function Component</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; Counter.jsx
+      </div>
+      <pre><span class="kw">import</span> React, { useState } <span class="kw">from</span> <span class="str">'react'</span>;
+
+<span class="kw">function</span> <span class="fn">Counter</span>() {
+  <span class="kw">const</span> [count, setCount] = <span class="fn">useState</span>(<span class="num">0</span>);   <span class="cmt">// useState Hook</span>
+
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;&gt;</span>
+      <span class="tag-c">&lt;h1&gt;</span>{count}<span class="tag-c">&lt;/h1&gt;</span>
+      <span class="tag-c">&lt;button</span> <span class="attr">onClick=</span>{() => <span class="fn">setCount</span>(count + <span class="num">1</span>)}<span class="tag-c">&gt;</span>
+        Increment
+      <span class="tag-c">&lt;/button&gt;</span>
+    <span class="tag-c">&lt;/&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> Counter;</pre>
+    </div>
+
+    <div class="def-box teal">
+      <div class="def-label">🔍 Key Points in the Code</div>
+      <p><code>useState(0)</code> → creates state variable <code>count</code> starting at <strong>0</strong><br/>
+      <code>setCount</code> → function to update the state (like <code>setState</code> in class)<br/>
+      <code>onClick={() =&gt; setCount(count + 1)}</code> → arrow function to increment on click</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ 4. PRACTICAL EXAMPLES ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--green);">4</div>
+    <h2>Practical Examples</h2>
+  </div>
+  <div class="section-body">
+
+    <!-- Example 1 -->
+    <h3>Example 1 — Welcome Component</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; Welcome.jsx
+      </div>
+      <pre><span class="kw">function</span> <span class="fn">Welcome</span>() {
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;h1&gt;</span>Welcome To React<span class="tag-c">&lt;/h1&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> Welcome;</pre>
+    </div>
+    <div class="output-box">
+      <div class="out-label">▶ Output</div>
+      Welcome To React
+    </div>
+
+    <!-- Example 2 -->
+    <h3>Example 2 — Student Component with Variable</h3>
+    <div class="example-wrap">
+      <div class="example-header">
+        <div class="dot-file" style="background:#ff5f57;"></div>
+        <div class="dot-file" style="background:#febc2e;"></div>
+        <div class="dot-file" style="background:#28c840;"></div>
+        &nbsp; Student.jsx
+      </div>
+      <pre><span class="kw">function</span> <span class="fn">Student</span>() {
+  <span class="kw">let</span> name = <span class="str">"Pravin"</span>;    <span class="cmt">// JS variable inside function</span>
+
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;h1&gt;</span>
+      My Name Is {name}   <span class="cmt">// JSX Expression</span>
+    <span class="tag-c">&lt;/h1&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> Student;</pre>
+    </div>
+    <div class="output-box">
+      <div class="out-label">▶ Output</div>
+      My Name Is Pravin
+    </div>
+
+    <div class="tip">
+      <span class="ti">💡</span>
+      <span>Variables declared inside a Function Component are accessible in the JSX <code>{}</code> expression. This is one of the key powers of Function Components — <strong>JS and JSX in one place</strong>.</span>
+    </div>
+
+    <!-- Real Life Analogy -->
+    <h3>Real-Life Analogy — Car Parts 🚗</h3>
+    <div class="tree-grid">
+      <div class="tree-box" style="background:var(--blue-bg); border:1.5px solid #b8d0ff;">
+        <div class="tb-label" style="color:var(--blue);">🚗 Car Made of Parts</div>
+        <span style="color:var(--blue);">Car<br/>
+│<br/>
+├── Engine<br/>
+├── Steering<br/>
+├── Wheels<br/>
+└── Dashboard</span>
+      </div>
+      <div class="tree-box" style="background:var(--purple-bg); border:1.5px solid #c9abf0;">
+        <div class="tb-label" style="color:var(--purple);">⚛️ Website Made of Components</div>
+        <span style="color:var(--purple);">Website<br/>
+│<br/>
+├── Navbar Component<br/>
+├── Home Component<br/>
+├── Product Component<br/>
+└── Footer Component</span>
+      </div>
+    </div>
+    <p style="font-size:13.5px; color:var(--muted);">Just like a car is assembled from individual parts, a React app is assembled from individual components — each performing a specific task.</p>
+  </div>
+</div>
+
+
+<!-- ═══ 5. ADVANTAGES ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--purple);">5</div>
+    <h2>Advantages of Function Components</h2>
+  </div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr><th>Advantage</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Simple</strong></td><td>Easy to understand — just a plain JS function</td></tr>
+        <tr><td><strong>Less Code</strong></td><td>No <code>class</code>, no <code>constructor</code>, no <code>render()</code> — write less, do more</td></tr>
+        <tr><td><strong>Reusable</strong></td><td>Use the same component multiple times across the app</td></tr>
+        <tr><td><strong>Fast Development</strong></td><td>Write features quickly with clean, minimal syntax</td></tr>
+        <tr><td><strong>Hooks Support</strong></td><td>Can use <code>useState</code>, <code>useEffect</code>, <code>useContext</code> etc.</td></tr>
+        <tr><td><strong>Modern Approach</strong></td><td>Preferred and officially recommended in all React projects</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ═══ 6. FUNCTION VS CLASS COMPARISON ═══ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--pink);">6</div>
+    <h2>Function Component vs Class Component</h2>
+  </div>
+  <div class="section-body">
+
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>Function Component</th><th>Class Component</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Type</strong></td>
+          <td>JavaScript Function</td>
+          <td>ES6 Class</td>
+        </tr>
+        <tr>
+          <td><strong>Code Length</strong></td>
+          <td>✅ Less Code</td>
+          <td>⚠️ More Boilerplate Code</td>
+        </tr>
+        <tr>
+          <td><strong>State</strong></td>
+          <td><code>useState()</code> Hook</td>
+          <td><code>this.state</code> + <code>this.setState()</code></td>
+        </tr>
+        <tr>
+          <td><strong>Lifecycle</strong></td>
+          <td><code>useEffect()</code> Hook</td>
+          <td><code>componentDidMount()</code> etc.</td>
+        </tr>
+        <tr>
+          <td><strong>render()</strong></td>
+          <td>❌ Not needed</td>
+          <td>✅ Mandatory</td>
+        </tr>
+        <tr>
+          <td><strong>Learning Curve</strong></td>
+          <td>✅ Easy to Learn</td>
+          <td>⚠️ Slightly Complex</td>
+        </tr>
+        <tr>
+          <td><strong>Used In</strong></td>
+          <td>✅ Modern React (Recommended)</td>
+          <td>⚠️ Legacy / Older Projects</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="compare-row">
+      <div class="compare-box cb-fn">
+        <div class="cb-label">✅ Function Component (Modern)</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:10px; font-size:12px; margin:4px 0 0;"><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>;
+
+<span class="kw">function</span> <span class="fn">Counter</span>() {
+  <span class="kw">const</span> [count, setCount] = <span class="fn">useState</span>(<span class="num">0</span>);
+  <span class="kw">return</span> (
+    <span class="tag-c">&lt;button</span> <span class="attr">onClick=</span>{()=><span class="fn">setCount</span>(count+<span class="num">1</span>)}<span class="tag-c">&gt;</span>
+      {count}
+    <span class="tag-c">&lt;/button&gt;</span>
+  );
+}</pre>
+      </div>
+      <div class="compare-box cb-cls">
+        <div class="cb-label">⚠️ Class Component (Legacy)</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:10px; font-size:12px; margin:4px 0 0;"><span class="kw">class</span> <span class="fn">Counter</span> <span class="kw">extends</span> Component {
+  <span class="fn">constructor</span>() {
+    <span class="kw">super</span>();
+    <span class="this">this</span>.state = { count: <span class="num">0</span> };
+  }
+  <span class="fn">render</span>() {
+    <span class="kw">return</span> (
+      <span class="tag-c">&lt;button</span> <span class="attr">onClick=</span>{()=><span class="this">this</span>.<span class="fn">setState</span>(
+        {count:<span class="this">this</span>.state.count+<span class="num">1</span>})}<span class="tag-c">&gt;</span>
+        {<span class="this">this</span>.state.count}
+      <span class="tag-c">&lt;/button&gt;</span>
+    );
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- Interview -->
+    <div class="interview-box">
+      <div class="ib-label">🎯 Interview Q&amp;A</div>
+      <div class="qa">
+        <div class="q">Q: What is a Function Component in React?</div>
+        <div class="a">A: A Function Component is a JavaScript function that returns JSX and is used to create reusable UI elements in React applications.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Why do we use Function Components?</div>
+        <div class="a">A: Function Components are simpler, require less code, support Hooks, are easier to read, and are the officially recommended way of building modern React applications.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Why were Function Components called Stateless Components earlier?</div>
+        <div class="a">A: Before React Hooks (React 16.8), Function Components could only render UI — they could not manage state or use lifecycle methods. After Hooks were introduced, they became fully capable, so "Stateless" is no longer accurate.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What is useState and why is it used?</div>
+        <div class="a">A: <code>useState</code> is a React Hook used in Function Components to manage state. It returns a state variable and a setter function: <code>const [count, setCount] = useState(0);</code></div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What changed in React 16.8?</div>
+        <div class="a">A: React 16.8 introduced Hooks, which allowed Function Components to manage state (<code>useState</code>), handle side effects (<code>useEffect</code>), and access context — making them as powerful as Class Components.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="text-align:center; padding:20px; color:#aaa; font-size:12.5px; margin-top:10px;">
+  React.js Chapter 4 · Function Based Components · Study Notes
+</div>
+
+</body>
+</html>

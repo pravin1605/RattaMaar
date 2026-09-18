@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spring Core – XML Configuration Project</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #e8eaf0;
+    color: #000000;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .page {
+    width: 794px;
+    min-height: 1123px;
+    background: #ffffff;
+    margin: 32px auto;
+    padding: 36px 40px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+    page-break-after: always;
+  }
+
+  .page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 22px;
+  }
+  .page-header .subject { font-size: 11px; font-weight: 700; color: #000; letter-spacing: 1.5px; text-transform: uppercase; }
+  .page-header .topic { font-size: 20px; font-weight: 800; color: #000; }
+  .page-header .badge { background: #000; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 1px; }
+
+  .section-label {
+    font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: #000; margin: 20px 0 8px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1.5px; background: #000; }
+
+  .card { border: 1.5px solid #000; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; background: #fff; }
+  .card-title { font-size: 12.5px; font-weight: 800; color: #000; margin-bottom: 6px; }
+  .card p { font-size: 12.5px; color: #000; margin-bottom: 5px; }
+
+  .def-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; background: #fff; }
+  .def-box .def-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .def-box p { font-size: 12.5px; color: #000; line-height: 1.65; }
+
+  .interview-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; background: #fff; }
+  .interview-box .int-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .interview-box p { font-size: 12.5px; color: #000; line-height: 1.65; }
+
+  .trick-box { background: #fff; border: 2px dashed #000; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+  .trick-box .trick-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .trick-box p { font-size: 12px; color: #000; }
+
+  .tip-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 12px; background: #fff; }
+  .tip-box .tip-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .tip-box p { font-size: 12px; color: #000; }
+
+  .warn-box { border: 1.5px solid #000; border-left: 4px solid #000; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 12px; background: #fff; }
+  .warn-box .warn-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .warn-box p { font-size: 12px; color: #000; }
+
+  .example-card { border: 1.5px solid #000; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; background: #fff; }
+  .example-card .ex-label { font-size: 10px; font-weight: 800; color: #000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+
+  /* CODE BLOCK */
+  .code-block { background: #000; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+  .code-block pre { font-family: 'Fira Code', monospace; font-size: 11.5px; color: #ffffff; white-space: pre-wrap; word-break: break-word; line-height: 1.7; }
+  .code-block .cm { color: #888888; font-style: italic; }
+  .code-block .kw { color: #ffffff; font-weight: 700; }
+  .code-block .str { color: #cccccc; }
+  .code-block .tag { color: #dddddd; font-weight: 700; }
+  .code-block .attr { color: #aaaaaa; }
+  .code-block .val { color: #cccccc; }
+  .out-bar { background: #222; border-radius: 0 0 6px 6px; padding: 8px 14px; margin-top: -10px; margin-bottom: 10px; border-top: 1px solid #444; }
+  .out-bar .out-label { font-size: 9px; font-weight: 800; color: #888; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
+  .out-bar pre { font-family: 'Fira Code', monospace; font-size: 11px; color: #cccccc; }
+
+  /* TABLE */
+  .cmp-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 12px; }
+  .cmp-table thead th { background: #000; color: #fff; padding: 8px 10px; text-align: left; font-weight: 800; }
+  .cmp-table tbody tr:nth-child(even) { background: #f5f5f5; }
+  .cmp-table tbody td { padding: 7px 10px; border-bottom: 1px solid #000; color: #000; vertical-align: top; }
+  .cmp-table tbody tr td:first-child { font-weight: 700; }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+  /* CHIPS */
+  .pros-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .chip { background: #fff; border: 1.5px solid #000; color: #000; border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 700; }
+  .chip-filled { background: #000; color: #fff; border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 700; }
+  .pill { display: inline-block; background: #000; color: #fff; border-radius: 4px; padding: 2px 9px; font-size: 11px; font-weight: 700; margin: 2px; }
+  .pill-outline { display: inline-block; background: #fff; color: #000; border: 1.5px solid #000; border-radius: 4px; padding: 2px 9px; font-size: 11px; font-weight: 700; margin: 2px; }
+
+  /* STEP FLOW */
+  .step-flow { display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin-bottom: 12px; }
+  .step-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+  .step-num { min-width: 26px; height: 26px; background: #000; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 12.5px; color: #000; padding-top: 3px; }
+
+  /* FLOW VERTICAL */
+  .flow { display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 12px; }
+  .flow-step { background: #000; color: #fff; font-size: 11.5px; font-weight: 700; padding: 7px 20px; border-radius: 8px; text-align: center; min-width: 340px; margin: 2px 0; }
+  .flow-step.outline { background: #fff; color: #000; border: 2px solid #000; }
+  .flow-arrow { font-size: 14px; color: #000; line-height: 1.2; margin: 1px 0; }
+
+  /* PROJECT STRUCTURE */
+  .proj-tree { font-family: 'Fira Code', monospace; font-size: 12px; color: #000; background: #fff; border: 1.5px solid #000; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; line-height: 2; }
+
+  /* INLINE CODE */
+  code { font-family: 'Fira Code', monospace; font-size: 11.5px; background: #f0f0f0; border: 1px solid #ccc; padding: 1px 5px; border-radius: 3px; color: #000; }
+
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     PAGE 1 — Project Structure + Steps 1–3
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Spring Core Project — XML Configuration</div>
+    </div>
+    <div class="badge">PART 1</div>
+  </div>
+
+  <div class="section-label">Project Overview</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 What This Project Does</div>
+    <p>This is the first Spring Core project where the <strong>Spring IoC Container creates and manages a Student object</strong> using an XML configuration file. No manual <code>new Student()</code> — Spring handles it all.</p>
+  </div>
+
+  <div class="section-label">Project Structure</div>
+
+  <div class="proj-tree">
+SpringCoreProject<br/>
+├── src/main/java<br/>
+│&nbsp;&nbsp;&nbsp; ├── com.j2ee<br/>
+│&nbsp;&nbsp;&nbsp; │&nbsp;&nbsp;&nbsp; ├── <strong>Student.java</strong> &nbsp;&nbsp;&nbsp;← POJO Class<br/>
+│&nbsp;&nbsp;&nbsp; │&nbsp;&nbsp;&nbsp; └── <strong>Driver.java</strong> &nbsp;&nbsp;&nbsp;← Main Class<br/>
+│&nbsp;&nbsp;&nbsp; └── <strong>myconfig.xml</strong> &nbsp;← Bean Configuration<br/>
+└── <strong>pom.xml</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Maven Dependency
+  </div>
+
+  <!-- Step 1 -->
+  <div class="section-label">Step 1 — Create Maven Project</div>
+  <div class="card">
+    <div class="card-title">🛠️ Create a simple Maven project in your IDE.</div>
+    <p>Maven manages dependencies automatically via <code>pom.xml</code>. We will add the Spring dependency next.</p>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="section-label">Step 2 — Add Spring Context Dependency (pom.xml)</div>
+
+  <div class="code-block">
+    <pre><span class="tag">&lt;dependencies&gt;</span>
+  <span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.springframework<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>spring-context<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>5.3.20<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;/dependency&gt;</span>
+<span class="tag">&lt;/dependencies&gt;</span></pre>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">💡 Why spring-context Dependency?</div>
+    <p>This dependency provides: <strong>ApplicationContext, BeanFactory, IoC Container, Dependency Injection</strong>, and all Spring Core Features. Without this dependency, Spring <strong>cannot create or manage objects</strong>.</p>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="section-label">Step 3 — Create POJO Class (Student.java)</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 What is POJO?</div>
+    <p><strong>POJO = Plain Old Java Object</strong>. A simple Java class with fields, getters, setters, and a no-arg constructor. This is the class whose <strong>object will be managed by Spring IoC Container</strong>.</p>
+  </div>
+
+  <div class="code-block">
+    <pre><span class="kw">package</span> com.j2ee;
+
+<span class="kw">public class</span> Student {
+
+    <span class="kw">private int</span> id;
+    <span class="kw">private</span> String name;
+    <span class="kw">private int</span> age;
+    <span class="kw">private</span> String address;
+
+    <span class="kw">public</span> Student() {
+        System.out.println(<span class="str">"Student Object Created"</span>);
+        <span class="cm">// Spring calls this constructor to create the bean</span>
+    }
+
+    <span class="cm">// Getters and Setters for all fields...</span>
+    <span class="cm">// (id, name, age, address)</span>
+
+    @Override
+    <span class="kw">public</span> String toString() {
+        <span class="kw">return</span> <span class="str">"Student [id="</span> + id +
+               <span class="str">", name="</span> + name +
+               <span class="str">", age="</span> + age +
+               <span class="str">", address="</span> + address + <span class="str">"]"</span>;
+    }
+}</pre>
+  </div>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 Why No-Arg Constructor?</div>
+    <p>Spring uses the <strong>no-arg (default) constructor</strong> to create the bean object. If you don't provide one and have a parameterized constructor, Spring will throw an error during bean creation.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PAGE 2 — XML Config + Driver Class
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">XML Config + Driver Class</div>
+    </div>
+    <div class="badge">PART 2</div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="section-label">Step 4 — Create XML Configuration File (myconfig.xml)</div>
+
+  <div class="tip-box">
+    <div class="tip-label">📁 File Location</div>
+    <p>Create <code>myconfig.xml</code> inside <strong>src/main/java</strong> folder.</p>
+  </div>
+
+  <div class="code-block">
+    <pre><span class="cm">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+
+<span class="tag">&lt;beans</span> xmlns=<span class="val">"http://www.springframework.org/schema/beans"</span>
+       xmlns:xsi=<span class="val">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       xsi:schemaLocation=<span class="val">"http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"</span><span class="tag">&gt;</span>
+
+    <span class="tag">&lt;bean</span> <span class="attr">id</span>=<span class="val">"student"</span>
+          <span class="attr">class</span>=<span class="val">"com.j2ee.Student"</span><span class="tag">&gt;
+    &lt;/bean&gt;</span>
+
+<span class="tag">&lt;/beans&gt;</span></pre>
+  </div>
+
+  <div class="section-label">Understanding the Bean Tag</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Attribute</th><th>Value</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>id</code></td><td><code>student</code></td><td>Unique name of the bean. Used while retrieving object with <code>getBean()</code>.</td></tr>
+      <tr><td><code>class</code></td><td><code>com.j2ee.Student</code></td><td>Fully qualified class name. Spring uses this class to create the object via reflection.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="example-card">
+    <div class="ex-label">⚙️ What Happens Internally When Spring Reads the Bean Tag</div>
+    <div class="step-flow" style="margin-top:6px;">
+      <div class="step-row"><div class="step-num">1</div><div class="step-text">Spring reads <code>&lt;bean id="student" class="com.j2ee.Student"&gt;</code></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-text">Creates the <strong>Student object</strong> using its no-arg constructor</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-text">Stores it in the <strong>IoC Container</strong> with name = <code>student</code></div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-text">Manages its full <strong>lifecycle</strong> (init → use → destroy)</div></div>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="section-label">Step 5 — Create Driver Class (Driver.java)</div>
+
+  <div class="code-block">
+    <pre><span class="kw">package</span> com.j2ee;
+
+<span class="kw">import</span> org.springframework.context.ApplicationContext;
+<span class="kw">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;
+
+<span class="kw">public class</span> Driver {
+
+    <span class="kw">public static void</span> main(String[] args) {
+
+        <span class="cm">// Step 1: Create IoC Container — reads XML, creates all beans</span>
+        ApplicationContext context =
+            <span class="kw">new</span> ClassPathXmlApplicationContext(<span class="str">"myconfig.xml"</span>);
+
+        <span class="cm">// Step 2: Retrieve bean from container by id</span>
+        Student student = (Student) context.getBean(<span class="str">"student"</span>);
+
+        <span class="cm">// Step 3: Use the object</span>
+        System.out.println(student);
+    }
+}</pre>
+  </div>
+  <div class="out-bar">
+    <div class="out-label">📤 Output</div>
+    <pre>Student Object Created
+Student [id=0, name=null, age=0, address=null]</pre>
+  </div>
+
+  <div class="section-label">Driver Class — Line by Line Explanation</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Line</th><th>What Happens</th></tr></thead>
+    <tbody>
+      <tr><td><code>new ClassPathXmlApplicationContext("myconfig.xml")</code></td><td>Spring Container starts → reads myconfig.xml → finds bean definitions → creates Student object → stores it</td></tr>
+      <tr><td><code>context.getBean("student")</code></td><td>Retrieves the bean from IoC Container whose <code>id = "student"</code>. Spring returns the managed object.</td></tr>
+      <tr><td><code>System.out.println(student)</code></td><td>Calls <code>toString()</code> on Student. Values are null/0 because no values were injected yet.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn-box">
+    <div class="warn-label">❓ Why Are Values Null?</div>
+    <p>Currently the bean tag only creates the object. <strong>No values are injected</strong>. That is why <code>id=0, name=null, age=0, address=null</code>. DI (value injection) comes in the next step.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PAGE 3 — DI, Flow Diagram, Interview Answer
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">DI + Complete Flow + Interview Answer</div>
+    </div>
+    <div class="badge">PART 3</div>
+  </div>
+
+  <!-- DI -->
+  <div class="section-label">Where is Dependency Injection (DI)?</div>
+
+  <div class="two-col">
+    <div>
+      <div class="warn-box">
+        <div class="warn-label">⚠️ Currently — Only Bean Creation</div>
+        <div class="code-block" style="margin-bottom:0;">
+          <pre><span class="tag">&lt;bean</span> <span class="attr">id</span>=<span class="val">"student"</span>
+      <span class="attr">class</span>=<span class="val">"com.j2ee.Student"</span><span class="tag">&gt;
+&lt;/bean&gt;</span>
+<span class="cm">// No values injected!</span></pre>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="tip-box">
+        <div class="tip-label">✅ With DI — Values Injected</div>
+        <div class="code-block" style="margin-bottom:0;">
+          <pre><span class="tag">&lt;bean</span> <span class="attr">id</span>=<span class="val">"student"</span>
+      <span class="attr">class</span>=<span class="val">"com.j2ee.Student"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;property</span> <span class="attr">name</span>=<span class="val">"id"</span> <span class="attr">value</span>=<span class="val">"101"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;property</span> <span class="attr">name</span>=<span class="val">"name"</span> <span class="attr">value</span>=<span class="val">"Pravin"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;property</span> <span class="attr">name</span>=<span class="val">"age"</span> <span class="attr">value</span>=<span class="val">"22"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;property</span> <span class="attr">name</span>=<span class="val">"address"</span> <span class="attr">value</span>=<span class="val">"Mumbai"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/bean&gt;</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="out-bar" style="border-radius:8px;margin-bottom:12px;">
+    <div class="out-label">📤 Output After DI</div>
+    <pre>Student Object Created
+Student [id=101, name=Pravin, age=22, address=Mumbai]</pre>
+  </div>
+
+  <div class="def-box">
+    <div class="def-label">💡 DI = Object Creation + Value Injection</div>
+    <p>When Spring not only creates the object but also <strong>sets its field values</strong> through <code>&lt;property&gt;</code> tags — that is <strong>Dependency Injection</strong>.</p>
+  </div>
+
+  <!-- Without vs With Spring -->
+  <div class="section-label">Without Spring vs With Spring</div>
+
+  <div class="two-col">
+    <div class="warn-box" style="margin-bottom:0;">
+      <div class="warn-label">❌ Without Spring</div>
+      <div class="code-block" style="margin-top:6px;margin-bottom:0;">
+        <pre>Student s = <span class="kw">new</span> Student();
+<span class="cm">// Developer manually creates</span>
+<span class="cm">// Developer manages lifecycle</span>
+<span class="cm">// Developer handles dependencies</span></pre>
+      </div>
+    </div>
+    <div class="tip-box" style="margin-bottom:0;">
+      <div class="tip-label">✅ With Spring</div>
+      <div class="code-block" style="margin-top:6px;margin-bottom:0;">
+        <pre>context.getBean(<span class="str">"student"</span>);
+<span class="cm">// Spring creates object</span>
+<span class="cm">// Spring manages lifecycle</span>
+<span class="cm">// Spring injects dependencies</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two Config Ways -->
+  <div class="section-label">Two Ways to Give Object Info to IoC Container</div>
+
+  <div class="two-col" style="margin-top:8px;">
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-title">1. XML Configuration</div>
+      <p style="font-size:11.5px;margin-bottom:6px;"><span class="pill-outline">Traditional Approach</span></p>
+      <div class="code-block" style="margin-bottom:0;">
+        <pre><span class="tag">&lt;bean</span> <span class="attr">id</span>=<span class="val">"student"</span>
+      <span class="attr">class</span>=<span class="val">"com.j2ee.Student"</span><span class="tag">/&gt;</span></pre>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-title">2. Annotation Configuration</div>
+      <p style="font-size:11.5px;margin-bottom:6px;"><span class="pill">Modern Approach</span></p>
+      <div class="code-block" style="margin-bottom:0;">
+        <pre><span class="kw">@Component</span>
+<span class="kw">public class</span> Student {}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complete Flow -->
+  <div class="section-label">Complete Flow Diagram</div>
+
+  <div class="flow">
+    <div class="flow-step outline">Student.java &nbsp; (POJO Class)</div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step">myconfig.xml &nbsp; (&lt;bean&gt; definition)</div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step outline">ClassPathXmlApplicationContext reads myconfig.xml</div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step">Creates Student Bean &nbsp; (calls no-arg constructor)</div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step outline">Stores Bean in IoC Container with id = "student"</div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step">context.getBean("student") called by Driver</div>
+    <div class="flow-arrow">▼</div>
+    <div class="flow-step outline">Spring Returns Student Object ✅</div>
+  </div>
+
+  <!-- Interview Answer -->
+  <div class="section-label">Final Interview Answer</div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Expected Interview Answer</div>
+    <p>In a Spring Core XML-based project, we first create a Maven project and add the <strong>spring-context dependency</strong>. Then we create a POJO class such as <strong>Student</strong> with fields, getters, setters, and a no-arg constructor. Next, we create an XML configuration file (<code>myconfig.xml</code>) and define a bean using the <code>&lt;bean&gt;</code> tag with <strong>id</strong> (unique name) and <strong>class</strong> (fully qualified class name). In the Driver class, we create an IoC Container using <code>ClassPathXmlApplicationContext</code>, which reads the XML file, creates the Student object, manages its lifecycle, and stores it as a bean. The bean is then accessed using <code>context.getBean("student")</code>. If we add <code>&lt;property&gt;</code> tags inside the bean definition, Spring also performs <strong>Dependency Injection</strong> by setting field values automatically.</p>
+  </div>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 Steps to Remember</div>
+    <p><strong>M</strong>aven Project → <strong>D</strong>ependency (spring-context) → <strong>P</strong>OJO Class → <strong>X</strong>ML Config (<code>myconfig.xml</code>) → <strong>D</strong>river Class (<code>getBean()</code>)</p>
+    <p style="margin-top:4px;">👉 <strong>"MDPXD"</strong> — <em>"My Dev Project eXecutes Dynamically!"</em> 😄</p>
+  </div>
+</div>
+
+</body>
+</html>

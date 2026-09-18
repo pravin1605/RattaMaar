@@ -1,0 +1,848 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center; font-size: 20px; font-weight: 700;
+    border: 2.5px solid #111; padding: 9px 18px;
+    margin-bottom: 5px; letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 13px; font-style: italic;
+  }
+  .page-title {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: #555; margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title {
+    font-weight: 700; font-size: 11.5px;
+    margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 10.8px; padding: 9px 12px;
+    margin: 7px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw  { color: #569cd6; }
+  .cm  { color: #6a9955; }
+  .st  { color: #ce9178; }
+  .cl  { color: #4ec9b0; }
+  .mt  { color: #dcdcaa; }
+  .nm  { color: #9cdcfe; }
+
+  .code-block {
+    background: #f5f5f5; border: 1px solid #ccc;
+    border-left: 3px solid #333;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px; padding: 7px 10px;
+    margin: 5px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.6;
+  }
+
+  .explain-box {
+    background: #fffdf0; border: 1px solid #ddd;
+    border-left: 3px solid #888;
+    padding: 7px 11px; margin: 6px 0; font-size: 12.5px;
+  }
+  .explain-box-title { font-weight: 700; font-size: 12px; margin-bottom: 4px; color: #333; }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  .line-explain { display: flex; gap: 0; margin: 3px 0; border: 1px solid #ddd; }
+  .line-code {
+    background: #f0f0f0; font-family: 'Courier New', monospace;
+    font-size: 11px; padding: 4px 8px;
+    border-right: 1px solid #ccc; min-width: 46%;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .line-meaning { padding: 4px 8px; font-size: 11.5px; color: #333; flex: 1; }
+
+  .step-row { display: flex; align-items: flex-start; gap: 9px; margin: 5px 0; }
+  .step-num {
+    min-width: 22px; height: 22px;
+    background: #111; color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .method-row { display: flex; gap: 6px; align-items: baseline; margin: 3px 0; }
+  .method-name {
+    font-family: 'Courier New', monospace; font-weight: 700;
+    font-size: 11.5px; background: #eee;
+    padding: 1px 5px; border-radius: 2px; white-space: nowrap;
+  }
+  .method-desc { font-size: 12px; color: #333; }
+
+  .tag {
+    display: inline-block; background: #111; color: #fff;
+    font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px;
+    margin-right: 4px; vertical-align: middle;
+  }
+
+  .output-box {
+    background: #111; color: #00dd00;
+    font-family: 'Courier New', monospace;
+    font-size: 12px; padding: 7px 12px; margin: 6px 0;
+  }
+  .output-box::before { content: '▶ Output: '; color: #aaa; font-size: 10px; display:block; margin-bottom:2px; }
+
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  .flow-row { display: flex; align-items: center; gap: 0; margin: 8px 0; flex-wrap: wrap; }
+  .flow-box {
+    border: 1.5px solid #333; padding: 5px 10px;
+    font-size: 11px; font-weight: 600; text-align: center;
+    background: #fff; min-width: 90px;
+  }
+  .flow-arrow { font-size: 16px; padding: 0 4px; color: #444; }
+
+  .try-block {
+    border: 2px solid #333; margin: 5px 0;
+  }
+  .try-label {
+    background: #333; color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 11px; font-weight: 700;
+    padding: 2px 8px; display: inline-block;
+  }
+  .try-body { padding: 6px 10px; font-size: 12px; }
+  .catch-block { border: 2px solid #888; margin: 3px 0; }
+  .catch-label {
+    background: #888; color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 11px; font-weight: 700;
+    padding: 2px 8px; display: inline-block;
+  }
+  .finally-block { border: 2px solid #555; margin: 3px 0; }
+  .finally-label {
+    background: #555; color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 11px; font-weight: 700;
+    padding: 2px 8px; display: inline-block;
+  }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  ol { padding-left: 17px; margin: 3px 0; }
+  ol li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — THEORY ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">JDBC — DDL Operations + Exception Handling (Complete Notes)</div>
+  <div class="main-subtitle">Package: jdbcFithyDay | CREATE DATABASE + CREATE TABLE + INSERT | try-catch-finally + try-with-resources</div>
+
+  <!-- What is DDL -->
+  <div class="section">
+    <div class="section-header">📘 1. What is DDL in SQL?</div>
+    <div class="section-body">
+      <p>✅ <strong>Definition:</strong> DDL stands for <strong>Data Definition Language</strong>. It is a category of SQL commands used to <strong>define, create, modify, or delete database structures</strong> (not data).</p>
+
+      <div class="two-col" style="margin-top:8px;">
+        <div>
+          <div class="subsection-title">🔹 DDL Commands:</div>
+          <table class="comp-table">
+            <tr><th>Command</th><th>Purpose</th></tr>
+            <tr><td><code>CREATE</code></td><td>Create database / table / index</td></tr>
+            <tr><td><code>ALTER</code></td><td>Modify existing table structure</td></tr>
+            <tr><td><code>DROP</code></td><td>Delete database / table permanently</td></tr>
+            <tr><td><code>TRUNCATE</code></td><td>Remove all rows from table</td></tr>
+            <tr><td><code>RENAME</code></td><td>Rename a table or column</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Key Properties of DDL:</div>
+          <ul>
+            <li><strong>Auto-commit</strong> — DDL statements are auto-committed in most databases. Cannot rollback.</li>
+            <li><strong>No ResultSet</strong> — DDL does not return rows of data</li>
+            <li><strong>execute() returns false</strong> — because no ResultSet is produced</li>
+            <li><strong>Affects structure</strong> — not data inside tables</li>
+          </ul>
+          <div class="subsection-title" style="margin-top:8px;">🔹 In JDBC:</div>
+          <ul>
+            <li>DDL is executed using <code>Statement.execute(sql)</code></li>
+            <li>Returns <code>boolean</code> → always <code>false</code> for DDL</li>
+            <li>No <code>executeUpdate()</code> for CREATE DATABASE</li>
+          </ul>
+        </div>
+      </div>
+      <div class="interview-line">DDL (Data Definition Language) includes CREATE, ALTER, DROP, TRUNCATE. In JDBC, DDL queries are executed via Statement.execute(). It returns false because DDL produces no ResultSet. DDL is auto-committed — changes cannot be rolled back.</div>
+    </div>
+  </div>
+
+  <!-- Exception Handling in JDBC -->
+  <div class="section">
+    <div class="section-header">📘 2. Exception Handling in JDBC — try-catch-finally vs try-with-resources</div>
+    <div class="section-body">
+      <p>👉 JDBC operations can throw checked exceptions. There are <strong>two ways</strong> to handle them properly in JDBC programs.</p>
+
+      <div class="two-col" style="margin-top:8px;">
+        <div>
+          <div class="subsection-title">🔹 Way 1 — try-catch-finally <span class="tag" style="font-size:9px;">Programs 1 &amp; 2</span></div>
+          <div class="try-block">
+            <div class="try-label">try { }</div>
+            <div class="try-body">Main JDBC code<br>(connection, statement, execute)</div>
+          </div>
+          <div class="catch-block">
+            <div class="catch-label">catch (ClassNotFoundException e) { }</div>
+            <div class="try-body">Driver JAR missing</div>
+          </div>
+          <div class="catch-block">
+            <div class="catch-label">catch (SQLException e) { }</div>
+            <div class="try-body">DB error (wrong SQL, no DB, etc.)</div>
+          </div>
+          <div class="finally-block">
+            <div class="finally-label">finally { }</div>
+            <div class="try-body">ALWAYS runs — close connection here<br>Check: <code>if (connection != null)</code></div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Way 2 — try-with-resources <span class="tag" style="font-size:9px;">Program 3</span></div>
+          <div class="code-block" style="font-size:11px;">try (Connection c =
+    DriverManager.getConnection(...)) {
+
+    // JDBC code here
+    // c auto-closed after this block
+
+} catch (SQLException e) {
+    e.printStackTrace();
+}
+// No finally needed!
+// Connection auto-closed by JVM</div>
+          <p style="margin-top:6px; font-size:12px;">👉 <code>AutoCloseable</code> — Connection implements <code>AutoCloseable</code> interface → JVM auto-calls <code>close()</code> when try block ends — even if exception occurs.</p>
+          <p style="font-size:12px; margin-top:4px;">✔ Cleaner code ✔ Less boilerplate ✔ No null check needed</p>
+        </div>
+      </div>
+
+      <div class="note-box" style="margin-top:7px;">
+        <strong>⚠️ Why connection declared outside try in Programs 1 &amp; 2:</strong><br>
+        <code>Connection connection = null;</code> is declared OUTSIDE try block so it is accessible in the <code>finally</code> block. If declared inside try → finally cannot see it → cannot close it → resource leak!<br>
+        <strong>Rule:</strong> Any variable needed in finally must be declared outside try.
+      </div>
+      <div class="interview-line">try-catch-finally: connection declared outside try, closed in finally with null check. try-with-resources (Java 7+): resource declared in try() → auto-closed — Connection implements AutoCloseable. try-with-resources is preferred as it eliminates finally block boilerplate and prevents resource leaks automatically.</div>
+    </div>
+  </div>
+
+  <!-- Connecting without DB name -->
+  <div class="section">
+    <div class="section-header">📘 3. Connecting to PostgreSQL Server WITHOUT a Database Name</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">🔹 Normal connection (with DB name):</div>
+          <div class="code-block" style="font-size:11px;">"jdbc:postgresql://localhost:5433/mydb"
+                                         ↑
+                                    database name</div>
+          <p style="font-size:12px; margin-top:4px;">👉 Connects to a specific database. Used for DML/DQL operations.</p>
+        </div>
+        <div>
+          <div class="subsection-title">🔹 Connection WITHOUT DB name (for CREATE DATABASE):</div>
+          <div class="code-block" style="font-size:11px;">"jdbc:postgresql://localhost:5433/"
+                                         ↑
+                                    slash with no DB name</div>
+          <p style="font-size:12px; margin-top:4px;">👉 Connects to PostgreSQL <strong>server</strong> itself — not any specific DB. Required for <code>CREATE DATABASE</code>.</p>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>⚠️ Why no DB name for CREATE DATABASE?</strong><br>
+        You cannot create a database while already connected to that same database (it doesn't exist yet!). Connect to the server root first → create the database → then connect to the new database.
+      </div>
+      <div class="interview-line">To execute CREATE DATABASE in JDBC, connect to the PostgreSQL server without specifying a database name: "jdbc:postgresql://localhost:5433/". You cannot connect to a database that doesn't exist yet — connect to server root first, create the DB, then reconnect with the DB name.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — CREATE DATABASE PROGRAM ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">DDL Notes | Page 2 — Program 1: CreateDAtabse.java</div>
+
+  <div class="section">
+    <div class="section-header">📄 Program 1 — CreateDAtabse.java (CREATE DATABASE using try-catch-finally)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Creates a new PostgreSQL database named <code>jdbcconnection5thday</code>. Connects to PostgreSQL <strong>server root</strong> (no DB name in URL). Uses <strong>try-catch-finally</strong> for proper exception handling. Connection is declared outside try block and closed in finally.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbcFithyDay</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Statement</span>;
+
+<span class="kw">public class</span> <span class="cl">CreateDAtabse</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) {
+
+        <span class="cm">// Declare connection reference</span>
+        <span class="cl">Connection</span> <span class="nm">connection</span> = <span class="kw">null</span>;
+
+        <span class="kw">try</span> {
+            <span class="cm">// Step 1: Load and Register Driver</span>
+            <span class="cm">// Loads PostgreSQL driver into memory</span>
+            <span class="cl">Class</span>.<span class="mt">forName</span>(<span class="st">"org.postgresql.Driver"</span>);
+
+            <span class="cm">// Step 2: Create Connection</span>
+            <span class="cm">// Note: No database name at end → connecting to PostgreSQL server</span>
+            <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+                    <span class="st">"jdbc:postgresql://localhost:5433/"</span>,
+                    <span class="st">"postgres"</span>,
+                    <span class="st">"root"</span>);
+
+            <span class="cm">// Step 3: Create Statement</span>
+            <span class="cm">// Used to execute SQL query</span>
+            <span class="cl">Statement</span> <span class="nm">statement</span> = <span class="nm">connection</span>.<span class="mt">createStatement</span>();
+
+            <span class="cm">// Step 4: Create Database Query</span>
+            <span class="cl">String</span> <span class="nm">query</span> = <span class="st">"CREATE DATABASE jdbcconnection5thday"</span>;
+
+            <span class="cm">// Execute query</span>
+            <span class="cm">// execute() returns false because DDL does not return ResultSet</span>
+            <span class="kw">boolean</span> <span class="nm">res</span> = <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="nm">query</span>);
+
+        } <span class="kw">catch</span> (<span class="cl">ClassNotFoundException</span> e) {
+            <span class="cm">// Driver class not found</span>
+            e.<span class="mt">printStackTrace</span>();
+
+        } <span class="kw">catch</span> (<span class="cl">SQLException</span> e) {
+            <span class="cm">// SQL error (DB already exists / permission issue / syntax error)</span>
+            e.<span class="mt">printStackTrace</span>();
+
+        } <span class="kw">finally</span> {
+            <span class="cm">// Step 5: Close Connection (Important)</span>
+            <span class="kw">try</span> {
+                <span class="kw">if</span> (<span class="nm">connection</span> != <span class="kw">null</span>) {
+                    <span class="nm">connection</span>.<span class="mt">close</span>(); <span class="cm">// free resources</span>
+                }
+            } <span class="kw">catch</span> (<span class="cl">SQLException</span> e) {
+                e.<span class="mt">printStackTrace</span>();
+            }
+        }
+
+        <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Database Created Successfully"</span>);
+    }
+}</div>
+
+      <div class="output-box">Database Created Successfully</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">public static void main(String[] args)</div>
+          <div class="line-meaning">No throws clause — exceptions are handled internally using try-catch-finally. Not propagated to JVM.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">Connection connection = null;</div>
+          <div class="line-meaning">Declared OUTSIDE try block. If declared inside → finally block cannot access it → cannot close → resource leak. null prevents NullPointerException if connection never established.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">try { ... }</div>
+          <div class="line-meaning">Contains all JDBC code that may throw exceptions. If exception occurs → jumps to matching catch block.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">"jdbc:postgresql://localhost:5433/"</div>
+          <div class="line-meaning">URL ends with / and NO database name. Connects to PostgreSQL server root — required for CREATE DATABASE because the target DB doesn't exist yet.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">String query = "CREATE DATABASE jdbcconnection5thday"</div>
+          <div class="line-meaning">DDL query stored in a String variable for readability. Same as passing directly to execute().</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">boolean res = statement.execute(query)</div>
+          <div class="line-meaning">execute() returns false for DDL — no ResultSet produced. res = false. Value not printed/used here.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">catch (ClassNotFoundException e)</div>
+          <div class="line-meaning">Catches exception from Class.forName() — thrown when PostgreSQL JAR is not in classpath.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">catch (SQLException e)</div>
+          <div class="line-meaning">Catches DB errors: DB already exists, wrong URL, server not running, permission denied. e.printStackTrace() prints full error trace.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">finally { if (connection != null) connection.close(); }</div>
+          <div class="line-meaning">finally ALWAYS runs — even if exception occurs. Null check prevents NPE if connection failed. Inner try-catch handles SQLException from close().</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">System.out.println("Database Created Successfully")</div>
+          <div class="line-meaning">Prints OUTSIDE try-catch — runs always (even if exception occurred). Better placement would be inside try after execute().</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>📝 Why two separate catch blocks?</strong><br>
+        <code>ClassNotFoundException</code> → from <code>Class.forName()</code> — driver not found<br>
+        <code>SQLException</code> → from <code>getConnection()</code>, <code>createStatement()</code>, <code>execute()</code> — DB errors<br>
+        Separate catches allow different handling logic for different error types. Could also write <code>catch (Exception e)</code> as shortcut — but less specific.
+      </div>
+      <div class="interview-line">In try-catch-finally pattern: Connection is declared null outside try so finally can access it. finally always executes — even on exception — making it the right place to close connections. The null check prevents NullPointerException if connection was never established.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — CREATE TABLE PROGRAM ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">DDL Notes | Page 3 — Program 2: CreateTable.java</div>
+
+  <div class="section">
+    <div class="section-header">📄 Program 2 — CreateTable.java (CREATE TABLE using try-catch-finally)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Creates an <code>emp</code> table with 3 columns inside the <code>jdbcconnection5thday</code> database that was created by Program 1. Uses same <strong>try-catch-finally</strong> pattern. Connects to the <strong>specific database</strong> (not server root) because DB now exists.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbcFithyDay</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Statement</span>;
+
+<span class="kw">public class</span> <span class="cl">CreateTable</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) {
+
+        <span class="cm">// Declare connection reference</span>
+        <span class="cl">Connection</span> <span class="nm">connection</span> = <span class="kw">null</span>;
+
+        <span class="kw">try</span> {
+            <span class="cm">// Step 1: Load and Register Driver</span>
+            <span class="cm">// Loads PostgreSQL driver into JVM</span>
+            <span class="cl">Class</span>.<span class="mt">forName</span>(<span class="st">"org.postgresql.Driver"</span>);
+
+            <span class="cm">// Step 2: Create Connection</span>
+            <span class="cm">// Connect to already created database "jdbcconnection5thday"</span>
+            <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+                    <span class="st">"jdbc:postgresql://localhost:5433/jdbcconnection5thday"</span>,
+                    <span class="st">"postgres"</span>,
+                    <span class="st">"root"</span>);
+
+            <span class="cm">// Step 3: Create Statement</span>
+            <span class="cm">// Statement is used to execute SQL queries</span>
+            <span class="cl">Statement</span> <span class="nm">statement</span> = <span class="nm">connection</span>.<span class="mt">createStatement</span>();
+
+            <span class="cm">// Step 4: SQL Query to Create Table</span>
+            <span class="cm">// Creating table "emp" with 3 columns</span>
+            <span class="cm">// eid → primary key</span>
+            <span class="cm">// ename → varchar (string)</span>
+            <span class="cm">// esal → double precision (salary)</span>
+            <span class="cl">String</span> <span class="nm">query</span> = <span class="st">"CREATE TABLE emp(eid INT primary key, ename varchar(45), esal DOUBLE PRECISION)"</span>;
+
+            <span class="cm">// Execute query</span>
+            <span class="cm">// execute() returns false because DDL does not return ResultSet</span>
+            <span class="kw">boolean</span> <span class="nm">result</span> = <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="nm">query</span>);
+
+        } <span class="kw">catch</span> (<span class="cl">ClassNotFoundException</span> e) {
+            <span class="cm">// Driver class not found</span>
+            e.<span class="mt">printStackTrace</span>();
+
+        } <span class="kw">catch</span> (<span class="cl">SQLException</span> e) {
+            <span class="cm">// SQL error (table already exists / syntax issue)</span>
+            e.<span class="mt">printStackTrace</span>();
+
+        } <span class="kw">finally</span> {
+            <span class="cm">// Step 5: Close Connection</span>
+            <span class="cm">// Always close connection to free resources</span>
+            <span class="kw">try</span> {
+                <span class="kw">if</span> (<span class="nm">connection</span> != <span class="kw">null</span>) {
+                    <span class="nm">connection</span>.<span class="mt">close</span>();
+                }
+            } <span class="kw">catch</span> (<span class="cl">SQLException</span> e) {
+                e.<span class="mt">printStackTrace</span>();
+            }
+        }
+
+        <span class="cl">System</span>.out.<span class="mt">println</span>(<span class="st">"Table Created Successfully"</span>);
+    }
+}</div>
+
+      <div class="output-box">Table Created Successfully</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">"jdbc:postgresql://localhost:5433/jdbcconnection5thday"</div>
+          <div class="line-meaning">Now database name IS included — "jdbcconnection5thday" was created by Program 1. CREATE TABLE must run inside a specific database.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">"CREATE TABLE emp(eid INT primary key, ename varchar(45), esal DOUBLE PRECISION)"</div>
+          <div class="line-meaning">Full CREATE TABLE DDL. Creates emp table with 3 columns. Entire SQL stored in a String variable for readability.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">eid INT primary key</div>
+          <div class="line-meaning">Column 1 → employee id. Data type: INT. PRIMARY KEY → unique, not null. No two employees can have same eid.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">ename varchar(45)</div>
+          <div class="line-meaning">Column 2 → employee name. Data type: VARCHAR (variable-length string). Max 45 characters.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">esal DOUBLE PRECISION</div>
+          <div class="line-meaning">Column 3 → employee salary. Data type: DOUBLE PRECISION (64-bit floating point). Used for decimal salary values.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">boolean result = statement.execute(query)</div>
+          <div class="line-meaning">execute() for DDL always returns false — no ResultSet. result = false. Variable declared but value not used — just for completeness.</div>
+        </div>
+      </div>
+
+      <div class="subsection-title" style="margin-top:8px;">🔹 emp Table Structure Created</div>
+      <div style="border:1px solid #999; font-size:12px; font-family:monospace; margin:6px 0;">
+        <div style="background:#111; color:#fff; padding:4px 10px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr;">
+          <span>Column</span><span>Data Type</span><span>Constraint</span><span>Purpose</span>
+        </div>
+        <div style="padding:3px 10px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-bottom:1px solid #ddd; background:#fafafa;">
+          <span>eid</span><span>INT</span><span>PRIMARY KEY</span><span>Employee ID</span>
+        </div>
+        <div style="padding:3px 10px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-bottom:1px solid #ddd;">
+          <span>ename</span><span>VARCHAR(45)</span><span>—</span><span>Employee Name</span>
+        </div>
+        <div style="padding:3px 10px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; background:#fafafa;">
+          <span>esal</span><span>DOUBLE PRECISION</span><span>—</span><span>Salary</span>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>📝 Difference from Program 1 (URL):</strong><br>
+        Program 1 (CREATE DATABASE): <code>"jdbc:postgresql://localhost:5433/"</code> → no DB name — connect to server<br>
+        Program 2 (CREATE TABLE): <code>"jdbc:postgresql://localhost:5433/jdbcconnection5thday"</code> → with DB name — connect to specific DB<br>
+        <strong>Rule:</strong> CREATE DATABASE → server root URL | CREATE TABLE / INSERT / etc. → specific DB URL
+      </div>
+      <div class="interview-line">CREATE TABLE requires connecting to the specific database where the table will be created. The URL includes the database name: jdbc:postgresql://localhost:5433/dbname. execute() returns false for DDL. The emp table has eid as INT PRIMARY KEY, ename as VARCHAR(45), and esal as DOUBLE PRECISION.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 4 — INSERT + TRY-WITH-RESOURCES ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">DDL Notes | Page 4 — Program 3: insertData.java (try-with-resources)</div>
+
+  <div class="section">
+    <div class="section-header">📄 Program 3 — insertData.java (INSERT using try-with-resources)</div>
+    <div class="section-body">
+
+      <div class="subsection-title">🔹 What this program does</div>
+      <p>Inserts 3 employee records into the <code>emp</code> table created by Program 2. Demonstrates <strong>try-with-resources</strong> — a modern Java 7+ approach where the Connection is automatically closed when the try block ends. No finally block needed.</p>
+
+      <div class="code-block-dark"><span class="kw">package</span> <span class="nm">jdbcFithyDay</span>;
+
+<span class="kw">import</span> <span class="nm">java.sql.Connection</span>;
+<span class="kw">import</span> <span class="nm">java.sql.DriverManager</span>;
+<span class="kw">import</span> <span class="nm">java.sql.SQLException</span>;
+<span class="kw">import</span> <span class="nm">java.sql.Statement</span>;
+
+<span class="kw">public class</span> <span class="cl">insertData</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="cl">String</span>[] args) <span class="kw">throws</span> <span class="cl">ClassNotFoundException</span> {
+        <span class="cl">Class</span>.<span class="mt">forName</span>(<span class="st">"org.postgresql.Driver"</span>);
+
+        <span class="kw">try</span>(<span class="cl">Connection</span> <span class="nm">connection</span> = <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(
+                <span class="st">"jdbc:postgresql://localhost:5433/jdbcconnection5thday"</span>,
+                <span class="st">"postgres"</span>,
+                <span class="st">"root"</span>))
+        {
+            <span class="cl">Statement</span> <span class="nm">statement</span> = <span class="nm">connection</span>.<span class="mt">createStatement</span>();
+
+            <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="st">"insert into emp values(101,'Pravin',50000)"</span>);
+            <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="st">"insert into emp values(102,'Mayuresh',40000)"</span>);
+            <span class="nm">statement</span>.<span class="mt">execute</span>(<span class="st">"insert into emp values(103,'Vednat',50)"</span>);
+        }
+        <span class="kw">catch</span>(<span class="cl">SQLException</span> e) {
+            e.<span class="mt">printStackTrace</span>();
+        }
+    }
+}</div>
+
+      <div class="explain-box">
+        <div class="explain-box-title">📖 Line-by-Line Explanation</div>
+        <div class="line-explain">
+          <div class="line-code">throws ClassNotFoundException</div>
+          <div class="line-meaning">Class.forName() is called OUTSIDE try-with-resources. So ClassNotFoundException is propagated via throws. Only SQLException is caught inside.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">Class.forName(...) outside try block</div>
+          <div class="line-meaning">Driver loading done outside the try-with-resources block. Can also be placed inside — both are valid. ClassNotFoundException propagated here via throws.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">try(Connection connection = DriverManager.getConnection(...))</div>
+          <div class="line-meaning">try-with-resources syntax — resource declared in (). Connection auto-closed when try block exits — success or exception. No finally needed. Connection implements AutoCloseable.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">{ Statement statement = connection.createStatement(); }</div>
+          <div class="line-meaning">try block body — statement created inside. Uses the auto-managed connection. All JDBC operations here.</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">statement.execute("insert into emp values(101,'Pravin',50000)")</div>
+          <div class="line-meaning">DML INSERT using Statement. Values hardcoded. execute() used — returns false (DML but boolean return is not captured here).</div>
+        </div>
+        <div class="line-explain">
+          <div class="line-code">catch(SQLException e) { e.printStackTrace(); }</div>
+          <div class="line-meaning">Catches SQL errors (duplicate key, wrong table, wrong column count). printStackTrace() prints error details to console.</div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>📝 What is AutoCloseable?</strong><br>
+        <code>AutoCloseable</code> is an interface in <code>java.lang</code> with one method: <code>close()</code>.<br>
+        <code>Connection</code> extends <code>AutoCloseable</code> → JVM automatically calls <code>connection.close()</code> at end of try block.<br>
+        <strong>Any object that implements AutoCloseable can be used in try-with-resources.</strong><br>
+        Order of closing (when multiple resources): last declared → first closed.
+      </div>
+
+      <div class="note-box">
+        <strong>📝 Data Inserted into emp table:</strong>
+        <div style="border:1px solid #999; font-size:12px; font-family:monospace; margin-top:5px;">
+          <div style="background:#111; color:#fff; padding:3px 10px; display:grid; grid-template-columns:1fr 1fr 1fr;">
+            <span>eid</span><span>ename</span><span>esal</span>
+          </div>
+          <div style="padding:3px 10px; display:grid; grid-template-columns:1fr 1fr 1fr; border-bottom:1px solid #ddd; background:#fafafa;">
+            <span>101</span><span>Pravin</span><span>50000.0</span>
+          </div>
+          <div style="padding:3px 10px; display:grid; grid-template-columns:1fr 1fr 1fr; border-bottom:1px solid #ddd;">
+            <span>102</span><span>Mayuresh</span><span>40000.0</span>
+          </div>
+          <div style="padding:3px 10px; display:grid; grid-template-columns:1fr 1fr 1fr; background:#fafafa;">
+            <span>103</span><span>Vednat</span><span>50.0</span>
+          </div>
+        </div>
+      </div>
+      <div class="interview-line">try-with-resources (Java 7+) auto-closes any AutoCloseable resource when the try block ends — even if an exception occurs. Connection implements AutoCloseable. No finally block or null check needed. This prevents resource leaks more reliably than manual close() in finally.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 5 — SUMMARY ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">DDL Notes | Page 5 — Summary, Comparison &amp; Quick Revision</div>
+
+  <!-- 3 programs flow -->
+  <div class="section">
+    <div class="section-header">🗂️ All 3 Programs — Execution Flow (Run in This Order!)</div>
+    <div class="section-body">
+      <div class="flow-row" style="justify-content:center;">
+        <div class="flow-box" style="text-align:center; min-width:120px;">
+          <div style="font-weight:700; font-size:11px;">Program 1</div>
+          <div style="font-size:10.5px;">CreateDAtabse.java</div>
+          <div style="font-size:10px; color:#555; margin-top:2px;">Creates DB: jdbcconnection5thday</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="text-align:center; min-width:120px;">
+          <div style="font-weight:700; font-size:11px;">Program 2</div>
+          <div style="font-size:10.5px;">CreateTable.java</div>
+          <div style="font-size:10px; color:#555; margin-top:2px;">Creates Table: emp (eid, ename, esal)</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="text-align:center; min-width:120px;">
+          <div style="font-weight:700; font-size:11px;">Program 3</div>
+          <div style="font-size:10.5px;">insertData.java</div>
+          <div style="font-size:10px; color:#555; margin-top:2px;">Inserts 3 rows into emp</div>
+        </div>
+      </div>
+      <div class="note-box" style="margin-top:8px;">
+        <strong>⚠️ Must run in order:</strong> Program 3 needs the table → Program 2 must run first. Program 2 needs the DB → Program 1 must run first. Running out of order → SQLException.
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 programs comparison -->
+  <div class="section">
+    <div class="section-header">🗂️ All 3 Programs — Comparison Table</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Feature</th>
+          <th>CreateDAtabse.java</th>
+          <th>CreateTable.java</th>
+          <th>insertData.java</th>
+        </tr>
+        <tr>
+          <td><strong>SQL Type</strong></td>
+          <td>DDL — CREATE DATABASE</td>
+          <td>DDL — CREATE TABLE</td>
+          <td>DML — INSERT</td>
+        </tr>
+        <tr>
+          <td><strong>URL</strong></td>
+          <td>No DB name (server root)</td>
+          <td>With DB name</td>
+          <td>With DB name</td>
+        </tr>
+        <tr>
+          <td><strong>Exception handling</strong></td>
+          <td>try-catch-finally</td>
+          <td>try-catch-finally</td>
+          <td>try-with-resources</td>
+        </tr>
+        <tr>
+          <td><strong>throws clause</strong></td>
+          <td>None (handled internally)</td>
+          <td>None (handled internally)</td>
+          <td>throws ClassNotFoundException</td>
+        </tr>
+        <tr>
+          <td><strong>Connection declared</strong></td>
+          <td>Outside try (= null)</td>
+          <td>Outside try (= null)</td>
+          <td>Inside try() resource block</td>
+        </tr>
+        <tr>
+          <td><strong>Connection closed</strong></td>
+          <td>Manually in finally</td>
+          <td>Manually in finally</td>
+          <td>Auto-closed by JVM</td>
+        </tr>
+        <tr>
+          <td><strong>execute() return</strong></td>
+          <td>false (DDL → no ResultSet)</td>
+          <td>false (DDL → no ResultSet)</td>
+          <td>false (DML → no ResultSet captured)</td>
+        </tr>
+        <tr>
+          <td><strong>finally block</strong></td>
+          <td>✅ Yes (with null check)</td>
+          <td>✅ Yes (with null check)</td>
+          <td>❌ Not needed</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- try-catch-finally vs try-with-resources -->
+  <div class="section">
+    <div class="section-header">📘 try-catch-finally vs try-with-resources — Full Comparison</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Feature</th>
+          <th>try-catch-finally</th>
+          <th>try-with-resources</th>
+        </tr>
+        <tr><td><strong>Java Version</strong></td><td>Java 1.0+</td><td>Java 7+</td></tr>
+        <tr><td><strong>Resource closing</strong></td><td>Manual in finally</td><td>Automatic by JVM</td></tr>
+        <tr><td><strong>finally block</strong></td><td>Required for cleanup</td><td>Not needed</td></tr>
+        <tr><td><strong>Null check</strong></td><td>Required (if(conn != null))</td><td>Not needed</td></tr>
+        <tr><td><strong>Connection declared</strong></td><td>Outside try (= null)</td><td>Inside try() parentheses</td></tr>
+        <tr><td><strong>Code length</strong></td><td>Longer (more boilerplate)</td><td>Shorter (cleaner)</td></tr>
+        <tr><td><strong>AutoCloseable needed</strong></td><td>No</td><td>Yes (Connection implements it)</td></tr>
+        <tr><td><strong>Leak risk</strong></td><td>Higher (if finally forgot)</td><td>Lower (JVM guarantees close)</td></tr>
+        <tr><td><strong>Preferred</strong></td><td>Legacy / older code</td><td>✅ Modern real projects</td></tr>
+      </table>
+      <div class="interview-line">try-with-resources (Java 7+) is the modern preferred approach for JDBC. Connection auto-closes because it implements AutoCloseable. No finally, no null check needed. try-catch-finally requires: declare connection null outside try, close in finally with null check — more boilerplate but works in pre-Java 7 code.</div>
+    </div>
+  </div>
+
+  <!-- Quick revision -->
+  <div class="section">
+    <div class="section-header">🗂️ Quick Revision — Key Rules</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title">DDL Rules:</div>
+          <ul>
+            <li>DDL = CREATE, ALTER, DROP, TRUNCATE</li>
+            <li>execute() returns <code>false</code> for DDL always</li>
+            <li>DDL is auto-committed — cannot rollback</li>
+            <li>CREATE DATABASE → URL without DB name</li>
+            <li>CREATE TABLE → URL with DB name</li>
+          </ul>
+          <div class="subsection-title" style="margin-top:8px;">Exception Handling Rules:</div>
+          <ul>
+            <li><code>ClassNotFoundException</code> → Class.forName() → driver missing</li>
+            <li><code>SQLException</code> → all DB operations</li>
+            <li><code>IOException</code> → file operations (db.properties)</li>
+            <li><code>finally</code> → ALWAYS runs (success or exception)</li>
+            <li>Connection null outside try → prevents NPE in finally</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title">try-with-resources Rules:</div>
+          <ul>
+            <li>Syntax: <code>try(ResourceType r = new ...)</code></li>
+            <li>Resource must implement <code>AutoCloseable</code></li>
+            <li>Connection implements <code>AutoCloseable</code> ✅</li>
+            <li>PreparedStatement implements <code>AutoCloseable</code> ✅</li>
+            <li>ResultSet implements <code>AutoCloseable</code> ✅</li>
+            <li>JVM calls <code>close()</code> in reverse order of declaration</li>
+            <li>Multiple resources: <code>try(Conn c = ...; Stmt s = ...)</code></li>
+          </ul>
+          <div class="subsection-title" style="margin-top:8px;">PostgreSQL Data Types used:</div>
+          <ul>
+            <li><code>INT</code> → integer (eid)</li>
+            <li><code>VARCHAR(n)</code> → variable string max n chars (ename)</li>
+            <li><code>DOUBLE PRECISION</code> → 64-bit decimal (esal)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,683 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Georgia', serif; }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    margin: 12px auto;
+    padding: 13mm 15mm 13mm 15mm;
+    font-size: 12.5px;
+    line-height: 1.65;
+    page-break-after: always;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+
+  .main-title {
+    text-align: center; font-size: 20px; font-weight: 700;
+    border: 2.5px solid #111; padding: 9px 18px;
+    margin-bottom: 5px; letter-spacing: 1px;
+  }
+  .main-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 13px; font-style: italic;
+  }
+  .page-title {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: #555; margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; padding-bottom: 5px;
+  }
+
+  .section { border: 1.5px solid #222; margin-bottom: 10px; }
+  .section-header {
+    background: #111; color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; letter-spacing: 0.4px;
+  }
+  .section-body { padding: 9px 13px 11px; background: #fff; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .inline-box { border: 1px solid #bbb; padding: 7px 9px; background: #fafafa; }
+  .inline-box-title {
+    font-weight: 700; font-size: 11.5px;
+    margin-bottom: 3px; border-bottom: 1px solid #ddd; padding-bottom: 3px;
+  }
+
+  .subsection-title {
+    font-weight: 700; font-size: 12.5px;
+    margin-bottom: 3px; margin-top: 8px; color: #111;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  .code-block-dark {
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 11px; padding: 8px 12px;
+    margin: 6px 0; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.7;
+    border-left: 4px solid #555;
+  }
+  .kw  { color: #569cd6; }
+  .cm  { color: #6a9955; }
+  .st  { color: #ce9178; }
+  .cl  { color: #4ec9b0; }
+  .mt  { color: #dcdcaa; }
+  .nm  { color: #9cdcfe; }
+  .an  { color: #c586c0; }
+
+  .interview-line {
+    background: #f5f5f5; border-left: 3px solid #111;
+    padding: 6px 10px; font-style: italic;
+    font-size: 12px; margin: 8px 0 3px; color: #222;
+  }
+  .interview-line::before {
+    content: '💬 Interview Line: ';
+    font-style: normal; font-weight: 700; font-size: 11px;
+  }
+
+  /* special interview answer box */
+  .interview-answer {
+    background: #fff; border: 2px solid #111;
+    padding: 8px 12px; margin: 7px 0; font-size: 12.5px;
+  }
+  .interview-answer-title {
+    font-weight: 700; font-size: 12px;
+    margin-bottom: 5px; color: #111;
+    border-bottom: 1px solid #ccc; padding-bottom: 3px;
+  }
+
+  .note-box {
+    border: 1.5px dashed #555; padding: 6px 10px;
+    margin: 7px 0; font-size: 12px; background: #fafafa;
+  }
+
+  .flow-col {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 0;
+  }
+  .flow-box {
+    border: 1.5px solid #333; padding: 5px 16px;
+    font-size: 11.5px; font-weight: 600; text-align: center;
+    background: #fff; min-width: 170px;
+  }
+  .flow-arrow { font-size: 15px; color: #444; line-height: 1.4; text-align: center; }
+
+  .comp-table { width:100%; border-collapse: collapse; font-size: 11.5px; margin: 7px 0; }
+  .comp-table th { background: #111; color: #fff; padding: 5px 8px; text-align: left; }
+  .comp-table td { padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  .comp-table tr:nth-child(even) td { background: #fafafa; }
+
+  .orm-map-table { width:100%; border-collapse: collapse; font-size: 12px; margin: 6px 0; }
+  .orm-map-table th { background: #333; color: #fff; padding: 5px 10px; text-align: center; }
+  .orm-map-table td { padding: 5px 10px; border: 1px solid #ccc; text-align: center; font-weight: 600; }
+  .orm-map-table tr:nth-child(even) td { background: #fafafa; }
+
+  .def-row { display: flex; gap: 0; margin: 3px 0; border: 1px solid #ddd; }
+  .def-term {
+    background: #f0f0f0; font-weight: 700;
+    font-size: 12px; padding: 4px 9px;
+    border-right: 1px solid #ccc; min-width: 38%;
+  }
+  .def-meaning { padding: 4px 9px; font-size: 12px; color: #333; flex: 1; }
+
+  .vs-box {
+    display: grid; grid-template-columns: 1fr 30px 1fr; gap: 0; margin: 8px 0; align-items:start;
+  }
+  .vs-left { border: 1.5px solid #999; padding: 8px 10px; background: #fafafa; }
+  .vs-right { border: 1.5px solid #111; padding: 8px 10px; background: #fff; }
+  .vs-mid { display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#555; }
+  .vs-title { font-weight:700; font-size:12px; margin-bottom:5px; border-bottom:1px solid #ddd; padding-bottom:3px; }
+
+  ul { padding-left: 17px; margin: 3px 0; }
+  ul li { margin-bottom: 2px; font-size: 12.5px; }
+  ol { padding-left: 17px; margin: 3px 0; }
+  ol li { margin-bottom: 2px; font-size: 12.5px; }
+  p { margin: 3px 0; font-size: 12.5px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 8px 0; }
+  code { font-family: 'Courier New', monospace; font-size: 11.5px; background: #eee; padding: 1px 4px; border-radius: 2px; }
+
+  @media print {
+    body { background: #fff; }
+    .a4-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; border:none; padding:13mm 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 — WHAT IS ORM + WHY IT CAME ══════════════════ -->
+<div class="a4-page">
+  <div class="main-title">ORM — Object Relational Mapping (Complete Notes)</div>
+  <div class="main-subtitle">What is ORM | Why ORM | Working | Mapping | Real-Life | ORM Frameworks | Interview Answers</div>
+
+  <!-- What is ORM -->
+  <div class="section">
+    <div class="section-header">📘 1. What is ORM?</div>
+    <div class="section-body">
+      <p>ORM stands for: <strong>Object Relational Mapping</strong></p>
+      <p style="margin-top:5px;">ORM is a <strong>technique</strong> used to automatically map Java Objects with Relational Database Tables.</p>
+      <p style="margin-top:5px;">In simple words: <strong>ORM acts as a bridge between Java Applications and Relational Databases.</strong></p>
+
+      <div class="subsection-title" style="margin-top:8px;">🔹 Standard Definition</div>
+      <div class="note-box" style="border:2px solid #333;">
+        <strong>Object Relational Mapping (ORM)</strong> is the <strong>automated and transparent persistence of objects</strong> in a Java application into relational database tables using <strong>metadata</strong> that describes the mapping between objects and database tables.
+      </div>
+
+      <div class="two-col" style="margin-top:8px;">
+        <div class="inline-box">
+          <div class="inline-box-title">Java applications work with:</div>
+          <ul>
+            <li>Classes</li>
+            <li>Objects</li>
+            <li>Fields / Variables</li>
+            <li>Collections</li>
+            <li>References</li>
+          </ul>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">Relational databases work with:</div>
+          <ul>
+            <li>Tables</li>
+            <li>Rows (records)</li>
+            <li>Columns</li>
+            <li>Multiple rows</li>
+            <li>Relationships (FK)</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:6px;">👉 ORM automatically converts <strong>Java Objects into Database Records</strong> and <strong>Database Records into Java Objects</strong>.</p>
+      <div class="interview-line">ORM (Object Relational Mapping) is a technique used to automatically map Java Objects with Relational Database Tables. It acts as a bridge between Java applications and databases, reducing JDBC complexity and enabling transparent persistence.</div>
+    </div>
+  </div>
+
+  <!-- Why ORM -->
+  <div class="section">
+    <div class="section-header">📘 2. Why ORM Came Into Picture?</div>
+    <div class="section-body">
+      <p>Before ORM, developers used <strong>JDBC</strong>. While working with JDBC, developers had to:</p>
+      <div class="two-col" style="margin-top:6px;">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">❌ Problems with JDBC (Before ORM):</div>
+          <ul>
+            <li>Write SQL queries manually</li>
+            <li>Handle ResultSet manually</li>
+            <li>Convert rows into objects manually</li>
+            <li>Manage database-specific code</li>
+          </ul>
+          <p style="margin-top:5px;">This increased:</p>
+          <ul>
+            <li>Development time</li>
+            <li>Code complexity</li>
+            <li>Maintenance cost</li>
+          </ul>
+          <p style="margin-top:5px;">👉 <strong>To solve these problems ORM was introduced.</strong></p>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">Without ORM — Manual JDBC:</div>
+          <div class="code-block-dark"><span class="cl">Connection</span> <span class="nm">con</span> =
+  <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(...);
+<span class="cl">PreparedStatement</span> <span class="nm">ps</span> =
+  <span class="nm">con</span>.<span class="mt">prepareStatement</span>(...);
+<span class="cl">ResultSet</span> <span class="nm">rs</span> = <span class="nm">ps</span>.<span class="mt">executeQuery</span>();
+
+<span class="cm">// Then manually convert:</span>
+<span class="cl">Student</span> <span class="nm">s</span> = <span class="kw">new</span> <span class="cl">Student</span>();
+<span class="nm">s</span>.<span class="mt">setId</span>(<span class="nm">rs</span>.<span class="mt">getInt</span>(<span class="st">"id"</span>));
+<span class="nm">s</span>.<span class="mt">setName</span>(<span class="nm">rs</span>.<span class="mt">getString</span>(<span class="st">"name"</span>));
+<span class="cm">// Lots of manual work!</span></div>
+          <p style="font-size:12px; margin-top:4px;">With ORM (Hibernate):</p>
+          <div class="code-block-dark"><span class="nm">session</span>.<span class="mt">save</span>(<span class="nm">student</span>);
+<span class="cm">// That's it! Hibernate handles everything.</span></div>
+        </div>
+      </div>
+      <div class="interview-line">ORM came as a solution to JDBC's problems: manual SQL writing, manual ResultSet iteration, manual object mapping, and DB-specific code. ORM automates all of this — developer just works with Java objects.</div>
+    </div>
+  </div>
+
+  <!-- ORM Working -->
+  <div class="section">
+    <div class="section-header">📘 3. ORM Working Concept</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="flow-col">
+            <div class="flow-box">Java Class</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Java Object (instance)</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">ORM Framework</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="background:#e8f5e9;">Database Table</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Class-to-Table Mapping:</div>
+          <table class="orm-map-table">
+            <tr><th>Java Side</th><th>Database Side</th></tr>
+            <tr><td>Class</td><td>Table</td></tr>
+            <tr><td>Object (instance)</td><td>Row (record)</td></tr>
+            <tr><td>Instance Variable</td><td>Column</td></tr>
+            <tr><td>Object Collection</td><td>Multiple Rows</td></tr>
+            <tr><td>Object Reference</td><td>Relationship (FK)</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 2 — EXAMPLE + REVERSIBLE + WITH/WITHOUT ORM ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">ORM Notes | Page 2 — Mapping Example + Reversible + With vs Without ORM</div>
+
+  <!-- Mapping Example -->
+  <div class="section">
+    <div class="section-header">📘 4. ORM Mapping Example</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="subsection-title" style="margin-top:0;">Java Class:</div>
+          <div class="code-block-dark"><span class="kw">public class</span> <span class="cl">Student</span> {
+    <span class="kw">private int</span> <span class="nm">id</span>;
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+}</div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">Database Table — STUDENT:</div>
+          <div style="border:1px solid #999; font-family:monospace; font-size:12px; margin-top:6px;">
+            <div style="background:#111; color:#fff; padding:4px 10px; display:grid; grid-template-columns:1fr 1fr; font-weight:700;">
+              <span>ID</span><span>NAME</span>
+            </div>
+            <div style="padding:4px 10px; display:grid; grid-template-columns:1fr 1fr;">
+              <span>101</span><span>Pravin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:8px; text-align:center;">
+        <div style="display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:600;">
+          <span style="border:1.5px solid #333; padding:3px 10px;">Student Class</span>
+          <span>→</span>
+          <span style="border:1.5px solid #333; padding:3px 10px;">Student Table</span>
+          <span style="padding:0 6px; color:#555;">|</span>
+          <span style="border:1.5px solid #333; padding:3px 10px;">id field</span>
+          <span>→</span>
+          <span style="border:1.5px solid #333; padding:3px 10px;">ID Column</span>
+          <span style="padding:0 6px; color:#555;">|</span>
+          <span style="border:1.5px solid #333; padding:3px 10px;">name field</span>
+          <span>→</span>
+          <span style="border:1.5px solid #333; padding:3px 10px;">NAME Column</span>
+        </div>
+      </div>
+      <p style="margin-top:6px;">👉 ORM automatically maps: Student Class → Student Table | id → ID Column | name → NAME Column</p>
+      <div class="interview-line">ORM maps Java class to DB table, instance variable to column, and object to row. When you call session.save(student), ORM generates INSERT INTO STUDENT(ID, NAME) VALUES(101,'Pravin') automatically.</div>
+    </div>
+  </div>
+
+  <!-- Reversible Transformation -->
+  <div class="section">
+    <div class="section-header">📘 5. Reversible Transformation</div>
+    <div class="section-body">
+      <p>ORM performs <strong>two-way conversion</strong>.</p>
+      <p style="margin-top:4px;"><strong>Java Object ↔ Database Table</strong></p>
+      <p style="margin-top:4px;">This process is called: <strong>Reversible Transformation</strong></p>
+
+      <div class="two-col" style="margin-top:8px;">
+        <div class="inline-box">
+          <div class="inline-box-title">Object → Table (Insert Operation)</div>
+          <div class="code-block-dark"><span class="nm">session</span>.<span class="mt">save</span>(<span class="nm">student</span>);</div>
+          <p style="font-size:12px; margin-top:4px;">Java Student object → Hibernate generates INSERT SQL → row inserted into STUDENT table.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">Table → Object (Fetch Operation)</div>
+          <div class="code-block-dark"><span class="cl">Student</span> <span class="nm">s</span> = session.<span class="mt">get</span>(
+    <span class="cl">Student</span>.<span class="kw">class</span>, 101);</div>
+          <p style="font-size:12px; margin-top:4px;">Hibernate reads row from STUDENT table → creates Student object with id=101, name="Pravin" → returns it.</p>
+        </div>
+      </div>
+      <div class="interview-line">ORM supports Reversible Transformation: Object→Table (save/insert) and Table→Object (fetch/select). session.save() converts Java object to DB row. session.get() converts DB row back to Java object — completely automatic, no manual SQL or ResultSet handling.</div>
+    </div>
+  </div>
+
+  <!-- Without vs With ORM -->
+  <div class="section">
+    <div class="section-header">📘 6. Without ORM vs With ORM</div>
+    <div class="section-body">
+      <div class="vs-box">
+        <div class="vs-left">
+          <div class="vs-title">❌ Without ORM (JDBC) — Manual Work</div>
+          <div class="code-block-dark" style="font-size:10.5px;"><span class="cl">Connection</span> <span class="nm">con</span> =
+  <span class="cl">DriverManager</span>.<span class="mt">getConnection</span>(...);
+
+<span class="cl">PreparedStatement</span> <span class="nm">ps</span> =
+  <span class="nm">con</span>.<span class="mt">prepareStatement</span>(
+    <span class="st">"SELECT * FROM student WHERE id=?"</span>);
+<span class="nm">ps</span>.<span class="mt">setInt</span>(1, 101);
+<span class="cl">ResultSet</span> <span class="nm">rs</span> = <span class="nm">ps</span>.<span class="mt">executeQuery</span>();
+
+<span class="cm">// Manual conversion:</span>
+<span class="cl">Student</span> <span class="nm">s</span> = <span class="kw">new</span> <span class="cl">Student</span>();
+<span class="nm">s</span>.<span class="mt">setId</span>(<span class="nm">rs</span>.<span class="mt">getInt</span>(<span class="st">"id"</span>));
+<span class="nm">s</span>.<span class="mt">setName</span>(<span class="nm">rs</span>.<span class="mt">getString</span>(<span class="st">"name"</span>));
+<span class="nm">rs</span>.<span class="mt">close</span>(); <span class="nm">ps</span>.<span class="mt">close</span>(); <span class="nm">con</span>.<span class="mt">close</span>();</div>
+          <ul style="font-size:11.5px; margin-top:5px;">
+            <li>Developer writes SQL manually</li>
+            <li>Manual ResultSet iteration</li>
+            <li>Manual object creation</li>
+            <li>Manual resource closing</li>
+            <li>DB-specific code</li>
+          </ul>
+        </div>
+        <div class="vs-mid">VS</div>
+        <div class="vs-right">
+          <div class="vs-title">✅ With ORM (Hibernate) — Auto</div>
+          <div class="code-block-dark" style="font-size:10.5px;"><span class="cm">// Just one line — fetch by ID:</span>
+<span class="cl">Student</span> <span class="nm">s</span> = session.<span class="mt">get</span>(
+    <span class="cl">Student</span>.<span class="kw">class</span>, 101);
+
+<span class="cm">// Just one line — save object:</span>
+session.<span class="mt">save</span>(<span class="nm">student</span>);</div>
+          <p style="font-size:11.5px; font-weight:700; margin-top:5px;">Hibernate internally:</p>
+          <ul style="font-size:11.5px;">
+            <li>Generates SQL automatically</li>
+            <li>Opens DB Connection</li>
+            <li>Executes Query</li>
+            <li>Maps Result to Object</li>
+            <li>Stores / Returns Data</li>
+            <li>Closes resources</li>
+          </ul>
+          <p style="font-size:11.5px; margin-top:5px;"><strong>All automatically!</strong></p>
+        </div>
+      </div>
+      <div class="interview-line">Without ORM: developers write Connection, PreparedStatement, ResultSet, manual object mapping, manual close — lots of boilerplate. With ORM: session.save(obj) or session.get(Class, id) — one line handles everything internally. This is the power of ORM.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 3 — WHY ORM NEEDED + TRANSPARENT + METADATA + FRAMEWORKS ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">ORM Notes | Page 3 — Why ORM Needed + Transparent Persistence + Metadata + ORM Frameworks</div>
+
+  <!-- Real-Life Analogy -->
+  <div class="section">
+    <div class="section-header">📘 7. Real-Life Example — ORM as Translator</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <p>Suppose:</p>
+          <ul>
+            <li>You know only <strong>English</strong></li>
+            <li>Your friend knows only <strong>Marathi</strong></li>
+            <li>A <strong>Translator</strong> helps both communicate</li>
+          </ul>
+          <div style="margin: 8px 0; display:flex; flex-direction:column; align-items:center; gap:2px;">
+            <div style="border:1.5px solid #333; padding:4px 16px; font-weight:700; font-size:12px;">English (You)</div>
+            <div style="font-size:14px; color:#555;">↓</div>
+            <div style="border:1.5px solid #333; padding:4px 16px; font-weight:700; font-size:12px;">Translator</div>
+            <div style="font-size:14px; color:#555;">↓</div>
+            <div style="border:1.5px solid #333; padding:4px 16px; font-weight:700; font-size:12px;">Marathi (Friend)</div>
+          </div>
+        </div>
+        <div>
+          <p>Similarly in software:</p>
+          <ul>
+            <li>You = <strong>Java Application</strong> (speaks Objects)</li>
+            <li>Friend = <strong>Database</strong> (speaks SQL/Tables)</li>
+            <li>Translator = <strong>ORM</strong></li>
+          </ul>
+          <div style="margin: 8px 0; display:flex; flex-direction:column; align-items:center; gap:2px;">
+            <div style="border:1.5px solid #333; padding:4px 16px; font-weight:700; font-size:12px;">Java Objects</div>
+            <div style="font-size:14px; color:#555;">↓</div>
+            <div style="border:2px solid #111; padding:4px 16px; font-weight:700; font-size:12px; background:#f5f5f5;">ORM (Translator)</div>
+            <div style="font-size:14px; color:#555;">↓</div>
+            <div style="border:1.5px solid #333; padding:4px 16px; font-weight:700; font-size:12px;">Database Tables</div>
+          </div>
+          <p style="font-size:12px; margin-top:4px;">ORM acts as a Translator between Java and Database.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why ORM is Needed -->
+  <div class="section">
+    <div class="section-header">📘 8. Why ORM is Needed? (5 Reasons)</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <div class="def-row"><div class="def-term">1. Reduces JDBC Code</div><div class="def-meaning">No need to write lengthy JDBC code. One line replaces 10+ lines.</div></div>
+          <div class="def-row"><div class="def-term">2. Eliminates Manual Mapping</div><div class="def-meaning">Objects are mapped automatically — no manual ResultSet column extraction.</div></div>
+          <div class="def-row"><div class="def-term">3. Database Independence</div><div class="def-meaning">Same code works with PostgreSQL, MySQL, Oracle — just change dialect in config.</div></div>
+        </div>
+        <div>
+          <div class="def-row"><div class="def-term">4. Better Maintainability</div><div class="def-meaning">Less code means easier maintenance. Change in one place updates everywhere.</div></div>
+          <div class="def-row"><div class="def-term">5. Supports OOP</div><div class="def-meaning">Works directly with Java Objects — keeps codebase truly object-oriented.</div></div>
+        </div>
+      </div>
+      <div class="interview-line">ORM is needed to: reduce JDBC boilerplate code, eliminate manual object-row mapping, achieve DB independence, improve maintainability, and keep code object-oriented. These 5 reasons drove the adoption of ORM frameworks like Hibernate.</div>
+    </div>
+  </div>
+
+  <!-- Transparent Persistence -->
+  <div class="section">
+    <div class="section-header">📘 9. Transparent Persistence</div>
+    <div class="section-body">
+      <p>One of the most important features of ORM is: <strong>Transparent Persistence</strong></p>
+      <p style="margin-top:4px;">Meaning: <strong>Developer does not need to know how data is stored internally.</strong></p>
+      <p style="margin-top:4px;">ORM framework handles everything automatically.</p>
+      <div class="note-box" style="margin-top:7px;">
+        <strong>📝 Transparent = Hidden from Developer</strong><br>
+        When you call <code>session.save(student)</code> → you don't see the SQL, you don't see the connection opening, you don't see the transaction — Hibernate does it all transparently behind the scenes. Developer only works with Java objects.
+      </div>
+      <div class="interview-line">Transparent Persistence means developer does not need to know how data is internally stored in DB. ORM handles SQL generation, connection management, and data persistence transparently — developer only interacts with Java objects.</div>
+    </div>
+  </div>
+
+  <!-- Metadata -->
+  <div class="section">
+    <div class="section-header">📘 10. Metadata in ORM</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <p>ORM uses <strong>Metadata</strong> to perform mapping.</p>
+          <div class="subsection-title">🔹 What is Metadata?</div>
+          <p>Metadata means: <strong>Data about Data</strong></p>
+          <p style="margin-top:4px;">Metadata tells ORM:</p>
+          <ul>
+            <li>Which class maps to which table</li>
+            <li>Which variable maps to which column</li>
+            <li>What is primary key</li>
+            <li>What are relationships</li>
+          </ul>
+          <div class="subsection-title" style="margin-top:7px;">🔹 Two ways to provide Metadata:</div>
+          <ul>
+            <li><strong>Annotations</strong> → modern, in Java class</li>
+            <li><strong>XML file</strong> → old way (hbm.xml)</li>
+          </ul>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">🔹 Example — Metadata via Annotations:</div>
+          <div class="code-block-dark"><span class="an">@Entity</span>
+<span class="an">@Table</span>(name=<span class="st">"student"</span>)
+<span class="kw">public class</span> <span class="cl">Student</span> {
+
+    <span class="an">@Id</span>
+    <span class="kw">private int</span> <span class="nm">id</span>;
+
+    <span class="kw">private</span> <span class="cl">String</span> <span class="nm">name</span>;
+}</div>
+          <p style="font-size:12px; margin-top:5px;">Here:</p>
+          <div class="def-row"><div class="def-term">@Entity</div><div class="def-meaning">Tells ORM: Student Class → Database Table</div></div>
+          <div class="def-row"><div class="def-term">@Table(name="student")</div><div class="def-meaning">Table name in DB is "student"</div></div>
+          <div class="def-row"><div class="def-term">@Id</div><div class="def-meaning">id field is the primary key column</div></div>
+        </div>
+      </div>
+      <div class="interview-line">ORM uses Metadata (data about data) to perform mapping. Metadata tells ORM which class maps to which table, which field maps to which column, and what is the primary key. In Hibernate, metadata is provided via Annotations (@Entity, @Table, @Id) or XML files.</div>
+    </div>
+  </div>
+
+  <!-- ORM Frameworks -->
+  <div class="section">
+    <div class="section-header">📘 11. ORM Frameworks in Java</div>
+    <div class="section-body">
+      <p>A <strong>Persistent Framework</strong> is an ORM service that stores and retrieves objects from a relational database.</p>
+      <div class="subsection-title">🔹 Popular ORM Frameworks:</div>
+      <table class="comp-table">
+        <tr>
+          <th>Framework</th>
+          <th>Description</th>
+          <th>Status</th>
+        </tr>
+        <tr><td><strong>EJB Entity Beans</strong></td><td>Old Enterprise ORM — part of J2EE</td><td>Old / Legacy</td></tr>
+        <tr><td><strong>JDO</strong></td><td>Java Data Objects — Sun Microsystems standard</td><td>Less used</td></tr>
+        <tr><td><strong>TopLink</strong></td><td>Oracle ORM Framework</td><td>Enterprise use</td></tr>
+        <tr><td><strong>Spring DAO</strong></td><td>DAO Support Framework — used with Hibernate/JPA</td><td>Popular</td></tr>
+        <tr><td><strong>Hibernate</strong></td><td>Most Popular ORM Framework — by Gavin King, 2001</td><td>✅ Most Used</td></tr>
+        <tr><td><strong>JPA</strong></td><td>ORM Specification (Java Persistence API) — standard interface; Hibernate is its implementation</td><td>✅ Standard</td></tr>
+      </table>
+      <div class="note-box" style="margin-top:6px;">
+        <strong>📝 JPA vs Hibernate:</strong><br>
+        <strong>JPA</strong> = Java Persistence API = <strong>Specification / Interface</strong> (defines rules — what to do)<br>
+        <strong>Hibernate</strong> = <strong>Implementation</strong> of JPA (defines how to do it)<br>
+        👉 JPA is the standard. Hibernate implements JPA + provides extra features beyond JPA.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE 4 — HIBERNATE ORM FLOW + ADVANTAGES + INTERVIEW ANSWERS ══════════════════ -->
+<div class="a4-page">
+  <div class="page-title">ORM Notes | Page 4 — ORM in Hibernate + Execution Flow + Advantages + Interview Answers</div>
+
+  <!-- ORM in Hibernate -->
+  <div class="section">
+    <div class="section-header">📘 12. ORM in Hibernate</div>
+    <div class="section-body">
+      <p>Hibernate is the <strong>most popular ORM Framework</strong> in Java.</p>
+      <p style="margin-top:4px;">Hibernate automatically performs:</p>
+
+      <div class="two-col" style="margin-top:7px;">
+        <div>
+          <div class="flow-col">
+            <div class="flow-box">Java Object</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">ORM Mapping</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">SQL Generation</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="background:#e8f5e9;">PostgreSQL Database</div>
+          </div>
+        </div>
+        <div>
+          <div class="subsection-title" style="margin-top:0;">Complete ORM Execution Flow:</div>
+          <div class="flow-col">
+            <div class="flow-box">Create Java Object</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Hibernate Session</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">ORM Mapping</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">SQL Query Generation</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">JDBC Driver</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">PostgreSQL Database</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box" style="background:#e8f5e9;">Data Stored ✅</div>
+          </div>
+        </div>
+      </div>
+      <div class="interview-line">Hibernate's ORM flow: Create Java Object → pass to Hibernate Session → ORM reads metadata (@Entity, @Table, @Id) → generates SQL → sends via JDBC Driver → PostgreSQL stores/retrieves data. Developer only creates the Java object and calls session.save() or session.get().</div>
+    </div>
+  </div>
+
+  <!-- Advantages -->
+  <div class="section">
+    <div class="section-header">📘 13. Advantages of ORM</div>
+    <div class="section-body">
+      <table class="comp-table">
+        <tr>
+          <th>Advantage</th>
+          <th>Benefit</th>
+        </tr>
+        <tr><td><strong>Less Coding</strong></td><td>Reduces JDBC boilerplate code significantly</td></tr>
+        <tr><td><strong>Database Independent</strong></td><td>Easy migration between PostgreSQL, MySQL, Oracle — change only dialect</td></tr>
+        <tr><td><strong>Automatic Mapping</strong></td><td>No manual conversion — Java Object ↔ DB Row done automatically</td></tr>
+        <tr><td><strong>OOP Support</strong></td><td>Works with Java Objects — code stays truly object-oriented</td></tr>
+        <tr><td><strong>Auto SQL Generation</strong></td><td>No manual SQL writing — Hibernate generates correct SQL from object</td></tr>
+        <tr><td><strong>Easy Maintenance</strong></td><td>Cleaner code — less lines to maintain and debug</td></tr>
+        <tr><td><strong>Better Readability</strong></td><td>Simple development — developer thinks in objects, not SQL</td></tr>
+        <tr><td><strong>Relationship Support</strong></td><td>OneToOne, OneToMany, ManyToMany — mapped easily with annotations</td></tr>
+        <tr><td><strong>Transparent Persistence</strong></td><td>Developer doesn't need to know how data is stored internally</td></tr>
+        <tr><td><strong>Cache Support</strong></td><td>L1 and L2 cache reduce repeated DB calls — better performance</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Interview Answers -->
+  <div class="section">
+    <div class="section-header">🎯 Interview Answers</div>
+    <div class="section-body">
+
+      <div class="interview-answer">
+        <div class="interview-answer-title">✅ Interview Answer — 2 Marks | Q: What is ORM?</div>
+        <p>ORM (Object Relational Mapping) is a technique used to <strong>automatically map Java Objects with Relational Database Tables</strong>. It acts as a bridge between Java applications and databases, <strong>reducing JDBC complexity</strong> and enabling <strong>transparent persistence</strong>.</p>
+      </div>
+
+      <div class="interview-answer" style="margin-top:8px;">
+        <div class="interview-answer-title">✅ Interview Answer — 5 Marks | Q: Explain ORM with Example</div>
+        <p>ORM stands for <strong>Object Relational Mapping</strong>. It is a technique used to map Java classes and objects with database tables and records automatically. ORM converts objects into rows and rows into objects, <strong>eliminating the need for manual SQL and ResultSet handling</strong>.</p>
+        <p style="margin-top:5px;"><strong>Mapping Example:</strong></p>
+        <ul>
+          <li>Java Class → Database Table</li>
+          <li>Object (instance) → Row (record)</li>
+          <li>Instance Variable → Column</li>
+        </ul>
+        <p style="margin-top:5px;"><strong>Example:</strong> A Student class with fields <code>id</code> and <code>name</code> maps to a STUDENT table with columns ID and NAME. When <code>session.save(student)</code> is called, Hibernate automatically generates <code>INSERT INTO STUDENT(ID, NAME) VALUES(101, 'Pravin')</code>.</p>
+        <p style="margin-top:5px;"><strong>Hibernate</strong> is the most widely used ORM framework in Java and provides <strong>transparent persistence, automatic SQL generation, relationship mapping, and database independence</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Revision -->
+  <div class="section">
+    <div class="section-header">🗂️ Quick Revision — ORM Key Points</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <ul>
+            <li><strong>ORM</strong> = Object Relational Mapping</li>
+            <li>Maps: Class↔Table | Object↔Row | Variable↔Column</li>
+            <li>Acts as <strong>bridge</strong> between Java and DB</li>
+            <li>Came to solve <strong>JDBC problems</strong></li>
+            <li>Provides <strong>Reversible Transformation</strong> (two-way)</li>
+            <li><strong>Transparent Persistence</strong> — developer doesn't see SQL</li>
+            <li>Uses <strong>Metadata</strong> (@Entity, @Table, @Id) for mapping</li>
+            <li><strong>Metadata</strong> = Data about Data</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>Most popular ORM = <strong>Hibernate</strong></li>
+            <li>ORM Standard = <strong>JPA</strong> (Hibernate implements JPA)</li>
+            <li>session.save(obj) → INSERT to DB</li>
+            <li>session.get(Class, id) → SELECT from DB</li>
+            <li>5 reasons for ORM: Less code, Auto mapping, DB independence, Maintainability, OOP support</li>
+            <li>Hibernate invented by <strong>Gavin King, 2001</strong></li>
+            <li>Flow: Java Object → Session → ORM → SQL → JDBC → DB</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

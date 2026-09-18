@@ -1,0 +1,535 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+.err-box{background:#fce4ec;border-left:5px solid #c62828;padding:10px 14px;margin-top:10px}
+.err-box .lbl{font-size:10px;font-weight:700;color:#c62828;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.err-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:3px}
+.mini-card p,.mini-card li{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+.code-wrap{margin:10px 0}
+.code-title{background:#2c2c2c;color:#ccc;font-size:11px;font-weight:700;padding:5px 12px;border-radius:5px 5px 0 0;letter-spacing:.4px}
+.code-body{background:#1e1e1e;border-radius:0 0 5px 5px;padding:12px 14px;font-family:'Courier New',monospace;font-size:12.5px;white-space:pre;color:#d4d4d4;overflow-x:auto}
+.kw{color:#569cd6}
+.cm{color:#6a9955}
+.str{color:#ce9178}
+.fn{color:#dcdcaa}
+.tp{color:#4ec9b0}
+.out-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:4px;padding:6px 12px;font-family:'Courier New',monospace;font-size:12.5px;color:#1b5e20;margin:4px 0 12px}
+.pq-block{border:1px solid #ccc;border-radius:6px;margin-bottom:12px;overflow:hidden}
+.pq-q{background:#1a1a6e;padding:8px 12px;font-size:13px;font-weight:700;color:#fff}
+.pq-note{background:#f5f6ff;padding:6px 12px;font-size:12px;color:#1a1a6e;font-weight:700;border-bottom:1px solid #ddd}
+.pq-body{background:#fff;padding:10px 12px}
+.err-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.err-card{border-radius:5px;padding:10px 12px;font-size:12.5px;font-family:'Courier New',monospace}
+.ec-wrong{background:#fce4ec;border:1px solid #f48fb1;color:#880e4f}
+.ec-right{background:#e8f5e9;border:1px solid #a5d6a7;color:#1b5e20}
+.ec-lbl{font-size:10px;font-weight:700;letter-spacing:.4px;margin-bottom:5px;font-family:Arial,sans-serif}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">PL/SQL — Part 4: Conditional Statements</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; IF / IF-ELSE / IF-ELSIF-ELSE &nbsp;|&nbsp; Orange tag = Extra content</div>
+</div>
+
+<div class="sec-label">1. What are Conditional Statements?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>Conditional Statements are used to make decisions in a PL/SQL program based on TRUE or FALSE conditions. They allow different blocks of code to execute depending on whether a condition is satisfied or not.</p>
+  </div>
+  <table style="margin-top:8px">
+    <tr><th>Type</th><th>Use When</th><th>Choices</th></tr>
+    <tr><td>IF</td><td>Only one condition to check</td><td>One choice</td></tr>
+    <tr><td>IF...ELSE</td><td>Two possible outcomes — TRUE or FALSE</td><td>Two choices</td></tr>
+    <tr><td>IF...ELSIF...ELSE</td><td>Multiple conditions to check one by one</td><td>Multiple choices</td></tr>
+  </table>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>IF = 1 condition &nbsp;|&nbsp; IF-ELSE = 2 choices &nbsp;|&nbsp; IF-ELSIF-ELSE = Many choices</p>
+    <p>PL/SQL keyword is ELSIF — NOT ELSEIF (a very common mistake)</p>
+  </div>
+</div>
+
+<div class="sec-label">2. IF Statement</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>The IF statement executes a block of code only when the condition is TRUE. If the condition is FALSE or NULL, the block is completely skipped.</p>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Syntax:</p>
+  <div class="code-wrap">
+    <div class="code-title">IF STATEMENT — SYNTAX</div>
+    <div class="code-body"><span class="kw">IF</span> condition <span class="kw">THEN</span>
+   statements;
+<span class="kw">END IF</span>;</div>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 1 — Voting Eligibility:</p>
+  <div class="code-wrap">
+    <div class="code-title">VOTING ELIGIBILITY</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   V_AGE <span class="tp">NUMBER</span> := 20;
+<span class="kw">BEGIN</span>
+   <span class="kw">IF</span> V_AGE >= 18 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'ELIGIBLE TO VOTE'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: ELIGIBLE TO VOTE</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 2 — High Salary:</p>
+  <div class="code-wrap">
+    <div class="code-title">HIGH SALARY CHECK</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   V_SAL <span class="tp">NUMBER</span> := 50000;
+<span class="kw">BEGIN</span>
+   <span class="kw">IF</span> V_SAL >= 40000 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'HIGH SAL'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: HIGH SAL</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 3 — Topper Check:</p>
+  <div class="code-wrap">
+    <div class="code-title">TOPPER CHECK</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   V_TOPPER <span class="tp">NUMBER</span> := 96;
+<span class="kw">BEGIN</span>
+   <span class="kw">IF</span> V_TOPPER >= 95 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'I AM A TOPPER'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: I AM A TOPPER</div>
+</div>
+
+<div class="sec-label">3. IF...ELSE Statement</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>The IF...ELSE statement executes one block of code if the condition is TRUE, and a different block if the condition is FALSE. Exactly one of the two blocks always executes.</p>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Syntax:</p>
+  <div class="code-wrap">
+    <div class="code-title">IF-ELSE — SYNTAX</div>
+    <div class="code-body"><span class="kw">IF</span> condition <span class="kw">THEN</span>
+   true block;
+<span class="kw">ELSE</span>
+   false block;
+<span class="kw">END IF</span>;</div>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 1 — Voting Eligibility:</p>
+  <div class="code-wrap">
+    <div class="code-title">VOTING ELIGIBILITY — IF-ELSE</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   V_VOTE <span class="tp">NUMBER</span> := 15;
+<span class="kw">BEGIN</span>
+   <span class="kw">IF</span> V_VOTE >= 18 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'ELIGIBLE'</span>);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RUK ABHI TIME HAI'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: RUK ABHI TIME HAI</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 2 — Temperature Check:</p>
+  <div class="code-wrap">
+    <div class="code-title">TEMPERATURE CHECK</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   V_TEMP <span class="tp">NUMBER</span> := 30;
+<span class="kw">BEGIN</span>
+   <span class="kw">IF</span> V_TEMP >= 30 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'TEMP IS HOT '</span> || V_TEMP);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'TEMP IS COOL '</span> || V_TEMP);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: TEMP IS HOT 30</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 3 — Account Balance Check:</p>
+  <div class="code-wrap">
+    <div class="code-title">ACCOUNT BALANCE CHECK</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   V_BALANCE <span class="tp">NUMBER</span> := 0;
+<span class="kw">BEGIN</span>
+   <span class="kw">IF</span> V_BALANCE > 0 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'BALANCE AVAILABLE'</span>);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'INSUFFICIENT BALANCE'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: INSUFFICIENT BALANCE</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 4 — SELECT INTO with IF-ELSE (EMP Table):</p>
+  <div class="code-wrap">
+    <div class="code-title">SELECT INTO WITH IF-ELSE — FETCH EMPLOYEE</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   V_NAME <span class="tp">EMP.ENAME%TYPE</span>;
+   V_SAL  <span class="tp">EMP.SAL%TYPE</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> ENAME, SAL
+   <span class="kw">INTO</span>   V_NAME, V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  SAL = 950;
+
+   <span class="kw">IF</span> V_SAL = 950 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'FETCHED NAME   : '</span> || V_NAME);
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'FETCHED SALARY : '</span> || V_SAL);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'DATA NOT FOUND'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: FETCHED NAME : JAMES &nbsp; FETCHED SALARY : 950</div>
+  <div class="tip-box">
+    <div class="lbl">Important Interview Point</div>
+    <p>If WHERE SAL = 10 is used and no employee has that salary, Oracle raises ORA-01403: NO_DATA_FOUND because SELECT INTO must always return exactly one row.</p>
+  </div>
+</div>
+
+<div class="sec-label">4. IF...ELSIF...ELSE Statement</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>Used when multiple conditions need to be checked one by one. The first condition that evaluates to TRUE gets executed and all remaining conditions are skipped. If none match, the ELSE block runs.</p>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:10px 0 4px">Syntax:</p>
+  <div class="code-wrap">
+    <div class="code-title">IF-ELSIF-ELSE — SYNTAX</div>
+    <div class="code-body"><span class="kw">IF</span> condition1 <span class="kw">THEN</span>
+   statements;
+<span class="kw">ELSIF</span> condition2 <span class="kw">THEN</span>
+   statements;
+<span class="kw">ELSIF</span> condition3 <span class="kw">THEN</span>
+   statements;
+<span class="kw">ELSE</span>
+   statements;
+<span class="kw">END IF</span>;</div>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 1 — Grade System:</p>
+  <div class="code-wrap">
+    <div class="code-title">GRADE SYSTEM — IF-ELSIF-ELSE</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   V_SCORE <span class="tp">NUMBER</span> := 72;
+<span class="kw">BEGIN</span>
+   <span class="kw">IF</span> V_SCORE >= 95 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'GRADE A'</span>);
+   <span class="kw">ELSIF</span> V_SCORE >= 75 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'GRADE B'</span>);
+   <span class="kw">ELSIF</span> V_SCORE >= 50 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'GRADE C'</span>);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'FAIL'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: GRADE C &nbsp; (72 is not >= 95, not >= 75, but >= 50 → GRADE C)</div>
+
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Example 2 — Day of Week:</p>
+  <div class="code-wrap">
+    <div class="code-title">DAY OF WEEK PROGRAM</div>
+    <div class="code-body"><span class="kw">DECLARE</span>
+   V_DAY <span class="tp">VARCHAR2</span>(20) := <span class="str">'MONDAY'</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">IF</span> V_DAY = <span class="str">'MONDAY'</span> <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'START OF THE WEEK'</span>);
+   <span class="kw">ELSIF</span> V_DAY = <span class="str">'FRIDAY'</span> <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'WEEKEND IS COMING'</span>);
+   <span class="kw">ELSIF</span> V_DAY = <span class="str">'SUNDAY'</span> <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'HOLIDAY'</span>);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'NORMAL WORKING DAY'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="out-bar">Output: START OF THE WEEK</div>
+</div>
+
+<div class="sec-label">5. Common Beginner Mistakes</div>
+<div class="card">
+  <div class="err-row">
+    <div class="err-card ec-wrong"><div class="ec-lbl">WRONG</div>V_SAL NUMBER: = 50000;</div>
+    <div class="err-card ec-right"><div class="ec-lbl">CORRECT</div>V_SAL NUMBER := 50000;</div>
+  </div>
+  <p style="font-size:12px;color:#555;margin-bottom:10px">No space between : and = in the assignment operator</p>
+
+  <div class="err-row">
+    <div class="err-card ec-wrong"><div class="ec-lbl">WRONG</div>V_TOPPER := 96;</div>
+    <div class="err-card ec-right"><div class="ec-lbl">CORRECT</div>V_TOPPER NUMBER := 96;</div>
+  </div>
+  <p style="font-size:12px;color:#555;margin-bottom:10px">Every variable must have a datatype — NUMBER, VARCHAR2, DATE, etc.</p>
+
+  <div class="err-row">
+    <div class="err-card ec-wrong"><div class="ec-lbl">WRONG</div>ELSEIF</div>
+    <div class="err-card ec-right"><div class="ec-lbl">CORRECT</div>ELSIF</div>
+  </div>
+  <p style="font-size:12px;color:#555;margin-bottom:10px">PL/SQL uses ELSIF (no E at end) — not ELSEIF like Java or other languages</p>
+
+  <div class="err-row">
+    <div class="err-card ec-wrong"><div class="ec-lbl">WRONG</div>V_DAY VARCHAR := 'MON';</div>
+    <div class="err-card ec-right"><div class="ec-lbl">CORRECT</div>V_DAY VARCHAR2(20) := 'MON';</div>
+  </div>
+  <p style="font-size:12px;color:#555;margin-bottom:10px">VARCHAR2 requires a size. Always write VARCHAR2(size)</p>
+
+  <div class="err-row">
+    <div class="err-card ec-wrong"><div class="ec-lbl">WRONG</div>IF V_TEMP >= 0 THEN<br>(V_TEMP not declared)</div>
+    <div class="err-card ec-right"><div class="ec-lbl">CORRECT</div>Use exactly the same<br>variable name you declared</div>
+  </div>
+  <p style="font-size:12px;color:#555;margin-bottom:4px">Error: PLS-00201 — identifier must be declared. Variable name used must match the declared name exactly.</p>
+
+  <div class="err-box">
+    <div class="lbl">Common Error Table</div>
+    <table style="margin-top:6px">
+      <tr><th>Mistake</th><th>Error Code</th><th>Fix</th></tr>
+      <tr><td>: = instead of :=</td><td>PLS-00103</td><td>Remove space — use :=</td></tr>
+      <tr><td>Missing datatype in declaration</td><td>PLS-00103</td><td>Add datatype after variable name</td></tr>
+      <tr><td>ELSEIF instead of ELSIF</td><td>PLS-00103</td><td>Use ELSIF</td></tr>
+      <tr><td>VARCHAR without size</td><td>PLS-00215</td><td>Use VARCHAR2(size)</td></tr>
+      <tr><td>Undeclared variable used</td><td>PLS-00201</td><td>Declare variable in DECLARE section</td></tr>
+      <tr><td>SELECT INTO returns 0 rows</td><td>ORA-01403</td><td>Handle NO_DATA_FOUND exception</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="sec-label">6. EMP Table Practice Questions — Conditional Statements</div>
+<div class="card" style="margin-bottom:0">
+
+  <div class="pq-block">
+    <div class="pq-q">Q1. Fetch the salary of KING (EMPNO 7839) and check if he is the highest paid</div>
+    <div class="pq-note">Uses: SELECT INTO + IF-ELSE + %TYPE</div>
+    <div class="pq-body">
+      <div class="code-wrap">
+        <div class="code-title">KING SALARY CHECK</div>
+        <div class="code-body"><span class="kw">DECLARE</span>
+   V_SAL <span class="tp">EMP.SAL%TYPE</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> SAL
+   <span class="kw">INTO</span>   V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = 7839;
+
+   <span class="kw">IF</span> V_SAL = 5000 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'KING IS THE HIGHEST PAID : '</span> || V_SAL);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'NOT HIGHEST PAID'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+      </div>
+      <div class="out-bar">Output: KING IS THE HIGHEST PAID : 5000</div>
+    </div>
+  </div>
+
+  <div class="pq-block">
+    <div class="pq-q">Q2. Fetch salary of SMITH (EMPNO 7369) and check if it is above or below 1000</div>
+    <div class="pq-note">Uses: SELECT INTO + IF-ELSE + %TYPE</div>
+    <div class="pq-body">
+      <div class="code-wrap">
+        <div class="code-title">SMITH SALARY CHECK</div>
+        <div class="code-body"><span class="kw">DECLARE</span>
+   V_NAME <span class="tp">EMP.ENAME%TYPE</span>;
+   V_SAL  <span class="tp">EMP.SAL%TYPE</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> ENAME, SAL
+   <span class="kw">INTO</span>   V_NAME, V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = 7369;
+
+   <span class="kw">IF</span> V_SAL > 1000 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' EARNS ABOVE 1000 : '</span> || V_SAL);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' EARNS BELOW 1000 : '</span> || V_SAL);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+      </div>
+      <div class="out-bar">Output: SMITH EARNS BELOW 1000 : 800</div>
+    </div>
+  </div>
+
+  <div class="pq-block">
+    <div class="pq-q">Q3. Fetch the job of SCOTT (EMPNO 7788) and display his salary category using ELSIF</div>
+    <div class="pq-note">Uses: SELECT INTO + IF-ELSIF-ELSE + %TYPE</div>
+    <div class="pq-body">
+      <div class="code-wrap">
+        <div class="code-title">SCOTT SALARY CATEGORY</div>
+        <div class="code-body"><span class="kw">DECLARE</span>
+   V_NAME <span class="tp">EMP.ENAME%TYPE</span>;
+   V_SAL  <span class="tp">EMP.SAL%TYPE</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> ENAME, SAL
+   <span class="kw">INTO</span>   V_NAME, V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = 7788;
+
+   <span class="kw">IF</span> V_SAL >= 4000 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' : VERY HIGH SALARY'</span>);
+   <span class="kw">ELSIF</span> V_SAL >= 2500 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' : HIGH SALARY'</span>);
+   <span class="kw">ELSIF</span> V_SAL >= 1500 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' : MEDIUM SALARY'</span>);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' : LOW SALARY'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+      </div>
+      <div class="out-bar">Output: SCOTT : HIGH SALARY &nbsp; (SAL = 3000, not >= 4000 but >= 2500)</div>
+    </div>
+  </div>
+
+  <div class="pq-block">
+    <div class="pq-q">Q4. Fetch ALLEN's (EMPNO 7499) details and check if he is a SALESMAN or not</div>
+    <div class="pq-note">Uses: SELECT INTO + IF-ELSE + %ROWTYPE</div>
+    <div class="pq-body">
+      <div class="code-wrap">
+        <div class="code-title">ALLEN JOB CHECK</div>
+        <div class="code-body"><span class="kw">DECLARE</span>
+   V_EMP <span class="tp">EMP%ROWTYPE</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> *
+   <span class="kw">INTO</span>   V_EMP
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = 7499;
+
+   <span class="kw">IF</span> V_EMP.JOB = <span class="str">'SALESMAN'</span> <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_EMP.ENAME || <span class="str">' IS A SALESMAN'</span>);
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'SALARY : '</span> || V_EMP.SAL);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_EMP.ENAME || <span class="str">' IS NOT A SALESMAN'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+      </div>
+      <div class="out-bar">Output: ALLEN IS A SALESMAN &nbsp; SALARY : 1600</div>
+    </div>
+  </div>
+
+  <div class="pq-block">
+    <div class="pq-q">Q5. Fetch JONES (EMPNO 7566) and classify his department as HQ, Operations, or Sales <span class="extra">Extra</span></div>
+    <div class="pq-note">Uses: SELECT INTO + IF-ELSIF-ELSE + %TYPE — DEPTNO 10=HQ, 20=Operations, 30=Sales</div>
+    <div class="pq-body">
+      <div class="code-wrap">
+        <div class="code-title">DEPARTMENT CLASSIFICATION</div>
+        <div class="code-body"><span class="kw">DECLARE</span>
+   V_NAME   <span class="tp">EMP.ENAME%TYPE</span>;
+   V_DEPTNO <span class="tp">EMP.DEPTNO%TYPE</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> ENAME, DEPTNO
+   <span class="kw">INTO</span>   V_NAME, V_DEPTNO
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = 7566;
+
+   <span class="kw">IF</span> V_DEPTNO = 10 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' WORKS IN HQ (DEPTNO 10)'</span>);
+   <span class="kw">ELSIF</span> V_DEPTNO = 20 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' WORKS IN OPERATIONS (DEPTNO 20)'</span>);
+   <span class="kw">ELSIF</span> V_DEPTNO = 30 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">' WORKS IN SALES (DEPTNO 30)'</span>);
+   <span class="kw">ELSE</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'UNKNOWN DEPARTMENT'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/</div>
+      </div>
+      <div class="out-bar">Output: JONES WORKS IN OPERATIONS (DEPTNO 20)</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sec-label">7. Quick Revision — All Three Types</div>
+<div class="card">
+  <table>
+    <tr><th>Statement</th><th>Condition Check</th><th>Blocks</th><th>Key Point</th></tr>
+    <tr><td>IF</td><td>One condition</td><td>Runs only if TRUE — skipped if FALSE</td><td>No ELSE — nothing happens if FALSE</td></tr>
+    <tr><td>IF...ELSE</td><td>One condition</td><td>TRUE block OR FALSE block — exactly one runs</td><td>Always one block executes</td></tr>
+    <tr><td>IF...ELSIF...ELSE</td><td>Multiple conditions</td><td>First TRUE condition's block runs, rest skipped</td><td>ELSIF not ELSEIF — common mistake!</td></tr>
+  </table>
+  <div class="mem-box">
+    <div class="lbl">Key Keywords</div>
+    <p>IF &nbsp;|&nbsp; THEN &nbsp;|&nbsp; ELSIF &nbsp;|&nbsp; ELSE &nbsp;|&nbsp; END IF;</p>
+    <p>Every IF block must close with END IF; — forgetting this causes a compilation error</p>
+  </div>
+</div>
+
+<div class="sec-label">8. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What is the difference between IF, IF-ELSE and IF-ELSIF-ELSE?</div>
+  <div class="qa-a">IF executes code only when the condition is TRUE. IF-ELSE executes one block for TRUE and another for FALSE. IF-ELSIF-ELSE is used when multiple conditions need to be checked — the first TRUE condition executes and the rest are skipped.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. What is the correct keyword in PL/SQL — ELSEIF or ELSIF?</div>
+  <div class="qa-a">The correct keyword in PL/SQL is ELSIF — not ELSEIF. Using ELSEIF will cause a PLS-00103 compilation error. This is a very common mistake when coming from Java or other languages.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. What error occurs when SELECT INTO returns no rows?</div>
+  <div class="qa-a">ORA-01403: NO DATA FOUND. SELECT INTO must always return exactly one row. If no rows are returned, the NO_DATA_FOUND exception is raised. It should be handled in the EXCEPTION section.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. What happens if none of the ELSIF conditions are TRUE and there is no ELSE? <span class="extra">Extra</span></div>
+  <div class="qa-a">If no condition matches and there is no ELSE block, the entire IF-ELSIF block is simply skipped. No error occurs — the program continues to the next statement after END IF.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. Can we use SELECT INTO inside an IF block? <span class="extra">Extra</span></div>
+  <div class="qa-a">SELECT INTO is placed in the BEGIN section before the IF block. The fetched values are stored in variables, which are then used inside the IF conditions. SELECT INTO cannot be placed directly inside an IF block condition.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. What is the error when a variable is used without being declared? <span class="extra">Extra</span></div>
+  <div class="qa-a">PLS-00201: identifier must be declared. Every variable used in BEGIN must be declared in the DECLARE section with its correct datatype. The name used in BEGIN must exactly match the name in DECLARE.</div>
+</div>
+
+<div class="divider"></div>
+<footer>PL/SQL Part 4 — Conditional Statements &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>

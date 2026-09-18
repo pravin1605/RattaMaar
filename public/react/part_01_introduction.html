@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>React.js – Chapter 1 Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --text: #111111;
+    --muted: #555555;
+    --border: #e0e0e0;
+
+    --blue:   #1a6bff;
+    --blue-bg:#e8f0ff;
+    --green:  #0a8a3c;
+    --green-bg:#e4f5ec;
+    --orange: #d95f00;
+    --orange-bg:#fff0e4;
+    --purple: #6b2fbd;
+    --purple-bg:#f0eaff;
+    --red:    #c4001a;
+    --red-bg: #fff0f2;
+    --teal:   #006d77;
+    --teal-bg:#e0f4f5;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 20px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: linear-gradient(135deg, #1a6bff 0%, #6b2fbd 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 36px 40px;
+    margin-bottom: 36px;
+  }
+  .page-header .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    margin-bottom: 14px;
+  }
+  .page-header h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+  .page-header p  { font-size: 14px; opacity: .88; }
+
+  /* ── SECTION CARD ── */
+  .section {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .sec-num {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .section-header h2 { font-size: 18px; font-weight: 700; color: var(--text); }
+  .section-body { padding: 22px 24px; }
+
+  /* ── DEFINITION BOX ── */
+  .def-box {
+    border-left: 4px solid var(--blue);
+    background: var(--blue-bg);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 14px 0;
+  }
+  .def-box .def-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--blue); margin-bottom: 4px;
+  }
+  .def-box p { color: var(--text); font-size: 14.5px; }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin-top: 14px;
+  }
+  .feature-card {
+    border-radius: 10px;
+    padding: 16px 18px;
+    border: 1.5px solid transparent;
+  }
+  .feature-card .fc-title {
+    font-weight: 700; font-size: 14px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .feature-card p { font-size: 13.5px; color: var(--muted); }
+  .fc-blue   { background: var(--blue-bg);   border-color: #b8d0ff; }
+  .fc-green  { background: var(--green-bg);  border-color: #9ddbb9; }
+  .fc-orange { background: var(--orange-bg); border-color: #ffc999; }
+  .fc-purple { background: var(--purple-bg); border-color: #c9abf0; }
+  .fc-teal   { background: var(--teal-bg);   border-color: #90d4d8; }
+  .fc-blue   .fc-title { color: var(--blue);   }
+  .fc-green  .fc-title { color: var(--green);  }
+  .fc-orange .fc-title { color: var(--orange); }
+  .fc-purple .fc-title { color: var(--purple); }
+  .fc-teal   .fc-title { color: var(--teal);   }
+
+  /* ── CODE BLOCK ── */
+  pre {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 12px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .kw  { color: #c792ea; }
+  .fn  { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .tag-color { color: #f07178; }
+  .attr{ color: #ffcb6b; }
+  .cmt { color: #546e7a; }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%; border-collapse: collapse;
+    margin: 14px 0; font-size: 14px;
+  }
+  th {
+    background: var(--purple-bg);
+    color: var(--purple);
+    font-weight: 700;
+    text-align: left;
+    padding: 10px 14px;
+    border: 1px solid #d6c4f4;
+  }
+  td {
+    padding: 9px 14px;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  tr:nth-child(even) td { background: #fafafa; }
+
+  /* ── COMPARISON ROW ── */
+  .compare-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0;
+  }
+  .compare-box {
+    border-radius: 8px; padding: 14px 16px;
+    font-size: 13.5px;
+  }
+  .compare-box .cb-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing:.08em;
+    margin-bottom: 6px;
+  }
+  .cb-wrong  { background: var(--red-bg);   border-left: 4px solid var(--red);   }
+  .cb-right  { background: var(--green-bg); border-left: 4px solid var(--green); }
+  .cb-wrong  .cb-label { color: var(--red);   }
+  .cb-right  .cb-label { color: var(--green); }
+
+  /* ── FLOW STEPS ── */
+  .flow {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    margin: 14px 0;
+  }
+  .flow-step {
+    background: var(--blue-bg);
+    border: 1.5px solid #b8d0ff;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px; font-weight: 600; color: var(--blue);
+  }
+  .flow-arrow { color: #888; font-size: 18px; font-weight: 700; }
+
+  /* ── INTERVIEW BOX ── */
+  .interview-box {
+    background: var(--orange-bg);
+    border: 1.5px solid #ffc999;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin: 14px 0;
+  }
+  .interview-box .ib-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--orange); margin-bottom: 8px;
+  }
+  .interview-box .qa { margin-bottom: 8px; }
+  .interview-box .qa:last-child { margin-bottom: 0; }
+  .interview-box .q { font-weight: 600; font-size: 13.5px; color: var(--text); }
+  .interview-box .a { font-size: 13.5px; color: var(--muted); margin-left: 14px; }
+
+  /* ── RULE LIST ── */
+  .rule-list { list-style: none; margin: 12px 0; }
+  .rule-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; margin-bottom: 8px;
+  }
+  .rule-list li .dot {
+    width: 22px; height: 22px; border-radius: 6px;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .dot-blue   { background: var(--blue-bg);   color: var(--blue);   }
+  .dot-purple { background: var(--purple-bg); color: var(--purple); }
+
+  /* ── SPA GRID ── */
+  .spa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .spa-box {
+    border-radius: 10px; padding: 16px 18px;
+    border: 1.5px solid var(--border);
+  }
+  .spa-box h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .spa-box .spa-blue   h4 { color: var(--blue); }
+  .spa-box .flow-step  { font-size: 12px; padding: 6px 10px; }
+
+  /* ── TIP ── */
+  .tip {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--teal-bg);
+    border-left: 4px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 14px; color: var(--teal);
+  }
+  .tip .tip-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* ── SUBHEADING ── */
+  h3 { font-size: 16px; font-weight: 700; margin: 18px 0 8px; color: var(--text); }
+  h4 { font-size: 14px; font-weight: 700; margin: 12px 0 6px; color: var(--muted); }
+  p  { margin-bottom: 8px; font-size: 14.5px; color: var(--text); }
+  ul, ol { padding-left: 20px; margin-bottom: 10px; }
+  li { font-size: 14.5px; margin-bottom: 4px; }
+
+  @media print {
+    body { padding: 10px; }
+    .section { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<div class="page-header">
+  <div class="tag">React.js · Chapter 1</div>
+  <h1>Introduction, Virtual DOM, JSX &amp; Core Concepts</h1>
+  <p>Introduction · History · Features · Virtual DOM · Reconciliation · createRoot · createElement · JSX</p>
+</div>
+
+
+<!-- ═══════════════════ 1. INTRODUCTION ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--blue);">1</div>
+    <h2>Introduction to React</h2>
+  </div>
+  <div class="section-body">
+
+
+
+    <div class="def-box">
+      <div class="def-label">📘 Definition</div>
+      <p>React is an Open-Source JavaScript Library used for building <strong>dynamic and interactive user interfaces</strong> by creating <strong>reusable components</strong> and efficiently updating the UI using the <strong>Virtual DOM</strong>.</p>
+    </div>
+
+    <h3>Why React is Used?</h3>
+    <ul class="rule-list">
+      <li><span class="dot dot-blue">✓</span> To create fast and interactive web applications</li>
+      <li><span class="dot dot-blue">✓</span> To build Single Page Applications (SPA)</li>
+      <li><span class="dot dot-blue">✓</span> To create reusable UI components</li>
+      <li><span class="dot dot-blue">✓</span> To manage application state efficiently</li>
+      <li><span class="dot dot-blue">✓</span> To improve performance using Virtual DOM</li>
+      <li><span class="dot dot-blue">✓</span> To simplify complex UI development</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ 2. FEATURES ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--purple);">2</div>
+    <h2>Features of React</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="feature-grid">
+
+      <div class="feature-card fc-blue">
+        <div class="fc-title">🧩 Component-Based Architecture</div>
+        <p>Applications are built using small, independent, reusable components — Header, Navbar, Footer, Login — that can be reused throughout the app.</p>
+        <pre><span class="kw">function</span> <span class="fn">Header</span>() {
+  <span class="kw">return</span> <span class="tag-color">&lt;h1&gt;</span>Welcome to React<span class="tag-color">&lt;/h1&gt;</span>;
+}</pre>
+      </div>
+
+      <div class="feature-card fc-green">
+        <div class="fc-title">⚡ Virtual DOM</div>
+        <p>React uses a Virtual DOM to improve performance. Instead of updating the entire webpage, React updates <strong>only the changed elements</strong>.</p>
+      </div>
+
+      <div class="feature-card fc-orange">
+        <div class="fc-title">📝 Declarative Syntax</div>
+        <p>Developers describe <em>what</em> should appear; React handles updates automatically — easier to read and debug than manual DOM manipulation.</p>
+        <pre><span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> <span class="tag-color">&lt;h1&gt;</span>Hello React<span class="tag-color">&lt;/h1&gt;</span>;
+}</pre>
+      </div>
+
+      <div class="feature-card fc-purple">
+        <div class="fc-title">🔁 Unidirectional Data Flow</div>
+        <p>Data flows in one direction: <strong>Parent → Child</strong>. Makes apps easier to understand and debug.</p>
+        <pre><span class="kw">function</span> <span class="fn">Child</span>(props) {
+  <span class="kw">return</span> <span class="tag-color">&lt;h2&gt;</span>{props.name}<span class="tag-color">&lt;/h2&gt;</span>;
+}
+<span class="kw">function</span> <span class="fn">Parent</span>() {
+  <span class="kw">return</span> <span class="tag-color">&lt;Child</span> <span class="attr">name=</span><span class="str">"Pravin"</span> <span class="tag-color">/&gt;</span>;
+}</pre>
+      </div>
+
+      <div class="feature-card fc-teal">
+        <div class="fc-title">🔣 JSX</div>
+        <p>JSX allows writing <strong>HTML-like code inside JavaScript</strong>, making React code easier to understand and write.</p>
+        <pre><span class="kw">const</span> element = <span class="tag-color">&lt;h1&gt;</span>Hello React<span class="tag-color">&lt;/h1&gt;</span>;</pre>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ 3. HISTORY ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--teal);">3</div>
+    <h2>History of React</h2>
+  </div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr><th>Year</th><th>Event</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>2011</strong></td><td>React was developed by <strong>Jordan Walke</strong> at Facebook</td></tr>
+        <tr><td><strong>2011</strong></td><td>Initially known as <strong>FaxJS</strong></td></tr>
+        <tr><td><strong>2013</strong></td><td>Released as <strong>Open Source</strong></td></tr>
+        <tr><td><strong>Present</strong></td><td>One of the most popular Frontend Libraries in the world</td></tr>
+      </tbody>
+    </table>
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <span><strong>Creator:</strong> Jordan Walke — a software engineer at Facebook who built React to solve UI performance problems in Facebook's News Feed.</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ 4. SPA ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--green);">4</div>
+    <h2>Single Page Application (SPA)</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box">
+      <div class="def-label">📘 Definition</div>
+      <p>A Single Page Application loads <strong>only one HTML page</strong> and updates content dynamically <strong>without reloading</strong> the entire webpage.</p>
+    </div>
+
+    <div class="spa-grid">
+      <div class="spa-box" style="border-color:#ffc999; background:var(--orange-bg);">
+        <h4 style="color:var(--orange);">🌐 Traditional Website</h4>
+        <div class="flow" style="flex-direction:column; align-items:flex-start;">
+          <div class="flow-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">Request Page</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">Server</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">New HTML Page Loads (full reload)</div>
+        </div>
+      </div>
+      <div class="spa-box" style="border-color:#9ddbb9; background:var(--green-bg);">
+        <h4 style="color:var(--green);">⚛️ React SPA</h4>
+        <div class="flow" style="flex-direction:column; align-items:flex-start;">
+          <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">Request</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">Single Page Loads</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">Only Required Data Updates</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">📱</span>
+      <span><strong>Real-Life Example — Instagram:</strong> When you like a post, the entire page does NOT reload — only the like count changes. This is React SPA behaviour.</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ 5. VIRTUAL DOM ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--orange);">5</div>
+    <h2>Virtual DOM</h2>
+  </div>
+  <div class="section-body">
+
+    <h3>What is DOM?</h3>
+    <p><strong>DOM</strong> = Document Object Model. It represents the structure of an HTML page as objects.</p>
+    <pre><span class="tag-color">&lt;body&gt;</span>
+  <span class="tag-color">&lt;h1&gt;</span>Hello<span class="tag-color">&lt;/h1&gt;</span>
+<span class="tag-color">&lt;/body&gt;</span>
+
+<span class="cmt">DOM Tree:</span>
+Body
+ └── H1
+       Hello</pre>
+
+    <div class="def-box">
+      <div class="def-label">📘 What is Virtual DOM?</div>
+      <p>Virtual DOM is a <strong>lightweight copy of the Real DOM</strong> maintained by React in memory. React first updates the Virtual DOM and then updates only the changed parts in the Real DOM.</p>
+    </div>
+
+    <h3>Why Virtual DOM?</h3>
+    <p>Updating Real DOM directly is <strong>expensive and slower</strong>. Virtual DOM makes updates faster.</p>
+
+    <div class="compare-row">
+      <div class="compare-box cb-wrong">
+        <div class="cb-label">❌ Without Virtual DOM</div>
+        <p>Suppose 20,000 elements exist. Even if only 1 button changes, all <strong>20,000 elements are checked and re-rendered</strong>.</p>
+      </div>
+      <div class="compare-box cb-right">
+        <div class="cb-label">✅ With Virtual DOM</div>
+        <p>React compares old and new Virtual DOM trees. <strong>Only the changed element is updated</strong> — massive performance gain!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ 6. RECONCILIATION ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--purple);">6</div>
+    <h2>Reconciliation</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box">
+      <div class="def-label">📘 Definition</div>
+      <p>Reconciliation is the process of comparing the <strong>Old Virtual DOM</strong> with the <strong>New Virtual DOM</strong> and updating only the changed elements in the Real DOM using the <strong>Diffing Algorithm</strong>.</p>
+    </div>
+
+    <h3>Working of Reconciliation</h3>
+    <div class="flow" style="flex-direction:column; align-items:flex-start;">
+      <div class="flow-step">Step 1 — State or Props change</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">Step 2 — React creates a New Virtual DOM</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">Step 3 — React compares Old VDOM vs New VDOM (Diffing Algorithm)</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">Step 4 — React finds the changed elements</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step" style="background:var(--teal-bg); border-color:#90d4d8; color:var(--teal);">Step 5 — Only changed elements updated in Real DOM ✅</div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🔍</span>
+      <span><strong>Diffing Algorithm:</strong> React uses a special algorithm to find differences between two Virtual DOM trees efficiently — this is what makes React fast!</span>
+    </div>
+
+    <!-- <div class="interview-box">
+      <div class="ib-label">🎯 Interview Q&amp;A</div>
+      <div class="qa">
+        <div class="q">Q: What is Reconciliation in React?</div>
+        <div class="a">A: It is the process of comparing old and new Virtual DOM using the Diffing Algorithm and updating only the changed elements in the Real DOM.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What is the Diffing Algorithm?</div>
+        <div class="a">A: A special algorithm used by React to find differences between two Virtual DOM trees efficiently so only necessary DOM updates are made.</div>
+      </div>
+    </div> -->
+  </div>
+</div>
+
+
+<!-- ═══════════════════ 7. createRoot() ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--teal);">7</div>
+    <h2>createRoot()</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box">
+      <div class="def-label">📘 Definition</div>
+      <p><code>createRoot()</code> is a React method used to create a <strong>root container</strong> where React components will be rendered. It acts as a bridge between <strong>index.html</strong> and <strong>main.jsx</strong>.</p>
+    </div>
+
+    <h3>Syntax</h3>
+    <pre><span class="kw">import</span> ReactDOM <span class="kw">from</span> <span class="str">"react-dom/client"</span>;
+
+<span class="kw">const</span> root = ReactDOM.<span class="fn">createRoot</span>(
+  document.<span class="fn">getElementById</span>(<span class="str">"root"</span>)
+);</pre>
+
+    <h3>Full Example</h3>
+    <h4>index.html</h4>
+    <pre><span class="tag-color">&lt;div</span> <span class="attr">id=</span><span class="str">"root"</span><span class="tag-color">&gt;&lt;/div&gt;</span></pre>
+    <h4>main.jsx</h4>
+    <pre><span class="kw">import</span> ReactDOM <span class="kw">from</span> <span class="str">"react-dom/client"</span>;
+<span class="kw">import</span> App <span class="kw">from</span> <span class="str">"./App"</span>;
+
+<span class="kw">const</span> root = ReactDOM.<span class="fn">createRoot</span>(
+  document.<span class="fn">getElementById</span>(<span class="str">"root"</span>)
+);
+root.<span class="fn">render</span>(<span class="tag-color">&lt;App /&gt;</span>);</pre>
+
+    <h3>Flow</h3>
+    <div class="flow">
+      <div class="flow-step">index.html</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">div#root</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">createRoot()</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">React Components</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background:var(--teal-bg); border-color:#90d4d8; color:var(--teal);">Browser</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ 8. createElement() ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--orange);">8</div>
+    <h2>createElement()</h2>
+  </div>
+  <div class="section-body">
+
+    <p><code>React.createElement()</code> is a React method used to create React elements <strong>programmatically</strong>. Before JSX, React apps were written using this method.</p>
+
+    <h3>Syntax</h3>
+    <pre>React.<span class="fn">createElement</span>(
+  type,      <span class="cmt">// HTML tag or component</span>
+  props,     <span class="cmt">// attributes / null</span>
+  children   <span class="cmt">// content inside the element</span>
+)</pre>
+
+    <div class="compare-row">
+      <div class="compare-box cb-wrong">
+        <div class="cb-label">🔧 createElement() (Before JSX)</div>
+        <pre style="background:#fff0f2; color:#333; border-radius:6px; padding:10px; font-size:12.5px; margin:0;">React.<span style="color:var(--red)">createElement</span>(
+  <span style="color:var(--green)">"h1"</span>,
+  null,
+  <span style="color:var(--green)">"Hello React"</span>
+)</pre>
+      </div>
+      <div class="compare-box cb-right">
+        <div class="cb-label">✅ Equivalent JSX (After JSX)</div>
+        <pre style="background:#e4f5ec; color:#333; border-radius:6px; padding:10px; font-size:12.5px; margin:0;"><span style="color:var(--red)">&lt;h1&gt;</span>Hello React<span style="color:var(--red)">&lt;/h1&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <span>JSX replaced createElement() because JSX is easier to read, easier to write, looks similar to HTML, and reduces code complexity.</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ 9. JSX ═══════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num" style="background:var(--blue);">9</div>
+    <h2>JSX (JavaScript XML)</h2>
+  </div>
+  <div class="section-body">
+
+    <div class="def-box">
+      <div class="def-label">📘 Definition</div>
+      <p>JSX (JavaScript XML) is a <strong>syntax extension for JavaScript</strong> that allows writing HTML-like code inside JavaScript, making React applications easier to build and understand.</p>
+    </div>
+
+    <pre><span class="kw">const</span> element = <span class="tag-color">&lt;h1&gt;</span>Welcome to React<span class="tag-color">&lt;/h1&gt;</span>;</pre>
+
+    <div class="tip">
+      <span class="tip-icon">🔍</span>
+      <span><strong>Behind the Scene:</strong> JSX is automatically converted into <code>React.createElement()</code> calls by Babel before running in the browser.</span>
+    </div>
+
+    <h3>Rules of JSX</h3>
+
+    <!-- Rule 1 -->
+    <div style="background:#f8f8f8; border-radius:10px; padding:16px; margin:12px 0; border:1.5px solid var(--border);">
+      <div style="font-weight:700; font-size:13.5px; color:var(--blue); margin-bottom:10px;">Rule 1 — Return Single Parent Element</div>
+      <div class="compare-row">
+        <div class="compare-box cb-wrong">
+          <div class="cb-label">❌ Wrong</div>
+          <pre style="background:#fff0f2; color:#333; border-radius:6px; padding:8px; font-size:12px; margin:0;">return (
+  <span style="color:var(--red)">&lt;h1&gt;</span>Hello<span style="color:var(--red)">&lt;/h1&gt;</span>
+  <span style="color:var(--red)">&lt;p&gt;</span>Welcome<span style="color:var(--red)">&lt;/p&gt;</span>
+)</pre>
+        </div>
+        <div class="compare-box cb-right">
+          <div class="cb-label">✅ Correct</div>
+          <pre style="background:#e4f5ec; color:#333; border-radius:6px; padding:8px; font-size:12px; margin:0;">return (
+  <span style="color:var(--green)">&lt;div&gt;</span>
+    <span style="color:var(--green)">&lt;h1&gt;</span>Hello<span style="color:var(--green)">&lt;/h1&gt;</span>
+    <span style="color:var(--green)">&lt;p&gt;</span>Welcome<span style="color:var(--green)">&lt;/p&gt;</span>
+  <span style="color:var(--green)">&lt;/div&gt;</span>
+)</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rules 2-5 in grid -->
+    <div class="feature-grid">
+      <div class="feature-card fc-blue">
+        <div class="fc-title">Rule 2 — Close Every Tag</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12px; margin:4px 0;"><span class="tag-color">&lt;input /&gt;</span>  <span class="cmt">✅</span>
+<span class="tag-color">&lt;input&gt;</span>   <span class="cmt">❌</span></pre>
+      </div>
+      <div class="feature-card fc-purple">
+        <div class="fc-title">Rule 3 — Use camelCase</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12px; margin:4px 0;"><span class="attr">onClick</span>   <span class="cmt">✅</span>
+<span class="attr">onclick</span>   <span class="cmt">❌</span></pre>
+      </div>
+      <div class="feature-card fc-orange">
+        <div class="fc-title">Rule 4 — className not class</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12px; margin:4px 0;"><span class="attr">className=</span><span class="str">"box"</span>  <span class="cmt">✅</span>
+<span class="attr">class=</span><span class="str">"box"</span>       <span class="cmt">❌</span></pre>
+      </div>
+      <div class="feature-card fc-teal">
+        <div class="fc-title">Rule 5 — htmlFor not for</div>
+        <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12px; margin:4px 0;"><span class="attr">htmlFor=</span><span class="str">"name"</span>  <span class="cmt">✅</span>
+<span class="attr">for=</span><span class="str">"name"</span>       <span class="cmt">❌</span></pre>
+      </div>
+    </div>
+
+    <h3>JSX Expressions — Writing JS inside JSX using {}</h3>
+    <p>Any valid JavaScript expression written inside <code>{ }</code> in JSX is called a <strong>JSX Expression</strong>.</p>
+
+    <pre><span class="cmt">// Example 1: Variable</span>
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">let</span> name = <span class="str">"Pravin"</span>;
+  <span class="kw">return</span> <span class="tag-color">&lt;h1&gt;</span>Hello {name}<span class="tag-color">&lt;/h1&gt;</span>;   <span class="cmt">// Output: Hello Pravin</span>
+}
+
+<span class="cmt">// Example 2: Arithmetic</span>
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> <span class="tag-color">&lt;h1&gt;</span>{10 + 20}<span class="tag-color">&lt;/h1&gt;</span>;         <span class="cmt">// Output: 30</span>
+}
+
+<span class="cmt">// Example 3: Function Call</span>
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">function</span> <span class="fn">add</span>(a, b) { <span class="kw">return</span> a + b; }
+  <span class="kw">return</span> <span class="tag-color">&lt;h1&gt;</span>{<span class="fn">add</span>(10, 20)}<span class="tag-color">&lt;/h1&gt;</span>;     <span class="cmt">// Output: 30</span>
+}</pre>
+
+    <div class="interview-box">
+      <div class="ib-label">🎯 Interview Q&amp;A</div>
+      <div class="qa">
+        <div class="q">Q: What is JSX?</div>
+        <div class="a">A: JSX (JavaScript XML) is a syntax extension for JavaScript that allows writing HTML-like code inside JavaScript. It gets compiled into React.createElement() by Babel.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Is JSX mandatory in React?</div>
+        <div class="a">A: No. JSX is not mandatory but it is strongly recommended because it makes code readable and maintainable. Without JSX, you have to write React.createElement() manually.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: What is Virtual DOM and how does it improve performance?</div>
+        <div class="a">A: Virtual DOM is a lightweight in-memory copy of the Real DOM. React updates the Virtual DOM first, then uses the Diffing Algorithm to find changes and updates only those in the Real DOM — avoiding unnecessary full-page re-renders.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q: Difference between Real DOM and Virtual DOM?</div>
+        <div class="a">A: Real DOM updates the full tree (slow, expensive). Virtual DOM only updates changed nodes (fast, efficient).</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="text-align:center; padding:20px; color:#aaa; font-size:12.5px; margin-top:10px;">
+  React.js Chapter 1 · Study Notes · White Theme
+</div>
+
+</body>
+</html>

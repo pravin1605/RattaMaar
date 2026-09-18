@@ -1,0 +1,529 @@
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">JavaScript Strings — Complete Study Notes</h2>
+<style>
+  .w{padding:1rem 0;font-family:var(--font-sans);}
+  .hero{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.5rem;margin-bottom:1.25rem;border:0.5px solid var(--color-border-tertiary);}
+  .hero-title{font-size:22px;font-weight:500;color:var(--color-text-primary);margin:0 0 6px;}
+  .hero-def{font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin:0 0 14px;}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+  .mbox{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;}
+  .ml{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px;}
+  .mv{font-size:13px;color:var(--color-text-primary);line-height:1.55;margin:0;}
+  .sh{font-size:12px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.07em;margin:1.75rem 0 .75rem;border-bottom:.5px solid var(--color-border-tertiary);padding-bottom:6px;}
+  .card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.1rem 1.4rem;margin-bottom:1rem;}
+  .ctag{display:inline-block;font-size:11px;font-weight:500;padding:2px 9px;border-radius:var(--border-radius-md);margin-bottom:8px;}
+  .ctitle{font-size:16px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px;}
+  .cdef{font-size:13px;color:var(--color-text-secondary);line-height:1.65;margin:0 0 10px;}
+  .cl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px;}
+  pre{background:var(--color-background-tertiary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 13px;font-family:var(--font-mono);font-size:12.5px;line-height:1.6;margin:0 0 8px;color:var(--color-text-primary);white-space:pre-wrap;word-break:break-word;}
+  .out{background:var(--color-background-secondary);border-left:3px solid;border-radius:0;padding:7px 13px;font-family:var(--font-mono);font-size:12.5px;color:var(--color-text-primary);white-space:pre-wrap;word-break:break-word;}
+  .pts{margin:0;padding:0;list-style:none;}
+  .pts li{font-size:13px;color:var(--color-text-secondary);line-height:1.6;padding:3px 0 3px 18px;position:relative;border-bottom:.5px solid var(--color-border-tertiary);}
+  .pts li:last-child{border-bottom:none;}
+  .pts li::before{content:"→";position:absolute;left:0;color:var(--color-text-tertiary);font-size:11px;top:5px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md);margin-left:6px;font-weight:500;vertical-align:middle;}
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .vs{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.1rem 1.4rem;margin-bottom:1rem;border:.5px solid var(--color-border-tertiary);}
+  .vs-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;}
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .vs-box{background:var(--color-background-primary);border-radius:var(--border-radius-md);padding:10px 12px;border:.5px solid var(--color-border-tertiary);}
+  .vs-head{font-size:12px;font-weight:500;margin:0 0 6px;}
+  .vs-pts{margin:0;padding:0;list-style:none;}
+  .vs-pts li{font-size:12px;color:var(--color-text-secondary);padding:2px 0 2px 14px;position:relative;}
+  .vs-pts li::before{content:"·";position:absolute;left:0;color:var(--color-text-tertiary);}
+</style>
+
+<div class="w">
+
+  <div class="hero">
+    <p class="hero-title">Strings in JavaScript</p>
+    <p class="hero-def">A string is a sequence of characters used to represent text. Strings are <strong style="font-weight:500">primitive</strong> values but behave like objects because JS auto-wraps them when you call a method. Strings are <strong style="font-weight:500">immutable</strong> — no method changes the original; they always return a new one.</p>
+    <div class="mgrid">
+      <div class="mbox">
+        <p class="ml">Ways to create</p>
+        <pre style="margin:0;font-size:12px;padding:7px 10px;">let s = "hello";   // double
+let s = 'hello';   // single
+let s = `hello`;   // template</pre>
+      </div>
+      <div class="mbox">
+        <p class="ml">Key trait</p>
+        <p class="mv"><strong style="font-weight:500">Immutable</strong> — methods never touch the original. Think of it like a photocopy machine — the original stays safe.</p>
+      </div>
+      <div class="mbox">
+        <p class="ml">Indexing</p>
+        <p class="mv">Zero-based — first character is at index <code>0</code>, last is at <code>length - 1</code>. Negative indexes (via <code>at()</code>) count from the end.</p>
+      </div>
+      <div class="mbox">
+        <p class="ml">Why use strings</p>
+        <p class="mv">Store names, messages, URLs, HTML content, user input — basically anything text-based in your app.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="sh">Group 1 — Info &amp; measurement</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">01</span>
+      <p class="ctitle"><code>length</code> <span class="badge" style="background:#EEEDFE;color:#3C3489;">property</span></p>
+      <p class="cdef">Returns the total number of characters in the string including spaces. It is a <strong style="font-weight:500">property</strong>, not a method — no parentheses needed.</p>
+      <ul class="pts">
+        <li>Counts every character — letters, spaces, symbols all count.</li>
+        <li>Last character index = <code>length - 1</code>.</li>
+        <li>Memory tip: "length = how many seats are in the row."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.length);</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#7F77DD;">20</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">02</span>
+      <p class="ctitle"><code>charAt(index)</code></p>
+      <p class="cdef">Returns the character at the specified index. If index is out of range, returns an empty string <code>""</code>.</p>
+      <ul class="pts">
+        <li>Does NOT support negative indexes — returns <code>""</code> for negative values.</li>
+        <li>Use <code>at()</code> instead when you need negative indexing.</li>
+        <li>Memory tip: "charAt = which seat is at position N?"</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin";
+console.log(name.charAt(0));
+console.log(name.charAt(name.length - 1));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#1D9E75;">P
+n</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAECE7;color:#993C1D;">03</span>
+      <p class="ctitle"><code>at(index)</code> <span class="badge" style="background:#EEEDFE;color:#3C3489;">ES2022</span></p>
+      <p class="cdef">Returns the character at the specified index. Unlike <code>charAt()</code>, it supports <strong style="font-weight:500">negative indexes</strong> — so <code>at(-1)</code> gives the last character.</p>
+      <ul class="pts">
+        <li>Negative index counts from the end: <code>at(-1)</code> = last char.</li>
+        <li>Introduced in ES2022 — modern and preferred over <code>charAt</code> for reverse access.</li>
+        <li>Memory tip: "at(-1) = last seat in the row — no need to count manually."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.at(-1));
+console.log(name.at(-3));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#D85A30;">y
+b</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E6F1FB;color:#0C447C;">04</span>
+      <p class="ctitle"><code>charCodeAt(index)</code></p>
+      <p class="cdef">Returns the Unicode (ASCII) number of the character at the given index. Every character in a computer has a secret number — this reveals it.</p>
+      <ul class="pts">
+        <li><code>'A'</code> = 65, <code>'a'</code> = 97, <code>'0'</code> = 48.</li>
+        <li>Useful for comparing characters mathematically in algorithms.</li>
+        <li>Memory tip: "charCodeAt = what is the ID number of this character?"</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin";
+console.log(name.charCodeAt(0));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#378ADD;">80</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EAF3DE;color:#3B6D11;">05</span>
+      <p class="ctitle"><code>String.fromCharCode(code)</code> <span class="badge" style="background:#F1EFE8;color:#5F5E5A;">static</span></p>
+      <p class="cdef">The reverse of <code>charCodeAt()</code>. Takes a Unicode number and converts it back into a character. Called on the <code>String</code> class itself, not on a string variable.</p>
+      <ul class="pts">
+        <li>Called as <code>String.fromCharCode()</code> — not on a string variable.</li>
+        <li>Can convert multiple codes at once: <code>String.fromCharCode(72, 101, 108)</code>.</li>
+        <li>Memory tip: "fromCharCode = give me the character whose ID is N."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>console.log(String.fromCharCode(80));
+console.log(String.fromCharCode(97));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#639922;">P
+a</div>
+    </div>
+
+  </div>
+
+  <p class="sh">Group 2 — Search &amp; check</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#FAEEDA;color:#633806;">06</span>
+      <p class="ctitle"><code>indexOf(value)</code></p>
+      <p class="cdef">Finds the index of the first occurrence of a value inside the string. Returns <code>-1</code> if not found.</p>
+      <ul class="pts">
+        <li>Case-sensitive — <code>"A"</code> ≠ <code>"a"</code>.</li>
+        <li>Returns only the FIRST match — use <code>lastIndexOf()</code> for the last.</li>
+        <li>Memory tip: "indexOf = where does this word first appear?"</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.indexOf("a"));
+console.log(name.indexOf("z"));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#EF9F27;">2
+-1</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FBEAF0;color:#72243E;">07</span>
+      <p class="ctitle"><code>lastIndexOf(value)</code></p>
+      <p class="cdef">Finds the index of the last occurrence of a value in the string. Scans from the end backwards. Returns <code>-1</code> if not found.</p>
+      <ul class="pts">
+        <li>Case-sensitive.</li>
+        <li>Pair with <code>indexOf()</code> — together they find first and last positions.</li>
+        <li>Memory tip: "lastIndexOf = where does this word appear for the LAST time?"</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.lastIndexOf("o"));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#D4537E;">18</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">08</span>
+      <p class="ctitle"><code>includes(value)</code> <span class="badge" style="background:#EEEDFE;color:#3C3489;">ES6</span></p>
+      <p class="cdef">Checks whether the string contains the given value. Returns <code>true</code> or <code>false</code>. Perfect for conditions.</p>
+      <ul class="pts">
+        <li>Case-sensitive.</li>
+        <li>Cleaner than <code>indexOf() !== -1</code> for simple presence checks.</li>
+        <li>Memory tip: "includes = does this sentence include this word? Yes or No."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.includes("good"));
+console.log(name.includes("bad"));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#7F77DD;">true
+false</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">09</span>
+      <p class="ctitle"><code>startsWith(value)</code> <span class="badge" style="background:#EEEDFE;color:#3C3489;">ES6</span></p>
+      <p class="cdef">Checks whether the string begins with the given value. Returns <code>true</code> or <code>false</code>. Case-sensitive.</p>
+      <ul class="pts">
+        <li>Useful for checking URL prefixes, file extensions, protocol checks.</li>
+        <li>Optional second param: starting position to check from.</li>
+        <li>Memory tip: "startsWith = does this sentence open with this word?"</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.startsWith("P"));
+console.log(name.startsWith("p"));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#1D9E75;">true
+false</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAECE7;color:#993C1D;">10</span>
+      <p class="ctitle"><code>endsWith(value)</code> <span class="badge" style="background:#EEEDFE;color:#3C3489;">ES6</span></p>
+      <p class="cdef">Checks whether the string ends with the given value. Returns <code>true</code> or <code>false</code>. Useful for file type checks.</p>
+      <ul class="pts">
+        <li>Case-sensitive.</li>
+        <li>Great for: <code>file.endsWith(".pdf")</code>, <code>email.endsWith("@gmail.com")</code>.</li>
+        <li>Memory tip: "endsWith = does this sentence close with this word?"</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.endsWith("y"));
+console.log(name.endsWith("Y"));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#D85A30;">true
+false</div>
+    </div>
+
+  </div>
+
+  <p class="sh">Group 3 — Case conversion</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#E6F1FB;color:#0C447C;">11</span>
+      <p class="ctitle"><code>toUpperCase()</code></p>
+      <p class="cdef">Converts every character to uppercase. Returns a new string — original stays unchanged.</p>
+      <ul class="pts">
+        <li>Does not mutate the original string.</li>
+        <li>Use for: storing data consistently (e.g. country codes, IDs).</li>
+        <li>Memory tip: "toUpperCase = SHOUT the sentence."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.toUpperCase());</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#378ADD;">PRAVIN IS A GOOD BOY</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EAF3DE;color:#3B6D11;">12</span>
+      <p class="ctitle"><code>toLowerCase()</code></p>
+      <p class="cdef">Converts every character to lowercase. Returns a new string — original stays unchanged.</p>
+      <ul class="pts">
+        <li>Does not mutate the original string.</li>
+        <li>Common use: normalize user input — <code>input.toLowerCase() === "yes"</code>.</li>
+        <li>Memory tip: "toLowerCase = whisper the sentence."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.toLowerCase());</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#639922;">pravin is a good boy</div>
+    </div>
+
+  </div>
+
+  <p class="sh">Group 4 — Extract a portion</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#FAEEDA;color:#633806;">13</span>
+      <p class="ctitle"><code>slice(start, end)</code> <span class="badge" style="background:#EAF3DE;color:#3B6D11;">supports negative</span></p>
+      <p class="cdef">Extracts a portion of the string from <code>start</code> up to (but not including) <code>end</code>. Returns a new string. Supports negative indexes.</p>
+      <ul class="pts">
+        <li>End index is exclusive — character at <code>end</code> is NOT included.</li>
+        <li>Negative indexes work: <code>slice(-3)</code> = last 3 characters.</li>
+        <li>Does not mutate the original string.</li>
+        <li>Memory tip: "slice = cut a slice of bread — original loaf stays."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.slice(0, 6));
+console.log(name.slice(-3));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#EF9F27;">Pravin
+boy</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FBEAF0;color:#72243E;">14</span>
+      <p class="ctitle"><code>substring(start, end)</code> <span class="badge" style="background:#FCEBEB;color:#A32D2D;">no negative</span></p>
+      <p class="cdef">Extracts a portion of the string from <code>start</code> to <code>end</code> (exclusive). Similar to <code>slice()</code> but does NOT support negative indexes.</p>
+      <ul class="pts">
+        <li>Negative values are treated as <code>0</code>.</li>
+        <li>If <code>start > end</code>, it swaps them automatically.</li>
+        <li>Does not mutate the original string.</li>
+        <li>Memory tip: "substring = older sibling of slice — less flexible, no negatives."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.substring(0, 6));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#D4537E;">Pravin</div>
+    </div>
+
+  </div>
+
+  <div class="vs">
+    <p class="vs-title"><i class="ti ti-arrows-diff" aria-hidden="true" style="margin-right:6px;"></i><code>slice</code> vs <code>substring</code> — key difference</p>
+    <div class="vs-grid">
+      <div class="vs-box">
+        <p class="vs-head" style="color:#633806;"><code>slice()</code></p>
+        <ul class="vs-pts">
+          <li>Supports negative indexes</li>
+          <li><code>slice(-3)</code> = last 3 chars</li>
+          <li>If start &gt; end → returns ""</li>
+          <li>Modern &amp; preferred</li>
+        </ul>
+      </div>
+      <div class="vs-box">
+        <p class="vs-head" style="color:#72243E;"><code>substring()</code></p>
+        <ul class="vs-pts">
+          <li>No negative indexes (treated as 0)</li>
+          <li><code>substring(-3)</code> = same as (0)</li>
+          <li>If start &gt; end → swaps them</li>
+          <li>Older — use slice() instead</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vs">
+    <p class="vs-title"><i class="ti ti-arrows-diff" aria-hidden="true" style="margin-right:6px;"></i><code>charAt()</code> vs <code>at()</code> — key difference</p>
+    <div class="vs-grid">
+      <div class="vs-box">
+        <p class="vs-head" style="color:#085041;"><code>charAt(index)</code></p>
+        <ul class="vs-pts">
+          <li>No negative index support</li>
+          <li>Returns "" for invalid index</li>
+          <li>Available since ES1</li>
+          <li>Use for older environments</li>
+        </ul>
+      </div>
+      <div class="vs-box">
+        <p class="vs-head" style="color:#3C3489;"><code>at(index)</code></p>
+        <ul class="vs-pts">
+          <li>Supports negative indexes</li>
+          <li><code>at(-1)</code> = last character</li>
+          <li>Introduced in ES2022</li>
+          <li>Modern &amp; preferred</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <p class="sh">Group 5 — Modify &amp; transform</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">15</span>
+      <p class="ctitle"><code>replace(old, new)</code></p>
+      <p class="cdef">Replaces the first occurrence of a value with a new value. Returns a new string.</p>
+      <ul class="pts">
+        <li>Only replaces the FIRST match.</li>
+        <li>Use <code>replaceAll()</code> to replace every occurrence.</li>
+        <li>Accepts a regular expression for advanced patterns.</li>
+        <li>Memory tip: "replace = fix-it tape — covers the first mistake."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.replace("Pravin", "Onkar"));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#7F77DD;">Onkar is a good boy</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">16</span>
+      <p class="ctitle"><code>replaceAll(old, new)</code> <span class="badge" style="background:#EEEDFE;color:#3C3489;">ES2021</span></p>
+      <p class="cdef">Replaces every occurrence of a value with a new value. Returns a new string.</p>
+      <ul class="pts">
+        <li>Replaces ALL matches — not just the first.</li>
+        <li>Introduced in ES2021 — cleaner than using regex with <code>/g</code> flag.</li>
+        <li>Memory tip: "replaceAll = find-and-replace-all in a Word document."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.replaceAll("a", "@"));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#1D9E75;">Pr@vin is @ good boy</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAECE7;color:#993C1D;">17</span>
+      <p class="ctitle"><code>split(separator)</code></p>
+      <p class="cdef">Splits the string into an array of substrings based on the separator. This is the bridge between strings and arrays.</p>
+      <ul class="pts">
+        <li>Returns an array — not a string.</li>
+        <li><code>split("")</code> splits into individual characters.</li>
+        <li><code>split(" ")</code> splits by spaces into words.</li>
+        <li>Memory tip: "split = cut the rope at every knot — each piece becomes an array item."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let name = "Pravin is a good boy";
+console.log(name.split(" "));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#D85A30;">["Pravin", "is", "a", "good", "boy"]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E6F1FB;color:#0C447C;">18</span>
+      <p class="ctitle"><code>repeat(count)</code></p>
+      <p class="cdef">Returns a new string repeated <code>count</code> number of times. Like copy-pasting the string N times.</p>
+      <ul class="pts">
+        <li>Count must be a non-negative number.</li>
+        <li><code>repeat(0)</code> returns an empty string.</li>
+        <li>Memory tip: "repeat = the echo — same thing said N times."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let word = "Ha";
+console.log(word.repeat(3));</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#378ADD;">HaHaHa</div>
+    </div>
+
+  </div>
+
+  <p class="sh">Group 6 — Whitespace removal</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#EAF3DE;color:#3B6D11;">19</span>
+      <p class="ctitle"><code>trim()</code></p>
+      <p class="cdef">Removes whitespace from both the start and end of the string. Very useful for cleaning user input from forms.</p>
+      <ul class="pts">
+        <li>Does NOT remove spaces between words — only from edges.</li>
+        <li>Use before comparing or storing user input.</li>
+        <li>Memory tip: "trim = haircut — trim the sides, not the middle."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let s = "   Hello World   ";
+console.log(s.trim());</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#639922;">Hello World</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAEEDA;color:#633806;">20</span>
+      <p class="ctitle"><code>trimStart()</code> &amp; <code>trimEnd()</code> <span class="badge" style="background:#EEEDFE;color:#3C3489;">ES2019</span></p>
+      <p class="cdef"><code>trimStart()</code> removes whitespace only from the beginning. <code>trimEnd()</code> removes it only from the end.</p>
+      <ul class="pts">
+        <li>Introduced in ES2019.</li>
+        <li>Use when you only want to clean one side.</li>
+        <li>Memory tip: "trimStart = erase the blank intro; trimEnd = cut the blank outro."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let s = "   Hello   ";
+console.log(s.trimStart());
+console.log(s.trimEnd());</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#EF9F27;">Hello   
+   Hello</div>
+    </div>
+
+  </div>
+
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.1rem 1.4rem;margin-top:.5rem;border:.5px solid var(--color-border-tertiary);">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;"><i class="ti ti-table" aria-hidden="true" style="margin-right:6px;"></i>Quick cheat sheet — all methods at a glance</p>
+    <table style="width:100%;font-size:12.5px;border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Method</th>
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Returns</th>
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">One-line memory</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">length</td><td style="padding:5px 8px;color:var(--color-text-secondary);">number</td><td style="padding:5px 8px;color:var(--color-text-secondary);">How many seats are in the row?</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">charAt(i)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">character</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Which seat at position i? (no negatives)</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">at(i)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">character</td><td style="padding:5px 8px;color:var(--color-text-secondary);">charAt but supports negatives (modern)</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">charCodeAt(i)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">number</td><td style="padding:5px 8px;color:var(--color-text-secondary);">What is this character's ID number?</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">String.fromCharCode(n)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">character</td><td style="padding:5px 8px;color:var(--color-text-secondary);">ID number → character</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">indexOf(v)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">number / -1</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Where does it FIRST appear?</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">lastIndexOf(v)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">number / -1</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Where does it LAST appear?</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">includes(v)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">boolean</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Does it contain this word? Yes / No</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">startsWith(v)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">boolean</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Does it open with this?</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">endsWith(v)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">boolean</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Does it close with this?</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">toUpperCase()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">new string</td><td style="padding:5px 8px;color:var(--color-text-secondary);">SHOUT the sentence</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">toLowerCase()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">new string</td><td style="padding:5px 8px;color:var(--color-text-secondary);">whisper the sentence</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">slice(s, e)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">new string</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Cut a slice — supports negatives</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">substring(s, e)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">new string</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Cut a slice — no negatives (older)</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">replace(o, n)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">new string</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Fix the FIRST mistake</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">replaceAll(o, n)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">new string</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Fix ALL mistakes</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">split(sep)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">array</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Cut rope into pieces → array</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">repeat(n)</td><td style="padding:5px 8px;color:var(--color-text-secondary);">new string</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Echo N times</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">trim()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">new string</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Haircut — trim both sides</td></tr>
+        <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">trimStart()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">new string</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Erase the blank intro</td></tr>
+        <tr><td style="padding:5px 8px;font-family:var(--font-mono);color:var(--color-text-primary);">trimEnd()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">new string</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Cut the blank outro</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:1rem;border:.5px solid var(--color-border-tertiary);">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 8px;"><i class="ti ti-star" aria-hidden="true" style="margin-right:6px;"></i>The golden rules of strings</p>
+    <ul class="pts">
+      <li>Strings are <strong style="font-weight:500">immutable</strong> — no method ever changes the original. Every method returns a brand new string.</li>
+      <li>All search methods are <strong style="font-weight:500">case-sensitive</strong> — <code>"A"</code> and <code>"a"</code> are different.</li>
+      <li><code>split()</code> is the bridge from string → array. <code>join()</code> (array method) brings it back from array → string.</li>
+      <li>Prefer <code>at()</code> over <code>charAt()</code> and prefer <code>slice()</code> over <code>substring()</code> — they are the modern, more powerful versions.</li>
+      <li>Always <code>trim()</code> user input before comparing or storing — users accidentally add spaces all the time.</li>
+    </ul>
+  </div>
+
+</div>

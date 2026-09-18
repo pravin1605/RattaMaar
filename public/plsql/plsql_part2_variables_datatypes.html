@@ -1,0 +1,386 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+.warn-box{background:#fff3e0;border-left:5px solid #e65100;padding:10px 14px;margin-top:10px}
+.warn-box .lbl{font-size:10px;font-weight:700;color:#e65100;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.warn-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700}
+.valid{background:#d0f0e0;color:#1b5e20}
+.invalid{background:#fce4ec;color:#880e4f}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:3px}
+.mini-card p{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+ol{padding-left:18px;margin:4px 0 6px}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.tag{background:#eef0ff;color:#1a1a6e;font-size:12px;padding:3px 10px;border-radius:12px;border:1px solid #b0bfff}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.point-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:7px}
+.point-num{background:#1a1a6e;color:#fff;font-size:11px;font-weight:700;min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.point-text{font-size:13px;color:#111}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+.mono{background:#f0f0f0;border:1px solid #ddd;border-radius:4px;padding:8px 12px;font-family:'Courier New',monospace;font-size:13px;color:#111;margin:8px 0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.name-box{background:#f5f6ff;border:1px solid #ddd;border-radius:5px;padding:8px 12px}
+.name-box .nt{font-size:11px;font-weight:700;margin-bottom:4px}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">PL/SQL — Part 2: Variables, Datatypes & SELECT INTO</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; Interview-Ready Notes &nbsp;|&nbsp; Orange tag = Extra added content</div>
+</div>
+
+<div class="sec-label">1. What is a Variable?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>A Variable is a named memory location used to store a value temporarily during program execution.</p>
+  </div>
+  <p style="font-size:13px;color:#111;margin-bottom:6px">The value stored in a variable can be:</p>
+  <div class="tag-row">
+    <span class="tag">Number</span>
+    <span class="tag">Character / String</span>
+    <span class="tag">Date</span>
+    <span class="tag">Boolean</span>
+  </div>
+  <p style="font-size:13px;color:#111;margin-top:8px">Variables help us store, modify, and reuse data whenever required.</p>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Variable = Named Box in memory → put a value in it, use it anytime, change it anytime</p>
+  </div>
+</div>
+
+<div class="sec-label">2. Why Do We Need Variables?</div>
+<div class="card">
+  <ul>
+    <li>Store values temporarily during program execution</li>
+    <li>Perform calculations</li>
+    <li>Fetch database records and hold them</li>
+    <li>Display output using DBMS_OUTPUT</li>
+    <li>Pass values between statements in the same block</li>
+  </ul>
+</div>
+
+<div class="sec-label">3. Variable Declaration Syntax</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:6px">Variables are declared in the <strong>DECLARE section</strong> of a PL/SQL block.</p>
+  <p style="font-size:13px;font-weight:700;color:#111;margin-bottom:4px">Syntax:</p>
+  <div class="mono">VARIABLE_NAME  DATATYPE(SIZE);</div>
+  <p style="font-size:13px;font-weight:700;color:#111;margin:8px 0 4px">Examples:</p>
+  <div class="mono">V_NAME  VARCHAR2(20);<br>V_AGE   NUMBER(3);<br>V_SAL   NUMBER(10,2);</div>
+  <div class="tip-box">
+    <div class="lbl">Extra — Initialization</div>
+    <p>Variables can be declared and initialized in the same line using :=</p>
+    <div class="mono" style="margin-top:6px">V_AGE  NUMBER := 25;<br>V_NAME VARCHAR2(20) := 'SCOTT';</div>
+  </div>
+</div>
+
+<div class="sec-label">4. Rules for Naming Variables</div>
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Rule</th></tr>
+    <tr><td>1</td><td>Must begin with a letter (A–Z)</td></tr>
+    <tr><td>2</td><td>Can contain letters, numbers, underscore ( _ ), dollar sign ( $ ), hash ( # )</td></tr>
+    <tr><td>3</td><td>Cannot contain spaces</td></tr>
+    <tr><td>4</td><td>Cannot use PL/SQL reserved words (SELECT, BEGIN, END, etc.)</td></tr>
+    <tr><td>5</td><td>Variable names are not case-sensitive</td></tr>
+  </table>
+  <div class="row2" style="margin-top:10px">
+    <div class="name-box">
+      <div class="nt" style="color:#1b5e20">Valid Examples</div>
+      <ul style="margin-top:4px">
+        <li><span class="badge valid">V_NAME</span></li>
+        <li><span class="badge valid">EMP_SALARY</span></li>
+        <li><span class="badge valid">AGE1</span></li>
+      </ul>
+    </div>
+    <div class="name-box">
+      <div class="nt" style="color:#880e4f">Invalid Examples</div>
+      <ul style="margin-top:4px">
+        <li><span class="badge invalid">1NAME</span> — starts with number</li>
+        <li><span class="badge invalid">EMP SAL</span> — contains space</li>
+        <li><span class="badge invalid">SELECT</span> — reserved word</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="sec-label">5. Assigning Values to Variables</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:6px">PL/SQL uses the assignment operator <strong>:=</strong> to assign values.</p>
+  <p style="font-size:13px;font-weight:700;color:#111;margin-bottom:4px">Syntax:</p>
+  <div class="mono">VARIABLE_NAME := VALUE;</div>
+  <p style="font-size:13px;font-weight:700;color:#111;margin:8px 0 4px">Examples:</p>
+  <div class="mono">V_AGE  := 60;<br>V_NAME := 'SCOTT';</div>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>:= means "gets the value of" → V_AGE := 60 means "V_AGE gets the value 60"</p>
+    <p>= is only for comparison (in WHERE / IF conditions), never for assignment</p>
+  </div>
+</div>
+
+<div class="sec-label">6. Displaying Output</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:6px">To display messages or variable values, use:</p>
+  <div class="mono">DBMS_OUTPUT.PUT_LINE('MESSAGE');<br>DBMS_OUTPUT.PUT_LINE(VARIABLE_NAME);</div>
+  <ul style="margin-top:8px">
+    <li>Must enable output first using: SET SERVEROUTPUT ON</li>
+    <li>Use || operator to join text and variable values</li>
+    <li>DBMS_OUTPUT is a built-in Oracle package</li>
+  </ul>
+  <div class="tip-box">
+    <div class="lbl">Extra — String Concatenation with ||</div>
+    <p>Use || to combine strings and variables in output:</p>
+    <div class="mono" style="margin-top:6px">DBMS_OUTPUT.PUT_LINE('NAME IS: ' || V_NAME);</div>
+  </div>
+</div>
+
+<div class="sec-label">7. Variable Reassignment — How It Works</div>
+<div class="card">
+  <table>
+    <tr><th>Concept</th><th>Explanation</th></tr>
+    <tr><td>Variable Reassignment</td><td>A variable can be assigned a new value anytime. The new value replaces the old one.</td></tr>
+    <tr><td>Multiple Assignments</td><td>If a variable is assigned multiple times, only the last assigned value is stored in memory.</td></tr>
+  </table>
+  <div class="two-col" style="margin-top:10px">
+    <div class="mini-card">
+      <div class="mct">Example 1 — Reassignment</div>
+      <p>V_NUM starts as 27, then assigned 7.</p>
+      <p>Output: NUMBER IS 7</p>
+      <p style="font-size:11px;color:#555;margin-top:4px">Latest value replaces the old value.</p>
+    </div>
+    <div class="mini-card">
+      <div class="mct">Example 2 — Multiple Assignments</div>
+      <p>V_NUM assigned 7, then 18, then 45.</p>
+      <p>Output: THE NUMBER IS 45</p>
+      <p style="font-size:11px;color:#555;margin-top:4px">Only the last assigned value remains.</p>
+    </div>
+  </div>
+</div>
+
+<div class="sec-label">8. What is a Datatype?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>A Datatype defines what kind of data can be stored, how much memory will be allocated, and what operations can be performed on the data.</p>
+  </div>
+  <table style="margin-top:8px">
+    <tr><th>Datatype</th><th>Used For</th></tr>
+    <tr><td>NUMBER</td><td>Numeric values (integers and decimals)</td></tr>
+    <tr><td>VARCHAR2</td><td>Variable-length character / string values</td></tr>
+    <tr><td>CHAR</td><td>Fixed-length character values</td></tr>
+    <tr><td>DATE</td><td>Date and time values</td></tr>
+    <tr><td>BOOLEAN</td><td>TRUE / FALSE / NULL values</td></tr>
+  </table>
+</div>
+
+<div class="sec-label">9. Classification of PL/SQL Datatypes</div>
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Category</th><th>Description</th><th>Interview Priority</th></tr>
+    <tr><td>1</td><td>Scalar Datatypes</td><td>Store only one value at a time — NUMBER, VARCHAR2, CHAR, DATE, BOOLEAN</td><td><span class="badge valid">Most Important</span></td></tr>
+    <tr><td>2</td><td>Reference Datatypes</td><td>Store references to DB columns using %TYPE and %ROWTYPE</td><td><span class="badge valid">Most Important</span></td></tr>
+    <tr><td>3</td><td>Composite Datatypes</td><td>Store multiple values — RECORD, TABLE, VARRAY</td><td><span class="badge" style="background:#fff3e0;color:#e65100">Intermediate</span></td></tr>
+    <tr><td>4</td><td>LOB Datatypes</td><td>Store large objects — CLOB, BLOB, BFILE</td><td><span class="badge" style="background:#f5f6ff;color:#555">Advanced</span></td></tr>
+  </table>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>S-R-C-L → Scalar → Reference → Composite → LOB</p>
+    <p>"Some Rookies Can't Lift" — Scalar and Reference are most important for interviews</p>
+  </div>
+</div>
+
+<div class="sec-label">10. Numeric Datatypes — Details</div>
+<div class="card">
+  <table>
+    <tr><th>Datatype</th><th>Description</th><th>Key Feature</th></tr>
+    <tr><td>NUMBER</td><td>General-purpose numeric datatype. Stores positive, negative, and decimal values.</td><td>Most flexible — works for all numbers</td></tr>
+    <tr><td>INTEGER</td><td>Stores whole numbers only (positive or negative)</td><td>No decimal values</td></tr>
+    <tr><td>PLS_INTEGER</td><td>Stores integer values with better performance than NUMBER</td><td>Faster than NUMBER — recommended for calculations</td></tr>
+    <tr><td>SIMPLE_INTEGER <span class="extra">Extra</span></td><td>Fastest integer datatype</td><td>Cannot store NULL — used in performance-critical code</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — Performance Order</div>
+    <p>Speed: SIMPLE_INTEGER &gt; PLS_INTEGER &gt; INTEGER &gt; NUMBER</p>
+    <p>Use PLS_INTEGER for loop counters and calculations where performance matters.</p>
+  </div>
+</div>
+
+<div class="sec-label">11. Reference Datatypes — %TYPE and %ROWTYPE</div>
+<div class="card">
+  <table>
+    <tr><th>Type</th><th>What it does</th><th>Example</th></tr>
+    <tr><td>%TYPE</td><td>Variable inherits the datatype of a single database column</td><td>V_NAME EMP.ENAME%TYPE</td></tr>
+    <tr><td>%ROWTYPE <span class="extra">Extra</span></td><td>Variable inherits the structure of an entire table row — all columns and their types</td><td>V_EMP EMP%ROWTYPE</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — Why use %TYPE and %ROWTYPE?</div>
+    <p>Best practice: If the column datatype changes in the database, the variable automatically adjusts. No need to manually update the PL/SQL code. Avoids type mismatch errors.</p>
+  </div>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>%TYPE = one column's type &nbsp;|&nbsp; %ROWTYPE = entire row's type (all columns)</p>
+  </div>
+</div>
+
+<div class="sec-label">12. SELECT INTO Statement</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>SELECT INTO is used to fetch data from a database table and store it directly into PL/SQL variables. Unlike normal SQL (which only displays data), SELECT INTO stores the data into variables for further use.</p>
+  </div>
+  <div class="two-col" style="margin-top:10px">
+    <div class="mini-card">
+      <div class="mct">Normal SQL</div>
+      <p>SELECT ENAME FROM EMP;</p>
+      <p style="font-size:11px;color:#555;margin-top:4px">Only displays data on screen. Cannot be used inside PL/SQL for further processing.</p>
+    </div>
+    <div class="mini-card">
+      <div class="mct">PL/SQL — SELECT INTO</div>
+      <p>SELECT ENAME INTO V_NAME FROM EMP;</p>
+      <p style="font-size:11px;color:#555;margin-top:4px">Stores data into a variable for use in further logic or output.</p>
+    </div>
+  </div>
+  <p style="font-size:13px;font-weight:700;color:#111;margin:12px 0 4px">Syntax:</p>
+  <div class="mono">SELECT col1, col2 INTO var1, var2 FROM table_name WHERE condition;</div>
+</div>
+
+<div class="sec-label">13. SELECT INTO — Important Rules</div>
+<div class="card">
+  <table>
+    <tr><th>Case</th><th>What Happens</th><th>Exception Raised</th></tr>
+    <tr><td>Exactly one row returned</td><td>Works correctly — value stored in variable</td><td>None</td></tr>
+    <tr><td>No rows returned</td><td>Variable gets no value — error occurs</td><td>NO_DATA_FOUND</td></tr>
+    <tr><td>More than one row returned</td><td>Cannot store multiple rows in one variable — error occurs</td><td>TOO_MANY_ROWS</td></tr>
+  </table>
+  <div class="warn-box">
+    <div class="lbl">Important Rule</div>
+    <p>SELECT INTO must always return exactly one row. Always use a proper WHERE condition to filter exactly one record.</p>
+  </div>
+</div>
+
+<div class="sec-label">14. Example — Fetch Employee Name and Salary</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:8px">Fetch employee name and salary from EMP table where EMPNO = 7369 and display them.</p>
+  <table>
+    <tr><th>Step</th><th>What Happens</th></tr>
+    <tr><td>DECLARE</td><td>V_NAME declared as EMP.ENAME%TYPE, V_SAL as EMP.SAL%TYPE</td></tr>
+    <tr><td>SELECT INTO</td><td>ENAME and SAL fetched from EMP table where EMPNO = 7369</td></tr>
+    <tr><td>DBMS_OUTPUT</td><td>Displays: NAME IS: SMITH  SALARY IS: 800</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — Multiple Column Fetch</div>
+    <p>When fetching multiple columns, the number of columns and variables must match exactly — SELECT col1, col2 INTO var1, var2</p>
+  </div>
+</div>
+
+<div class="sec-label">15. Example — Third Highest Salary</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:8px">Find the third highest salary from the EMP table using DENSE_RANK() inside SELECT INTO.</p>
+  <table>
+    <tr><th>Step</th><th>Explanation</th></tr>
+    <tr><td>DENSE_RANK()</td><td>Assigns ranks to salaries in descending order — highest salary gets rank 1</td></tr>
+    <tr><td>Subquery</td><td>Inner query assigns rank to each salary row using DENSE_RANK() OVER (ORDER BY SAL DESC)</td></tr>
+    <tr><td>Outer WHERE RN = 3</td><td>Filters only the row with rank 3 — which is the third highest salary</td></tr>
+    <tr><td>SELECT INTO V_MAX</td><td>Stores the third highest salary into the variable V_MAX</td></tr>
+    <tr><td>Output</td><td>THIRD HIGHEST SALARY IS: [value]</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — DENSE_RANK vs RANK</div>
+    <p>DENSE_RANK does not skip numbers when there are ties. Example: if two employees have the same salary and are ranked 2, the next rank is 3 (not 4). RANK would skip to 4 in this case.</p>
+  </div>
+</div>
+
+<div class="sec-label">16. GREATEST() Function</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>The GREATEST() function returns the largest value from a given list of values.</p>
+  </div>
+  <p style="font-size:13px;font-weight:700;color:#111;margin:8px 0 4px">Syntax:</p>
+  <div class="mono">SELECT GREATEST(value1, value2, value3, ...) FROM DUAL;</div>
+  <table style="margin-top:8px">
+    <tr><th>Example</th><th>Output</th></tr>
+    <tr><td>SELECT GREATEST(100, 300, 50) FROM DUAL;</td><td>300</td></tr>
+    <tr><td>SELECT GREATEST(5, 10, 7, 2) FROM DUAL;</td><td>10</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — LEAST() Function</div>
+    <p>LEAST() is the opposite of GREATEST() — it returns the smallest value from a list. Example: SELECT LEAST(100, 300, 50) FROM DUAL; → Output: 50</p>
+  </div>
+</div>
+
+<div class="sec-label">17. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What is a Variable in PL/SQL?</div>
+  <div class="qa-a">A variable is a named memory location used to store a value temporarily during program execution.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. What is the assignment operator in PL/SQL?</div>
+  <div class="qa-a">The assignment operator is := (colon equals). Example: V_NUM := 100; It assigns the value 100 to the variable V_NUM.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. What is a Datatype?</div>
+  <div class="qa-a">A datatype specifies what type of data a variable can store, how much memory it requires, and what operations can be performed on it.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. What is SELECT INTO in PL/SQL?</div>
+  <div class="qa-a">SELECT INTO is used to fetch data from a database table and store it directly into PL/SQL variables for further use in the program.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. What exceptions can occur in SELECT INTO?</div>
+  <div class="qa-a">1. NO_DATA_FOUND — when the query returns no rows. &nbsp; 2. TOO_MANY_ROWS — when the query returns more than one row. SELECT INTO must always return exactly one row.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. What are the rules for naming variables in PL/SQL? <span class="extra">Extra</span></div>
+  <div class="qa-a">1. Must begin with a letter. 2. Can contain letters, numbers, _, $, #. 3. Cannot contain spaces. 4. Cannot use reserved words. 5. Names are not case-sensitive.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q7. What is the difference between %TYPE and %ROWTYPE? <span class="extra">Extra</span></div>
+  <div class="qa-a">%TYPE anchors a variable to the datatype of a single database column. %ROWTYPE anchors a variable to the structure of an entire table row — it holds all columns and their types together.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q8. What is the difference between PLS_INTEGER and SIMPLE_INTEGER? <span class="extra">Extra</span></div>
+  <div class="qa-a">Both store integer values with better performance than NUMBER. SIMPLE_INTEGER is faster than PLS_INTEGER but cannot store NULL values. PLS_INTEGER can store NULL.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q9. What is the GREATEST() function? <span class="extra">Extra</span></div>
+  <div class="qa-a">GREATEST() returns the largest value from a given list of values. Example: SELECT GREATEST(100, 300, 50) FROM DUAL; returns 300. Its opposite is LEAST(), which returns the smallest value.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q10. What is DENSE_RANK() and how is it different from RANK()? <span class="extra">Extra</span></div>
+  <div class="qa-a">DENSE_RANK() assigns consecutive ranks without gaps even when there are ties. RANK() skips the next rank number when there are ties. Example: if two rows share rank 2, DENSE_RANK gives next row rank 3, but RANK gives rank 4.</div>
+</div>
+
+<div class="divider"></div>
+<footer>PL/SQL Part 2 — Variables, Datatypes & SELECT INTO &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>

@@ -1,0 +1,327 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.root{font-family:'DM Sans',sans-serif;color:var(--color-text-primary);padding:2rem 0.5rem;max-width:680px;}
+.ch-sub{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:.3rem;}
+.ch-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;letter-spacing:-.5px;margin-bottom:2.5rem;}
+.sec{margin-bottom:3rem;}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.sec-num{font-size:11px;font-weight:500;color:var(--color-text-secondary);background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary);border-radius:20px;padding:3px 10px;letter-spacing:.05em;}
+.sec-title{font-size:18px;font-weight:500;}
+.accent{width:28px;height:3px;border-radius:2px;margin-bottom:1.1rem;}
+.a-blue{background:#378ADD;}.a-purple{background:#7F77DD;}.a-teal{background:#1D9E75;}.a-amber{background:#EF9F27;}.a-coral{background:#D85A30;}.a-green{background:#639922;}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:.75rem;}
+.clabel{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:.4rem;}
+.ctext{font-size:14px;line-height:1.65;color:var(--color-text-primary);}
+.mt{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-secondary);margin:.9rem 0 .4rem;}
+.code-b{background:#F1EFE8;border-radius:var(--border-radius-md);padding:.85rem 1rem;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75;color:#2C2C2A;white-space:pre;overflow-x:auto;margin-bottom:.4rem;}
+.out-b{background:#E1F5EE;border-radius:var(--border-radius-md);padding:.6rem 1rem;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:#085041;margin-bottom:.75rem;}
+.out-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:#0F6E56;margin-bottom:3px;}
+.rule{border-left:3px solid;padding:.65rem 1rem;border-radius:0;background:var(--color-background-secondary);margin-bottom:.55rem;font-size:13.5px;line-height:1.6;}
+.r-blue{border-color:#378ADD;}.r-teal{border-color:#1D9E75;}.r-purple{border-color:#7F77DD;}.r-amber{border-color:#EF9F27;}.r-coral{border-color:#D85A30;}
+.pill-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:.4rem;}
+.pill{font-size:12px;font-weight:500;padding:4px 11px;border-radius:20px;}
+.p-blue{background:#E6F1FB;color:#185FA5;}.p-purple{background:#EEEDFE;color:#3C3489;}.p-teal{background:#E1F5EE;color:#0F6E56;}.p-amber{background:#FAEEDA;color:#854F0B;}.p-coral{background:#FAECE7;color:#993C1D;}.p-green{background:#EAF3DE;color:#3B6D11;}.p-gray{background:#F1EFE8;color:#5F5E5A;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.75rem;}
+.mc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.8rem 1rem;border:.5px solid var(--color-border-tertiary);}
+.mc-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;}
+.ibox{background:#EEEDFE;border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:.75rem;margin-bottom:.75rem;}
+.ibox-lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:#534AB7;margin-bottom:.4rem;}
+.ibox-text{font-size:13.5px;line-height:1.65;color:#3C3489;}
+.trick{display:flex;gap:10px;align-items:flex-start;background:#FAEEDA;border-radius:var(--border-radius-md);padding:.8rem 1rem;margin-top:.75rem;}
+.trick i{font-size:17px;flex-shrink:0;margin-top:2px;color:#854F0B;}
+.trick-t{font-size:13.5px;line-height:1.5;color:#854F0B;font-weight:500;}
+hr.dv{border:none;border-top:.5px solid var(--color-border-tertiary);margin:2.2rem 0;}
+.tbl-wrap{overflow-x:auto;margin-top:.5rem;}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
+.tbl th{text-align:left;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);padding:0 8px 8px 0;border-bottom:.5px solid var(--color-border-tertiary);}
+.tbl td{padding:8px 8px 8px 0;border-bottom:.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:top;line-height:1.5;}
+.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:.5rem;}
+.adv-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem;border:.5px solid var(--color-border-tertiary);font-size:13px;line-height:1.5;color:var(--color-text-primary);}
+.adv-card strong{display:block;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);margin-bottom:4px;}
+.flow-col{display:flex;flex-direction:column;align-items:flex-start;gap:0;margin:.5rem 0 .75rem;}
+.fnode{background:#E1F5EE;color:#0F6E56;font-size:13px;font-weight:500;padding:5px 14px;border-radius:20px;margin-bottom:2px;}
+.farrow{color:var(--color-text-tertiary);font-size:14px;padding:1px 0 1px 14px;}
+.timeline{display:flex;flex-direction:column;gap:0;margin:.5rem 0;}
+.tl-row{display:flex;align-items:flex-start;gap:12px;}
+.tl-line{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0;}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:#378ADD;flex-shrink:0;margin-top:4px;}
+.tl-stem{width:2px;background:var(--color-border-tertiary);flex:1;min-height:24px;}
+.tl-content{padding-bottom:16px;font-size:13.5px;line-height:1.55;color:var(--color-text-primary);}
+.tl-year{font-size:11px;font-weight:500;color:#185FA5;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;}
+.char-card{border-left:3px solid;padding:.75rem 1rem;border-radius:0;background:var(--color-background-secondary);margin-bottom:.7rem;}
+.char-num{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;}
+.char-title{font-size:15px;font-weight:500;margin-bottom:.3rem;}
+.char-desc{font-size:13.5px;line-height:1.6;color:var(--color-text-secondary);}
+.html-block{background:#F1EFE8;border-radius:var(--border-radius-md);padding:.85rem 1rem;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.75;color:#2C2C2A;white-space:pre;overflow-x:auto;margin-bottom:.4rem;}
+</style>
+
+<div class="root">
+
+<p class="ch-sub">JavaScript · Chapter 1</p>
+<h1 class="ch-title">Introduction to JavaScript</h1>
+
+<!-- ═══════════════════════════
+     01 · WHAT IS JAVASCRIPT
+═══════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">01</span><span class="sec-title">What is JavaScript?</span></div>
+<div class="accent a-blue"></div>
+
+<div class="card">
+<div class="clabel">Definition</div>
+<div class="ctext">JavaScript is a high-level programming language used to make web pages interactive, dynamic, and intelligent. It works mainly in two environments — the browser (client-side) and the server using Node.js (server-side).</div>
+</div>
+
+<div class="mt">What we can build with JavaScript</div>
+<div class="adv-grid">
+<div class="adv-card"><strong>UI interaction</strong>Create buttons, forms, popups, and animations on web pages.</div>
+<div class="adv-card"><strong>Validation</strong>Validate user input before it reaches the server.</div>
+<div class="adv-card"><strong>Data fetching</strong>Fetch data from servers and display it dynamically.</div>
+<div class="adv-card"><strong>Full applications</strong>Build complete web apps, games, and mobile apps.</div>
+</div>
+
+<div class="mt">Where JavaScript works</div>
+<div class="two">
+<div class="mc">
+<div class="mc-lbl" style="color:#185FA5;">Browser (client-side)</div>
+<div style="font-size:13px;line-height:1.7;color:var(--color-text-secondary);">Runs directly in Chrome, Firefox, Safari, and Edge. No installation needed.</div>
+</div>
+<div class="mc">
+<div class="mc-lbl" style="color:#0F6E56;">Server (server-side)</div>
+<div style="font-size:13px;line-height:1.7;color:var(--color-text-secondary);">Runs on a computer using Node.js. Powers the backend of web apps.</div>
+</div>
+</div>
+
+<div class="mt">Real-life understanding — HTML + CSS + JavaScript</div>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead><tr><th style="width:33%;">Technology</th><th style="width:33%;">Role in website</th><th style="width:33%;">Real-life example</th></tr></thead>
+<tbody>
+<tr><td>HTML</td><td>Structure</td><td>Skeleton of the body</td></tr>
+<tr><td>CSS</td><td>Design</td><td>Clothes and makeup</td></tr>
+<tr><td>JavaScript</td><td>Functionality</td><td>Brain and muscles</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="ibox">
+<div class="ibox-lbl">Classic example</div>
+<div class="ibox-text">HTML creates a button &nbsp;·&nbsp; CSS styles the button &nbsp;·&nbsp; JavaScript makes the button do something when clicked.</div>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════
+     02 · KEY CHARACTERISTICS
+═══════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">02</span><span class="sec-title">Key characteristics of JavaScript</span></div>
+<div class="accent a-purple"></div>
+
+<!-- 1 Interpreted -->
+<div class="char-card" style="border-color:#7F77DD;">
+<div class="char-num" style="color:#534AB7;">01 · Interpreted Language</div>
+<div class="char-title">JavaScript runs line by line</div>
+<div class="char-desc">JavaScript code is executed line by line by the browser engine. No compilation step is needed — unlike Java or C++, it runs directly in the browser.</div>
+<div class="mt">Example</div>
+<div class="code-b">console.log("Hello");
+console.log("JavaScript");</div>
+<div class="out-b"><div class="out-lbl">Execution order</div>Step 1 → console.log("Hello")    runs first
+Step 2 → console.log("JavaScript") runs second</div>
+</div>
+
+<!-- 2 Dynamically Typed -->
+<div class="char-card" style="border-color:#1D9E75;">
+<div class="char-num" style="color:#0F6E56;">02 · Dynamically Typed Language</div>
+<div class="char-title">No need to specify data type manually</div>
+<div class="char-desc">JavaScript automatically determines the data type of a variable at runtime. The same variable can store different types of values.</div>
+<div class="mt">Example</div>
+<div class="code-b">let x = 10;       // Number
+x = "Pravin";    // String
+x = true;        // Boolean</div>
+<div class="rule r-teal" style="margin-top:.5rem;">Same variable can store different data types — JavaScript handles it automatically.</div>
+</div>
+
+<!-- 3 Prototype-Based -->
+<div class="char-card" style="border-color:#EF9F27;">
+<div class="char-num" style="color:#854F0B;">03 · Prototype-Based Language</div>
+<div class="char-title">Objects can inherit from other objects</div>
+<div class="char-desc">In JavaScript, one object can use the features (properties and methods) of another object. This is called prototype-based inheritance.</div>
+<div class="mt">Example</div>
+<div class="code-b">const student = {
+    name: "Pravin"
+};
+
+console.log(student.name);</div>
+<div class="out-b"><div class="out-lbl">Output</div>Pravin</div>
+</div>
+
+<!-- 4 Scripting Language -->
+<div class="char-card" style="border-color:#378ADD;">
+<div class="char-num" style="color:#185FA5;">04 · Scripting Language</div>
+<div class="char-title">Automates behavior inside webpages</div>
+<div class="char-desc">JavaScript is designed to automate behavior — popup messages, form validation, button click actions, and more — without needing a separate program.</div>
+<div class="mt">Examples of scripting</div>
+<div class="pill-row" style="margin-bottom:.5rem;">
+<span class="pill p-blue">Popup messages</span><span class="pill p-blue">Form validation</span><span class="pill p-blue">Button click actions</span>
+</div>
+</div>
+
+<!-- 5 Asynchronous -->
+<div class="char-card" style="border-color:#D85A30;">
+<div class="char-num" style="color:#993C1D;">05 · Asynchronous Language</div>
+<div class="char-title">Can perform tasks later without stopping</div>
+<div class="char-desc">JavaScript can schedule tasks to run in the future without blocking the rest of the program. This is used in timers, API calls, and event handling.</div>
+<div class="mt">Example — timer running asynchronously</div>
+<div class="code-b">setTimeout(() => {
+    console.log("Runs after 2 seconds");
+}, 2000);</div>
+<div class="out-b"><div class="out-lbl">Output (after 2 seconds)</div>Runs after 2 seconds</div>
+<div class="rule r-coral">The rest of the program keeps running while this timer waits. JavaScript does not stop and wait.</div>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════
+     03 · HISTORY
+═══════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">03</span><span class="sec-title">History of JavaScript</span></div>
+<div class="accent a-amber"></div>
+
+<div class="card">
+<div class="clabel">Creator</div>
+<div class="ctext">JavaScript was created by <strong>Brendan Eich</strong> in just 10 days in the year 1995.</div>
+</div>
+
+<div class="mt">Timeline</div>
+<div class="timeline">
+<div class="tl-row">
+<div class="tl-line"><div class="tl-dot"></div><div class="tl-stem"></div></div>
+<div class="tl-content"><div class="tl-year">1995</div>Created by Brendan Eich in just 10 days at Netscape.</div>
+</div>
+<div class="tl-row">
+<div class="tl-line"><div class="tl-dot" style="background:#EF9F27;"></div><div class="tl-stem"></div></div>
+<div class="tl-content"><div class="tl-year" style="color:#854F0B;">First name</div>Originally called <strong>Mocha</strong> — the very first name of the language.</div>
+</div>
+<div class="tl-row">
+<div class="tl-line"><div class="tl-dot" style="background:#D85A30;"></div><div class="tl-stem"></div></div>
+<div class="tl-content"><div class="tl-year" style="color:#993C1D;">Renamed</div>Later renamed to <strong>LiveScript</strong> before getting its final name.</div>
+</div>
+<div class="tl-row">
+<div class="tl-line"><div class="tl-dot" style="background:#1D9E75;"></div><div class="tl-stem"></div></div>
+<div class="tl-content"><div class="tl-year" style="color:#0F6E56;">Final name</div>Given the final name <strong>JavaScript</strong> — the name it carries today.</div>
+</div>
+</div>
+
+<div class="card">
+<div class="clabel">ECMAScript — the official standard</div>
+<div class="ctext">ECMAScript is the official standard on which JavaScript is based. JavaScript follows ECMAScript rules and receives updates through it. Common versions include ES5, ES6 (ES2015), ES2020, and beyond.</div>
+</div>
+
+<div class="mt">ECMAScript versions</div>
+<div class="pill-row">
+<span class="pill p-gray">ES5</span><span class="pill p-blue">ES6 / ES2015</span><span class="pill p-teal">ES2017</span><span class="pill p-purple">ES2020</span><span class="pill p-amber">ES2022+</span>
+</div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════
+     04 · WAYS TO USE JS IN HTML
+═══════════════════════════ -->
+<div class="sec">
+<div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Ways to use JavaScript in HTML</span></div>
+<div class="accent a-teal"></div>
+
+<!-- Internal JS -->
+<div class="card">
+<div class="clabel">Type 1 — Internal JavaScript</div>
+<div class="ctext" style="margin-bottom:.6rem;">JavaScript code written directly inside the HTML file using the &lt;script&gt; tag. Best for small pieces of code.</div>
+
+<div class="mt">Example</div>
+<div class="html-block">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+   &lt;title&gt;Internal JS&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+   &lt;h1&gt;Hello&lt;/h1&gt;
+
+   &lt;script&gt;
+      alert("Welcome");
+   &lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div>
+
+<div class="mt">Internal JS flow</div>
+<div class="flow-col">
+<span class="fnode">HTML file loads</span>
+<span class="farrow">↓</span>
+<span class="fnode">Browser finds &lt;script&gt; tag</span>
+<span class="farrow">↓</span>
+<span class="fnode">Browser executes JavaScript</span>
+</div>
+</div>
+
+<!-- External JS -->
+<div class="card">
+<div class="clabel">Type 2 — External JavaScript</div>
+<div class="ctext" style="margin-bottom:.6rem;">JavaScript written in a completely separate .js file and linked to HTML using the src attribute. Best for large projects — keeps HTML and JS cleanly separated.</div>
+
+<div class="mt">HTML file</div>
+<div class="html-block">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+   &lt;title&gt;External JS&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+   &lt;h1&gt;Hello&lt;/h1&gt;
+
+   &lt;script src="script.js"&gt;&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div>
+
+<div class="mt">script.js file</div>
+<div class="code-b">alert("External JavaScript File");</div>
+
+<div class="mt">External JS flow</div>
+<div class="flow-col">
+<span class="fnode">HTML file loads</span>
+<span class="farrow">↓</span>
+<span class="fnode">Browser reads src="script.js"</span>
+<span class="farrow">↓</span>
+<span class="fnode">Browser loads the JS file</span>
+<span class="farrow">↓</span>
+<span class="fnode">JavaScript executes</span>
+</div>
+</div>
+
+<div class="mt">Internal vs External — comparison</div>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead><tr><th style="width:25%;">Feature</th><th style="width:37%;">Internal JS</th><th style="width:38%;">External JS</th></tr></thead>
+<tbody>
+<tr><td>Location</td><td>Inside the HTML file</td><td>Separate .js file</td></tr>
+<tr><td>Reusability</td><td>Low — only for that page</td><td>High — reuse across pages</td></tr>
+<tr><td>Maintenance</td><td>Difficult for large code</td><td>Easy to manage and update</td></tr>
+<tr><td>Best for</td><td>Small code snippets</td><td>Large real-world projects</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="trick">
+<i class="ti ti-bulb" aria-hidden="true"></i>
+<div class="trick-t">Best practice — always use External JS for real projects. It keeps your HTML clean, your JS reusable, and your code easy to maintain.</div>
+</div>
+</div>
+
+</div>

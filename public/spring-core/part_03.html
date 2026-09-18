@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spring Framework – IoC Container Types</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #e8eaf0;
+    color: #000000;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .page {
+    width: 794px;
+    min-height: 1123px;
+    background: #ffffff;
+    margin: 32px auto;
+    padding: 36px 40px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+    page-break-after: always;
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #000000;
+    padding-bottom: 10px;
+    margin-bottom: 22px;
+  }
+  .page-header .subject { font-size: 11px; font-weight: 700; color: #000000; letter-spacing: 1.5px; text-transform: uppercase; }
+  .page-header .topic { font-size: 20px; font-weight: 800; color: #000000; }
+  .page-header .badge { background: #000000; color: #ffffff; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 1px; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 10px; font-weight: 800; letter-spacing: 2px;
+    text-transform: uppercase; color: #000000;
+    margin: 20px 0 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1.5px; background: #000000; }
+
+  /* CARD */
+  .card { border: 1.5px solid #000000; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; background: #ffffff; }
+  .card-title { font-size: 12.5px; font-weight: 800; color: #000000; margin-bottom: 6px; }
+  .card p { font-size: 12.5px; color: #000000; margin-bottom: 5px; }
+
+  /* DEF BOX */
+  .def-box { background: #ffffff; border-left: 4px solid #000000; border: 1.5px solid #000000; border-left: 4px solid #000000; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; }
+  .def-box .def-label { font-size: 10px; font-weight: 800; color: #000000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .def-box p { font-size: 12.5px; color: #000000; line-height: 1.65; }
+
+  /* INTERVIEW BOX */
+  .interview-box { background: #ffffff; border-left: 4px solid #000000; border: 1.5px solid #000000; border-left: 4px solid #000000; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; }
+  .interview-box .int-label { font-size: 10px; font-weight: 800; color: #000000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .interview-box p { font-size: 12.5px; color: #000000; line-height: 1.65; }
+
+  /* TRICK BOX */
+  .trick-box { background: #ffffff; border: 2px dashed #000000; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+  .trick-box .trick-label { font-size: 10px; font-weight: 800; color: #000000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .trick-box p { font-size: 12px; color: #000000; }
+
+  /* TIP BOX */
+  .tip-box { background: #ffffff; border-left: 4px solid #000000; border: 1.5px solid #000000; border-left: 4px solid #000000; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 12px; }
+  .tip-box .tip-label { font-size: 10px; font-weight: 800; color: #000000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .tip-box p { font-size: 12px; color: #000000; }
+
+  /* WARN BOX */
+  .warn-box { background: #ffffff; border-left: 4px solid #000000; border: 1.5px solid #000000; border-left: 4px solid #000000; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 12px; }
+  .warn-box .warn-label { font-size: 10px; font-weight: 800; color: #000000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .warn-box p { font-size: 12px; color: #000000; }
+
+  /* EXAMPLE CARD */
+  .example-card { background: #ffffff; border: 1.5px solid #000000; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+  .example-card .ex-label { font-size: 10px; font-weight: 800; color: #000000; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+
+  /* CODE BLOCK */
+  .code-block { background: #ffffff; border: 1.5px solid #000000; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+  .code-block pre { font-family: 'Fira Code', monospace; font-size: 11.5px; color: #000000; white-space: pre-wrap; word-break: break-word; }
+
+  /* TABLE */
+  .cmp-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 12px; }
+  .cmp-table thead th { background: #000000; color: #ffffff; padding: 8px 10px; text-align: left; font-weight: 800; }
+  .cmp-table tbody tr:nth-child(even) { background: #f5f5f5; }
+  .cmp-table tbody td { padding: 7px 10px; border-bottom: 1px solid #000000; color: #000000; vertical-align: top; }
+  .cmp-table tbody tr td:first-child { font-weight: 700; }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+  /* CHIPS */
+  .pros-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .chip { background: #ffffff; border: 1.5px solid #000000; color: #000000; border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 700; }
+  .chip-filled { background: #000000; color: #ffffff; border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 700; }
+
+  /* PILL */
+  .pill { display: inline-block; background: #000000; color: #ffffff; border-radius: 4px; padding: 2px 9px; font-size: 11px; font-weight: 700; margin: 2px; }
+  .pill-outline { display: inline-block; background: #ffffff; color: #000000; border: 1.5px solid #000000; border-radius: 4px; padding: 2px 9px; font-size: 11px; font-weight: 700; margin: 2px; }
+
+  /* FLOW */
+  .flow { display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 12px; }
+  .flow-step { background: #000000; color: #ffffff; font-size: 11.5px; font-weight: 700; padding: 8px 24px; border-radius: 8px; text-align: center; min-width: 320px; margin: 2px 0; }
+  .flow-step.outline { background: #ffffff; color: #000000; border: 2px solid #000000; }
+  .flow-arrow { font-size: 16px; color: #000000; line-height: 1.2; margin: 1px 0; }
+
+  /* HIERARCHY */
+  .hier { margin-bottom: 12px; }
+  .hier-row { display: flex; align-items: center; gap: 0; margin: 3px 0; }
+  .hier-indent { width: 28px; border-bottom: 2px solid #000; border-left: 2px solid #000; height: 18px; margin-right: 6px; flex-shrink: 0; border-radius: 0 0 0 4px; }
+  .hier-box { border: 1.5px solid #000; border-radius: 6px; padding: 5px 14px; font-size: 12px; font-weight: 700; background: #fff; color: #000; }
+  .hier-box.filled { background: #000; color: #fff; }
+  .hier-type { font-size: 10px; font-weight: 500; margin-left: 8px; color: #000; }
+
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     PAGE 1 — IoC Container + BeanFactory
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">Types of IoC Container</div>
+    </div>
+    <div class="badge">PART 1</div>
+  </div>
+
+  <div class="section-label">What is an IoC Container?</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 Definition</div>
+    <p>An <strong>IoC Container</strong> is the core component of Spring Framework responsible for creating objects (Beans), configuring them, managing their lifecycle, managing dependencies, and providing objects whenever required.</p>
+  </div>
+
+  <div class="warn-box">
+    <div class="warn-label">⚠️ Without IoC Container</div>
+    <p>Developers would have to <strong>manually create and manage all objects</strong> — increasing complexity, errors, and maintenance effort.</p>
+  </div>
+
+  <div class="section-label">Two Types of IoC Containers</div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">1. BeanFactory</div>
+      <p><span class="pill-outline">Core Container</span></p>
+      <p style="margin-top:8px;">Most <strong>basic</strong> version of Spring IoC Container. Provides fundamental bean management.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">2. ApplicationContext</div>
+      <p><span class="pill">J2EE Container</span></p>
+      <p style="margin-top:8px;"><strong>Advanced</strong> version of BeanFactory. Adds enterprise-level features on top.</p>
+    </div>
+  </div>
+
+  <div class="section-label">1. BeanFactory — Core Container</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 Definition</div>
+    <p>BeanFactory is the <strong>most basic version</strong> of Spring IoC Container. It provides a mechanism to instantiate, configure, manage lifecycle, and retrieve objects.</p>
+    <p style="margin-top:6px;"><strong>Interface:</strong> <code>org.springframework.beans.factory.BeanFactory</code></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ Key Behaviour — Lazy Initialization</div>
+    <p>Beans are created <strong>only when requested</strong>, not at container startup.</p>
+    <div class="code-block" style="margin-top:8px;margin-bottom:0;">
+      <pre>Resource resource = new ClassPathResource("beans.xml");
+BeanFactory factory = new XmlBeanFactory(resource);
+
+// Bean is created ONLY at this line:
+Student s = (Student) factory.getBean("student");</pre>
+    </div>
+  </div>
+
+  <div class="section-label">Features of BeanFactory</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>#</th><th>Feature</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Bean Creation</td><td>Creates Java objects (Beans) from configuration</td></tr>
+      <tr><td>2</td><td>Bean Configuration</td><td>Reads configuration and sets properties on objects</td></tr>
+      <tr><td>3</td><td>Dependency Management</td><td>Manages dependencies between beans</td></tr>
+      <tr><td>4</td><td>Lifecycle Management</td><td>Handles Creation → Initialization → Usage → Destruction</td></tr>
+      <tr><td>5</td><td>Memory Efficient</td><td>Creates beans only when needed (Lazy)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Configuration Support</div>
+
+  <div class="card">
+    <div class="card-title">📄 XML Configuration (Traditional Approach)</div>
+    <div class="code-block" style="margin-top:6px;margin-bottom:0;">
+      <pre>&lt;bean id="student" class="com.ty.Student"/&gt;
+&lt;!-- Spring reads XML and creates the object --&gt;</pre>
+    </div>
+  </div>
+
+  <div class="section-label">Limitations of BeanFactory</div>
+
+  <div class="warn-box">
+    <div class="warn-label">❌ BeanFactory Does NOT Provide</div>
+    <p>Event Handling &nbsp;|&nbsp; Internationalization (i18n) &nbsp;|&nbsp; Automatic Bean Post Processing &nbsp;|&nbsp; Advanced Resource Loading</p>
+    <p style="margin-top:6px;">Because of these limitations, BeanFactory is <strong>rarely used directly</strong> in modern Spring applications.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PAGE 2 — ApplicationContext + Configuration Ways
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">ApplicationContext &amp; Configuration</div>
+    </div>
+    <div class="badge">PART 2</div>
+  </div>
+
+  <div class="section-label">2. ApplicationContext — J2EE Container</div>
+
+  <div class="def-box">
+    <div class="def-label">📖 Definition</div>
+    <p>ApplicationContext is an <strong>advanced version of BeanFactory</strong>. It supports all BeanFactory features plus many enterprise-level features.</p>
+    <p style="margin-top:6px;"><strong>Interface:</strong> <code>org.springframework.context.ApplicationContext</code></p>
+    <p style="margin-top:4px;"><strong>Relationship:</strong> <code>public interface ApplicationContext extends BeanFactory</code></p>
+    <p style="margin-top:4px;">→ ApplicationContext <strong>IS-A</strong> BeanFactory. It inherits all BeanFactory capabilities.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ Key Behaviour — Eager Initialization</div>
+    <p>All <strong>Singleton beans are created at container startup</strong>, not on demand.</p>
+    <div class="code-block" style="margin-top:8px;margin-bottom:6px;">
+      <pre>// At this line itself — ALL beans are created:
+ApplicationContext context =
+    new ClassPathXmlApplicationContext("beans.xml");
+
+// Student Bean → Created
+// Employee Bean → Created
+// Department Bean → Created
+
+Student s = context.getBean("student", Student.class);</pre>
+    </div>
+  </div>
+
+  <div class="section-label">Why ApplicationContext Was Introduced?</div>
+
+  <div class="warn-box">
+    <div class="warn-label">⚠️ BeanFactory Was Not Enough For</div>
+    <p>Event management &nbsp;|&nbsp; Annotation support &nbsp;|&nbsp; Resource loading &nbsp;|&nbsp; Internationalization &nbsp;|&nbsp; Better bean processing</p>
+  </div>
+
+  <div class="section-label">Features of ApplicationContext</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>#</th><th>Feature</th><th>Details</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Bean Management</td><td>Creates and manages all beans (inherits from BeanFactory)</td></tr>
+      <tr><td>2</td><td>Event Handling</td><td>Context Started / Closed / Custom Events</td></tr>
+      <tr><td>3</td><td>Internationalization (i18n)</td><td>Supports English, Hindi, Japanese, French etc.</td></tr>
+      <tr><td>4</td><td>Annotation Support</td><td><code>@Component</code> <code>@Service</code> <code>@Repository</code> <code>@Controller</code> <code>@Configuration</code></td></tr>
+      <tr><td>5</td><td>Resource Loading</td><td>XML Files, Properties Files, URLs, Classpath Resources</td></tr>
+      <tr><td>6</td><td>Auto Bean Processing</td><td>Supports BeanPostProcessor automatically</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Two Ways to Provide Configuration to IoC Container</div>
+
+  <div class="two-col">
+    <div>
+      <div class="card">
+        <div class="card-title">1. XML Configuration — Old Approach</div>
+        <div class="code-block" style="margin-bottom:8px;">
+          <pre>&lt;bean id="student"
+      class="com.ty.Student"/&gt;
+&lt;!-- Spring reads XML → creates object --&gt;</pre>
+        </div>
+        <p style="font-size:12px;font-weight:700;margin-bottom:4px;">✅ Advantages</p>
+        <p style="font-size:12px;">Centralized config &nbsp;|&nbsp; Easy to understand</p>
+        <p style="font-size:12px;font-weight:700;margin-top:6px;margin-bottom:4px;">❌ Disadvantages</p>
+        <p style="font-size:12px;">Large XML files &nbsp;|&nbsp; Difficult maintenance &nbsp;|&nbsp; More boilerplate</p>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-title">2. Annotation Configuration — Modern</div>
+        <div class="code-block" style="margin-bottom:8px;">
+          <pre>@Component
+public class Student {}
+// Spring auto-detects → creates bean</pre>
+        </div>
+        <p style="font-size:12px;font-weight:700;margin-bottom:4px;">Common Annotations</p>
+        <div class="pros-grid" style="margin-bottom:8px;">
+          <span class="pill">@Component</span>
+          <span class="pill">@Service</span>
+          <span class="pill">@Repository</span>
+          <span class="pill">@Controller</span>
+          <span class="pill">@Configuration</span>
+          <span class="pill">@Bean</span>
+        </div>
+        <p style="font-size:12px;font-weight:700;margin-bottom:4px;">✅ Advantages</p>
+        <p style="font-size:12px;">Less config &nbsp;|&nbsp; Cleaner code &nbsp;|&nbsp; Faster dev &nbsp;|&nbsp; Easy maintenance</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 BeanFactory vs ApplicationContext — One Line</div>
+    <p><strong>BeanFactory</strong> = Basic container, Lazy loading, No enterprise features, XML only.<br/>
+    <strong>ApplicationContext</strong> = Advanced container, Eager loading, Full enterprise features, XML + Annotations.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PAGE 3 — Hierarchy + Comparison Table + Interview Answer
+════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="subject">Spring Framework</div>
+      <div class="topic">IoC Container Hierarchy &amp; Comparison</div>
+    </div>
+    <div class="badge">PART 3</div>
+  </div>
+
+  <div class="section-label">IoC Container Hierarchy — Very Important for Interviews</div>
+
+  <div class="flow">
+    <div class="flow-step">BeanFactory &nbsp;&nbsp;<span style="font-weight:400;font-size:10px;">(Interface — Root IoC Container)</span></div>
+    <div class="flow-arrow">▼ extends</div>
+    <div class="flow-step outline">ApplicationContext &nbsp;&nbsp;<span style="font-weight:400;font-size:10px;">(Interface — Extends BeanFactory)</span></div>
+    <div class="flow-arrow">▼ extends</div>
+    <div class="flow-step">ConfigurableApplicationContext &nbsp;&nbsp;<span style="font-weight:400;font-size:10px;">(Interface — Adds lifecycle methods)</span></div>
+    <div class="flow-arrow">▼ extends</div>
+    <div class="flow-step outline">AbstractApplicationContext &nbsp;&nbsp;<span style="font-weight:400;font-size:10px;">(Abstract Class — Partial implementation)</span></div>
+    <div class="flow-arrow">▼ extends</div>
+    <div class="flow-step">ClassPathXmlApplicationContext &nbsp;&nbsp;<span style="font-weight:400;font-size:10px;">(Concrete Class — Actual implementation)</span></div>
+  </div>
+
+  <div class="section-label">Understanding Each Level</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Level</th><th>Type</th><th>Purpose / Key Methods</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>BeanFactory</td>
+        <td>Interface</td>
+        <td>Root IoC interface. Provides: Bean Creation, Retrieval, Lifecycle, Dependency Management. Key method: <code>getBean()</code></td>
+      </tr>
+      <tr>
+        <td>ApplicationContext</td>
+        <td>Interface</td>
+        <td>Extends BeanFactory. Adds: Events, i18n, Annotations, Resource Loading. IS-A BeanFactory.</td>
+      </tr>
+      <tr>
+        <td>ConfigurableApplicationContext</td>
+        <td>Interface</td>
+        <td>Extends ApplicationContext. Adds lifecycle control methods: <code>refresh()</code> <code>close()</code> <code>start()</code> <code>stop()</code> <code>registerShutdownHook()</code></td>
+      </tr>
+      <tr>
+        <td>AbstractApplicationContext</td>
+        <td>Abstract Class</td>
+        <td>Partial implementation. Reduces code duplication. Developers don't use it directly.</td>
+      </tr>
+      <tr>
+        <td>ClassPathXmlApplicationContext</td>
+        <td>Concrete Class ✅</td>
+        <td>Actual class used by developers. Loads XML from classpath → Creates → Stores → Manages → Provides Beans.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="example-card">
+    <div class="ex-label">🔄 Visual Flow — How It Works</div>
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:12px;font-weight:700;">
+      <span class="pill-outline">beans.xml</span>
+      <span>→</span>
+      <span class="pill">ClassPathXmlApplicationContext</span>
+      <span>→</span>
+      <span class="pill-outline">AbstractApplicationContext</span>
+      <span>→</span>
+      <span class="pill">ConfigurableApplicationContext</span>
+      <span>→</span>
+      <span class="pill-outline">ApplicationContext</span>
+      <span>→</span>
+      <span class="pill">BeanFactory</span>
+      <span>→</span>
+      <span class="pill-outline">Creates &amp; Manages Beans ✅</span>
+    </div>
+  </div>
+
+  <div class="section-label">BeanFactory vs ApplicationContext — Full Comparison</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Feature</th><th>BeanFactory</th><th>ApplicationContext</th></tr></thead>
+    <tbody>
+      <tr><td>Type</td><td>Interface</td><td>Interface</td></tr>
+      <tr><td>Container Level</td><td>Basic</td><td>Advanced</td></tr>
+      <tr><td>Initialization</td><td>Lazy (on demand)</td><td>Eager (at startup)</td></tr>
+      <tr><td>XML Support</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Annotation Support</td><td>Limited / Indirect</td><td>Full Support</td></tr>
+      <tr><td>Event Handling</td><td>No</td><td>Yes</td></tr>
+      <tr><td>Internationalization (i18n)</td><td>No</td><td>Yes</td></tr>
+      <tr><td>Enterprise Features</td><td>No</td><td>Yes</td></tr>
+      <tr><td>Modern Usage</td><td>Rare</td><td>Very Common ✅</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Final Interview Answer</div>
+
+  <div class="interview-box">
+    <div class="int-label">🎤 Expected Interview Answer</div>
+    <p>Spring provides <strong>two types of IoC Containers: BeanFactory and ApplicationContext</strong>. Both are interfaces. <strong>BeanFactory</strong> is the basic IoC container that provides bean creation, configuration, dependency management, and lifecycle management using <strong>lazy initialization</strong>. <strong>ApplicationContext</strong> extends BeanFactory and provides advanced enterprise features such as event handling, internationalization, annotation support, resource loading, and automatic bean processing using <strong>eager initialization</strong>. Configuration can be provided via <strong>XML</strong> or <strong>Annotations</strong>. Internally, the hierarchy is <em>BeanFactory → ApplicationContext → ConfigurableApplicationContext → AbstractApplicationContext → ClassPathXmlApplicationContext</em>, where <strong>ClassPathXmlApplicationContext</strong> is the concrete implementation commonly used to load XML configuration and create Spring beans.</p>
+  </div>
+
+  <div class="trick-box">
+    <div class="trick-label">🧠 Memory Trick — Hierarchy</div>
+    <p><strong>B</strong>ean Factory → <strong>A</strong>pplication Context → <strong>C</strong>onfigurable → <strong>A</strong>bstract → <strong>C</strong>lassPath</p>
+    <p style="margin-top:4px;">👉 <strong>"BAC AC"</strong> — <em>"Be A Cool Abstract Coder!"</em> 😄</p>
+  </div>
+</div>
+
+</body>
+</html>

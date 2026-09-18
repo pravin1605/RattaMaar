@@ -1,0 +1,666 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+.warn-box{background:#fce4ec;border-left:5px solid #c62828;padding:10px 14px;margin-top:10px}
+.warn-box .lbl{font-size:10px;font-weight:700;color:#c62828;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.warn-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:4px}
+.mini-card p,.mini-card li{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+.prog-wrap{margin:10px 0}
+.prog-header{background:#2c2c2c;padding:6px 14px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.prog-label{color:#bbb;font-size:11px;margin-left:6px;font-family:Arial,sans-serif;font-weight:700;letter-spacing:.3px}
+.prog-body{background:#1e1e1e;border-radius:0 0 6px 6px;padding:13px 16px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.9;white-space:pre;overflow-x:auto;color:#d4d4d4}
+.kw{color:#569cd6;font-weight:700}
+.cm{color:#6a9955;font-style:italic}
+.str{color:#ce9178}
+.fn{color:#dcdcaa}
+.tp{color:#4ec9b0}
+.num{color:#b5cea8}
+.out-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:0 0 5px 5px;padding:6px 14px;font-family:'Courier New',monospace;font-size:12.5px;color:#1b5e20;margin-bottom:12px}
+.err-bar{background:#fce4ec;border:1px solid #f48fb1;border-radius:0 0 5px 5px;padding:6px 14px;font-family:'Courier New',monospace;font-size:12px;color:#880e4f;margin-bottom:12px}
+.ex-block{border:1px solid #ccc;border-radius:6px;margin-bottom:14px;overflow:hidden}
+.ex-head{background:#1a1a6e;color:#fff;padding:7px 14px;font-size:13px;font-weight:700}
+.ex-logic{background:#f5f6ff;padding:8px 14px;font-size:12.5px;color:#333;border-bottom:1px solid #ddd}
+.step-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.step-card{background:#f5f6ff;border:2px solid #1a1a6e;border-radius:6px;padding:10px 12px;text-align:center}
+.step-num{font-size:20px;font-weight:700;color:#1a1a6e}
+.step-title{font-size:12px;font-weight:700;color:#111;margin-top:2px}
+.step-desc{font-size:11px;color:#555;margin-top:4px;line-height:1.4}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">PL/SQL — Part 7: Exception Handling</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; Predefined Exceptions &amp; User-Defined Exceptions &nbsp;|&nbsp; Orange tag = Extra content</div>
+</div>
+
+<!-- ===== 1 ===== -->
+<div class="sec-label">1. What is an Exception?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>An Exception is a runtime error that occurs while a PL/SQL program is executing. PL/SQL provides a dedicated EXCEPTION section to handle these errors gracefully — preventing program crashes and allowing custom error messages or recovery actions.</p>
+  </div>
+  <ul>
+    <li>Exceptions occur at runtime — not during compilation</li>
+    <li>Without exception handling, the program terminates abruptly with an Oracle error</li>
+    <li>The EXCEPTION section catches the error and allows the developer to handle it cleanly</li>
+    <li>After the EXCEPTION block runs, the program ends normally — no crash</li>
+  </ul>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Exception = Runtime Error Safety Net — catches errors before they crash the program</p>
+    <p>Predefined = Oracle already named it &nbsp;|&nbsp; User-Defined = Developer creates their own</p>
+  </div>
+</div>
+
+<!-- ===== 2 ===== -->
+<div class="sec-label">2. Types of Exceptions</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">1. Predefined Exceptions</div>
+      <ul style="margin-top:4px">
+        <li>Oracle has already defined 20 predefined exception names</li>
+        <li>Raised automatically when a matching error occurs</li>
+        <li>Developer just uses the name in the EXCEPTION block</li>
+        <li>Examples: NO_DATA_FOUND, TOO_MANY_ROWS, ZERO_DIVIDE</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct">2. User-Defined Exceptions</div>
+      <ul style="margin-top:4px">
+        <li>Created by the developer for custom business rules</li>
+        <li>Must be declared, raised manually using RAISE, and handled</li>
+        <li>Three steps: DECLARE → RAISE → HANDLE</li>
+        <li>Examples: LOW_SAL, LOW_AGE, INVALID_MARKS</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 3 ===== -->
+<div class="sec-label">3. PL/SQL Block with Exception — Syntax</div>
+<div class="card">
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="prog-label">EXCEPTION HANDLING — GENERAL SYNTAX</span>
+    </div>
+    <div class="prog-body"><span class="kw">DECLARE</span>
+   <span class="cm">-- Variables, constants, cursors, user-defined exceptions</span>
+
+<span class="kw">BEGIN</span>
+   <span class="cm">-- Executable statements (SQL + logic)</span>
+
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN</span> exception_name <span class="kw">THEN</span>
+      <span class="cm">-- Error handling code</span>
+
+   <span class="kw">WHEN OTHERS THEN</span>
+      <span class="cm">-- Catch-all for any unhandled exception (always placed last)</span>
+
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <div class="tip-box">
+    <div class="lbl">Extra — WHEN OTHERS</div>
+    <p>WHEN OTHERS is a catch-all handler that handles any exception not covered by a specific WHEN clause. It must always be the LAST handler in the EXCEPTION block. Use it to avoid unexpected program crashes.</p>
+  </div>
+</div>
+
+<!-- ===== 4 ===== -->
+<div class="sec-label">4. Predefined Exceptions — Summary Table</div>
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Exception Name</th><th>Oracle Error</th><th>Raised When</th></tr>
+    <tr><td>1</td><td>NO_DATA_FOUND</td><td>ORA-01403</td><td>SELECT INTO returns no rows</td></tr>
+    <tr><td>2</td><td>TOO_MANY_ROWS</td><td>ORA-01422</td><td>SELECT INTO returns more than one row</td></tr>
+    <tr><td>3</td><td>ZERO_DIVIDE</td><td>ORA-01476</td><td>A number is divided by zero</td></tr>
+    <tr><td>4</td><td>INVALID_CURSOR</td><td>ORA-01001</td><td>FETCH or CLOSE on a cursor that was never opened</td></tr>
+    <tr><td>5</td><td>CURSOR_ALREADY_OPEN</td><td>ORA-01001</td><td>OPEN is called on a cursor that is already open</td></tr>
+    <tr><td>6</td><td>INVALID_NUMBER</td><td>ORA-01722</td><td>String-to-number conversion fails inside a SQL statement</td></tr>
+    <tr><td>7</td><td>VALUE_ERROR</td><td>ORA-06502</td><td>Value too large for variable, or string-to-number fails in PL/SQL</td></tr>
+  </table>
+</div>
+
+<!-- ===== 5 ===== -->
+<div class="sec-label">5. Predefined Exception — Program Examples</div>
+<div class="card">
+
+  <!-- NO_DATA_FOUND -->
+  <div class="ex-block">
+    <div class="ex-head">Exception 1 — NO_DATA_FOUND</div>
+    <div class="ex-logic">Raised when: SELECT INTO returns zero rows. &nbsp; Oracle Error: ORA-01403: NO DATA FOUND<br>Task: Fetch employee where EMPNO = 736. No such employee exists → NO_DATA_FOUND is raised.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">NO_DATA_FOUND — EMPNO 736 DOES NOT EXIST</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   V_NAME  <span class="tp">VARCHAR2</span>(20);
+   V_SAL   <span class="tp">NUMBER</span>;
+
+<span class="kw">BEGIN</span>
+   <span class="cm">-- EMPNO 736 does not exist → raises NO_DATA_FOUND</span>
+   <span class="kw">SELECT</span> ENAME, SAL
+   <span class="kw">INTO</span>   V_NAME, V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = <span class="num">736</span>;
+
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">'  '</span> || V_SAL);
+
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN</span> NO_DATA_FOUND <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD NOT FOUND'</span>);
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: RECORD NOT FOUND &nbsp;→ No employee with EMPNO 736</div>
+  </div>
+
+  <!-- TOO_MANY_ROWS -->
+  <div class="ex-block">
+    <div class="ex-head">Exception 2 — TOO_MANY_ROWS</div>
+    <div class="ex-logic">Raised when: SELECT INTO returns more than one row. &nbsp; Oracle Error: ORA-01422<br>Task: SELECT INTO from EMP without a WHERE clause → all 14 rows returned → TOO_MANY_ROWS is raised.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">TOO_MANY_ROWS — SELECT INTO WITHOUT WHERE</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   V_NAME  <span class="tp">VARCHAR2</span>(20);
+   V_SAL   <span class="tp">NUMBER</span>;
+
+<span class="kw">BEGIN</span>
+   <span class="cm">-- No WHERE clause → returns all 14 rows → raises TOO_MANY_ROWS</span>
+   <span class="kw">SELECT</span> ENAME, SAL
+   <span class="kw">INTO</span>   V_NAME, V_SAL
+   <span class="kw">FROM</span>   EMP;
+
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">'  '</span> || V_SAL);
+
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN</span> TOO_MANY_ROWS <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'CANNOT FETCH MULTIPLE RECORDS USING INTO CLAUSE'</span>);
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: CANNOT FETCH MULTIPLE RECORDS USING INTO CLAUSE</div>
+  </div>
+
+  <!-- ZERO_DIVIDE -->
+  <div class="ex-block">
+    <div class="ex-head">Exception 3 — ZERO_DIVIDE</div>
+    <div class="ex-logic">Raised when: A number is divided by zero. &nbsp; Oracle Error: ORA-01476: divisor is equal to zero<br>Task: Divide V_NUM1 (10) by V_NUM2 (0) → ZERO_DIVIDE is raised.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">ZERO_DIVIDE — DIVIDING BY ZERO</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   V_NUM1  <span class="tp">NUMBER</span> := <span class="num">10</span>;
+   V_NUM2  <span class="tp">NUMBER</span> := <span class="num">0</span>;    <span class="cm">-- divisor is zero</span>
+
+<span class="kw">BEGIN</span>
+   <span class="cm">-- Dividing by 0 → raises ZERO_DIVIDE</span>
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NUM1 / V_NUM2);
+
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN</span> ZERO_DIVIDE <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'ERROR: CANNOT DIVIDE BY ZERO'</span>);
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: ERROR: CANNOT DIVIDE BY ZERO</div>
+  </div>
+
+  <!-- INVALID_CURSOR -->
+  <div class="ex-block">
+    <div class="ex-head">Exception 4 — INVALID_CURSOR</div>
+    <div class="ex-logic">Raised when: FETCH or CLOSE is performed on a cursor that was never opened. &nbsp; Oracle Error: ORA-01001<br>Task: FETCH from cursor C1 without calling OPEN C1 first → INVALID_CURSOR is raised.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">INVALID_CURSOR — FETCH WITHOUT OPEN</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   I       EMP%ROWTYPE;
+   <span class="kw">CURSOR</span> C1 <span class="kw">IS</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> EMP;
+
+<span class="kw">BEGIN</span>
+   <span class="cm">-- OPEN C1 is missing → FETCH on closed cursor → raises INVALID_CURSOR</span>
+   <span class="kw">LOOP</span>
+      <span class="kw">FETCH</span> C1 <span class="kw">INTO</span> I;
+      <span class="kw">EXIT WHEN</span> C1%NOTFOUND;
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(I.ENAME || <span class="str">'  '</span> || I.SAL);
+   <span class="kw">END LOOP</span>;
+   <span class="kw">CLOSE</span> C1;
+
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN</span> INVALID_CURSOR <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'ERROR: CURSOR WAS NOT OPENED. USE PROPER SYNTAX'</span>);
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: ERROR: CURSOR WAS NOT OPENED. USE PROPER SYNTAX</div>
+  </div>
+
+  <!-- CURSOR_ALREADY_OPEN -->
+  <div class="ex-block">
+    <div class="ex-head">Exception 5 — CURSOR_ALREADY_OPEN</div>
+    <div class="ex-logic">Raised when: OPEN is called on a cursor that is already open. &nbsp; Oracle Error: ORA-01001<br>Task: OPEN C1 is called inside the loop when it is already open → CURSOR_ALREADY_OPEN is raised on the second OPEN call.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">CURSOR_ALREADY_OPEN — OPENING AN ALREADY OPEN CURSOR</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   I       EMP%ROWTYPE;
+   <span class="kw">CURSOR</span> C1 <span class="kw">IS</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> EMP;
+
+<span class="kw">BEGIN</span>
+   <span class="kw">LOOP</span>
+      <span class="kw">OPEN</span>  C1;                    <span class="cm">-- First OPEN: OK</span>
+      <span class="kw">FETCH</span> C1 <span class="kw">INTO</span> I;
+      <span class="kw">EXIT WHEN</span> C1%NOTFOUND;
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(I.ENAME || <span class="str">'  '</span> || I.SAL);
+   <span class="kw">END LOOP</span>;
+   <span class="kw">OPEN</span> C1;                        <span class="cm">-- Second OPEN: raises CURSOR_ALREADY_OPEN</span>
+
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN</span> CURSOR_ALREADY_OPEN <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'ERROR: CLOSE THE CURSOR BEFORE REOPENING IT'</span>);
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: SMITH  800 &nbsp;→ CURSOR_ALREADY_OPEN raised → ERROR: CLOSE THE CURSOR BEFORE REOPENING IT</div>
+  </div>
+
+  <!-- INVALID_NUMBER -->
+  <div class="ex-block">
+    <div class="ex-head">Exception 6 — INVALID_NUMBER</div>
+    <div class="ex-logic">Raised when: Oracle tries to convert a non-numeric string to a number inside a SQL statement. &nbsp; Oracle Error: ORA-01722<br>Task: INSERT 'ABC' into EMPNO (NUMBER column) → INVALID_NUMBER is raised.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">INVALID_NUMBER — INSERT NON-NUMERIC VALUE INTO NUMBER COLUMN</span>
+      </div>
+      <div class="prog-body"><span class="kw">BEGIN</span>
+   <span class="cm">-- 'ABC' cannot be converted to NUMBER → raises INVALID_NUMBER</span>
+   <span class="kw">INSERT INTO</span> EMP(EMPNO, ENAME)
+   <span class="kw">VALUES</span>(<span class="str">'ABC'</span>, <span class="num">1111</span>);
+
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN</span> INVALID_NUMBER <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'ERROR: PLEASE INSERT VALID NUMERIC DATA'</span>);
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: ERROR: PLEASE INSERT VALID NUMERIC DATA</div>
+  </div>
+
+  <!-- VALUE_ERROR -->
+  <div class="ex-block">
+    <div class="ex-head">Exception 7 — VALUE_ERROR</div>
+    <div class="ex-logic">Raised when: A value assigned to a variable exceeds its defined precision, or a string-to-number conversion fails in PL/SQL. &nbsp; Oracle Error: ORA-06502<br>Task: Assign 123456 to Z NUMBER(5) — max 5 digits allowed but 6 digits given → VALUE_ERROR is raised.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">VALUE_ERROR — VALUE TOO LARGE FOR VARIABLE</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   Z  <span class="tp">NUMBER</span>(<span class="num">5</span>);   <span class="cm">-- max 5 digits allowed</span>
+
+<span class="kw">BEGIN</span>
+   <span class="cm">-- 123456 has 6 digits → exceeds NUMBER(5) → raises VALUE_ERROR</span>
+   Z := <span class="num">123456</span>;
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(Z);
+
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN</span> VALUE_ERROR <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'ERROR: VALUE EXCEEDS THE ALLOWED SIZE OF THE VARIABLE'</span>);
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: ERROR: VALUE EXCEEDS THE ALLOWED SIZE OF THE VARIABLE</div>
+  </div>
+
+</div>
+
+<!-- ===== 6 ===== -->
+<div class="sec-label">6. User-Defined Exceptions</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>User-Defined Exceptions are custom exceptions created by the developer to enforce business rules that Oracle does not handle automatically. The developer declares, raises manually using RAISE, and handles them just like predefined exceptions.</p>
+  </div>
+
+  <div class="step-row">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-title">DECLARE</div>
+      <div class="step-desc">Define the exception in the DECLARE section using the EXCEPTION keyword.<br><br>Syntax: exception_name EXCEPTION;</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-title">RAISE</div>
+      <div class="step-desc">Manually raise the exception in the BEGIN section using the RAISE keyword when the condition is met.<br><br>Syntax: RAISE exception_name;</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-title">HANDLE</div>
+      <div class="step-desc">Handle the exception in the EXCEPTION section just like a predefined exception.<br><br>Syntax: WHEN exception_name THEN …</div>
+    </div>
+  </div>
+
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>D-R-H → DECLARE → RAISE → HANDLE &nbsp;|&nbsp; "Developers Raise Handles"</p>
+  </div>
+</div>
+
+<!-- ===== 7 ===== -->
+<div class="sec-label">7. User-Defined Exception — Program Examples</div>
+<div class="card">
+
+  <!-- Example 1 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 1 — LOW_SAL Exception (Single Exception)</div>
+    <div class="ex-logic">Task: Check if salary is less than 5000. If yes, raise LOW_SAL user-defined exception.<br>Logic: V_SAL = 3000 → condition IF V_SAL &lt; 5000 is TRUE → RAISE LOW_SAL → EXCEPTION block handles it.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">USER-DEFINED EXCEPTION — LOW_SAL</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   V_SAL    <span class="tp">NUMBER</span>    := <span class="num">3000</span>;
+   LOW_SAL  <span class="tp">EXCEPTION</span>;             <span class="cm">-- Step 1: Declare user-defined exception</span>
+
+<span class="kw">BEGIN</span>
+   <span class="cm">-- Step 2: Check condition and RAISE exception if met</span>
+   <span class="kw">IF</span> V_SAL < <span class="num">5000</span> <span class="kw">THEN</span>
+      <span class="kw">RAISE</span> LOW_SAL;
+   <span class="kw">END IF</span>;
+
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'SALARY IS VALID'</span>);
+
+<span class="kw">EXCEPTION</span>
+   <span class="cm">-- Step 3: Handle the exception</span>
+   <span class="kw">WHEN</span> LOW_SAL <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'SALARY MUST BE >= 5000'</span>);
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: SALARY MUST BE >= 5000 &nbsp;→ V_SAL = 3000 &lt; 5000 → LOW_SAL raised</div>
+  </div>
+
+  <!-- Example 2 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 2 — LOW_AGE Exception</div>
+    <div class="ex-logic">Task: Check if age is less than 18. If yes, raise LOW_AGE exception.<br>Logic: V_AGE = 16 → IF V_AGE &lt; 18 is TRUE → RAISE LOW_AGE → handled in EXCEPTION block.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">USER-DEFINED EXCEPTION — LOW_AGE</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   V_AGE    <span class="tp">NUMBER</span>    := <span class="num">16</span>;
+   LOW_AGE  <span class="tp">EXCEPTION</span>;             <span class="cm">-- Declare user-defined exception</span>
+
+<span class="kw">BEGIN</span>
+   <span class="kw">IF</span> V_AGE < <span class="num">18</span> <span class="kw">THEN</span>
+      <span class="kw">RAISE</span> LOW_AGE;               <span class="cm">-- Raise when condition met</span>
+   <span class="kw">END IF</span>;
+
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'AGE IS VALID'</span>);
+
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN</span> LOW_AGE <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'AGE MUST BE 18 OR ABOVE'</span>);
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: AGE MUST BE 18 OR ABOVE &nbsp;→ V_AGE = 16 &lt; 18 → LOW_AGE raised</div>
+  </div>
+
+  <!-- Example 3 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 3 — INVALID_MARKS Exception (Multiple Exceptions in One Block)</div>
+    <div class="ex-logic">Task: Check marks — raise INVALID_MARKS if marks &gt; 100. Two exceptions declared in one block. Since INVALID_MARKS fires first, the second check is never reached.<br>Logic: V_MARKS1 = 120 → &gt; 100 → RAISE INVALID_MARKS → first WHEN handler executes → second WHEN is skipped.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">MULTIPLE USER-DEFINED EXCEPTIONS — SINGLE BLOCK</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   V_MARKS1        <span class="tp">NUMBER</span>    := <span class="num">120</span>;
+   V_MARKS2        <span class="tp">NUMBER</span>    := <span class="num">0</span>;
+   INVALID_MARKS   <span class="tp">EXCEPTION</span>;        <span class="cm">-- Exception for marks > 100</span>
+   INVALID_MARKS1  <span class="tp">EXCEPTION</span>;        <span class="cm">-- Exception for marks = 0</span>
+
+<span class="kw">BEGIN</span>
+   <span class="kw">IF</span> V_MARKS1 > <span class="num">100</span> <span class="kw">THEN</span>
+      <span class="kw">RAISE</span> INVALID_MARKS;            <span class="cm">-- Fires first → second check skipped</span>
+   <span class="kw">END IF</span>;
+
+   <span class="kw">IF</span> V_MARKS2 = <span class="num">0</span> <span class="kw">THEN</span>
+      <span class="kw">RAISE</span> INVALID_MARKS1;
+   <span class="kw">END IF</span>;
+
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'MARKS ARE VALID'</span>);
+
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN</span> INVALID_MARKS <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'MARKS SHOULD NOT EXCEED 100'</span>);
+   <span class="kw">WHEN</span> INVALID_MARKS1 <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'MARKS SHOULD NOT BE ZERO'</span>);
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: MARKS SHOULD NOT EXCEED 100 &nbsp;→ First exception fires, second check never reached</div>
+  </div>
+
+  <!-- Example 4 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 4 — Multiple Exceptions Using Nested Blocks (Both Execute)</div>
+    <div class="ex-logic">Task: Check both conditions — marks &gt; 100 AND marks = 0 — and handle both exceptions independently.<br>Logic: Each condition is in its own inner BEGIN-EXCEPTION-END block. So even if first fires, second block still runs independently. V_MARKS1 = 0 → skips first, raises second.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">NESTED BLOCKS — BOTH EXCEPTIONS HANDLED INDEPENDENTLY</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   V_MARKS1        <span class="tp">NUMBER</span>    := <span class="num">0</span>;
+   INVALID_MARKS   <span class="tp">EXCEPTION</span>;
+   INVALID_MARKS1  <span class="tp">EXCEPTION</span>;
+
+<span class="kw">BEGIN</span>
+
+   <span class="cm">-- Inner block 1: check if marks exceed 100</span>
+   <span class="kw">BEGIN</span>
+      <span class="kw">IF</span> V_MARKS1 > <span class="num">100</span> <span class="kw">THEN</span>
+         <span class="kw">RAISE</span> INVALID_MARKS;
+      <span class="kw">END IF</span>;
+   <span class="kw">EXCEPTION</span>
+      <span class="kw">WHEN</span> INVALID_MARKS <span class="kw">THEN</span>
+         <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'MARKS SHOULD NOT EXCEED 100'</span>);
+   <span class="kw">END</span>;
+
+   <span class="cm">-- Inner block 2: check if marks are zero</span>
+   <span class="kw">BEGIN</span>
+      <span class="kw">IF</span> V_MARKS1 = <span class="num">0</span> <span class="kw">THEN</span>
+         <span class="kw">RAISE</span> INVALID_MARKS1;
+      <span class="kw">END IF</span>;
+   <span class="kw">EXCEPTION</span>
+      <span class="kw">WHEN</span> INVALID_MARKS1 <span class="kw">THEN</span>
+         <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'MARKS SHOULD NOT BE ZERO'</span>);
+   <span class="kw">END</span>;
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: MARKS SHOULD NOT BE ZERO &nbsp;→ V_MARKS1 = 0 → only second block fires</div>
+  </div>
+
+  <!-- Example 5 -->
+  <div class="ex-block">
+    <div class="ex-head">Example 5 — Bank Withdrawal (Multiple Nested Exceptions)</div>
+    <div class="ex-logic">Task: Validate three conditions — insufficient balance, invalid amount, underage user — using three separate nested blocks.<br>Logic: Each nested block checks one condition independently. WITHDRAW_AMOUNT (500) &lt; ACCOUNT_BALANCE (1000) → withdrawal succeeds. V_AGE = 16 &lt; 18 → AGE_EXCEPTION fires in third block.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">BANK WITHDRAWAL — THREE NESTED EXCEPTION BLOCKS</span>
+      </div>
+      <div class="prog-body"><span class="kw">DECLARE</span>
+   ACCOUNT_BALANCE     <span class="tp">NUMBER</span> := <span class="num">1000</span>;
+   WITHDRAW_AMOUNT     <span class="tp">NUMBER</span> := <span class="num">500</span>;
+   V_AGE               <span class="tp">NUMBER</span> := <span class="num">16</span>;
+
+   AGE_EXCEPTION        <span class="tp">EXCEPTION</span>;
+   INSUFFICIENT_BALANCE <span class="tp">EXCEPTION</span>;
+   INVALID_AMOUNT       <span class="tp">EXCEPTION</span>;
+
+<span class="kw">BEGIN</span>
+
+   <span class="cm">-- Block 1: Check if withdrawal exceeds balance</span>
+   <span class="kw">BEGIN</span>
+      <span class="kw">IF</span> WITHDRAW_AMOUNT > ACCOUNT_BALANCE <span class="kw">THEN</span>
+         <span class="kw">RAISE</span> INSUFFICIENT_BALANCE;
+      <span class="kw">END IF</span>;
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'WITHDRAWAL SUCCESSFUL'</span>);
+   <span class="kw">EXCEPTION</span>
+      <span class="kw">WHEN</span> INSUFFICIENT_BALANCE <span class="kw">THEN</span>
+         <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'INSUFFICIENT BALANCE. AVAILABLE: '</span> || ACCOUNT_BALANCE);
+   <span class="kw">END</span>;
+
+   <span class="cm">-- Block 2: Check if withdrawal amount is valid</span>
+   <span class="kw">BEGIN</span>
+      <span class="kw">IF</span> WITHDRAW_AMOUNT <= <span class="num">0</span> <span class="kw">THEN</span>
+         <span class="kw">RAISE</span> INVALID_AMOUNT;
+      <span class="kw">END IF</span>;
+   <span class="kw">EXCEPTION</span>
+      <span class="kw">WHEN</span> INVALID_AMOUNT <span class="kw">THEN</span>
+         <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'PLEASE ENTER A VALID WITHDRAWAL AMOUNT'</span>);
+   <span class="kw">END</span>;
+
+   <span class="cm">-- Block 3: Check if user is old enough</span>
+   <span class="kw">BEGIN</span>
+      <span class="kw">IF</span> V_AGE < <span class="num">18</span> <span class="kw">THEN</span>
+         <span class="kw">RAISE</span> AGE_EXCEPTION;
+      <span class="kw">END IF</span>;
+   <span class="kw">EXCEPTION</span>
+      <span class="kw">WHEN</span> AGE_EXCEPTION <span class="kw">THEN</span>
+         <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'YOU ARE NOT ELIGIBLE TO WITHDRAW'</span>);
+   <span class="kw">END</span>;
+
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: WITHDRAWAL SUCCESSFUL &nbsp;→ YOU ARE NOT ELIGIBLE TO WITHDRAW</div>
+  </div>
+
+</div>
+
+<!-- ===== 8 ===== -->
+<div class="sec-label">8. Single Block vs Nested Block — Key Difference</div>
+<div class="card">
+  <table>
+    <tr><th>Feature</th><th>Single Exception Block</th><th>Nested Exception Blocks</th></tr>
+    <tr><td>How many exceptions fire?</td><td>Only the FIRST matching exception fires. All remaining checks are skipped.</td><td>Each inner block handles its own exception independently. All blocks execute.</td></tr>
+    <tr><td>Use when</td><td>Only one condition matters at a time</td><td>Multiple conditions must all be validated independently</td></tr>
+    <tr><td>Example</td><td>MARKS &gt; 100 fires → zero-check skipped</td><td>MARKS &gt; 100 fires in block 1, zero-check runs in block 2</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — Why Nested Blocks?</div>
+    <p>In a single EXCEPTION block, once the first exception is raised, execution jumps directly to the EXCEPTION section and the remaining BEGIN logic is skipped. Nested blocks allow each condition to be checked and handled separately — useful in real-world validations where multiple rules must all be enforced.</p>
+  </div>
+</div>
+
+<!-- ===== 9 ===== -->
+<div class="sec-label">9. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What is an exception in PL/SQL?</div>
+  <div class="qa-a">An exception is a runtime error that occurs while a PL/SQL program is executing. PL/SQL provides the EXCEPTION section to handle these errors gracefully — preventing crashes and allowing custom error messages.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. What are the types of exceptions in PL/SQL?</div>
+  <div class="qa-a">1. Predefined Exceptions — Oracle has already defined 20 exception names for common errors (NO_DATA_FOUND, TOO_MANY_ROWS, ZERO_DIVIDE, etc.). 2. User-Defined Exceptions — created by the developer using DECLARE → RAISE → HANDLE.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. What is NO_DATA_FOUND?</div>
+  <div class="qa-a">NO_DATA_FOUND is raised when a SELECT INTO statement returns zero rows. Oracle Error: ORA-01403. It is handled in the EXCEPTION block using WHEN NO_DATA_FOUND THEN.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. What is the difference between INVALID_NUMBER and VALUE_ERROR?</div>
+  <div class="qa-a">INVALID_NUMBER is raised when a string-to-number conversion fails inside a SQL statement (e.g., INSERT with a non-numeric value in a NUMBER column). VALUE_ERROR is raised when a value is too large for a PL/SQL variable or when string-to-number conversion fails inside PL/SQL code (not SQL).</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. What are the steps to create a User-Defined Exception?</div>
+  <div class="qa-a">Step 1: DECLARE — define the exception name using the EXCEPTION keyword in the DECLARE section. Step 2: RAISE — use the RAISE keyword inside the BEGIN section when the condition is met. Step 3: HANDLE — use WHEN exception_name THEN in the EXCEPTION section.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. What is WHEN OTHERS in PL/SQL exception handling? <span class="extra">Extra</span></div>
+  <div class="qa-a">WHEN OTHERS is a catch-all exception handler that handles any exception not covered by a specific WHEN clause. It must always be the LAST handler in the EXCEPTION section. It is used to avoid unexpected program crashes from unhandled errors.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q7. What is the difference between a single EXCEPTION block and nested blocks? <span class="extra">Extra</span></div>
+  <div class="qa-a">In a single EXCEPTION block, only the first raised exception is handled — the rest of the BEGIN logic is skipped. In nested blocks, each inner block handles its own exception independently, allowing multiple validations to all execute even if one raises an exception.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q8. What error does ZERO_DIVIDE raise? <span class="extra">Extra</span></div>
+  <div class="qa-a">ZERO_DIVIDE raises ORA-01476: divisor is equal to zero. It occurs when a PL/SQL program attempts to divide a number by zero during execution.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q9. What is the difference between INVALID_CURSOR and CURSOR_ALREADY_OPEN? <span class="extra">Extra</span></div>
+  <div class="qa-a">INVALID_CURSOR is raised when you try to FETCH or CLOSE a cursor that was never opened. CURSOR_ALREADY_OPEN is raised when you try to OPEN a cursor that is already open. Both return ORA-01001.</div>
+</div>
+
+<div class="divider"></div>
+<footer>PL/SQL Part 7 — Exception Handling &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>

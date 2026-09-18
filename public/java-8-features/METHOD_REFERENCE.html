@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Method Reference ( :: )</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; color:#e0e0e0; font-family:'Segoe UI',Arial,sans-serif; font-size:13.5px; line-height:1.65; }
+
+.header { background:#111; padding:28px 32px 8px; }
+.header h1 { font-size:28px; font-weight:800; color:#fff; margin-bottom:4px; }
+.header p  { font-size:13px; color:#aaa; }
+
+.sec-label {
+  font-size:11px; font-weight:700; letter-spacing:1.5px;
+  text-transform:uppercase; color:#888;
+  border-bottom:1px solid #333;
+  padding:18px 32px 6px;
+}
+
+.wrap { padding:10px 32px; }
+
+/* DEF CARDS */
+.def-card {
+  background:#1a1a2e; border-radius:10px;
+  border-left:4px solid #7c3aed;
+  padding:16px 18px; margin:8px 0;
+}
+.def-card.green { border-left-color:#14b8a6; }
+.def-card.red   { border-left-color:#ef4444; }
+.def-card.orange{ border-left-color:#f97316; }
+.def-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:6px; }
+.def-card p  { font-size:13px; color:#ccc; margin-bottom:4px; }
+
+/* DARK CARD */
+.dark-card {
+  background:#1e1e1e; border-radius:10px;
+  padding:18px 20px; margin:8px 0;
+}
+.dark-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:8px; }
+.dark-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; }
+.dark-card p  { font-size:13px; color:#ccc; margin-bottom:5px; }
+
+/* GRIDS */
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0; }
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:8px 0; }
+.g5 { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:8px 0; }
+
+/* SYNTAX CARDS */
+.syn-card {
+  background:#1e1e1e; border-radius:10px; padding:16px 18px;
+}
+.syn-card.purple { border-left:3px solid #7c3aed; }
+.syn-card.teal   { border-left:3px solid #14b8a6; }
+.syn-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:10px; }
+.syn-label { font-size:12px; color:#aaa; margin-bottom:5px; }
+
+/* TYPE CARDS */
+.type-card {
+  background:#1e1e1e; border-radius:10px; padding:16px 18px;
+}
+.type-card.purple { border-left:3px solid #7c3aed; }
+.type-card.teal   { border-left:3px solid #14b8a6; }
+.type-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:10px; }
+
+/* CODE */
+pre {
+  background:#2a2a2a; color:#d4d4d4;
+  border-radius:6px; padding:12px 14px;
+  font-family:'Courier New',Consolas,monospace;
+  font-size:11.5px; line-height:1.6;
+  margin:8px 0; white-space:pre-wrap;
+}
+.kw  { color:#569cd6; }
+.str { color:#ce9178; }
+.cm  { color:#6a9955; }
+.cls { color:#4ec9b0; }
+
+/* OUTPUT */
+.output-box {
+  background:#2a2a2a; border-radius:6px; padding:12px 14px;
+  font-family:'Courier New',Consolas,monospace;
+  font-size:11.5px; color:#d4d4d4; margin:8px 0;
+}
+
+/* EXPLANATION */
+.expl-card {
+  background:#1a1a2e; border-left:4px solid #7c3aed;
+  border-radius:8px; padding:14px 16px; margin:8px 0;
+}
+.expl-card.teal  { border-left-color:#14b8a6; }
+.expl-card.red   { border-left-color:#ef4444; }
+.expl-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:6px; }
+.expl-card p  { font-size:13px; color:#ccc; }
+
+ic { background:#333; padding:2px 6px; border-radius:4px;
+     font-family:'Courier New',monospace; font-size:11px; color:#d4d4d4; }
+
+/* PURPOSE STEPS */
+.step-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:7px; font-size:13px; color:#ccc; }
+.step-circle {
+  width:22px; height:22px; border-radius:50%;
+  background:#333; border:1.5px solid #666;
+  color:#ccc; font-size:10.5px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
+}
+
+/* FLOW DIAGRAM */
+.flow-wrap { display:flex; flex-direction:column; align-items:center; gap:0; margin:14px 0; }
+.flow-box-lav  { border:2px solid #b39ddb; border-radius:8px; padding:10px 60px; font-size:13px; font-weight:700; background:#ede7f6; color:#4a148c; text-align:center; min-width:240px; }
+.flow-box-teal { border:2px solid #80cbc4; border-radius:8px; padding:10px 60px; font-size:13px; font-weight:700; background:#e0f2f1; color:#004d40; text-align:center; min-width:240px; }
+.flow-box-org  { border:2px solid #ffcc80; border-radius:8px; padding:10px 60px; font-size:13px; font-weight:700; background:#fff3e0; color:#bf360c; text-align:center; min-width:240px; }
+.flow-box-lgrn { border:2px solid #a5d6a7; border-radius:8px; padding:10px 60px; font-size:13px; font-weight:700; background:#f1f8e9; color:#1b5e20; text-align:center; min-width:240px; }
+.flow-arrow    { font-size:20px; color:#aaa; line-height:1.4; }
+
+/* NOTE CARDS */
+.note-card {
+  background:#1e1e1e; border-radius:8px; padding:14px 16px;
+  border-top:3px solid #444;
+}
+.note-card.purple { border-top-color:#7c3aed; }
+.note-card.teal   { border-top-color:#14b8a6; }
+.note-card.orange { border-top-color:#f97316; }
+.note-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:6px; }
+.note-card p  { font-size:12.5px; color:#aaa; }
+
+/* RULE CARDS */
+.rule-card {
+  background:#1e1e1e; border-radius:10px; padding:16px 18px; margin:8px 0;
+  border-left:3px solid #ef4444;
+}
+.rule-card.green { border-left-color:#22c55e; }
+.rule-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:6px; }
+.rule-card p  { font-size:13px; color:#ccc; margin-bottom:8px; }
+.rule-note {
+  background:#2a2a2a; border-left:3px solid #ef4444;
+  border-radius:4px; padding:8px 12px; font-size:12.5px; color:#ccc; margin-top:6px;
+}
+.rule-note.green { border-left-color:#22c55e; }
+
+/* COMPARISON TABLE */
+.cmp-table { width:100%; border-collapse:collapse; margin:8px 0; font-size:13px; }
+.cmp-table th { background:#2a2a2a; color:#aaa; font-size:11.5px; font-weight:700; padding:9px 14px; text-align:left; }
+.cmp-table td { padding:9px 14px; border-bottom:1px solid #2a2a2a; color:#ccc; }
+.cmp-table tr:last-child td { border-bottom:none; }
+
+/* LAMBDA vs MR cards */
+.lmr-card {
+  background:#1e1e1e; border-radius:10px; padding:16px 18px;
+}
+.lmr-card.purple { border-left:3px solid #7c3aed; }
+.lmr-card.teal   { border-left:3px solid #14b8a6; }
+.lmr-card h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:10px; }
+
+/* USES CARDS */
+.use-card {
+  background:#1e1e1e; border-radius:8px; padding:14px;
+}
+.use-num {
+  width:24px; height:24px; border-radius:50%;
+  background:#333; border:1.5px solid #666;
+  color:#ccc; font-size:11px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:8px;
+}
+.use-card p { font-size:12.5px; color:#ccc; font-weight:500; }
+
+/* KEY RULE */
+.key-card {
+  background:#1a1a2e; border-left:4px solid #7c3aed;
+  border-radius:10px; padding:16px 18px; margin:14px 0;
+}
+.key-card h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:5px; }
+.key-card p  { font-size:13px; color:#ccc; }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <h1>Method Reference ( :: )</h1>
+  <p>Complete notes — definition, types, examples, return rules, comparison, uses</p>
+</div>
+
+<!-- ═══ DEFINITION ═══ -->
+<div class="sec-label">Definition</div>
+<div class="wrap">
+  <div class="def-card">
+    <h3>What is a Method Reference?</h3>
+    <p>A Method Reference is a shorthand syntax for a Lambda Expression that simply refers to an existing method. Instead of writing the implementation again using a Lambda Expression, we can directly refer to an already existing method. Method References were introduced in Java 8 along with Lambda Expressions.</p>
+  </div>
+
+  <div class="def-card green">
+    <h3>Simple definition (for interviews)</h3>
+    <p>Method Reference is a compact way of referring to an existing method using the <ic>::</ic> operator.</p>
+  </div>
+</div>
+
+<!-- ═══ WHY METHOD REFERENCE ═══ -->
+<div class="sec-label">Why Method Reference?</div>
+<div class="wrap">
+  <div class="g2">
+    <div class="dark-card">
+      <h4>Using a Lambda Expression</h4>
+      <p>Lambda is simply calling an already existing method — this is repetitive.</p>
+      <pre>Demo d = () -> Reference.m1();</pre>
+    </div>
+    <div class="dark-card" style="border-left:3px solid #14b8a6;">
+      <h4>Using a Method Reference</h4>
+      <p>We can directly refer to the method instead — shorter, cleaner.</p>
+      <pre>Demo d = Reference::m1;</pre>
+    </div>
+  </div>
+
+  <div class="dark-card" style="margin-top:6px;">
+    <h3>Purpose — why use Method Reference</h3>
+    <div class="step-row"><div class="step-circle">1</div> Improves readability — code becomes easier to understand</div>
+    <div class="step-row"><div class="step-circle">2</div> Improves conciseness — less code is written</div>
+    <div class="step-row"><div class="step-circle">3</div> Avoids repetition — no need to rewrite the same implementation</div>
+    <div class="step-row"><div class="step-circle">4</div> Supports Functional Programming — works with Functional Interfaces and Lambda Expressions</div>
+  </div>
+</div>
+
+<!-- ═══ SYNTAX ═══ -->
+<div class="sec-label">Syntax</div>
+<div class="wrap">
+  <div class="g2">
+    <div class="syn-card purple">
+      <h4>Static Method Reference</h4>
+      <pre>ClassName::staticMethodName</pre>
+      <div class="syn-label">Example:</div>
+      <pre>Math::max</pre>
+    </div>
+    <div class="syn-card teal">
+      <h4>Instance Method Reference</h4>
+      <pre>objectReference::instanceMethodName</pre>
+      <div class="syn-label">Example:</div>
+      <pre>obj::display</pre>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TYPES ═══ -->
+<div class="sec-label">Types of Method References</div>
+<div class="wrap">
+  <div class="g2">
+    <div class="type-card purple">
+      <h4>1 — Reference to a static method</h4>
+      <pre>ClassName::staticMethodName</pre>
+    </div>
+    <div class="type-card teal">
+      <h4>2 — Reference to an instance method of a particular object</h4>
+      <pre>objectReference::instanceMethodName</pre>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TYPE 1 ═══ -->
+<div class="sec-label">Type 1 — Reference to a Static Method</div>
+<div class="wrap">
+
+  <div class="dark-card">
+    <h4>Example 1 — static method reference (wish)</h4>
+    <pre><span class="cm">// Functional Interface</span>
+<span class="kw">public interface</span> <span class="cls">Demo</span> {
+  <span class="kw">void</span> wish();
+}
+
+<span class="cm">// Implementation class</span>
+<span class="kw">class</span> <span class="cls">Reference</span> {
+  <span class="kw">public static void</span> m1() {
+    System.out.println(<span class="str">"hello world"</span>);
+  }
+}
+
+<span class="kw">public static void</span> main(String[] args) {
+  Demo d = Reference::m1;
+  d.wish();
+}</pre>
+    <div class="output-box">Output: hello world</div>
+  </div>
+
+  <div class="expl-card">
+    <h4>Explanation</h4>
+    <p>The method <ic>m1()</ic> is already available. Instead of writing the full Lambda, we directly refer to it with <ic>Reference::m1</ic> . When <ic>d.wish()</ic> is executed, Java internally calls <ic>Reference.m1()</ic> .</p>
+  </div>
+
+  <div class="dark-card" style="margin-top:8px;">
+    <h3>Flow of execution</h3>
+    <div class="flow-wrap">
+      <div class="flow-box-lav">Functional Interface method</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-box-teal">Method Reference</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-box-org">Existing method</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-box-lgrn">Execution</div>
+    </div>
+  </div>
+
+  <div class="dark-card" style="margin-top:8px;">
+    <h4>Example 2 — static method reference using Math::max</h4>
+    <pre><span class="kw">public interface</span> <span class="cls">Calci</span> {
+  <span class="kw">int</span> findMax(<span class="kw">int</span> x, <span class="kw">int</span> y);
+}
+
+<span class="kw">public static void</span> main(String[] args) {
+  Calci c = Math::max;
+  System.out.println(c.findMax(<span class="num">10</span>, <span class="num">20</span>));
+}</pre>
+    <div class="output-box">Output: 20</div>
+  </div>
+
+  <div class="expl-card">
+    <h4>Explanation</h4>
+    <p><ic>Math::max</ic> refers to <ic>Math.max(int, int)</ic> . When <ic>c.findMax(10, 20)</ic> is executed, internally <ic>Math.max(10, 20)</ic> is executed, giving output 20.</p>
+  </div>
+
+</div>
+
+<!-- ═══ TYPE 2 ═══ -->
+<div class="sec-label">Type 2 — Reference to an Instance Method of a Particular Object</div>
+<div class="wrap">
+
+  <div class="def-card">
+    <h3>Definition</h3>
+    <p>If we refer to a non-static method using an object reference, it is called an Instance Method Reference.</p>
+  </div>
+
+  <div class="dark-card" style="margin-top:8px;">
+    <h4>Example 1 — instance method reference</h4>
+    <pre><span class="cm">// Reference class</span>
+<span class="kw">public class</span> <span class="cls">Reference</span> {
+  <span class="kw">public void</span> test() {
+    System.out.println(<span class="str">"we are getting more testing requirements"</span>);
+  }
+}
+
+<span class="cm">// Functional Interface</span>
+<span class="kw">public interface</span> <span class="cls">Demo</span> {
+  <span class="kw">void</span> m1();
+
+  <span class="kw">public static void</span> main(String[] args) {
+    Reference r = <span class="kw">new</span> Reference();
+    Demo d = r::test;           <span class="cm">// using object reference</span>
+    d.m1();
+
+    Demo d2 = <span class="kw">new</span> Reference()::test;  <span class="cm">// using inline object</span>
+    d2.m1();
+  }
+}</pre>
+    <div class="output-box">Output:
+we are getting more testing requirements
+we are getting more testing requirements</div>
+  </div>
+
+  <div class="expl-card">
+    <h4>Explanation</h4>
+    <p><ic>r::test</ic> means <ic>r.test()</ic> . Similarly, <ic>new Reference()::test</ic> means <ic>new Reference().test()</ic> . Both forms are valid.</p>
+  </div>
+
+  <div class="dark-card" style="margin-top:8px;">
+    <h4>Example 2 — System.out::println</h4>
+    <pre><span class="kw">public interface</span> <span class="cls">Remo</span> {
+  <span class="kw">void</span> display(String x);
+}
+
+<span class="kw">public class</span> <span class="cls">Demo1</span> {
+  <span class="kw">public void</span> m1(String s) {
+    System.out.println(s);
+  }
+
+  <span class="kw">public static void</span> main(String[] args) {
+    Remo r = System.out::println;
+    r.display(<span class="str">"hello"</span> + <span class="str">" every one "</span> + <span class="num">20</span> + <span class="num">30</span>);
+  }
+}</pre>
+    <div class="output-box">Output: hello every one 2030</div>
+  </div>
+
+  <div class="expl-card teal">
+    <h4>Explanation</h4>
+    <p><ic>System.out::println</ic> refers to <ic>System.out.println()</ic> . Therefore <ic>r.display(...)</ic> internally becomes <ic>System.out.println(...)</ic> .</p>
+  </div>
+
+</div>
+
+<!-- ═══ IMPORTANT NOTES ═══ -->
+<div class="sec-label">Important Notes</div>
+<div class="wrap">
+  <div class="g3">
+    <div class="note-card purple">
+      <h4>Note 1 — compiler converts to Lambda</h4>
+      <p>Method References are converted into Lambda Expressions by the compiler internally.</p>
+      <pre>Reference::m1
+// internally behaves like:
+() -> Reference.m1()</pre>
+    </div>
+    <div class="note-card teal">
+      <h4>Note 2 — parameter list must match</h4>
+      <p>The parameter list of the Functional Interface method must match the parameter list of the referred method.</p>
+    </div>
+    <div class="note-card orange">
+      <h4>Note 3 — return type compatibility</h4>
+      <p>Return type compatibility rules must be followed between the Functional Interface method and the referred method.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RETURN TYPE RULES ═══ -->
+<div class="sec-label">Return Type Rules</div>
+<div class="wrap">
+
+  <div class="rule-card">
+    <h4>Rule 1 — compile time error case</h4>
+    <p>If the Functional Interface method returns a value, the referred method must also return the same compatible type. Mismatch causes a Compile Time Error.</p>
+    <pre><span class="kw">public interface</span> <span class="cls">Demo2</span> {
+  <span class="kw">int</span> m1();  <span class="cm">// returns int</span>
+}
+
+<span class="kw">class</span> <span class="cls">Ref</span> {
+  <span class="kw">public static void</span> fun() {  <span class="cm">// returns void — MISMATCH</span>
+    System.out.println(<span class="str">"having fun"</span>);
+  }
+}
+
+<span class="cm">// Demo2 d = Ref::fun;  → COMPILE TIME ERROR</span></pre>
+    <div class="rule-note">Functional Interface method returns <ic>int</ic> but <ic>fun()</ic> returns <ic>void</ic> — mismatch → Compile Time Error.</div>
+  </div>
+
+  <div class="rule-card green" style="margin-top:8px;">
+    <h4>Rule 2 — void method accepts any return type</h4>
+    <p>If the Functional Interface method returns <ic>void</ic> , the referred method may return any datatype. The returned value will simply be ignored by Java.</p>
+    <pre><span class="kw">public interface</span> <span class="cls">Demo2</span> {
+  <span class="kw">void</span> m1();  <span class="cm">// returns void</span>
+}
+
+<span class="kw">class</span> <span class="cls">Ref</span> {
+  <span class="kw">public static int</span> fun() {  <span class="cm">// returns int — ALLOWED</span>
+    System.out.println(<span class="str">"having fun"</span>);
+    <span class="kw">return</span> <span class="num">10</span>;            <span class="cm">// 10 is ignored</span>
+  }
+}
+
+Demo2 d = Ref::fun;   <span class="cm">// valid</span>
+d.m1();</pre>
+    <div class="output-box">Output: having fun</div>
+    <div class="rule-note green"><ic>void m1()</ic> does not expect any return value. Even though <ic>fun()</ic> returns 10, Java ignores it. Program executes successfully.</div>
+  </div>
+
+</div>
+
+<!-- ═══ METHOD REFERENCE VS LAMBDA EXPRESSION ═══ -->
+<div class="sec-label">Method Reference vs Lambda Expression</div>
+<div class="wrap">
+  <div class="dark-card">
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Feature</th><th>Lambda Expression</th><th>Method Reference</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Code length</td><td>More code</td><td>Less code</td></tr>
+        <tr><td>Implementation</td><td>Explicit implementation written</td><td>Reuses existing method</td></tr>
+        <tr><td>Readability</td><td>Slightly less readable</td><td>More readable</td></tr>
+        <tr><td>When to use</td><td>For new logic</td><td>For existing logic</td></tr>
+      </tbody>
+    </table>
+
+    <div class="g2" style="margin-top:10px;">
+      <div class="lmr-card purple">
+        <h4>Lambda</h4>
+        <pre>Demo d = () -> Reference.m1();</pre>
+      </div>
+      <div class="lmr-card teal">
+        <h4>Method Reference</h4>
+        <pre>Demo d = Reference::m1;</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ USES ═══ -->
+<div class="sec-label">Uses of Method Reference</div>
+<div class="wrap">
+  <div class="g5">
+    <div class="use-card">
+      <div class="use-num">1</div>
+      <p>More concise — less code is written</p>
+    </div>
+    <div class="use-card">
+      <div class="use-num">2</div>
+      <p>More readable — programs become easier to understand</p>
+    </div>
+    <div class="use-card">
+      <div class="use-num">3</div>
+      <p>Avoids redundant code — no need to rewrite existing logic</p>
+    </div>
+    <div class="use-card">
+      <div class="use-num">4</div>
+      <p>Supports Functional Programming — works with Functional Interfaces and Lambda Expressions</p>
+    </div>
+    <div class="use-card">
+      <div class="use-num">5</div>
+      <p>Used in Stream API — frequently used with Streams and Collections</p>
+      <pre style="font-size:10.5px;margin-top:6px;">list.forEach(System.out::println);</pre>
+    </div>
+  </div>
+
+  <div class="key-card" style="margin-top:14px;">
+    <h4>Key rule to always remember</h4>
+    <p>Method Reference using <ic>::</ic> is just a shorthand for a Lambda Expression that calls an existing method. The parameter list and return type of the Functional Interface method must be compatible with the referred method. The compiler internally converts Method References back into Lambda Expressions.</p>
+  </div>
+</div>
+
+</body>
+</html>

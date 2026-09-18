@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lambda Expressions — Java 8</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; color:#e0e0e0; font-family:'Segoe UI',Arial,sans-serif; font-size:13.5px; line-height:1.65; }
+
+/* ── HEADER ── */
+.header { background:#111; padding:28px 32px 8px; }
+.header h1 { font-size:28px; font-weight:800; color:#fff; margin-bottom:4px; }
+.header p  { font-size:13px; color:#aaa; }
+
+/* ── SECTION LABEL ── */
+.sec-label {
+  font-size:11px; font-weight:700; letter-spacing:1.5px;
+  text-transform:uppercase; color:#888;
+  border-bottom:1px solid #333;
+  padding:18px 32px 6px;
+}
+
+/* ── CONTENT WRAP ── */
+.wrap { padding:0 32px 8px; }
+
+/* ── DARK CARD ── */
+.dark-card {
+  background:#1e1e1e; border-radius:10px;
+  padding:18px 20px; margin:10px 0;
+}
+.dark-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:6px; }
+.dark-card p  { font-size:13px; color:#ccc; margin-bottom:5px; }
+
+/* ── GRID ── */
+.g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:10px 0; }
+.g3 { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:10px 0; }
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0; }
+.g5-wrap { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+.g5-wrap .why-btn { flex:1; min-width:180px; }
+
+/* INTERFACE CARDS */
+.iface-card {
+  background:#1e1e1e; border-radius:8px; padding:16px 14px;
+  border-top:3px solid #333;
+}
+.iface-card.purple { border-top-color:#7c3aed; }
+.iface-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:6px; }
+.iface-card p  { font-size:12.5px; color:#aaa; }
+
+/* DEF CARD — bordered left */
+.def-card {
+  background:#1a1a2e; border-radius:10px;
+  border-left:4px solid #7c3aed;
+  padding:16px 18px; margin:10px 0;
+}
+.def-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:6px; }
+.def-card p  { font-size:13px; color:#ccc; margin-bottom:4px; }
+
+/* ALLOWED CARDS */
+.allow-card {
+  background:#1e1e1e; border-radius:8px; padding:14px;
+}
+.allow-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:6px; }
+.badge-green {
+  display:inline-block; background:transparent; border:1px solid #4ade80;
+  color:#4ade80; font-size:10.5px; font-weight:700;
+  padding:2px 10px; border-radius:20px; margin-bottom:8px;
+}
+.badge-red {
+  display:inline-block; background:transparent; border:1px solid #f87171;
+  color:#f87171; font-size:10.5px; font-weight:700;
+  padding:2px 10px; border-radius:20px; margin-bottom:8px;
+}
+
+/* OBJECT RULE CARD */
+.obj-card {
+  background:#1e1e1e; border-radius:10px; padding:16px 18px; margin:10px 0;
+}
+.obj-card h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:6px; }
+.obj-card p  { font-size:13px; color:#ccc; margin-bottom:8px; }
+
+/* BUILT-IN CARD */
+.builtin-card {
+  background:#1e1e1e; border-radius:10px; padding:14px 18px; margin:10px 0;
+}
+.builtin-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:10px; }
+.badge-outline {
+  display:inline-block; border:1px solid #888;
+  color:#ccc; font-size:11.5px; font-weight:600;
+  padding:3px 12px; border-radius:20px; margin:3px 4px 3px 0;
+}
+
+/* CODE BLOCK */
+pre {
+  background:#2a2a2a; color:#d4d4d4;
+  border-radius:6px; padding:12px 14px;
+  font-family:'Courier New',Consolas,monospace;
+  font-size:11.5px; line-height:1.6;
+  margin:8px 0; white-space:pre-wrap;
+  overflow-x:auto;
+}
+.kw  { color:#569cd6; }
+.str { color:#ce9178; }
+.cm  { color:#6a9955; }
+.cls { color:#4ec9b0; }
+.num { color:#b5cea8; }
+
+/* STEPS */
+.step-row { display:flex; align-items:center; gap:10px; margin-bottom:7px; font-size:13px; color:#ccc; }
+.step-circle {
+  width:22px; height:22px; border-radius:50%;
+  background:#333; border:1.5px solid #666;
+  color:#ccc; font-size:10.5px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+
+/* PROBLEM CARD */
+.prob-card {
+  background:#1e1e1e; border-radius:10px; padding:16px 18px; margin:10px 0;
+  border-left:3px solid #f59e0b;
+}
+.prob-card h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:6px; }
+.prob-card p  { font-size:13px; color:#ccc; }
+
+/* WHY LAMBDA BUTTONS */
+.why-btn {
+  background:#1e1e1e; border-radius:8px; padding:12px 14px;
+  display:flex; align-items:center; gap:10px;
+}
+.why-num {
+  width:22px; height:22px; border-radius:50%;
+  background:#333; border:1.5px solid #666;
+  color:#ccc; font-size:10.5px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.why-btn span { font-size:13px; color:#e0e0e0; font-weight:500; }
+
+/* WITHOUT / WITH LAMBDA */
+.ww-card {
+  background:#1e1e1e; border-radius:10px; padding:16px 18px;
+}
+.ww-card h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:10px; }
+
+/* LAMBDA DEF CARD */
+.ldef-card {
+  background:#1a1a2e; border-radius:10px;
+  border-left:4px solid #7c3aed;
+  padding:16px 18px; margin:10px 0;
+}
+.ldef-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:6px; }
+.ldef-card p  { font-size:13px; color:#ccc; }
+
+/* SYNTAX THREE COMPONENTS */
+.syn-comp {
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:12px 0;
+}
+.syn-box {
+  border-radius:8px; padding:14px; text-align:center;
+}
+.syn-box.purple { background:#2d1b69; border:1.5px solid #7c3aed; }
+.syn-box.gray   { background:#1e1e1e; border:1.5px solid #444; }
+.syn-box.green  { background:#0f2e1a; border:1.5px solid #16a34a; }
+.syn-box .sym   { font-size:22px; font-weight:900; margin-bottom:4px; }
+.syn-box.purple .sym { color:#a78bfa; }
+.syn-box.gray   .sym { color:#e0e0e0; }
+.syn-box.green  .sym { color:#4ade80; }
+.syn-box .lbl   { font-size:11.5px; font-weight:700; }
+.syn-box.purple .lbl { color:#a78bfa; }
+.syn-box.gray   .lbl { color:#aaa; }
+.syn-box.green  .lbl { color:#4ade80; }
+
+/* PARAM CARDS */
+.param-card {
+  background:#1e1e1e; border-radius:8px; padding:14px;
+}
+.param-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:6px; }
+.param-card p  { font-size:12.5px; color:#aaa; margin-bottom:6px; }
+
+/* SINGLE PARAM */
+.single-card {
+  background:#1e1e1e; border-radius:8px; padding:14px;
+  max-width:360px; margin:8px 0;
+}
+.single-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:5px; }
+.single-card p  { font-size:12.5px; color:#aaa; margin-bottom:6px; }
+
+/* EXPLICIT / IMPLICIT */
+.ei-card {
+  background:#1e1e1e; border-radius:10px; padding:16px 18px;
+}
+.ei-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:6px; }
+.ei-card p  { font-size:13px; color:#ccc; margin-bottom:8px; }
+.ei-note {
+  background:#2a2a2a; border-radius:6px; padding:8px 10px;
+  font-size:12px; color:#aaa; margin-top:8px;
+}
+ic { background:#333; padding:2px 6px; border-radius:4px; font-family:'Courier New',monospace; font-size:11px; color:#d4d4d4; }
+
+/* COMPARISON TABLE */
+.cmp-table { width:100%; border-collapse:collapse; margin:8px 0; font-size:13px; }
+.cmp-table th { background:#2a2a2a; color:#aaa; font-size:11px; font-weight:700; letter-spacing:0.5px; padding:8px 12px; text-align:left; }
+.cmp-table td { padding:8px 12px; border-bottom:1px solid #2a2a2a; color:#ccc; }
+.cmp-table tr:last-child td { border-bottom:none; }
+.cmp-table tbody tr:hover td { background:#222; }
+
+/* NOTES CARDS */
+.note-card {
+  background:#1e1e1e; border-radius:8px; padding:14px 16px;
+  border-top:3px solid #444;
+}
+.note-card.purple { border-top-color:#7c3aed; }
+.note-card.teal   { border-top-color:#14b8a6; }
+.note-card.orange { border-top-color:#f97316; }
+.note-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:5px; }
+.note-card p  { font-size:12.5px; color:#aaa; }
+
+/* EXAMPLE CARD */
+.ex-card {
+  background:#1e1e1e; border-radius:10px; padding:16px 18px; margin:10px 0;
+}
+.ex-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; }
+.ex-note {
+  background:#2a2a2a; border-radius:6px; padding:8px 10px;
+  font-size:12.5px; color:#aaa; margin-top:8px;
+}
+
+/* ADVANTAGE CARDS */
+.adv-card {
+  background:#1e1e1e; border-radius:8px; padding:14px;
+}
+.adv-num {
+  width:22px; height:22px; border-radius:50%;
+  background:#333; border:1.5px solid #666;
+  color:#ccc; font-size:10.5px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:8px;
+}
+.adv-card p { font-size:13px; color:#ccc; font-weight:500; }
+
+/* KEY RULE */
+.key-card {
+  background:#1a1a2e; border-left:4px solid #7c3aed;
+  border-radius:10px; padding:16px 18px; margin:14px 0;
+}
+.key-card h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:5px; }
+.key-card p  { font-size:13px; color:#ccc; }
+
+/* PAGE BREAK */
+@media print { .pb { page-break-before:always; } }
+.pb { margin-top:30px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<div class="header">
+  <h1>Lambda Expressions — Java 8</h1>
+  <p>Complete notes — Functional Interfaces, Syntax, Return types, Examples, Advantages</p>
+</div>
+
+<!-- ═══════ TYPES OF INTERFACES ═══════ -->
+<div class="sec-label">Types of Interfaces in Java</div>
+<div class="wrap">
+  <div class="g4">
+    <div class="iface-card">
+      <h4>Normal Interface</h4>
+      <p>Contains multiple abstract methods</p>
+    </div>
+    <div class="iface-card purple">
+      <h4>Functional Interface</h4>
+      <p>Contains only one abstract method — focus of Lambda</p>
+    </div>
+    <div class="iface-card">
+      <h4>Marker Interface</h4>
+      <p>Empty interface — no methods</p>
+    </div>
+    <div class="iface-card">
+      <h4>Nested Interface</h4>
+      <p>Interface declared inside another interface or class</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ FUNCTIONAL INTERFACE ═══════ -->
+<div class="sec-label">Functional Interface (SAM Interface)</div>
+<div class="wrap">
+  <div class="def-card">
+    <h3>Definition</h3>
+    <p>A Functional Interface contains <strong>exactly one abstract method</strong>. SAM stands for Single Abstract Method. It is called a Functional Interface because we provide implementation for only one abstract method.</p>
+    <pre><span class="kw">public interface</span> <span class="cls">Demo1</span> {
+  <span class="kw">public void</span> m1();
+}</pre>
+  </div>
+
+  <div class="g3">
+    <div class="allow-card">
+      <h4>Allowed — multiple default methods</h4>
+      <span class="badge-green">allowed</span>
+      <pre>default void m2() {
+  System.out.println("m2");
+}</pre>
+    </div>
+    <div class="allow-card">
+      <h4>Allowed — multiple static methods</h4>
+      <span class="badge-green">allowed</span>
+      <pre>public static void m3() {
+  System.out.println("m3");
+}</pre>
+    </div>
+    <div class="allow-card">
+      <h4>Cannot have 2+ abstract methods</h4>
+      <span class="badge-red">not allowed</span>
+      <p style="font-size:12.5px;color:#aaa;margin-top:4px;">Adding a second abstract method breaks the Functional Interface contract.</p>
+    </div>
+  </div>
+
+  <div class="obj-card">
+    <h4>Object class methods — special rule</h4>
+    <p>Even if an interface declares <ic>equals(Object)</ic> , <ic>hashCode()</ic> , or <ic>toString()</ic> , these are NOT counted as abstract methods — they already exist in the <ic>Object</ic> class. The compiler ignores them while counting. So the interface below is still a valid Functional Interface:</p>
+    <pre><span class="kw">public interface</span> <span class="cls">Demo1</span> {
+  <span class="kw">public void</span> m1();                    <span class="cm">// counted — 1 abstract method</span>
+  <span class="kw">public boolean</span> equals(Object obj);   <span class="cm">// ignored</span>
+  <span class="kw">public int</span> hashCode();               <span class="cm">// ignored</span>
+}</pre>
+  </div>
+
+  <div class="builtin-card">
+    <h4>Built-in examples of Functional Interfaces</h4>
+    <span class="badge-outline">Comparable</span>
+    <span class="badge-outline">Comparator</span>
+    <span class="badge-outline">Runnable</span>
+    <span class="badge-outline">Callable</span>
+  </div>
+</div>
+
+<!-- ═══════ CONVENTIONAL APPROACH ═══════ -->
+<div class="sec-label">Conventional Approach — Before Java 8</div>
+<div class="wrap">
+  <div class="dark-card">
+    <h3>Steps required to use a Functional Interface</h3>
+    <div style="margin:10px 0;">
+      <div class="step-row"><div class="step-circle">1</div> Create an Interface</div>
+      <div class="step-row"><div class="step-circle">2</div> Create a Child Class implementing the interface</div>
+      <div class="step-row"><div class="step-circle">3</div> Override the abstract method</div>
+      <div class="step-row"><div class="step-circle">4</div> Create an Object</div>
+      <div class="step-row"><div class="step-circle">5</div> Call the Method</div>
+    </div>
+    <pre><span class="cm">// Interface</span>
+<span class="kw">public interface</span> <span class="cls">Vehicle</span> { <span class="kw">void</span> start(); }
+
+<span class="cm">// Two separate classes needed</span>
+<span class="kw">public class</span> <span class="cls">Car</span> <span class="kw">implements</span> <span class="cls">Vehicle</span> {
+  <span class="kw">public void</span> start() { System.out.println(<span class="str">"Car Started"</span>); }
+}
+<span class="kw">public class</span> <span class="cls">Bus</span> <span class="kw">implements</span> <span class="cls">Vehicle</span> {
+  <span class="kw">public void</span> start() { System.out.println(<span class="str">"Bus Started"</span>); }
+}
+
+<span class="cm">// Driver class</span>
+Vehicle car = <span class="kw">new</span> Car();
+car.start();  <span class="cm">// Car Started</span>
+Vehicle bus = <span class="kw">new</span> Bus();
+bus.start();  <span class="cm">// Bus Started</span></pre>
+  </div>
+
+  <div class="prob-card">
+    <h4>Problem with this approach</h4>
+    <p>To execute only one method we are forced to create an interface, multiple child classes, override the method, create objects, and then call it. This increases code length, development time, and maintenance cost.</p>
+  </div>
+</div>
+
+<!-- ═══════ WHY LAMBDA ═══════ -->
+<div class="sec-label">Why Lambda Expression was Introduced</div>
+<div class="wrap">
+  <div class="g5-wrap">
+    <div class="why-btn"><div class="why-num">1</div><span>Reduce boilerplate code</span></div>
+    <div class="why-btn"><div class="why-num">2</div><span>Improve readability</span></div>
+    <div class="why-btn"><div class="why-num">3</div><span>Support Functional Programming</span></div>
+  </div>
+  <div class="g5-wrap">
+    <div class="why-btn"><div class="why-num">4</div><span>Provide dynamic implementations</span></div>
+    <div class="why-btn"><div class="why-num">5</div><span>Work efficiently with Stream API</span></div>
+  </div>
+
+  <div class="g2" style="margin-top:8px;">
+    <div class="ww-card">
+      <h4>Without Lambda</h4>
+      <pre>Vehicle car = <span class="kw">new</span> Car();
+<span class="cm">// Needs a separate class</span></pre>
+    </div>
+    <div class="ww-card">
+      <h4>With Lambda</h4>
+      <pre>Vehicle car = () -> {
+  System.out.println(<span class="str">"Car Started"</span>);
+};
+<span class="cm">// No child class needed</span>
+<span class="cm">// No method overriding needed</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ LAMBDA DEFINITION ═══════ -->
+<div class="sec-label">Lambda Expression — Definition</div>
+<div class="wrap">
+  <div class="ldef-card">
+    <h3>What is a Lambda Expression?</h3>
+    <p>A Lambda Expression is an <strong>anonymous function</strong> used to provide the implementation of a Functional Interface in a concise way. Introduced in Java 8 to reduce boilerplate code and support Functional Programming. No child class is required, no method overriding is required.</p>
+  </div>
+</div>
+
+<!-- ═══════ LAMBDA SYNTAX ═══════ -->
+<div class="sec-label">Lambda Syntax</div>
+<div class="wrap">
+  <div class="dark-card">
+    <h3>Three components</h3>
+    <div class="syn-comp">
+      <div class="syn-box purple">
+        <div class="sym">( )</div>
+        <div class="lbl">Parameters</div>
+      </div>
+      <div class="syn-box gray">
+        <div class="sym">-&gt;</div>
+        <div class="lbl">Lambda operator</div>
+      </div>
+      <div class="syn-box green">
+        <div class="sym">{ }</div>
+        <div class="lbl">Method body</div>
+      </div>
+    </div>
+    <pre>InterfaceName variable = (parameters) -> {
+  method body
+};</pre>
+  </div>
+
+  <div class="g3">
+    <div class="param-card">
+      <h4>Without parameters</h4>
+      <pre>Vehicle car = () -> {
+  System.out.println("car started");
+};
+car.start();</pre>
+    </div>
+    <div class="param-card">
+      <h4>With parameters (type specified)</h4>
+      <pre>Demo2 d1 = (int a) -> {
+  System.out.println(a * 2);
+};
+d1.m1(10); // Output: 20</pre>
+    </div>
+    <div class="param-card">
+      <h4>With parameters (type omitted)</h4>
+      <p>Java automatically infers the datatype from the method declaration. Both forms are valid.</p>
+      <pre>Demo2 d2 = (a) -> {
+  System.out.println(a * 2);
+};
+d2.m1(20); // Output: 40</pre>
+    </div>
+  </div>
+
+  <div class="single-card">
+    <h4>Single parameter shorthand</h4>
+    <p>When there is only one parameter, parentheses can also be omitted.</p>
+    <pre>Even e = x -> x % 2 == 0;</pre>
+  </div>
+</div>
+
+<!-- ═══════ EXPLICIT VS IMPLICIT ═══════ -->
+<div class="sec-label">Explicit Return vs Implicit Return</div>
+<div class="wrap">
+  <div class="g2">
+    <div class="ei-card">
+      <h3>Explicit Return</h3>
+      <p>Uses the <ic>return</ic> keyword inside <ic>{ }</ic> curly braces. Used when there are multiple statements in the body.</p>
+      <pre>Test t = (a, b) -> {
+  return a * b * 5;
+};
+System.out.println(t.display(3, 2));
+// Output: 30</pre>
+      <div class="ei-note">Calculation: 3 × 2 × 5 = 30. Since <ic>return</ic> is explicitly written, this is Explicit Return.</div>
+    </div>
+    <div class="ei-card">
+      <h3>Implicit Return</h3>
+      <p>If the lambda body has only one return statement, the <ic>return</ic> keyword and <ic>{ }</ic> curly braces can both be removed. Java automatically returns the result.</p>
+      <pre>Test t = (a, b) -> a * b * 5;
+System.out.println(t.display(3, 2));
+// Output: 30</pre>
+      <div class="ei-note">Same result — shorter code. Only works for single-expression bodies.</div>
+    </div>
+  </div>
+
+  <div class="dark-card" style="margin-top:8px;">
+    <h3>Comparison table</h3>
+    <table class="cmp-table">
+      <thead><tr><th>Feature</th><th>Explicit Return</th><th>Implicit Return</th></tr></thead>
+      <tbody>
+        <tr><td>return keyword</td><td>Used</td><td>Not used</td></tr>
+        <tr><td>Curly braces { }</td><td>Required</td><td>Not required</td></tr>
+        <tr><td>Code length</td><td>More code</td><td>Less code</td></tr>
+        <tr><td>Multiple statements</td><td>Possible</td><td>Single statement only</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════ IMPORTANT NOTES ═══════ -->
+<div class="sec-label">Important Notes</div>
+<div class="wrap">
+  <div class="g3">
+    <div class="note-card purple">
+      <h4>Note 1 — Functional Interfaces only</h4>
+      <p>Lambda Expressions can only be used with Functional Interfaces. They cannot be used with normal interfaces that have multiple abstract methods.</p>
+    </div>
+    <div class="note-card teal">
+      <h4>Note 2 — Dynamic functionality</h4>
+      <p>Using Lambda Expressions we can change the functionality dynamically. Same interface reference, different implementations at different points.</p>
+    </div>
+    <div class="note-card orange">
+      <h4>Note 3 — No child classes needed</h4>
+      <p>No need to create child classes and override methods. The lambda body directly acts as the implementation of the single abstract method.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ EXAMPLES ═══════ -->
+<div class="sec-label">Examples</div>
+<div class="wrap">
+
+  <div class="ex-card">
+    <h4>Example 1 — No parameters (Vehicle)</h4>
+    <pre><span class="kw">public interface</span> <span class="cls">Vehicle</span> {
+  <span class="kw">void</span> start();
+
+  <span class="kw">public static void</span> main(String[] args) {
+    Vehicle car = () -> {
+      System.out.println(<span class="str">"car started"</span>);
+    };
+    car.start();  <span class="cm">// car started</span>
+
+    Vehicle bus = () -> {
+      System.out.println(<span class="str">"bus started"</span>);
+    };
+    bus.start();  <span class="cm">// bus started</span>
+  }
+}</pre>
+    <div class="ex-note">Same Functional Interface, two different implementations — no child classes created, no method overriding.</div>
+  </div>
+
+  <div class="ex-card">
+    <h4>Example 2 — With parameters</h4>
+    <pre><span class="kw">public interface</span> <span class="cls">Demo2</span> {
+  <span class="kw">void</span> m1(<span class="kw">int</span> a);
+
+  <span class="kw">public static void</span> main(String[] args) {
+    Demo2 d1 = (<span class="kw">int</span> a) -> {  <span class="cm">// type specified</span>
+      System.out.println(a * <span class="num">2</span>);
+    };
+    d1.m1(<span class="num">10</span>);  <span class="cm">// Output: 20</span>
+
+    Demo2 d2 = (a) -> {  <span class="cm">// type omitted</span>
+      System.out.println(a * <span class="num">2</span>);
+    };
+    d2.m1(<span class="num">20</span>);  <span class="cm">// Output: 40</span>
+  }
+}</pre>
+  </div>
+
+  <div class="ex-card">
+    <h4>Example 3 — Even number check</h4>
+    <pre><span class="kw">public interface</span> <span class="cls">Even</span> {
+  <span class="kw">boolean</span> isEven(<span class="kw">int</span> x);
+
+  <span class="kw">public static void</span> main(String[] args) {
+    Even e1 = (<span class="kw">int</span> x) -> {  <span class="cm">// explicit return</span>
+      <span class="kw">return</span> x % <span class="num">2</span> == <span class="num">0</span>;
+    };
+    System.out.println(e1.isEven(<span class="num">23</span>));  <span class="cm">// false</span>
+
+    Even e2 = x -> x % <span class="num">2</span> == <span class="num">0</span>;  <span class="cm">// implicit return</span>
+    System.out.println(e2.isEven(<span class="num">10</span>));  <span class="cm">// true</span>
+  }
+}</pre>
+    <div class="ex-note">23 is odd → <ic>false</ic> &nbsp;|&nbsp; 10 is even → <ic>true</ic></div>
+  </div>
+
+  <div class="ex-card">
+    <h4>Example 4 — Calculator (void, no return)</h4>
+    <pre><span class="kw">public interface</span> <span class="cls">Calculator</span> {
+  <span class="kw">void</span> add(<span class="kw">int</span> x, <span class="kw">int</span> y);
+
+  <span class="kw">public static void</span> main(String[] args) {
+    Calculator c1 = (<span class="kw">int</span> x, <span class="kw">int</span> y) -> {  <span class="cm">// type specified</span>
+      System.out.println(x + y);
+    };
+    c1.add(<span class="num">10</span>, <span class="num">20</span>);  <span class="cm">// 30</span>
+
+    Calculator c2 = (x, y) -> {  <span class="cm">// type omitted</span>
+      System.out.println(x + y);
+    };
+    c2.add(<span class="num">30</span>, <span class="num">40</span>);  <span class="cm">// 70</span>
+  }
+}</pre>
+  </div>
+
+  <div class="ex-card">
+    <h4>Example 5 — Explicit and implicit return calculator</h4>
+    <pre><span class="kw">public interface</span> <span class="cls">Calculator2</span> {
+  <span class="kw">int</span> add(<span class="kw">int</span> x, <span class="kw">int</span> y);
+
+  <span class="kw">public static void</span> main(String[] args) {
+    Calculator2 c1 = (a, b) -> {  <span class="cm">// explicit return</span>
+      System.out.println(<span class="str">"calculating sum"</span>);
+      <span class="kw">return</span> a + b;
+    };
+    System.out.println(c1.add(<span class="num">20</span>, <span class="num">30</span>));  <span class="cm">// calculating sum → 50</span>
+
+    Calculator2 c2 = (x, y) -> x + y;  <span class="cm">// implicit return</span>
+    System.out.println(c2.add(<span class="num">20</span>, <span class="num">30</span>));  <span class="cm">// 50</span>
+  }
+}</pre>
+  </div>
+
+  <div class="ex-card">
+    <h4>Example 6 — Dynamic calculator (same interface, four operations)</h4>
+    <pre><span class="kw">public interface</span> <span class="cls">Calculator</span> {
+  <span class="kw">int</span> calculate(<span class="kw">int</span> x, <span class="kw">int</span> y);
+
+  <span class="kw">public static void</span> main(String[] args) {
+    Calculator add = (x, y) -> x + y;
+    Calculator sub = (x, y) -> x - y;
+    Calculator pro = (x, y) -> x * y;
+    Calculator div = (x, y) -> x / y;
+
+    System.out.println(<span class="str">"sum="</span>        + add.calculate(<span class="num">10</span>, <span class="num">20</span>));  <span class="cm">// 30</span>
+    System.out.println(<span class="str">"difference="</span> + sub.calculate(<span class="num">10</span>, <span class="num">20</span>));  <span class="cm">// -10</span>
+    System.out.println(<span class="str">"product="</span>    + pro.calculate(<span class="num">10</span>, <span class="num">20</span>));  <span class="cm">// 200</span>
+    System.out.println(<span class="str">"division="</span>   + div.calculate(<span class="num">10</span>, <span class="num">20</span>));  <span class="cm">// 0</span>
+  }
+}</pre>
+    <div class="ex-note">The same Functional Interface <ic>int calculate(int x, int y)</ic> is implemented in four different ways — addition, subtraction, multiplication, division. This demonstrates the dynamic nature of Lambda Expressions.</div>
+  </div>
+
+</div>
+
+<!-- ═══════ ADVANTAGES ═══════ -->
+<div class="sec-label">Advantages of Lambda Expressions</div>
+<div class="wrap">
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0;">
+    <div class="adv-card"><div class="adv-num">1</div><p>Makes code shorter and more readable</p></div>
+    <div class="adv-card"><div class="adv-num">2</div><p>Reduces boilerplate code significantly</p></div>
+    <div class="adv-card"><div class="adv-num">3</div><p>No need to create child classes</p></div>
+    <div class="adv-card"><div class="adv-num">4</div><p>Supports Functional Programming style</p></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 12px;">
+    <div class="adv-card"><div class="adv-num">5</div><p>Widely used in Stream API</p></div>
+    <div class="adv-card"><div class="adv-num">6</div><p>Easy to maintain</p></div>
+    <div class="adv-card"><div class="adv-num">7</div><p>Allows dynamic implementation of methods</p></div>
+  </div>
+
+  <div class="key-card">
+    <h4>Key rule to always remember</h4>
+    <p>Lambda Expressions work <strong>only with Functional Interfaces</strong> — interfaces that contain exactly one abstract method (SAM). The compiler maps the lambda body directly to that single abstract method.</p>
+  </div>
+</div>
+
+</body>
+</html>

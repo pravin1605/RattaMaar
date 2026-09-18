@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Web Application, Web Service & REST API + HTTP Methods — Study Notes</title>
+<style>
+  :root {
+    --primary: #4f46e5;
+    --primary-light: #eef2ff;
+    --accent: #06b6d4;
+    --accent2: #f59e0b;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --card-bg: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px;
+    background: #f8fafc;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  h1.title {
+    text-align: center;
+    font-size: 28px;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: 28px;
+    font-size: 14px;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 6px solid var(--primary);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .card.accent { border-left-color: var(--accent); }
+  .card.warn { border-left-color: var(--accent2); }
+  h2.section-title {
+    font-size: 20px;
+    color: var(--primary);
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 {
+    color: #111827;
+    font-size: 16px;
+    margin-bottom: 6px;
+    border-bottom: 2px solid var(--primary-light);
+    padding-bottom: 4px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    color: #fff;
+    background: var(--accent2);
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .badge.extra { background: var(--success); }
+  .flow {
+    background: #0f172a;
+    color: #e2e8f0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13.5px;
+    padding: 16px 18px;
+    border-radius: 8px;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 12px 0;
+    line-height: 1.5;
+  }
+  pre.code {
+    background: #1e1e2f;
+    color: #dcdcdc;
+    padding: 16px 18px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13.5px;
+    margin: 12px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  pre.code .kw { color: #569cd6; }
+  pre.code .str { color: #ce9178; }
+  pre.code .ann { color: #dcdcaa; }
+  pre.code .cls { color: #4ec9b0; }
+  pre.code .com { color: #6a9955; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 14px;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    text-align: left;
+  }
+  th {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 700;
+  }
+  tr:nth-child(even) { background: #fafafa; }
+  .qa {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+  }
+  .qa .q { font-weight: 700; color: #15803d; }
+  .qa .a { margin-top: 4px; color: #1f2937; }
+  .trick {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+  }
+  .trick .label { font-weight: 700; color: #b45309; }
+  .analogy {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+  }
+  .analogy .label { font-weight: 700; color: #1d4ed8; }
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 14px 0;
+  }
+  .method-box {
+    border-radius: 8px;
+    padding: 14px;
+    color: #fff;
+    text-align: center;
+    font-weight: 700;
+  }
+  .m-get { background: #2563eb; }
+  .m-post { background: #16a34a; }
+  .m-put { background: #d97706; }
+  .m-patch { background: #7c3aed; }
+  .m-delete { background: #dc2626; }
+  .method-box small {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
+    margin-top: 4px;
+    opacity: 0.9;
+  }
+  .toc {
+    background: var(--primary-light);
+    border-radius: 10px;
+    padding: 16px 22px;
+    margin-bottom: 24px;
+  }
+  .toc a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .toc li { margin-bottom: 4px; }
+  .footer-note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1 class="title">Web Application, Web Service & REST API</h1>
+  <p class="subtitle">+ HTTP Methods (GET / POST / PUT / PATCH / DELETE) — Interview-Ready Notes</p>
+
+  <div class="toc">
+    <strong>Contents</strong>
+    <ol>
+      <li><a href="#s1">Web Application, Web Service & REST API</a></li>
+      <li><a href="#s2">HTTP Methods — GET, POST, PUT, PATCH, DELETE</a></li>
+      <li><a href="#s3">SocietyHub Layered Architecture Example</a></li>
+      <li><a href="#s4">Interview Answer Templates</a></li>
+      <li><a href="#s5">Interview Q&A Bank</a> <span class="badge extra">Added</span></li>
+      <li><a href="#s6">Memory Tricks</a> <span class="badge extra">Added</span></li>
+      <li><a href="#s7">Common Bugs / Gotchas</a> <span class="badge extra">Added</span></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="card" id="s1">
+    <h2 class="section-title">1. What is a Web Application, Web Service, and REST API?</h2>
+    <p>These three terms are connected. Think about a food delivery application:</p>
+    <div class="flow">USER
+  ↓
+Web Application
+  ↓
+REST API
+  ↓
+Web Service
+  ↓
+Database</div>
+    <p><strong>Important:</strong> Web Application, Web Service, and REST API are <em>not</em> exactly the same thing.</p>
+
+    <h3>A. Web Application</h3>
+    <p>A software application that users access through a web browser or another web client — e.g. Amazon, Facebook, Gmail, a Society Management System, a Banking Website. The user interacts through a frontend/UI.</p>
+    <div class="flow">User
+  ↓
+Browser
+  ↓
+React Frontend
+  ↓
+Spring Boot Backend
+  ↓
+Database</div>
+    <div class="analogy">
+      <div class="label">🍽️ Restaurant Analogy</div>
+      <div>The customer sees the visible part of a restaurant — tables, menu, waiter, food, billing counter. Similarly, the user interacts with the Web Application UI: login, click buttons, fill forms, search, view data, submit payments, download reports.</div>
+    </div>
+    <h3>SocietyHub Example</h3>
+    <p>User opens <code>http://localhost:5173</code>, sees Dashboard → Residents / Maintenance / Complaints / Visitors / Notices. Clicking <strong>Residents</strong> requires data — but React doesn't talk to the database directly:</p>
+    <div class="flow">React
+  ↓
+Spring Boot API
+  ↓
+Database</div>
+    <p>The <strong>web application</strong> is the complete system the user interacts with.</p>
+
+    <h3>B. Web Service</h3>
+    <p>When React needs data, it asks Spring Boot: "give me all residents." Spring Boot provides a service through which React communicates with it — that's a <strong>Web Service</strong>: a mechanism allowing different applications to communicate over a network.</p>
+    <div class="flow">Application A
+  ↓
+Internet
+  ↓
+Application B</div>
+    <div class="analogy">
+      <div class="label">🏦 Bank Analogy</div>
+      <div>Amazon doesn't have access to the bank's internal database. It asks the Bank API/Web Service: "Was payment transaction 123 successful?" The bank responds <code>{"status": "SUCCESS"}</code>. That communication is a web service.</div>
+    </div>
+
+    <h3>C. REST API</h3>
+    <p>A way of designing web APIs so applications communicate using standard HTTP methods and resource-based URLs. REST = <strong>Re</strong>presentational <strong>S</strong>tate <strong>T</strong>ransfer.</p>
+    <div class="qa">
+      <div class="q">Interview-friendly definition:</div>
+      <div class="a">"A REST API is an API that follows REST principles and uses HTTP methods such as GET, POST, PUT, PATCH and DELETE to perform operations on resources."</div>
+    </div>
+    <p>Example resource: <code>Resident</code> → base URL <code>/api/residents</code></p>
+    <table>
+      <tr><th>Method</th><th>URL</th></tr>
+      <tr><td>GET</td><td>/api/residents</td></tr>
+      <tr><td>POST</td><td>/api/residents</td></tr>
+      <tr><td>PUT</td><td>/api/residents/101</td></tr>
+      <tr><td>PATCH</td><td>/api/residents/101</td></tr>
+      <tr><td>DELETE</td><td>/api/residents/101</td></tr>
+    </table>
+
+    <h3>Difference Table</h3>
+    <table>
+      <tr><th>Term</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td><strong>Web Application</strong></td><td>The complete application the user interacts with</td><td>SocietyHub</td></tr>
+      <tr><td><strong>Web Service</strong></td><td>A service allowing different applications to communicate</td><td>React ↔ Spring Boot</td></tr>
+      <tr><td><strong>REST API</strong></td><td>An architectural approach for building APIs using HTTP methods & resources</td><td>GET/POST/PUT/DELETE /api/residents</td></tr>
+    </table>
+
+    <h3>Full Restaurant → Software Mapping</h3>
+    <div class="flow">Customer  →  Menu  →  Waiter  →  Kitchen  →  Food
+   User    → Frontend → REST API → Backend  → Database</div>
+    <div class="flow">Customer: "I want pizza."
+   ↓
+Waiter: "Takes the order."
+   ↓
+Kitchen: "Processes the order."
+   ↓
+Waiter: "Returns the pizza."
+
+React: "Give me resident 101."
+   ↓
+REST API
+   ↓
+Spring Boot: "Find resident 101."
+   ↓
+Database
+   ↓
+Spring Boot: "Resident found."
+   ↓
+JSON Response
+   ↓
+React</div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="card accent" id="s2">
+    <h2 class="section-title">2. HTTP Mapping Methods — GET, POST, PUT, PATCH, DELETE</h2>
+    <p>HTTP methods tell the server what operation the client wants to perform. Example dataset — <strong>Resident</strong> table:</p>
+    <table>
+      <tr><th>ID</th><th>Name</th><th>Flat</th></tr>
+      <tr><td>101</td><td>Rahul</td><td>A-101</td></tr>
+      <tr><td>102</td><td>Amit</td><td>A-102</td></tr>
+      <tr><td>103</td><td>Priya</td><td>B-101</td></tr>
+    </table>
+
+    <div class="method-grid">
+      <div class="method-box m-get">GET<small>Read</small></div>
+      <div class="method-box m-post">POST<small>Create</small></div>
+      <div class="method-box m-put">PUT<small>Full Update</small></div>
+      <div class="method-box m-patch">PATCH<small>Partial Update</small></div>
+      <div class="method-box m-delete">DELETE<small>Remove</small></div>
+    </div>
+
+    <h3>GET — Read Data</h3>
+    <p>Retrieves/reads data from the server. Nothing is created or deleted.</p>
+    <div class="flow">GET /api/residents</div>
+    <pre class="code">[
+  { "id": 101, "name": "Rahul", "flat": "A-101" },
+  { "id": 102, "name": "Amit",  "flat": "A-102" }
+]</pre>
+    <pre class="code"><span class="ann">@GetMapping</span>(<span class="str">"/residents"</span>)
+<span class="kw">public</span> List&lt;Resident&gt; getResidents() {
+    <span class="kw">return</span> residentService.getAllResidents();
+}</pre>
+    <div class="analogy">
+      <div class="label">Real-life</div>
+      <div>Opening "Transaction History" in a bank app → app asks server "Give me my transactions" → a GET request. In SocietyHub: Chairman opens Residents page → <code>GET /api/residents</code> → backend returns all residents.</div>
+    </div>
+
+    <h3>POST — Create Data</h3>
+    <p>Generally used to create a new resource.</p>
+    <div class="flow">POST /api/residents
+{
+  "name": "Rohit",
+  "flat": "C-201",
+  "mobile": "9876543210"
+}</div>
+    <pre class="code"><span class="ann">@PostMapping</span>(<span class="str">"/residents"</span>)
+<span class="kw">public</span> Resident createResident(
+        <span class="ann">@RequestBody</span> ResidentRequest request) {
+    <span class="kw">return</span> residentService.createResident(request);
+}</pre>
+    <div class="analogy">
+      <div class="label">Real-life</div>
+      <div>Online shopping app → "Add a new address" → provide Name, Address, City, Pincode → frontend sends info to server → new address created. That's POST.</div>
+    </div>
+
+    <h3>PUT — Update / Replace Data (Whole Resource)</h3>
+    <p>Resident 101 currently: Name: Rahul, Flat: A-101, Mobile: 9876543210, Occupation: Engineer. Rahul updates his info — send the full updated representation:</p>
+    <div class="flow">PUT /api/residents/101
+{
+  "name": "Rahul Patil",
+  "flat": "A-101",
+  "mobile": "9999999999",
+  "occupation": "Software Engineer"
+}</div>
+    <pre class="code"><span class="ann">@PutMapping</span>(<span class="str">"/residents/{id}"</span>)
+<span class="kw">public</span> Resident updateResident(
+        <span class="ann">@PathVariable</span> Long id,
+        <span class="ann">@RequestBody</span> ResidentRequest request) {
+    <span class="kw">return</span> residentService.updateResident(id, request);
+}</pre>
+
+    <h3>PATCH — Partial Update</h3>
+    <p>Updates only part of an existing resource. Rahul only changes his mobile number — no need to send everything:</p>
+    <div class="flow">PATCH /api/residents/101
+{
+  "mobile": "9999999999"
+}</div>
+
+    <h3>PUT vs PATCH ⭐ (Very Common Interview Question)</h3>
+    <div class="flow">PUT   → Complete resource update / replacement
+PATCH → Partial resource update</div>
+    <div class="analogy">
+      <div class="label">Real-life</div>
+      <div>College student record (Name, Roll No, Mobile, Email, Address, Department): changing your <strong>complete</strong> profile → PUT. Changing <strong>only</strong> mobile number → PATCH.</div>
+    </div>
+
+    <h3>DELETE — Delete Data</h3>
+    <p>Used to remove a resource.</p>
+    <div class="flow">DELETE /api/residents/101</div>
+    <pre class="code"><span class="ann">@DeleteMapping</span>(<span class="str">"/residents/{id}"</span>)
+<span class="kw">public</span> <span class="kw">void</span> deleteResident(
+        <span class="ann">@PathVariable</span> Long id) {
+    residentService.deleteResident(id);
+}</pre>
+
+    <h3>The Five Methods Together</h3>
+    <div class="flow">                RESIDENT
+                    │
+       ┌────────────┼─────────────┐
+       ↓             ↓             ↓
+    CREATE         READ          UPDATE
+       │             │             │
+     POST           GET       PUT / PATCH
+       │             │             │
+       └────────────┼─────────────┘
+                     │
+                  DELETE</div>
+    <table>
+      <tr><th>Method</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td>GET</td><td>Read</td><td>Get residents</td></tr>
+      <tr><td>POST</td><td>Create</td><td>Add resident</td></tr>
+      <tr><td>PUT</td><td>Complete update</td><td>Update resident</td></tr>
+      <tr><td>PATCH</td><td>Partial update</td><td>Change mobile</td></tr>
+      <tr><td>DELETE</td><td>Delete</td><td>Remove resident</td></tr>
+    </table>
+
+    <h3>One Complete Example — /api/residents</h3>
+    <div class="flow">1. GET /api/residents               → Give me all residents.
+
+2. POST /api/residents
+   { "name": "Rahul", "flat": "A-101" }  → Create a new resident.
+
+3. GET /api/residents/101            → Give me resident 101.
+
+4. PUT /api/residents/101
+   {
+     "name": "Rahul Patil",
+     "flat": "A-101",
+     "mobile": "9999999999",
+     "occupation": "Engineer"
+   }                                  → Update/replace resident info.
+
+5. PATCH /api/residents/101
+   { "mobile": "8888888888" }         → Only change mobile number.
+
+6. DELETE /api/residents/101         → Delete resident 101.</div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="card" id="s3">
+    <h2 class="section-title">3. SocietyHub Layered Architecture</h2>
+    <div class="flow">              React Frontend
+                    │
+                    │ HTTP Request
+                    ▼
+         ┌─────────────────────┐
+         │ ResidentController  │
+         └──────────┬──────────┘
+                    │
+                    ▼
+         ┌─────────────────────┐
+         │ ResidentService     │
+         └──────────┬──────────┘
+                    │
+                    ▼
+         ┌─────────────────────┐
+         │ ResidentServiceImpl │
+         └──────────┬──────────┘
+                    │
+                    ▼
+         ┌─────────────────────┐
+         │ ResidentRepository  │
+         └──────────┬──────────┘
+                    │
+                    ▼
+              JPA/Hibernate
+                    │
+                    ▼
+                  MySQL</div>
+    <h3>Example: POST Request Flow</h3>
+    <div class="flow">React
+  │
+  │ POST /api/residents
+  ▼
+Controller
+  │
+  │ createResident()
+  ▼
+Service
+  │
+  ▼
+ServiceImpl
+  │
+  │ repository.save()
+  ▼
+Repository
+  │
+  ▼
+Hibernate
+  │
+  ▼
+Database</div>
+    <h3>Response Path (Return Journey)</h3>
+    <div class="flow">Database
+  ↓
+Hibernate
+  ↓
+Repository
+  ↓
+ServiceImpl
+  ↓
+Service
+  ↓
+Controller
+  ↓
+JSON Response
+  ↓
+React</div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="card warn" id="s4">
+    <h2 class="section-title">4. ⭐ Interview Answer Templates</h2>
+    <div class="qa">
+      <div class="q">Q: What is a Web Application?</div>
+      <div class="a">"A web application is a software application that is accessed through a web browser or web client over a network. It generally consists of a frontend, backend and database. For example, in my SocietyHub project, React acts as the frontend, Spring Boot acts as the backend, and the database stores the application data."</div>
+    </div>
+    <div class="qa">
+      <div class="q">Q: What is a Web Service?</div>
+      <div class="a">"A web service is a mechanism that allows different applications to communicate with each other over a network. For example, my React frontend communicates with the Spring Boot backend through HTTP-based services to fetch or modify resident information."</div>
+    </div>
+    <div class="qa">
+      <div class="q">Q: What is REST API?</div>
+      <div class="a">"REST API is an API designed according to REST principles. It represents data as resources and uses HTTP methods such as GET, POST, PUT, PATCH and DELETE to perform operations on those resources. For example, GET /api/residents retrieves residents, POST /api/residents creates a resident, and DELETE /api/residents/101 deletes a particular resident."</div>
+    </div>
+    <div class="qa">
+      <div class="q">Q: Explain HTTP Methods</div>
+      <div class="a">"HTTP methods define what operation the client wants to perform on a resource. GET is used to retrieve data, POST is used to create a new resource, PUT is generally used for a complete update or replacement, PATCH is used for a partial update, and DELETE is used to remove a resource." Then add: "For example, in my SocietyHub project, I can use GET /api/residents to fetch residents, POST /api/residents to create a resident, PUT /api/residents/101 to update the complete resident information, PATCH /api/residents/101 to update only a particular field such as mobile number, and DELETE /api/residents/101 to delete the resident."</div>
+    </div>
+    <p><strong>Why this works:</strong> You're not just giving textbook definitions — you're connecting every concept to a real project (SocietyHub), which is exactly what interviewers want to hear.</p>
+  </div>
+
+  <!-- SECTION 5 - EXTRA -->
+  <div class="card accent" id="s5">
+    <h2 class="section-title">5. Interview Q&A Bank <span class="badge extra">Added</span></h2>
+    <div class="qa"><div class="q">Q: Is REST API the same as Web Service?</div><div class="a">No. Web Service is the broader concept (any mechanism for inter-application communication — includes SOAP, REST, gRPC). REST API is one specific architectural style of implementing a web service using HTTP verbs and resource URLs.</div></div>
+    <div class="qa"><div class="q">Q: Why is PUT called idempotent but POST is not?</div><div class="a">Calling PUT multiple times with the same data results in the same final state (replacing the resource each time). Calling POST multiple times typically creates multiple new resources — so it's not idempotent.</div></div>
+    <div class="qa"><div class="q">Q: What HTTP status codes are typically returned for each method?</div><div class="a">GET → 200 OK. POST → 201 Created. PUT → 200 OK (or 204 No Content). PATCH → 200 OK. DELETE → 204 No Content (or 200 OK).</div></div>
+    <div class="qa"><div class="q">Q: Can PUT be used instead of PATCH?</div><div class="a">Technically yes, by sending the full resource with only one field changed — but that's inefficient and not semantically correct. PATCH exists specifically to avoid resending unchanged data.</div></div>
+    <div class="qa"><div class="q">Q: What does "resource-based URL" mean in REST?</div><div class="a">URLs represent nouns (resources), not actions — e.g. <code>/api/residents/101</code>, not <code>/api/getResident?id=101</code>. The HTTP method (verb) expresses the action, not the URL.</div></div>
+    <div class="qa"><div class="q">Q: What are the 6 REST architectural constraints?</div><div class="a">Client-Server separation, Statelessness, Cacheability, Uniform Interface, Layered System, and (optionally) Code on Demand.</div></div>
+    <div class="qa"><div class="q">Q: What is statelessness in REST?</div><div class="a">Each request from client to server must contain all information needed to understand and process it — the server doesn't store client session state between requests.</div></div>
+  </div>
+
+  <!-- SECTION 6 - EXTRA -->
+  <div class="card warn" id="s6">
+    <h2 class="section-title">6. Memory Tricks <span class="badge extra">Added</span></h2>
+    <div class="trick"><div class="label">🧠 CRUD ↔ HTTP Mnemonic</div><div>"<strong>C</strong>reate-<strong>R</strong>ead-<strong>U</strong>pdate-<strong>D</strong>elete" maps directly to "<strong>P</strong>OST-<strong>G</strong>ET-<strong>P</strong>UT/PATCH-<strong>D</strong>ELETE". Remember it as: <em>"Post to Get, Put/Patch, then Delete."</em></div></div>
+    <div class="trick"><div class="label">🧠 PUT vs PATCH</div><div>PUT = "Put the whole thing back" (full replace). PATCH = "Patch just the hole" (partial fix). Both start differently but PUT is the bigger word action = bigger update.</div></div>
+    <div class="trick"><div class="label">🧠 Web App vs Web Service vs REST API</div><div>Web Application = the <strong>restaurant</strong> (whole experience). Web Service = the <strong>waiter</strong> (communication channel). REST API = the <strong>waiter following a specific ordering rulebook</strong> (HTTP verbs + menu/resource format).</div></div>
+    <div class="trick"><div class="label">🧠 Layered flow order</div><div>"<strong>C</strong>ontrollers <strong>S</strong>erve <strong>S</strong>oup, then <strong>R</strong>epositories <strong>H</strong>and it to the <strong>D</strong>atabase" → Controller → Service → ServiceImpl → Repository → Hibernate → Database.</div></div>
+  </div>
+
+  <!-- SECTION 7 - EXTRA -->
+  <div class="card" id="s7">
+    <h2 class="section-title">7. Common Bugs / Gotchas <span class="badge extra">Added</span></h2>
+    <div class="qa"><div class="q">⚠️ Using POST for updates</div><div class="a">Beginners often use POST for every write operation. This breaks REST semantics — POST should only create new resources; use PUT/PATCH for updates.</div></div>
+    <div class="qa"><div class="q">⚠️ Forgetting @RequestBody</div><div class="a">Without <code>@RequestBody</code> on POST/PUT/PATCH methods, Spring Boot won't deserialize the incoming JSON into the request object — you'll get null fields or a 400 error.</div></div>
+    <div class="qa"><div class="q">⚠️ Sending full object on PATCH</div><div class="a">Defeats the purpose of PATCH. If you always send the whole resource, you should be using PUT instead, and your update logic (partial-field merging) becomes unnecessary complexity.</div></div>
+    <div class="qa"><div class="q">⚠️ Missing @PathVariable id mismatch</div><div class="a">If the URL path <code>{id}</code> doesn't match the field name in the method signature (<code>@PathVariable Long id</code>), Spring throws a runtime binding error — always keep names consistent or use <code>@PathVariable("id")</code> explicitly.</div></div>
+  </div>
+
+  <p class="footer-note">Study Notes — Web Application / Web Service / REST API / HTTP Methods · SocietyHub Project Reference</p>
+</div>
+</body>
+</html>

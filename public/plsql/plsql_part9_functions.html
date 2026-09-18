@@ -1,0 +1,557 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+.warn-box{background:#fce4ec;border-left:5px solid #c62828;padding:10px 14px;margin-top:10px}
+.warn-box .lbl{font-size:10px;font-weight:700;color:#c62828;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.warn-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:4px}
+.mini-card p,.mini-card li{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+.prog-wrap{margin:10px 0}
+.prog-header{background:#2c2c2c;padding:6px 14px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.prog-label{color:#bbb;font-size:11px;margin-left:6px;font-family:Arial,sans-serif;font-weight:700;letter-spacing:.3px}
+.prog-body{background:#1e1e1e;border-radius:0 0 6px 6px;padding:13px 16px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.9;white-space:pre;overflow-x:auto;color:#d4d4d4}
+.kw{color:#569cd6;font-weight:700}
+.cm{color:#6a9955;font-style:italic}
+.str{color:#ce9178}
+.fn{color:#dcdcaa}
+.tp{color:#4ec9b0}
+.num{color:#b5cea8}
+.out-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:0 0 5px 5px;padding:6px 14px;font-family:'Courier New',monospace;font-size:12.5px;color:#1b5e20;margin-bottom:12px}
+.ex-block{border:1px solid #ccc;border-radius:6px;margin-bottom:14px;overflow:hidden}
+.ex-head{background:#1a1a6e;color:#fff;padding:7px 14px;font-size:13px;font-weight:700}
+.ex-logic{background:#f5f6ff;padding:8px 14px;font-size:12.5px;color:#333;border-bottom:1px solid #ddd}
+.trace-box{background:#2c2c2c;border-radius:5px;padding:10px 14px;font-family:'Courier New',monospace;font-size:12px;color:#d4d4d4;margin:8px 0;line-height:1.8}
+.trace-box .th{color:#4ec9b0;font-weight:700}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">PL/SQL — Part 9: Functions</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; Named Blocks that Return a Value &nbsp;|&nbsp; Orange tag = Extra content</div>
+</div>
+
+<!-- ===== 1 ===== -->
+<div class="sec-label">1. What is a Function?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>A Function is a named PL/SQL block used to perform a specific task and return exactly one value. It is a subprogram that accepts input parameters, performs an operation, and returns a single result using the RETURN statement. Once stored in the database, it can be reused in SQL queries, PL/SQL blocks, and other programs.</p>
+  </div>
+  <ul>
+    <li>A function always returns exactly one value using the RETURN keyword</li>
+    <li>It can be called inside a SQL query — SELECT function_name() FROM DUAL</li>
+    <li>It accepts input parameters — default mode is IN</li>
+    <li>Once created, it is stored permanently in the Oracle database</li>
+    <li>Mainly used when a computed result needs to be returned after performing an operation</li>
+  </ul>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Function = Procedure that MUST return a value</p>
+    <p>Procedure → may or may not return &nbsp;|&nbsp; Function → ALWAYS returns exactly one value</p>
+  </div>
+</div>
+
+<!-- ===== 2 ===== -->
+<div class="sec-label">2. Parts of a Function</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">1. Function Specification (Header)</div>
+      <ul style="margin-top:4px">
+        <li>Specifies the name of the function</li>
+        <li>Defines the input parameters and their datatypes</li>
+        <li>Specifies the return datatype using RETURN keyword</li>
+        <li>Written before IS / AS keyword</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct">2. Function Body</div>
+      <ul style="margin-top:4px">
+        <li>Contains the actual code to perform the task</li>
+        <li>Must include at least one RETURN statement</li>
+        <li>Written between BEGIN and END</li>
+        <li>Can include SQL, loops, conditions, cursors, and exception handling</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 3 ===== -->
+<div class="sec-label">3. Function — Syntax</div>
+<div class="card">
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="prog-label">FUNCTION — GENERAL SYNTAX</span>
+    </div>
+    <div class="prog-body"><span class="kw">CREATE</span> [<span class="kw">OR REPLACE</span>] <span class="kw">FUNCTION</span> function_name
+(
+   parameter  datatype          <span class="cm">-- IN mode is default</span>
+)
+<span class="kw">RETURN</span> return_datatype          <span class="cm">-- declare what type will be returned</span>
+<span class="kw">IS</span> / <span class="kw">AS</span>
+   <span class="cm">-- Local variables, cursors (optional)</span>
+<span class="kw">BEGIN</span>
+   <span class="cm">-- SQL / PL/SQL logic</span>
+   <span class="kw">RETURN</span> expression;           <span class="cm">-- Mandatory — must return a value</span>
+[<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN OTHERS THEN</span>
+      <span class="cm">-- Optional error handling</span>]
+<span class="kw">END</span> [function_name];
+/</div>
+  </div>
+
+  <table style="margin-top:12px">
+    <tr><th>Keyword</th><th>Meaning</th></tr>
+    <tr><td>CREATE OR REPLACE FUNCTION</td><td>Create or overwrite the function in the database</td></tr>
+    <tr><td>RETURN datatype (header)</td><td>Declares what type of value the function will return</td></tr>
+    <tr><td>IS / AS</td><td>Starts the function block — both work identically</td></tr>
+    <tr><td>RETURN expression; (body)</td><td>Mandatory — returns the computed value to the caller</td></tr>
+    <tr><td>END [function_name];</td><td>Marks the end of the function</td></tr>
+  </table>
+
+  <div class="tip-box">
+    <div class="lbl">Extra — How to Call a Function</div>
+    <p>Method 1 — SQL query: &nbsp; SELECT function_name(params) FROM DUAL;</p>
+    <p>Method 2 — PL/SQL block: &nbsp; result := function_name(params);</p>
+    <p>Method 3 — Inside another procedure or function body</p>
+  </div>
+</div>
+
+<!-- ===== 4 ===== -->
+<div class="sec-label">4. Procedure vs Function — Comparison</div>
+<div class="card">
+  <table>
+    <tr><th>Feature</th><th>Procedure</th><th>Function</th></tr>
+    <tr><td>Returns a value?</td><td>Optional (via OUT parameter)</td><td>Mandatory — always returns one value</td></tr>
+    <tr><td>RETURN keyword</td><td>Not required</td><td>Required in both header and body</td></tr>
+    <tr><td>Called in SQL SELECT?</td><td>No</td><td>Yes — SELECT func() FROM DUAL</td></tr>
+    <tr><td>Called using</td><td>EXEC procedure_name(params)</td><td>SELECT / assignment in PL/SQL block</td></tr>
+    <tr><td>Parameter modes</td><td>IN, OUT, IN OUT</td><td>Typically IN only</td></tr>
+    <tr><td>Purpose</td><td>Perform a task — insert, update, display</td><td>Compute and return a single value</td></tr>
+  </table>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Procedure = DO something &nbsp;|&nbsp; Function = CALCULATE and RETURN something</p>
+    <p>Function can be used in SELECT — Procedure cannot</p>
+  </div>
+</div>
+
+<!-- ===== 5 ===== -->
+<div class="sec-label">5. Function — Teacher Examples</div>
+<div class="card">
+
+  <div class="ex-block">
+    <div class="ex-head">Example 1 — GET_SAL: Fetch Employee Salary by EMPNO</div>
+    <div class="ex-logic">Task: Accept EMPNO as input and return the salary of that employee from EMP table.<br>Logic: SELECT SAL INTO V_SAL WHERE EMPNO = P_EMPNO → RETURN V_SAL. SMITH (7369) has salary 800.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">GET_SAL — RETURN EMPLOYEE SALARY</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE FUNCTION</span> GET_SAL(P_EMPNO <span class="tp">NUMBER</span>)
+<span class="kw">RETURN</span> <span class="tp">NUMBER</span>
+<span class="kw">AS</span>
+   V_SAL <span class="tp">NUMBER</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> SAL
+   <span class="kw">INTO</span>   V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = P_EMPNO;
+
+   <span class="kw">RETURN</span> V_SAL;            <span class="cm">-- Return the fetched salary</span>
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Call the function</span>
+<span class="kw">SELECT</span> <span class="fn">GET_SAL</span>(<span class="num">7369</span>) <span class="kw">FROM</span> DUAL;</div>
+    </div>
+    <div class="out-bar">Output: 800 &nbsp;→ SMITH (EMPNO 7369) has salary 800</div>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-head">Example 2 — FIRST_CHAR: Return First Character of a String</div>
+    <div class="ex-logic">Task: Accept a string and return its first character using SUBSTR.<br>Logic: SUBSTR(P_CHAR, 1, 1) → starts at position 1, extracts 1 character → 'S' from 'SAHIL'.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">FIRST_CHAR — RETURN FIRST CHARACTER</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE FUNCTION</span> FIRST_CHAR(P_CHAR <span class="tp">VARCHAR2</span>)
+<span class="kw">RETURN</span> <span class="tp">CHAR</span>
+<span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+   <span class="kw">RETURN</span> <span class="fn">SUBSTR</span>(P_CHAR, <span class="num">1</span>, <span class="num">1</span>);   <span class="cm">-- Extract 1 character from position 1</span>
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Call the function</span>
+<span class="kw">SELECT</span> <span class="fn">FIRST_CHAR</span>(<span class="str">'SAHIL'</span>) <span class="kw">FROM</span> DUAL;</div>
+    </div>
+    <div class="out-bar">Output: S &nbsp;→ First character of 'SAHIL'</div>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-head">Example 3 — STRING_LENGTH: Return Number of Characters in a String</div>
+    <div class="ex-logic">Task: Accept a string and return the total number of characters in it using LENGTH.<br>Logic: LENGTH('SAHIL') counts all characters → returns 5.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">STRING_LENGTH — RETURN LENGTH OF STRING</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE FUNCTION</span> STRING_LENGTH(P_STRING <span class="tp">VARCHAR2</span>)
+<span class="kw">RETURN</span> <span class="tp">NUMBER</span>
+<span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+   <span class="kw">RETURN</span> <span class="fn">LENGTH</span>(P_STRING);      <span class="cm">-- Return total number of characters</span>
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Call the function</span>
+<span class="kw">SELECT</span> <span class="fn">STRING_LENGTH</span>(<span class="str">'SAHIL'</span>) <span class="kw">FROM</span> DUAL;</div>
+    </div>
+    <div class="out-bar">Output: 5 &nbsp;→ 'SAHIL' has 5 characters</div>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-head">Example 4 — GREETING: No Parameter — Return Fixed Message</div>
+    <div class="ex-logic">Task: Create a function with no parameters that returns a fixed welcome message.<br>Logic: No input — directly RETURN the hardcoded string.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">GREETING — NO PARAMETER FUNCTION</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE FUNCTION</span> GREETING
+<span class="kw">RETURN</span> <span class="tp">VARCHAR2</span>
+<span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+   <span class="kw">RETURN</span> <span class="str">'WELCOME TO PLSQL CLASS'</span>;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Call the function</span>
+<span class="kw">SELECT</span> <span class="fn">GREETING</span>() <span class="kw">FROM</span> DUAL;</div>
+    </div>
+    <div class="out-bar">Output: WELCOME TO PLSQL CLASS</div>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-head">Example 5 — GREETING: With Name Parameter — Return Personalised Message</div>
+    <div class="ex-logic">Task: Accept a name and return a personalised welcome message by concatenating the name to the fixed message.<br>Logic: RETURN fixed_string || V_NAME → joins both strings and returns.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">GREETING — WITH NAME PARAMETER</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE FUNCTION</span> GREETING(V_NAME <span class="tp">VARCHAR2</span>)
+<span class="kw">RETURN</span> <span class="tp">VARCHAR2</span>
+<span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+   <span class="kw">RETURN</span> <span class="str">'WELCOME TO PLSQL CLASS, '</span> || V_NAME;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Call the function</span>
+<span class="kw">SELECT</span> <span class="fn">GREETING</span>(<span class="str">'PRAVIN'</span>) <span class="kw">FROM</span> DUAL;</div>
+    </div>
+    <div class="out-bar">Output: WELCOME TO PLSQL CLASS, PRAVIN</div>
+  </div>
+
+</div>
+
+<!-- ===== 6 ===== -->
+<div class="sec-label">6. Extra Function Examples — String Operations <span class="extra">Extra</span></div>
+<div class="card">
+
+  <!-- REVERSE — CORRECTED -->
+  <div class="ex-block">
+    <div class="ex-head">Example 6 — REVERSE_STRING: Return Reverse of a String (Using FOR LOOP + SUBSTR)</div>
+    <div class="ex-logic">Task: Accept a string and return it reversed character by character.<br>Logic: Oracle PL/SQL has no built-in REVERSE() for strings. We use FOR I IN REVERSE 1..LENGTH() loop to pick characters from last to first and build the reversed string one character at a time.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">REVERSE_STRING — FOR LOOP + SUBSTR (CORRECT METHOD)</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE FUNCTION</span> REVERSE_STRING(P_STRING <span class="tp">VARCHAR2</span>)
+<span class="kw">RETURN</span> <span class="tp">VARCHAR2</span>
+<span class="kw">AS</span>
+   V_REVERSE <span class="tp">VARCHAR2</span>(<span class="num">4000</span>) := <span class="str">''</span>;   <span class="cm">-- Empty string to build result</span>
+<span class="kw">BEGIN</span>
+   <span class="cm">-- FOR REVERSE loop goes from last index down to 1</span>
+   <span class="kw">FOR</span> I <span class="kw">IN REVERSE</span> <span class="num">1</span>..<span class="fn">LENGTH</span>(P_STRING)
+   <span class="kw">LOOP</span>
+      <span class="cm">-- Pick one character at position I and append to result</span>
+      V_REVERSE := V_REVERSE || <span class="fn">SUBSTR</span>(P_STRING, I, <span class="num">1</span>);
+   <span class="kw">END LOOP</span>;
+
+   <span class="kw">RETURN</span> V_REVERSE;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Call the function</span>
+<span class="kw">SELECT</span> <span class="fn">REVERSE_STRING</span>(<span class="str">'PRAVIN'</span>) <span class="kw">FROM</span> DUAL;</div>
+    </div>
+    <div class="out-bar">Output: NIVARP &nbsp;→ 'PRAVIN' reversed character by character</div>
+  </div>
+
+  <!-- DRY RUN -->
+  <div class="tip-box" style="margin-top:-4px;margin-bottom:14px">
+    <div class="lbl">Dry Run — How REVERSE_STRING('PRAVIN') Works Step by Step</div>
+    <div class="trace-box" style="margin-top:8px">
+<span class="th">Input: 'PRAVIN'  →  LENGTH = 6</span>
+
+I = 6  →  SUBSTR('PRAVIN', 6, 1) = 'N'  →  V_REVERSE = 'N'
+I = 5  →  SUBSTR('PRAVIN', 5, 1) = 'I'  →  V_REVERSE = 'NI'
+I = 4  →  SUBSTR('PRAVIN', 4, 1) = 'V'  →  V_REVERSE = 'NIV'
+I = 3  →  SUBSTR('PRAVIN', 3, 1) = 'A'  →  V_REVERSE = 'NIVA'
+I = 2  →  SUBSTR('PRAVIN', 2, 1) = 'R'  →  V_REVERSE = 'NIVAR'
+I = 1  →  SUBSTR('PRAVIN', 1, 1) = 'P'  →  V_REVERSE = 'NIVARP'
+
+<span class="th">RETURN 'NIVARP'</span></div>
+  </div>
+
+  <!-- SUBSTRING -->
+  <div class="ex-block">
+    <div class="ex-head">Example 7 — GET_SUBSTRING: Extract a Portion of a String</div>
+    <div class="ex-logic">Task: Accept a string, starting position, and length — return the extracted portion using SUBSTR.<br>Logic: SUBSTR('WELCOME', 1, 4) → starts at position 1, extracts 4 characters → 'WELC'.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">GET_SUBSTRING — EXTRACT PORTION OF STRING</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE FUNCTION</span> GET_SUBSTRING
+(
+   P_STRING   <span class="tp">VARCHAR2</span>,
+   P_START    <span class="tp">NUMBER</span>,
+   P_LENGTH   <span class="tp">NUMBER</span>
+)
+<span class="kw">RETURN</span> <span class="tp">VARCHAR2</span>
+<span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+   <span class="kw">RETURN</span> <span class="fn">SUBSTR</span>(P_STRING, P_START, P_LENGTH);
+   <span class="cm">-- Extracts P_LENGTH characters starting from P_START position</span>
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Call the function</span>
+<span class="kw">SELECT</span> <span class="fn">GET_SUBSTRING</span>(<span class="str">'WELCOME'</span>, <span class="num">1</span>, <span class="num">4</span>) <span class="kw">FROM</span> DUAL;</div>
+    </div>
+    <div class="out-bar">Output: WELC &nbsp;→ 4 characters from position 1 of 'WELCOME'</div>
+  </div>
+
+  <!-- UPPERCASE -->
+  <div class="ex-block">
+    <div class="ex-head">Example 8 — TO_UPPER_CASE: Convert String to Uppercase</div>
+    <div class="ex-logic">Task: Accept a string and return it converted to uppercase using UPPER.<br>Logic: UPPER('pravin') → 'PRAVIN'. Oracle UPPER function converts all lowercase letters to uppercase.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">TO_UPPER_CASE — CONVERT TO UPPERCASE</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE FUNCTION</span> TO_UPPER_CASE(P_STRING <span class="tp">VARCHAR2</span>)
+<span class="kw">RETURN</span> <span class="tp">VARCHAR2</span>
+<span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+   <span class="kw">RETURN</span> <span class="fn">UPPER</span>(P_STRING);       <span class="cm">-- Converts all characters to uppercase</span>
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Call the function</span>
+<span class="kw">SELECT</span> <span class="fn">TO_UPPER_CASE</span>(<span class="str">'pravin'</span>) <span class="kw">FROM</span> DUAL;</div>
+    </div>
+    <div class="out-bar">Output: PRAVIN &nbsp;→ 'pravin' converted to uppercase</div>
+  </div>
+
+  <!-- ANNUAL SAL -->
+  <div class="ex-block">
+    <div class="ex-head">Example 9 — ANNUAL_SAL: Calculate Annual Salary of Employee</div>
+    <div class="ex-logic">Task: Accept EMPNO and return the annual salary (monthly salary × 12) of that employee from EMP table.<br>Logic: Fetch SAL for given EMPNO → multiply by 12 → RETURN result. SMITH: 800 × 12 = 9600.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">ANNUAL_SAL — RETURN ANNUAL SALARY OF EMPLOYEE</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE FUNCTION</span> ANNUAL_SAL(P_EMPNO <span class="tp">NUMBER</span>)
+<span class="kw">RETURN</span> <span class="tp">NUMBER</span>
+<span class="kw">AS</span>
+   V_SAL <span class="tp">NUMBER</span>;
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> SAL
+   <span class="kw">INTO</span>   V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = P_EMPNO;
+
+   <span class="kw">RETURN</span> V_SAL * <span class="num">12</span>;            <span class="cm">-- Annual = monthly × 12</span>
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Call the function</span>
+<span class="kw">SELECT</span> <span class="fn">ANNUAL_SAL</span>(<span class="num">7369</span>) <span class="kw">FROM</span> DUAL;</div>
+    </div>
+    <div class="out-bar">Output: 9600 &nbsp;→ SMITH salary 800 × 12 = 9600</div>
+  </div>
+
+  <!-- LAST CHAR -->
+  <div class="ex-block">
+    <div class="ex-head">Example 10 — LAST_CHAR: Return Last Character of a String</div>
+    <div class="ex-logic">Task: Accept a string and return its last character.<br>Logic: SUBSTR(P_STRING, -1, 1) → negative position counts from the end → position -1 is the last character.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">LAST_CHAR — RETURN LAST CHARACTER</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE FUNCTION</span> LAST_CHAR(P_STRING <span class="tp">VARCHAR2</span>)
+<span class="kw">RETURN</span> <span class="tp">CHAR</span>
+<span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+   <span class="kw">RETURN</span> <span class="fn">SUBSTR</span>(P_STRING, -<span class="num">1</span>, <span class="num">1</span>);  <span class="cm">-- -1 = last position from end</span>
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Call the function</span>
+<span class="kw">SELECT</span> <span class="fn">LAST_CHAR</span>(<span class="str">'ORACLE'</span>) <span class="kw">FROM</span> DUAL;</div>
+    </div>
+    <div class="out-bar">Output: E &nbsp;→ Last character of 'ORACLE' is 'E'</div>
+  </div>
+
+  <!-- REMOVE SPACES -->
+  <div class="ex-block">
+    <div class="ex-head">Example 11 — REMOVE_SPACES: Remove All Spaces from a String</div>
+    <div class="ex-logic">Task: Accept a string and return it with all spaces removed.<br>Logic: REPLACE(P_STRING, ' ', '') replaces every space character with an empty string → all spaces stripped.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">REMOVE_SPACES — STRIP ALL SPACES FROM STRING</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE FUNCTION</span> REMOVE_SPACES(P_STRING <span class="tp">VARCHAR2</span>)
+<span class="kw">RETURN</span> <span class="tp">VARCHAR2</span>
+<span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+   <span class="kw">RETURN</span> <span class="fn">REPLACE</span>(P_STRING, <span class="str">' '</span>, <span class="str">''</span>);  <span class="cm">-- Replace space with nothing</span>
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Call the function</span>
+<span class="kw">SELECT</span> <span class="fn">REMOVE_SPACES</span>(<span class="str">'P L S Q L C L A S S'</span>) <span class="kw">FROM</span> DUAL;</div>
+    </div>
+    <div class="out-bar">Output: PLSQLCLASS &nbsp;→ All spaces removed from the string</div>
+  </div>
+
+</div>
+
+<!-- ===== 7 ===== -->
+<div class="sec-label">7. Built-in Oracle Functions Used in Examples</div>
+<div class="card">
+  <table>
+    <tr><th>Function</th><th>Syntax</th><th>Purpose</th><th>Example</th></tr>
+    <tr><td>SUBSTR</td><td>SUBSTR(str, start, length)</td><td>Extract a portion of a string</td><td>SUBSTR('ORACLE', 1, 3) → ORA</td></tr>
+    <tr><td>LENGTH</td><td>LENGTH(str)</td><td>Return number of characters</td><td>LENGTH('SAHIL') → 5</td></tr>
+    <tr><td>UPPER</td><td>UPPER(str)</td><td>Convert to uppercase</td><td>UPPER('pravin') → PRAVIN</td></tr>
+    <tr><td>LOWER</td><td>LOWER(str)</td><td>Convert to lowercase</td><td>LOWER('PRAVIN') → pravin</td></tr>
+    <tr><td>REPLACE</td><td>REPLACE(str, old, new)</td><td>Replace part of string with another</td><td>REPLACE('HELLO', 'L', 'R') → HERRO</td></tr>
+    <tr><td>TRIM</td><td>TRIM(str)</td><td>Remove leading and trailing spaces</td><td>TRIM('  HELLO  ') → HELLO</td></tr>
+    <tr><td>INSTR</td><td>INSTR(str, search)</td><td>Return position of a substring</td><td>INSTR('ORACLE', 'A') → 3</td></tr>
+  </table>
+  <div class="warn-box">
+    <div class="lbl">Important — No Built-in REVERSE() in PL/SQL</div>
+    <p>Oracle PL/SQL does NOT have a built-in REVERSE() function for strings. Always use the FOR LOOP + SUBSTR approach to reverse a string manually — as shown in Example 6 above.</p>
+  </div>
+</div>
+
+<!-- ===== 8 ===== -->
+<div class="sec-label">8. Quick Revision — Function Keywords</div>
+<div class="card">
+  <table>
+    <tr><th>Keyword / Syntax</th><th>Purpose</th></tr>
+    <tr><td>CREATE OR REPLACE FUNCTION name</td><td>Create or overwrite the function</td></tr>
+    <tr><td>RETURN datatype (in header)</td><td>Declare what type of value the function returns</td></tr>
+    <tr><td>IS / AS</td><td>Starts the function block</td></tr>
+    <tr><td>RETURN expression; (in body)</td><td>Return the computed value — mandatory</td></tr>
+    <tr><td>SELECT func(params) FROM DUAL;</td><td>Call a function in a SQL query</td></tr>
+    <tr><td>result := func(params);</td><td>Call a function inside a PL/SQL block</td></tr>
+    <tr><td>FOR I IN REVERSE 1..LENGTH(str)</td><td>Loop from last character to first — used to reverse strings</td></tr>
+    <tr><td>SUBSTR(str, I, 1)</td><td>Extract single character at position I</td></tr>
+  </table>
+  <div class="warn-box">
+    <div class="lbl">Common Mistakes with Functions</div>
+    <p>1. Missing RETURN statement in body → PLS-00372 error</p>
+    <p>2. Missing RETURN datatype in header → PLS-00103 compilation error</p>
+    <p>3. Using REVERSE() built-in for strings → does not exist in PL/SQL — use FOR LOOP + SUBSTR</p>
+    <p>4. Calling a function with EXEC → use SELECT or assignment, not EXEC</p>
+    <p>5. Using VARCHAR instead of VARCHAR2 → PLS-00215 error — always use VARCHAR2</p>
+  </div>
+</div>
+
+<!-- ===== 9 ===== -->
+<div class="sec-label">9. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What is a function in PL/SQL?</div>
+  <div class="qa-a">A function is a named PL/SQL block that performs a specific task and always returns exactly one value using the RETURN statement. Once stored in the database, it can be reused in SQL queries and PL/SQL blocks.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. What is the difference between a procedure and a function?</div>
+  <div class="qa-a">A procedure may or may not return a value and cannot be used in a SQL SELECT statement. A function always returns exactly one value and can be called in a SQL SELECT statement. Functions are used to compute and return a result; procedures are used to perform a task.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. What is the RETURN keyword in a function?</div>
+  <div class="qa-a">RETURN is used in two places. In the header: RETURN datatype — declares what type the function will return. In the body: RETURN expression; — actually returns the computed value to the caller. Both are mandatory in a function.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. How do you call a function in Oracle?</div>
+  <div class="qa-a">Method 1: SELECT function_name(params) FROM DUAL; &nbsp; Method 2: result := function_name(params); inside a PL/SQL block. &nbsp; Method 3: Inside another procedure or function body.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. How do you reverse a string in PL/SQL? <span class="extra">Extra</span></div>
+  <div class="qa-a">Oracle PL/SQL has no built-in REVERSE() function for strings. Use a FOR LOOP with REVERSE keyword and SUBSTR to pick characters from the last position to the first. Declare an empty VARCHAR2 variable, append each character in reverse order, and return the result.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. What does SUBSTR do? What are the parameters? <span class="extra">Extra</span></div>
+  <div class="qa-a">SUBSTR(string, start, length) extracts a portion of a string. Start is the position to begin from (1-based index). Length is how many characters to extract. A negative start position (-1) extracts from the end of the string. Example: SUBSTR('ORACLE', 1, 3) returns 'ORA'.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q7. What is DUAL and why is it used with functions? <span class="extra">Extra</span></div>
+  <div class="qa-a">DUAL is a special one-row, one-column dummy table in Oracle. Since SELECT always needs a FROM clause, DUAL is used when no real table is needed — just to call a function or evaluate an expression. Example: SELECT GET_SAL(7369) FROM DUAL;</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q8. Can a function have no parameters? <span class="extra">Extra</span></div>
+  <div class="qa-a">Yes. A function can have no parameters. It is called with empty parentheses: SELECT function_name() FROM DUAL; Example: the GREETING function returns a fixed welcome message without needing any input.</div>
+</div>
+
+<div class="divider"></div>
+<footer>PL/SQL Part 9 — Functions &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>

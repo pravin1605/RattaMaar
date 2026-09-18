@@ -1,0 +1,576 @@
+
+<style>
+  .w{padding:1rem 0;font-family:var(--font-sans);}
+  .hero{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.5rem;margin-bottom:1.25rem;border:0.5px solid var(--color-border-tertiary);}
+  .hero-title{font-size:22px;font-weight:500;color:var(--color-text-primary);margin:0 0 6px;}
+  .hero-def{font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin:0 0 14px;}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+  .mbox{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;}
+  .ml{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px;}
+  .mv{font-size:13px;color:var(--color-text-primary);line-height:1.55;margin:0;}
+  .sh{font-size:12px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.07em;margin:1.75rem 0 .75rem;border-bottom:.5px solid var(--color-border-tertiary);padding-bottom:6px;}
+  .card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.1rem 1.4rem;margin-bottom:1rem;}
+  .ctag{display:inline-block;font-size:11px;font-weight:500;padding:2px 9px;border-radius:var(--border-radius-md);margin-bottom:8px;}
+  .ctitle{font-size:16px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px;}
+  .cdef{font-size:13px;color:var(--color-text-secondary);line-height:1.65;margin:0 0 10px;}
+  .cl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px;}
+  pre{background:var(--color-background-tertiary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 13px;font-family:var(--font-mono);font-size:12.5px;line-height:1.6;margin:0 0 8px;color:var(--color-text-primary);white-space:pre-wrap;word-break:break-word;}
+  .out{background:var(--color-background-secondary);border-left:3px solid;border-radius:0;padding:7px 13px;font-family:var(--font-mono);font-size:12.5px;color:var(--color-text-primary);white-space:pre-wrap;word-break:break-word;}
+  .pts{margin:0;padding:0;list-style:none;}
+  .pts li{font-size:13px;color:var(--color-text-secondary);line-height:1.6;padding:3px 0 3px 18px;position:relative;border-bottom:.5px solid var(--color-border-tertiary);}
+  .pts li:last-child{border-bottom:none;}
+  .pts li::before{content:"→";position:absolute;left:0;color:var(--color-text-tertiary);font-size:11px;top:5px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md);margin-left:6px;font-weight:500;vertical-align:middle;}
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .quote{background:var(--color-background-tertiary);border-left:3px solid var(--color-border-secondary);padding:9px 13px;font-size:13px;color:var(--color-text-secondary);line-height:1.65;margin:0 0 10px;font-style:italic;border-radius:0;}
+  .state-row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;}
+  .state-box{flex:1;min-width:100px;border-radius:var(--border-radius-md);padding:10px 12px;text-align:center;border:0.5px solid var(--color-border-tertiary);}
+  .state-icon{font-size:18px;margin-bottom:4px;}
+  .state-name{font-size:13px;font-weight:500;margin:0 0 3px;}
+  .state-desc{font-size:11px;color:var(--color-text-secondary);margin:0;}
+  .flow-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:8px 0;}
+  .fb{background:var(--color-background-tertiary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:5px 10px;font-size:12px;color:var(--color-text-primary);font-family:var(--font-mono);}
+  .fa{color:var(--color-text-tertiary);font-size:13px;}
+  .trick{background:var(--color-background-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;font-size:13px;font-weight:500;color:var(--color-text-primary);margin-top:8px;border:.5px solid var(--color-border-tertiary);}
+</style>
+
+<div class="w">
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-title">Promises in JavaScript</p>
+    <p class="hero-def">A <strong style="font-weight:500">Promise</strong> is an object that represents the eventual completion or failure of an asynchronous operation. It is a guarantee that a result will be available — now, later, or never. Used for API calls, DB operations, file handling, and network requests.</p>
+    <div class="mgrid">
+      <div class="mbox">
+        <p class="ml">Easy definition</p>
+        <p class="mv">"A Promise is a guarantee that a result will be available now, later, or never."</p>
+      </div>
+      <div class="mbox">
+        <p class="ml">Real-life analogy</p>
+        <p class="mv">Ordering food online — it is either delivered (resolved) or cancelled (rejected). While waiting, it is pending.</p>
+      </div>
+      <div class="mbox">
+        <p class="ml">Syntax</p>
+        <pre style="margin:0;font-size:12px;padding:7px 10px;">let p = new Promise((resolve, reject) => {
+  // async task
+});</pre>
+      </div>
+      <div class="mbox">
+        <p class="ml">Why needed</p>
+        <p class="mv">Async tasks don't give results immediately. Promises let us say "do this task and call me when it's done."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 STATES -->
+  <p class="sh">Promise states — every promise goes through these</p>
+  <div class="card">
+    <p class="ctitle">3 states of a Promise</p>
+    <div class="state-row">
+      <div class="state-box" style="background:#FAEEDA;">
+        <div class="state-icon">⏳</div>
+        <p class="state-name" style="color:#633806;">Pending</p>
+        <p class="state-desc">Initial state — neither done nor failed. Neither resolve() nor reject() called yet.</p>
+      </div>
+      <div class="state-box" style="background:#EAF3DE;">
+        <div class="state-icon">✅</div>
+        <p class="state-name" style="color:#3B6D11;">Fulfilled</p>
+        <p class="state-desc">Operation completed successfully. resolve() was called. .then() runs.</p>
+      </div>
+      <div class="state-box" style="background:#FCEBEB;">
+        <div class="state-icon">❌</div>
+        <p class="state-name" style="color:#A32D2D;">Rejected</p>
+        <p class="state-desc">Operation failed. reject() was called. .catch() runs.</p>
+      </div>
+    </div>
+    <p class="cl">State examples</p>
+    <pre>// PENDING — neither called
+let p = new Promise((resolve, reject) => {
+  console.log("Running...");
+});
+// State: Pending
+
+// FULFILLED
+let p = new Promise((resolve, reject) => {
+  resolve("Payment Successful");
+});
+// State: Fulfilled
+
+// REJECTED
+let p = new Promise((resolve, reject) => {
+  reject("Payment Failed");
+});
+// State: Rejected</pre>
+  </div>
+
+  <!-- THEN CATCH FINALLY -->
+  <p class="sh">Handling a promise — .then() .catch() .finally()</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">.then()</span>
+      <p class="ctitle"><code>.then(callback)</code> <span class="badge" style="background:#E1F5EE;color:#085041;">on success</span></p>
+      <p class="cdef">Executes when the Promise is <strong style="font-weight:500">resolved successfully</strong>. The resolved value is passed as the argument to the callback.</p>
+      <div class="quote">".then() executes code when a Promise is resolved successfully."</div>
+      <ul class="pts">
+        <li>Only runs when <code>resolve()</code> is called.</li>
+        <li>Can be chained — return a value from .then() and the next .then() receives it.</li>
+        <li>Memory tip: "then = IF all goes well, THEN do this."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let p = new Promise((resolve, reject) => {
+  resolve("Data Received");
+});
+
+p.then((data) => {
+  console.log(data);
+});</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#1D9E75;">Data Received</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FCEBEB;color:#A32D2D;">.catch()</span>
+      <p class="ctitle"><code>.catch(callback)</code> <span class="badge" style="background:#FCEBEB;color:#A32D2D;">on failure</span></p>
+      <p class="cdef">Executes when the Promise is <strong style="font-weight:500">rejected</strong> or when a runtime error occurs. Think of it as the safety net.</p>
+      <div class="quote">".catch() handles rejected Promises and runtime errors."</div>
+      <ul class="pts">
+        <li>Only runs when <code>reject()</code> is called or an error is thrown.</li>
+        <li>Placed at the end of a chain to catch any error from any step.</li>
+        <li>Memory tip: "catch = safety net — catches whatever falls (errors)."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>let p = new Promise((resolve, reject) => {
+  reject("Server Error");
+});
+
+p.catch((error) => {
+  console.log(error);
+});</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#E24B4A;">Server Error</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">.finally()</span>
+      <p class="ctitle"><code>.finally(callback)</code> <span class="badge" style="background:#EEEDFE;color:#3C3489;">always runs</span></p>
+      <p class="cdef">Executes <strong style="font-weight:500">regardless</strong> of whether the Promise was resolved or rejected. Perfect for cleanup tasks like hiding loaders.</p>
+      <div class="quote">".finally() always executes after a Promise settles, whether success or failure."</div>
+      <ul class="pts">
+        <li>Runs after .then() or .catch() — always last.</li>
+        <li>Does not receive any value — no argument passed.</li>
+        <li>Use for: hide loading spinner, close DB connection, cleanup.</li>
+        <li>Memory tip: "finally = no matter what happens, this ALWAYS runs."</li>
+      </ul>
+      <p class="cl">Example — success</p>
+      <pre>let p = new Promise((resolve, reject) => {
+  resolve("Success");
+});
+
+p.then((data) => {
+  console.log(data);
+}).finally(() => {
+  console.log("Completed");
+});</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#7F77DD;">Success
+Completed</div>
+    </div>
+
+    <!-- COMPLETE EXAMPLE -->
+    <div class="card">
+      <span class="ctag" style="background:#FAEEDA;color:#633806;">Complete</span>
+      <p class="ctitle">then + catch + finally together</p>
+      <p class="cdef">The full promise pattern — handle success, handle failure, and always run cleanup. This is the correct way to write a complete Promise.</p>
+      <p class="cl">Example</p>
+      <pre>let p = new Promise((resolve, reject) => {
+  let login = true;
+  if (login) {
+    resolve("Login Successful");
+  } else {
+    reject("Login Failed");
+  }
+});
+
+p.then((msg) => {
+  console.log(msg);
+}).catch((err) => {
+  console.log(err);
+}).finally(() => {
+  console.log("Process Finished");
+});</pre>
+      <p class="cl">Output (login = true)</p>
+      <div class="out" style="border-color:#EF9F27;">Login Successful
+Process Finished</div>
+    </div>
+
+  </div>
+
+  <!-- PROMISE CHAINING -->
+  <p class="sh">Promise chaining — solving callback hell</p>
+  <div class="card">
+    <p class="ctitle">What is Promise Chaining?</p>
+    <p class="cdef">Connecting multiple <code>.then()</code> calls so the return value of one step becomes the input of the next. Avoids deeply nested "callback hell" code.</p>
+    <ul class="pts">
+      <li>Each <code>.then()</code> receives the return value of the previous one.</li>
+      <li>Makes multi-step async operations readable top-to-bottom.</li>
+      <li>One <code>.catch()</code> at the end catches errors from any step.</li>
+      <li>Memory tip: "chaining = assembly line — each station passes the product to the next."</li>
+    </ul>
+    <div class="two" style="margin-top:10px;">
+      <div>
+        <p class="cl">Example 1 — numbers</p>
+        <pre>Promise.resolve(5)
+.then((num) => {
+  console.log(num);   // 5
+  return num * 2;
+})
+.then((num) => {
+  console.log(num);   // 10
+  return num * 2;
+})
+.then((num) => {
+  console.log(num);   // 20
+});</pre>
+        <p class="cl">Output</p>
+        <div class="out" style="border-color:#1D9E75;">5
+10
+20</div>
+      </div>
+      <div>
+        <p class="cl">Example 2 — real life salary</p>
+        <pre>new Promise((resolve) => {
+  resolve(1000);
+})
+.then((salary) => {
+  console.log("Salary :", salary);
+  return salary + 5000;
+})
+.then((salary) => {
+  console.log("Bonus Added :", salary);
+  return salary + 2000;
+})
+.then((salary) => {
+  console.log("Final Salary :", salary);
+});</pre>
+        <p class="cl">Output</p>
+        <div class="out" style="border-color:#378ADD;">Salary : 1000
+Bonus Added : 6000
+Final Salary : 8000</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 PROMISE METHODS -->
+  <p class="sh">Advanced promise methods — working with multiple promises</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">01</span>
+      <p class="ctitle"><code>Promise.all([ ])</code></p>
+      <p class="cdef">Runs all promises simultaneously. Resolves only when <strong style="font-weight:500">ALL</strong> succeed. If even one fails, the whole thing fails immediately.</p>
+      <div class="quote">"Promise.all() resolves when all promises fulfill, or rejects immediately if any one fails."</div>
+      <ul class="pts">
+        <li>All must succeed — one failure = total failure.</li>
+        <li>Returns array of all results in the same order.</li>
+        <li>Use when every result is required — e.g. load user + orders + settings together.</li>
+      </ul>
+      <div class="trick">🧠 Everyone must pass — or all fail</div>
+      <p class="cl">Example</p>
+      <pre>let p1 = Promise.resolve("HTML");
+let p2 = Promise.resolve("CSS");
+let p3 = Promise.resolve("JavaScript");
+
+Promise.all([p1, p2, p3])
+.then((result) => {
+  console.log(result);
+});</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#1D9E75;">["HTML", "CSS", "JavaScript"]</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">02</span>
+      <p class="ctitle"><code>Promise.any([ ])</code></p>
+      <p class="cdef">Returns the <strong style="font-weight:500">first successfully resolved</strong> promise. Ignores rejections unless ALL promises fail.</p>
+      <div class="quote">"Promise.any() returns the first fulfilled promise and ignores rejected ones."</div>
+      <ul class="pts">
+        <li>Only needs one success — others are ignored.</li>
+        <li>Fails only if ALL promises are rejected.</li>
+        <li>Use when any one result is enough — e.g. try multiple servers, use whichever responds.</li>
+      </ul>
+      <div class="trick">🧠 Any one passing is enough</div>
+      <p class="cl">Example</p>
+      <pre>let p1 = Promise.reject("Error 1");
+let p2 = Promise.resolve("Success");
+let p3 = Promise.resolve("Java");
+
+Promise.any([p1, p2, p3])
+.then((result) => {
+  console.log(result);
+});</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#7F77DD;">Success</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAECE7;color:#993C1D;">03</span>
+      <p class="ctitle"><code>Promise.race([ ])</code></p>
+      <p class="cdef">Returns the result of the <strong style="font-weight:500">first promise that settles</strong> — whether resolved or rejected. Fastest one wins.</p>
+      <div class="quote">"Promise.race() returns the result of the first promise that completes, success or failure."</div>
+      <ul class="pts">
+        <li>First to finish wins — resolved OR rejected.</li>
+        <li>All others are ignored after the first settles.</li>
+        <li>Use for timeout patterns — if API takes too long, reject first.</li>
+      </ul>
+      <div class="trick">🏁 Fastest wins the race</div>
+      <p class="cl">Example</p>
+      <pre>let p1 = new Promise((resolve) => {
+  setTimeout(() => resolve("HTML"), 3000);
+});
+let p2 = new Promise((resolve) => {
+  setTimeout(() => resolve("CSS"), 1000);
+});
+
+Promise.race([p1, p2])
+.then((result) => {
+  console.log(result);
+});</pre>
+      <p class="cl">Output — CSS finishes first</p>
+      <div class="out" style="border-color:#D85A30;">CSS</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#FAEEDA;color:#633806;">04</span>
+      <p class="ctitle"><code>Promise.allSettled([ ])</code></p>
+      <p class="cdef">Waits for <strong style="font-weight:500">ALL</strong> promises to finish — success or failure — and returns every result. Never rejects because of one failure.</p>
+      <div class="quote">"Promise.allSettled() returns all results after every promise has settled, regardless of success or failure."</div>
+      <ul class="pts">
+        <li>Never fails — always waits for every promise.</li>
+        <li>Returns objects with <code>status: "fulfilled"</code> or <code>status: "rejected"</code>.</li>
+        <li>Use when you need to know the outcome of every promise, even failures.</li>
+      </ul>
+      <div class="trick">📋 Show everyone's result — pass or fail</div>
+      <p class="cl">Example</p>
+      <pre>let p1 = Promise.resolve("HTML");
+let p2 = Promise.reject("Error");
+let p3 = Promise.resolve("JavaScript");
+
+Promise.allSettled([p1, p2, p3])
+.then((result) => {
+  console.log(result);
+});</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#EF9F27;">[
+  { status: "fulfilled", value: "HTML" },
+  { status: "rejected",  reason: "Error" },
+  { status: "fulfilled", value: "JavaScript" }
+]</div>
+    </div>
+
+  </div>
+
+  <!-- FETCH API -->
+  <p class="sh">fetch() — getting data from a server</p>
+  <div class="card">
+    <p class="ctitle"><code>fetch(url)</code> <span class="badge" style="background:#E1F5EE;color:#085041;">returns a Promise</span></p>
+    <p class="cdef">A built-in JS method to send HTTP requests and receive data from APIs. Replaced the old XMLHttpRequest (XHR). Because API calls take time, fetch() returns a Promise.</p>
+    <ul class="pts">
+      <li>Returns a Promise — must use <code>.then()</code> or <code>await</code>.</li>
+      <li>First <code>.then()</code> receives the raw Response object — call <code>.json()</code> on it to parse data.</li>
+      <li>Always add <code>.catch()</code> to handle network errors.</li>
+      <li>Memory tip: "fetch = call the waiter — waiter goes to kitchen (server) and brings back food (data)."</li>
+    </ul>
+    <p class="cl">Example — using .then() chain</p>
+    <pre>fetch("https://jsonplaceholder.typicode.com/users")
+.then((response) => {
+  return response.json();    // parse raw response
+})
+.then((data) => {
+  console.log(data);         // actual data
+})
+.catch((error) => {
+  console.log(error);        // handle error
+});</pre>
+  </div>
+
+  <!-- ASYNC AWAIT -->
+  <p class="sh">async / await — ES8 (2017) — promises made easy</p>
+  <div class="two">
+
+    <div class="card">
+      <span class="ctag" style="background:#EEEDFE;color:#3C3489;">async</span>
+      <p class="ctitle"><code>async function</code> <span class="badge" style="background:#EEEDFE;color:#3C3489;">ES8 — 2017</span></p>
+      <p class="cdef">The <code>async</code> keyword before a function makes it <strong style="font-weight:500">automatically return a Promise</strong>. Even if you return a plain value, it gets wrapped in a resolved Promise.</p>
+      <div class="quote">"The async keyword declares an asynchronous function that always returns a Promise."</div>
+      <ul class="pts">
+        <li>Any function with <code>async</code> = returns a Promise, always.</li>
+        <li>Allows use of <code>await</code> inside the function.</li>
+        <li>Memory tip: "async = this function will deal with Promises."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>async function demo() {
+  return "Hello";
+}
+
+demo().then((data) => {
+  console.log(data);
+});</pre>
+      <p class="cl">Output</p>
+      <div class="out" style="border-color:#7F77DD;">Hello</div>
+    </div>
+
+    <div class="card">
+      <span class="ctag" style="background:#E1F5EE;color:#085041;">await</span>
+      <p class="ctitle"><code>await</code> keyword <span class="badge" style="background:#E1F5EE;color:#085041;">only inside async</span></p>
+      <p class="cdef">Pauses the execution of an async function until the Promise resolves. Makes async code read like normal synchronous code — no more <code>.then()</code> chains.</p>
+      <div class="quote">"await pauses an async function until a Promise resolves before continuing execution."</div>
+      <ul class="pts">
+        <li>Can ONLY be used inside an <code>async</code> function.</li>
+        <li>Pauses only that function — not the whole program.</li>
+        <li>Memory tip: "await = hold on, wait for the Promise to finish, THEN continue."</li>
+      </ul>
+      <p class="cl">Example</p>
+      <pre>function getData() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("Data Received");
+    }, 3000);
+  });
+}
+
+async function display() {
+  let result = await getData();
+  console.log(result);
+}
+
+display();</pre>
+      <p class="cl">Output — after 3 seconds</p>
+      <div class="out" style="border-color:#1D9E75;">Data Received</div>
+    </div>
+
+  </div>
+
+  <!-- FETCH WITH ASYNC AWAIT -->
+  <div class="card">
+    <span class="ctag" style="background:#FAEEDA;color:#633806;">fetch + async/await</span>
+    <p class="ctitle">Fetching API data with async/await — the modern way</p>
+    <p class="cdef">Combining <code>fetch()</code> with <code>async/await</code> makes API calls look clean and readable. Use <code>try/catch</code> instead of <code>.catch()</code> for error handling.</p>
+    <ul class="pts">
+      <li>Wrap in <code>try { }</code> — success code goes here.</li>
+      <li>Wrap in <code>catch(error) { }</code> — error handling goes here.</li>
+      <li>Much cleaner than chaining multiple <code>.then()</code> calls.</li>
+    </ul>
+    <p class="cl">Example</p>
+    <pre>async function getUsers() {
+  try {
+    let response = await fetch(
+      "https://jsonplaceholder.typicode.com/users"
+    );
+    let data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+getUsers();</pre>
+  </div>
+
+  <!-- COMPARISON TABLES -->
+  <p class="sh">Interview comparison tables</p>
+  <div class="two">
+
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;border:.5px solid var(--color-border-tertiary);">
+      <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;">resolve() vs reject()</p>
+      <table style="width:100%;font-size:12.5px;border-collapse:collapse;">
+        <thead><tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:#3B6D11;">resolve()</th>
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:#A32D2D;">reject()</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;color:var(--color-text-secondary);">Indicates success</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Indicates failure</td></tr>
+          <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;color:var(--color-text-secondary);">Calls .then()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Calls .catch()</td></tr>
+          <tr><td style="padding:5px 8px;color:var(--color-text-secondary);">Returns result</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Returns error</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;border:.5px solid var(--color-border-tertiary);">
+      <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;">then() vs catch() vs finally()</p>
+      <table style="width:100%;font-size:12.5px;border-collapse:collapse;">
+        <thead><tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Method</th>
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">When it runs</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">.then()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Only on success</td></tr>
+          <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">.catch()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Only on failure</td></tr>
+          <tr><td style="padding:5px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">.finally()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Always — no matter what</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;border:.5px solid var(--color-border-tertiary);">
+      <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;">Promise methods — when each succeeds</p>
+      <table style="width:100%;font-size:12.5px;border-collapse:collapse;">
+        <thead><tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Method</th>
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Success condition</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">Promise.all()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">ALL must succeed</td></tr>
+          <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">Promise.any()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">ANY ONE must succeed</td></tr>
+          <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">Promise.race()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">First one to finish wins</td></tr>
+          <tr><td style="padding:5px 8px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);">Promise.allSettled()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Returns all results always</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;border:.5px solid var(--color-border-tertiary);">
+      <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;">Promise .then() chain vs async/await</p>
+      <table style="width:100%;font-size:12.5px;border-collapse:collapse;">
+        <thead><tr style="border-bottom:.5px solid var(--color-border-tertiary);">
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">Promise</th>
+          <th style="text-align:left;padding:5px 8px;font-weight:500;color:var(--color-text-secondary);">async/await</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;color:var(--color-text-secondary);">Uses .then()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Uses await</td></tr>
+          <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;color:var(--color-text-secondary);">More chaining</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Cleaner syntax</td></tr>
+          <tr style="border-bottom:.5px solid var(--color-border-tertiary);"><td style="padding:5px 8px;color:var(--color-text-secondary);">Harder to read</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Reads like sync code</td></tr>
+          <tr><td style="padding:5px 8px;color:var(--color-text-secondary);">Uses .catch()</td><td style="padding:5px 8px;color:var(--color-text-secondary);">Uses try/catch</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- MEMORY TRICKS -->
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:.5rem;border:.5px solid var(--color-border-tertiary);">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;">⚡ Super quick memory tricks — 1 line each</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;">
+      <div style="background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;"><p style="font-size:12px;font-family:var(--font-mono);color:var(--color-text-primary);margin:0 0 3px;">all()</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Everyone must pass — or all fail</p></div>
+      <div style="background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;"><p style="font-size:12px;font-family:var(--font-mono);color:var(--color-text-primary);margin:0 0 3px;">any()</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Any one passing is enough</p></div>
+      <div style="background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;"><p style="font-size:12px;font-family:var(--font-mono);color:var(--color-text-primary);margin:0 0 3px;">race()</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Fastest wins the race</p></div>
+      <div style="background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;"><p style="font-size:12px;font-family:var(--font-mono);color:var(--color-text-primary);margin:0 0 3px;">allSettled()</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Show everyone's result</p></div>
+      <div style="background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;"><p style="font-size:12px;font-family:var(--font-mono);color:var(--color-text-primary);margin:0 0 3px;">fetch()</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Call the waiter → kitchen → food</p></div>
+      <div style="background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;"><p style="font-size:12px;font-family:var(--font-mono);color:var(--color-text-primary);margin:0 0 3px;">async</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">This function deals with Promises</p></div>
+      <div style="background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;"><p style="font-size:12px;font-family:var(--font-mono);color:var(--color-text-primary);margin:0 0 3px;">await</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Hold on — wait for Promise to finish</p></div>
+      <div style="background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;"><p style="font-size:12px;font-family:var(--font-mono);color:var(--color-text-primary);margin:0 0 3px;">finally()</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">No matter what — always runs</p></div>
+    </div>
+  </div>
+
+  <!-- GOLDEN RULES -->
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:1rem;border:.5px solid var(--color-border-tertiary);">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 8px;">⭐ Golden rules — say these in an interview</p>
+    <ul class="pts">
+      <li>A Promise has exactly 3 states — <strong style="font-weight:500">pending</strong>, <strong style="font-weight:500">fulfilled</strong>, <strong style="font-weight:500">rejected</strong>. Once settled it cannot change state again.</li>
+      <li><code>async/await</code> is built on top of Promises — it is just cleaner syntax, not a replacement.</li>
+      <li><code>await</code> can ONLY be used inside an <code>async</code> function — using it outside throws a SyntaxError.</li>
+      <li><code>Promise.all()</code> fails fast — the moment one rejects, the whole thing rejects. Use <code>allSettled()</code> when you need all results regardless.</li>
+      <li><code>fetch()</code> only rejects on network failure — a 404 or 500 response is still a resolved promise. Always check <code>response.ok</code>.</li>
+      <li>Promise chaining solves callback hell — keeps code flat and readable instead of deeply nested.</li>
+    </ul>
+  </div>
+
+</div>

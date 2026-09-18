@@ -1,0 +1,660 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+.warn-box{background:#fce4ec;border-left:5px solid #c62828;padding:10px 14px;margin-top:10px}
+.warn-box .lbl{font-size:10px;font-weight:700;color:#c62828;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.warn-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:4px}
+.mini-card p,.mini-card li{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+.prog-wrap{margin:10px 0}
+.prog-header{background:#2c2c2c;padding:6px 14px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.prog-label{color:#bbb;font-size:11px;margin-left:6px;font-family:Arial,sans-serif;font-weight:700;letter-spacing:.3px}
+.prog-body{background:#1e1e1e;border-radius:0 0 6px 6px;padding:13px 16px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.9;white-space:pre;overflow-x:auto;color:#d4d4d4}
+.kw{color:#569cd6;font-weight:700}
+.cm{color:#6a9955;font-style:italic}
+.str{color:#ce9178}
+.fn{color:#dcdcaa}
+.tp{color:#4ec9b0}
+.num{color:#b5cea8}
+.out-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:0 0 5px 5px;padding:6px 14px;font-family:'Courier New',monospace;font-size:12.5px;color:#1b5e20;margin-bottom:12px}
+.ex-block{border:1px solid #ccc;border-radius:6px;margin-bottom:14px;overflow:hidden}
+.ex-head{background:#1a1a6e;color:#fff;padding:7px 14px;font-size:13px;font-weight:700}
+.ex-logic{background:#f5f6ff;padding:8px 14px;font-size:12.5px;color:#333;border-bottom:1px solid #ddd}
+.flow-box{background:#f5f6ff;border:1px solid #b0bfff;border-radius:6px;padding:10px 14px;text-align:center;font-size:13px;color:#111;margin:8px 0;line-height:2.2}
+.flow-box b{color:#1a1a6e}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.tag{background:#eef0ff;color:#1a1a6e;font-size:12px;padding:3px 10px;border-radius:12px;border:1px solid #b0bfff}
+.mono{background:#f0f0f0;border:1px solid #ddd;border-radius:4px;padding:7px 12px;font-family:'Courier New',monospace;font-size:13px;color:#111;margin:6px 0}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">PL/SQL — Part 10: Triggers</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; DML / DDL / Database Triggers &nbsp;|&nbsp; Orange tag = Extra content</div>
+</div>
+
+<!-- ===== 1 ===== -->
+<div class="sec-label">1. What is a Trigger?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition — One Line</div>
+    <p>A Trigger is a stored PL/SQL block that Oracle automatically executes in response to a specified database event such as INSERT, UPDATE, DELETE, CREATE, ALTER, or DROP.</p>
+  </div>
+  <ul>
+    <li>A trigger is stored permanently in the Oracle database</li>
+    <li>It fires automatically — the developer does not call it manually</li>
+    <li>It cannot accept parameters directly</li>
+    <li>It is associated with a specific table, view, schema, or database event</li>
+    <li>Commonly used for validation, auditing, logging, security, and data integrity</li>
+  </ul>
+  <div class="flow-box">
+    <b>User Performs Action</b> → INSERT / UPDATE / DELETE<br>
+    ↓<br>
+    <b>Oracle Detects the Event</b><br>
+    ↓<br>
+    <b>Trigger Fires Automatically</b><br>
+    ↓<br>
+    <b>Trigger Logic Executes</b>
+  </div>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Trigger = Alarm System — you set it up once, it fires automatically whenever the event happens</p>
+    <p>Procedure = called by you &nbsp;|&nbsp; Trigger = called by Oracle automatically</p>
+  </div>
+</div>
+
+<!-- ===== 2 ===== -->
+<div class="sec-label">2. Stored Procedure vs Trigger</div>
+<div class="card">
+  <table>
+    <tr><th>Feature</th><th>Stored Procedure</th><th>Trigger</th></tr>
+    <tr><td>Execution</td><td>Called explicitly by user or programmer</td><td>Fires automatically when an event occurs</td></tr>
+    <tr><td>How to call</td><td>EXEC procedure_name(params)</td><td>Cannot be called manually — fires on DML/DDL</td></tr>
+    <tr><td>Parameters</td><td>Can accept IN / OUT / IN OUT parameters</td><td>Cannot accept parameters directly</td></tr>
+    <tr><td>Control</td><td>User controls when it runs</td><td>Oracle controls when it runs</td></tr>
+    <tr><td>COMMIT / ROLLBACK</td><td>Allowed inside procedure</td><td>NOT allowed inside a trigger</td></tr>
+    <tr><td>Used for</td><td>Business logic, data processing</td><td>Validation, auditing, logging, security</td></tr>
+    <tr><td>Multiple per table</td><td>Not table-specific</td><td>Yes — multiple triggers can exist on one table</td></tr>
+  </table>
+</div>
+
+<!-- ===== 3 ===== -->
+<div class="sec-label">3. Why Do We Use Triggers?</div>
+<div class="card">
+  <div class="tag-row">
+    <span class="tag">Validation</span>
+    <span class="tag">Auditing</span>
+    <span class="tag">Logging</span>
+    <span class="tag">Security</span>
+    <span class="tag">Data Integrity</span>
+    <span class="tag">Automatic Calculations</span>
+    <span class="tag">Maintaining History Tables</span>
+    <span class="tag">Backup on Delete</span>
+    <span class="tag">Preventing Invalid Operations</span>
+  </div>
+  <div class="tip-box">
+    <div class="lbl">Extra — Real World Use Cases</div>
+    <p>Bank systems: trigger fires on every UPDATE to salary/account to log changes in an audit table.</p>
+    <p>HR systems: trigger prevents deletion of key employees like managers or presidents.</p>
+    <p>E-commerce: trigger auto-inserts a backup record every time an order is deleted.</p>
+  </div>
+</div>
+
+<!-- ===== 4 ===== -->
+<div class="sec-label">4. General Syntax of a Trigger</div>
+<div class="card">
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="prog-label">TRIGGER — GENERAL SYNTAX</span>
+    </div>
+    <div class="prog-body"><span class="kw">CREATE</span> [<span class="kw">OR REPLACE</span>] <span class="kw">TRIGGER</span> trigger_name
+{<span class="kw">BEFORE</span> | <span class="kw">AFTER</span>}               <span class="cm">-- Timing: when trigger fires</span>
+{<span class="kw">INSERT</span> | <span class="kw">UPDATE</span> | <span class="kw">DELETE</span>}        <span class="cm">-- Event: what action fires it</span>
+<span class="kw">ON</span> table_name                       <span class="cm">-- Table associated with the trigger</span>
+[<span class="kw">FOR EACH ROW</span>]                      <span class="cm">-- Row-level trigger (optional)</span>
+<span class="kw">BEGIN</span>
+   <span class="cm">-- Trigger logic here</span>
+<span class="kw">END</span>;
+/</div>
+  </div>
+  <table style="margin-top:10px">
+    <tr><th>Keyword</th><th>Meaning</th></tr>
+    <tr><td>CREATE OR REPLACE TRIGGER</td><td>Create or overwrite the trigger</td></tr>
+    <tr><td>BEFORE / AFTER</td><td>Timing — whether trigger fires before or after the event</td></tr>
+    <tr><td>INSERT / UPDATE / DELETE</td><td>The event that fires the trigger</td></tr>
+    <tr><td>ON table_name</td><td>The table this trigger is attached to</td></tr>
+    <tr><td>FOR EACH ROW</td><td>Makes it a Row-Level trigger — fires once per affected row</td></tr>
+    <tr><td>:OLD</td><td>Pseudo record — holds the original (old) values of the row</td></tr>
+    <tr><td>:NEW</td><td>Pseudo record — holds the new values being inserted/updated</td></tr>
+    <tr><td>RAISE_APPLICATION_ERROR</td><td>Raises a custom error and stops the operation</td></tr>
+  </table>
+</div>
+
+<!-- ===== 5 ===== -->
+<div class="sec-label">5. Types of Triggers</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:10px">Triggers are classified in three ways:</p>
+  <div class="three-col">
+    <div class="mini-card">
+      <div class="mct">Based on Event</div>
+      <ul style="margin-top:4px">
+        <li>DML Trigger</li>
+        <li>DDL Trigger</li>
+        <li>Database Trigger</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct">Based on Timing</div>
+      <ul style="margin-top:4px">
+        <li>BEFORE Trigger</li>
+        <li>AFTER Trigger</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct">Based on Level</div>
+      <ul style="margin-top:4px">
+        <li>Statement-Level Trigger</li>
+        <li>Row-Level Trigger (FOR EACH ROW)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 6 ===== -->
+<div class="sec-label">6. Types Based on Event</div>
+<div class="card">
+  <table>
+    <tr><th>Trigger Type</th><th>Events</th><th>Used For</th></tr>
+    <tr><td>DML Trigger</td><td>INSERT, UPDATE, DELETE</td><td>Validating and controlling data changes on tables</td></tr>
+    <tr><td>DDL Trigger</td><td>CREATE, ALTER, DROP, TRUNCATE, RENAME</td><td>Auditing schema changes — who created or dropped objects</td></tr>
+    <tr><td>Database Trigger</td><td>LOGON, LOGOFF, STARTUP, SHUTDOWN</td><td>Session tracking, welcome messages, security logging</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — DDL Trigger Example</div>
+    <p>A DDL Trigger on AFTER CREATE ON SCHEMA fires automatically every time a new object (table, procedure, function) is created in the schema. Used for audit trails of database changes.</p>
+  </div>
+</div>
+
+<!-- ===== 7 ===== -->
+<div class="sec-label">7. Types Based on Timing</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">BEFORE Trigger</div>
+      <ul style="margin-top:4px">
+        <li>Fires BEFORE the DML event is applied to the table</li>
+        <li>Used for validation — can stop the operation before data changes</li>
+        <li>Used for modifying :NEW values before they are saved</li>
+        <li>If RAISE_APPLICATION_ERROR is called → DML is cancelled</li>
+      </ul>
+      <div style="text-align:center;margin-top:8px;font-size:12px;color:#1a1a6e;font-weight:700">Action → BEFORE Trigger → Data Saved</div>
+    </div>
+    <div class="mini-card">
+      <div class="mct">AFTER Trigger</div>
+      <ul style="margin-top:4px">
+        <li>Fires AFTER the DML event is applied to the table</li>
+        <li>Data is already changed when trigger runs</li>
+        <li>Used for auditing, logging, history maintenance</li>
+        <li>Cannot modify :NEW values — data is already written</li>
+      </ul>
+      <div style="text-align:center;margin-top:8px;font-size:12px;color:#1a1a6e;font-weight:700">Action → Data Saved → AFTER Trigger</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 8 ===== -->
+<div class="sec-label">8. Types Based on Level</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">Statement-Level Trigger</div>
+      <ul style="margin-top:4px">
+        <li>Executes ONCE per SQL statement</li>
+        <li>Regardless of how many rows are affected</li>
+        <li>Does NOT use FOR EACH ROW</li>
+        <li>Cannot access :OLD or :NEW values</li>
+      </ul>
+      <p style="font-size:11px;color:#555;margin-top:6px">Example: UPDATE EMP SET SAL = SAL+100 (100 rows) → trigger fires ONCE</p>
+    </div>
+    <div class="mini-card">
+      <div class="mct">Row-Level Trigger</div>
+      <ul style="margin-top:4px">
+        <li>Executes ONCE for EACH affected row</li>
+        <li>Must use FOR EACH ROW keyword</li>
+        <li>Can access :OLD and :NEW pseudo records</li>
+        <li>Most commonly used in real applications</li>
+      </ul>
+      <p style="font-size:11px;color:#555;margin-top:6px">Example: UPDATE EMP SET SAL = SAL+100 (10 rows) → trigger fires 10 TIMES</p>
+    </div>
+  </div>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>No FOR EACH ROW = Statement-Level (fires once) &nbsp;|&nbsp; WITH FOR EACH ROW = Row-Level (fires per row)</p>
+    <p>:OLD and :NEW are only available in Row-Level triggers (FOR EACH ROW)</p>
+  </div>
+</div>
+
+<!-- ===== 9 ===== -->
+<div class="sec-label">9. Pseudo Records — :OLD and :NEW</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>:OLD and :NEW are special pseudo records automatically provided by Oracle in Row-Level triggers. They hold the column values of the row before and after the DML operation.</p>
+  </div>
+  <table>
+    <tr><th>Operation</th><th>:OLD</th><th>:NEW</th></tr>
+    <tr><td>INSERT</td><td>Not available — no old data exists</td><td>Available — holds the new values being inserted</td></tr>
+    <tr><td>UPDATE</td><td>Available — holds the original values</td><td>Available — holds the updated values</td></tr>
+    <tr><td>DELETE</td><td>Available — holds the deleted values</td><td>Not available — data is being removed</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — How to Use :OLD and :NEW</div>
+    <p>Access column values using dot notation: &nbsp; :OLD.SAL &nbsp; :NEW.SAL &nbsp; :OLD.ENAME &nbsp; :NEW.EMPNO</p>
+    <p>Example: Before update SAL = 3000, after update SAL = 5000 → :OLD.SAL = 3000, :NEW.SAL = 5000</p>
+    <p>In BEFORE triggers you can modify :NEW values. In AFTER triggers :NEW values cannot be changed.</p>
+  </div>
+  <div class="warn-box">
+    <div class="lbl">Important — :OLD and :NEW Only in Row-Level Triggers</div>
+    <p>:OLD and :NEW are ONLY available when FOR EACH ROW is used. In Statement-Level triggers, there is no concept of individual rows — so :OLD and :NEW do not exist.</p>
+  </div>
+</div>
+
+<!-- ===== 10 ===== -->
+<div class="sec-label">10. RAISE_APPLICATION_ERROR</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Definition</div>
+    <p>RAISE_APPLICATION_ERROR is a built-in Oracle procedure used inside triggers and procedures to raise a custom user-defined error. When called, it stops the current DML operation and returns a custom error message to the user.</p>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+      <span class="prog-label">RAISE_APPLICATION_ERROR — SYNTAX</span>
+    </div>
+    <div class="prog-body"><span class="fn">RAISE_APPLICATION_ERROR</span>(error_number, error_message);
+
+<span class="cm">-- error_number : must be between -20000 and -20999 (user-defined range)</span>
+<span class="cm">-- error_message: custom message string shown to the user</span>
+
+<span class="cm">-- Example:</span>
+<span class="fn">RAISE_APPLICATION_ERROR</span>(-<span class="num">20001</span>, <span class="str">'SALARY MUST BE GREATER THAN OR EQUAL TO 1000'</span>);</div>
+  </div>
+  <div class="tip-box">
+    <div class="lbl">Extra — Error Number Range</div>
+    <p>Oracle reserves error numbers -20000 to -20999 for user-defined errors. You must always use a number within this range when calling RAISE_APPLICATION_ERROR. Numbers outside this range will cause an error.</p>
+  </div>
+</div>
+
+<!-- ===== 11 ===== -->
+<div class="sec-label">11. Trigger Examples — Validation & Security</div>
+<div class="card">
+
+  <div class="ex-block">
+    <div class="ex-head">Trigger 1 — T1: Salary Validation on INSERT (BEFORE INSERT)</div>
+    <div class="ex-logic">Requirement: Salary must be >= 1000 when inserting a new employee. If salary is less than 1000, raise an error and stop the INSERT.<br>Logic: BEFORE INSERT fires before data is saved → check :NEW.SAL → if less than 1000 → RAISE_APPLICATION_ERROR → INSERT is cancelled.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">T1 — SALARY VALIDATION ON INSERT</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE TRIGGER</span> T1
+<span class="kw">BEFORE INSERT ON</span> EMP
+<span class="kw">FOR EACH ROW</span>
+<span class="kw">BEGIN</span>
+   <span class="cm">-- Check if new salary is below the minimum allowed</span>
+   <span class="kw">IF</span> :NEW.SAL < <span class="num">1000</span> <span class="kw">THEN</span>
+      <span class="fn">RAISE_APPLICATION_ERROR</span>(-<span class="num">20001</span>,
+         <span class="str">'SALARY MUST BE GREATER THAN OR EQUAL TO 1000'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Test: Insert with salary below 1000</span>
+<span class="kw">INSERT INTO</span> EMP(EMPNO, ENAME, SAL)
+<span class="kw">VALUES</span>(<span class="num">111</span>, <span class="str">'ROHIT'</span>, <span class="num">264</span>);</div>
+    </div>
+    <div class="out-bar">Output: ORA-20001: SALARY MUST BE GREATER THAN OR EQUAL TO 1000 &nbsp;→ INSERT is blocked</div>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-head">Trigger 2 — T2: Prevent Salary Reduction on UPDATE (BEFORE UPDATE)</div>
+    <div class="ex-logic">Requirement: New salary cannot be less than the current salary. Salary can only increase or stay the same.<br>Logic: BEFORE UPDATE → compare :NEW.SAL with :OLD.SAL → if new is less → RAISE_APPLICATION_ERROR → UPDATE is cancelled.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">T2 — PREVENT SALARY REDUCTION ON UPDATE</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE TRIGGER</span> T2
+<span class="kw">BEFORE UPDATE ON</span> EMP
+<span class="kw">FOR EACH ROW</span>
+<span class="kw">BEGIN</span>
+   <span class="cm">-- :OLD.SAL = current salary, :NEW.SAL = salary being set</span>
+   <span class="kw">IF</span> :NEW.SAL < :OLD.SAL <span class="kw">THEN</span>
+      <span class="fn">RAISE_APPLICATION_ERROR</span>(-<span class="num">20002</span>,
+         <span class="str">'NEW SALARY CANNOT BE LESS THAN OLD SALARY'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Test: Try to reduce SMITH's salary from 800 to 500</span>
+<span class="kw">UPDATE</span> EMP
+<span class="kw">SET</span>   SAL = <span class="num">500</span>
+<span class="kw">WHERE</span> EMPNO = <span class="num">7369</span>;</div>
+    </div>
+    <div class="out-bar">Output: ORA-20002: NEW SALARY CANNOT BE LESS THAN OLD SALARY &nbsp;→ UPDATE is blocked</div>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-head">Trigger 3 — T4: Prevent Deletion of MILLER (BEFORE DELETE)</div>
+    <div class="ex-logic">Requirement: Employee MILLER must never be deleted from the EMP table.<br>Logic: BEFORE DELETE → check :OLD.ENAME → if it equals 'MILLER' → RAISE_APPLICATION_ERROR → DELETE is cancelled.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">T4 — PREVENT DELETION OF MILLER</span>
+      </div>
+      <div class="prog-body"><span class="kw">CREATE OR REPLACE TRIGGER</span> T4
+<span class="kw">BEFORE DELETE ON</span> EMP
+<span class="kw">FOR EACH ROW</span>
+<span class="kw">BEGIN</span>
+   <span class="cm">-- UPPER ensures check works regardless of case</span>
+   <span class="kw">IF</span> <span class="fn">UPPER</span>(:OLD.ENAME) = <span class="str">'MILLER'</span> <span class="kw">THEN</span>
+      <span class="fn">RAISE_APPLICATION_ERROR</span>(-<span class="num">20004</span>,
+         <span class="str">'MILLER CANNOT BE DELETED'</span>);
+   <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Test: Try to delete MILLER</span>
+<span class="kw">DELETE FROM</span> EMP
+<span class="kw">WHERE</span> ENAME = <span class="str">'MILLER'</span>;</div>
+    </div>
+    <div class="out-bar">Output: ORA-20004: MILLER CANNOT BE DELETED &nbsp;→ DELETE is blocked</div>
+  </div>
+
+</div>
+
+<!-- ===== 12 ===== -->
+<div class="sec-label">12. Trigger Examples — Auditing & History</div>
+<div class="card">
+
+  <div class="ex-block">
+    <div class="ex-head">Trigger 4 — T6: Salary History Maintenance (AFTER UPDATE)</div>
+    <div class="ex-logic">Requirement: Every time an employee's salary is updated, store the old salary, new salary, and date in a SAL_HISTORY table automatically.<br>Logic: AFTER UPDATE OF SAL → insert a row into SAL_HISTORY with :OLD.SAL, :NEW.SAL, and SYSDATE.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">T6 — SALARY HISTORY MAINTENANCE</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the history table</span>
+<span class="kw">CREATE TABLE</span> SAL_HISTORY
+(
+   EMPNO        <span class="tp">NUMBER</span>,
+   OLD_SAL      <span class="tp">NUMBER</span>,
+   NEW_SAL      <span class="tp">NUMBER</span>,
+   ACTION_DATE  <span class="tp">DATE</span>
+);
+
+<span class="cm">-- Step 2: Create the trigger</span>
+<span class="kw">CREATE OR REPLACE TRIGGER</span> T6
+<span class="kw">AFTER UPDATE OF</span> SAL <span class="kw">ON</span> EMP
+<span class="kw">FOR EACH ROW</span>
+<span class="kw">BEGIN</span>
+   <span class="cm">-- Insert old and new salary details into history table</span>
+   <span class="kw">INSERT INTO</span> SAL_HISTORY(EMPNO, OLD_SAL, NEW_SAL, ACTION_DATE)
+   <span class="kw">VALUES</span>(:OLD.EMPNO, :OLD.SAL, :NEW.SAL, <span class="fn">SYSDATE</span>);
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Step 3: Test</span>
+<span class="kw">UPDATE</span> EMP <span class="kw">SET</span> SAL = <span class="num">4000</span> <span class="kw">WHERE</span> EMPNO = <span class="num">7369</span>;
+
+<span class="cm">-- Step 4: Verify</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> SAL_HISTORY;</div>
+    </div>
+    <div class="out-bar">Output in SAL_HISTORY: EMPNO=7369 &nbsp; OLD_SAL=800 &nbsp; NEW_SAL=4000 &nbsp; ACTION_DATE=22-JUN-26</div>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-head">Trigger 5 — T5: Audit Employee Insertions (AFTER INSERT)</div>
+    <div class="ex-logic">Requirement: Every time a new employee is inserted, log the EMPNO, action type, and date in an AUDIT_EMP table automatically.<br>Logic: AFTER INSERT → insert :NEW.EMPNO, 'INSERT', and SYSDATE into AUDIT_EMP table.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">T5 — AUDIT EMPLOYEE INSERTIONS</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the audit table</span>
+<span class="kw">CREATE TABLE</span> AUDIT_EMP
+(
+   EMPNO        <span class="tp">NUMBER</span>,
+   ACTION       <span class="tp">VARCHAR2</span>(20),
+   ACTION_DATE  <span class="tp">DATE</span>
+);
+
+<span class="cm">-- Step 2: Create the trigger</span>
+<span class="kw">CREATE OR REPLACE TRIGGER</span> T5
+<span class="kw">AFTER INSERT ON</span> EMP
+<span class="kw">FOR EACH ROW</span>
+<span class="kw">BEGIN</span>
+   <span class="cm">-- Log the insert action with timestamp</span>
+   <span class="kw">INSERT INTO</span> AUDIT_EMP(EMPNO, ACTION, ACTION_DATE)
+   <span class="kw">VALUES</span>(:NEW.EMPNO, <span class="str">'INSERT'</span>, <span class="fn">SYSDATE</span>);
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Step 3: Test</span>
+<span class="kw">INSERT INTO</span> EMP <span class="kw">VALUES</span>(<span class="num">9999</span>, <span class="str">'PRAVIN'</span>, <span class="str">'CLERK'</span>, <span class="kw">NULL</span>, <span class="fn">SYSDATE</span>, <span class="num">5000</span>, <span class="kw">NULL</span>, <span class="num">10</span>);
+
+<span class="cm">-- Step 4: Verify</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> AUDIT_EMP;</div>
+    </div>
+    <div class="out-bar">Output in AUDIT_EMP: EMPNO=9999 &nbsp; ACTION=INSERT &nbsp; ACTION_DATE=22-JUN-26</div>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-head">Trigger 6 — T7: Backup Deleted Employees (AFTER DELETE)</div>
+    <div class="ex-logic">Requirement: Every time an employee is deleted, automatically save a copy of their data in EMP_BACKUP table before the data is permanently lost.<br>Logic: AFTER DELETE → use :OLD values (deleted row) → INSERT into EMP_BACKUP.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">T7 — BACKUP DELETED EMPLOYEES</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the backup table</span>
+<span class="kw">CREATE TABLE</span> EMP_BACKUP
+(
+   EMPNO   <span class="tp">NUMBER</span>,
+   ENAME   <span class="tp">VARCHAR2</span>(30),
+   SAL     <span class="tp">NUMBER</span>,
+   COMM    <span class="tp">NUMBER</span>,
+   DEPTNO  <span class="tp">NUMBER</span>
+);
+
+<span class="cm">-- Step 2: Create the trigger</span>
+<span class="kw">CREATE OR REPLACE TRIGGER</span> T7
+<span class="kw">AFTER DELETE ON</span> EMP
+<span class="kw">FOR EACH ROW</span>
+<span class="kw">BEGIN</span>
+   <span class="cm">-- Save deleted row's data using :OLD pseudo record</span>
+   <span class="kw">INSERT INTO</span> EMP_BACKUP(EMPNO, ENAME, SAL, COMM, DEPTNO)
+   <span class="kw">VALUES</span>(:OLD.EMPNO, :OLD.ENAME, :OLD.SAL, :OLD.COMM, :OLD.DEPTNO);
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Step 3: Test</span>
+<span class="kw">DELETE FROM</span> EMP <span class="kw">WHERE</span> EMPNO = <span class="num">7369</span>;
+
+<span class="cm">-- Step 4: Verify</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> EMP_BACKUP;</div>
+    </div>
+    <div class="out-bar">Output in EMP_BACKUP: EMPNO=7369 &nbsp; ENAME=SMITH &nbsp; SAL=800 &nbsp; COMM=NULL &nbsp; DEPTNO=20</div>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-head">Trigger 7 — T_SAL_AUDIT: Salary Audit with Difference (AFTER UPDATE)</div>
+    <div class="ex-logic">Requirement: Log old salary, new salary, the difference (increase or decrease), and date every time salary is updated.<br>Logic: SAL_DIFF = :NEW.SAL - :OLD.SAL → positive means increase, negative means decrease.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">T_SAL_AUDIT — SALARY AUDIT WITH DIFFERENCE</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create audit table with salary difference column</span>
+<span class="kw">CREATE TABLE</span> AUDIT_SAL
+(
+   EMPNO        <span class="tp">NUMBER</span>,
+   OLD_SAL      <span class="tp">NUMBER</span>,
+   NEW_SAL      <span class="tp">NUMBER</span>,
+   SAL_DIFF     <span class="tp">NUMBER</span>,     <span class="cm">-- Positive = increase, Negative = decrease</span>
+   ACTION_DATE  <span class="tp">DATE</span>
+);
+
+<span class="cm">-- Step 2: Create the trigger</span>
+<span class="kw">CREATE OR REPLACE TRIGGER</span> T_SAL_AUDIT
+<span class="kw">AFTER UPDATE OF</span> SAL <span class="kw">ON</span> EMP
+<span class="kw">FOR EACH ROW</span>
+<span class="kw">BEGIN</span>
+   <span class="kw">INSERT INTO</span> AUDIT_SAL(EMPNO, OLD_SAL, NEW_SAL, SAL_DIFF, ACTION_DATE)
+   <span class="kw">VALUES</span>(:OLD.EMPNO, :OLD.SAL, :NEW.SAL,
+          :NEW.SAL - :OLD.SAL,     <span class="cm">-- Calculate salary difference</span>
+          <span class="fn">SYSDATE</span>);
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Step 3: Test</span>
+<span class="kw">UPDATE</span> EMP <span class="kw">SET</span> SAL = <span class="num">3500</span> <span class="kw">WHERE</span> EMPNO = <span class="num">7369</span>;
+
+<span class="cm">-- Step 4: Verify</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> AUDIT_SAL;</div>
+    </div>
+    <div class="out-bar">Output: EMPNO=7369 &nbsp; OLD_SAL=800 &nbsp; NEW_SAL=3500 &nbsp; SAL_DIFF=2700 &nbsp; ACTION_DATE=22-JUN-26</div>
+  </div>
+
+</div>
+
+<!-- ===== 13 ===== -->
+<div class="sec-label">13. Managing Triggers</div>
+<div class="card">
+  <table>
+    <tr><th>Operation</th><th>Syntax</th><th>Purpose</th></tr>
+    <tr><td>View all triggers</td><td>SELECT TRIGGER_NAME FROM USER_TRIGGERS;</td><td>List all triggers in your schema</td></tr>
+    <tr><td>View trigger details</td><td>SELECT TRIGGER_NAME, TRIGGER_TYPE, TRIGGERING_EVENT, STATUS FROM USER_TRIGGERS;</td><td>See type, event, and enabled/disabled status</td></tr>
+    <tr><td>Disable trigger</td><td>ALTER TRIGGER T1 DISABLE;</td><td>Temporarily stop trigger from firing</td></tr>
+    <tr><td>Enable trigger</td><td>ALTER TRIGGER T1 ENABLE;</td><td>Re-enable a disabled trigger</td></tr>
+    <tr><td>Drop trigger</td><td>DROP TRIGGER T1;</td><td>Permanently delete the trigger</td></tr>
+    <tr><td>Disable all on table</td><td>ALTER TABLE EMP DISABLE ALL TRIGGERS;</td><td>Disable every trigger on a specific table</td></tr>
+    <tr><td>Enable all on table</td><td>ALTER TABLE EMP ENABLE ALL TRIGGERS;</td><td>Enable every trigger on a specific table</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="lbl">Extra — USER_TRIGGERS View</div>
+    <p>USER_TRIGGERS is an Oracle data dictionary view that stores information about all triggers in the current user's schema — including name, type, timing, event, table name, and current status (ENABLED / DISABLED).</p>
+  </div>
+</div>
+
+<!-- ===== 14 ===== -->
+<div class="sec-label">14. Quick Revision — All Trigger Keywords</div>
+<div class="card">
+  <table>
+    <tr><th>Keyword</th><th>Purpose</th></tr>
+    <tr><td>CREATE OR REPLACE TRIGGER</td><td>Create or overwrite a trigger</td></tr>
+    <tr><td>BEFORE</td><td>Fire trigger before DML event — used for validation</td></tr>
+    <tr><td>AFTER</td><td>Fire trigger after DML event — used for auditing and logging</td></tr>
+    <tr><td>INSERT / UPDATE / DELETE</td><td>The DML event that fires the trigger</td></tr>
+    <tr><td>ON table_name</td><td>Table the trigger is attached to</td></tr>
+    <tr><td>FOR EACH ROW</td><td>Makes it a Row-Level trigger — fires once per affected row</td></tr>
+    <tr><td>:OLD.column</td><td>Holds the original value of the column before the change</td></tr>
+    <tr><td>:NEW.column</td><td>Holds the new value of the column after the change</td></tr>
+    <tr><td>RAISE_APPLICATION_ERROR</td><td>Raises a custom error (-20000 to -20999) and cancels the DML</td></tr>
+    <tr><td>UPPER(:OLD.ENAME)</td><td>Convert to uppercase for case-insensitive comparison</td></tr>
+    <tr><td>SYSDATE</td><td>Current date and time — used to timestamp audit records</td></tr>
+  </table>
+  <div class="warn-box">
+    <div class="lbl">Common Mistakes with Triggers</div>
+    <p>1. Using COMMIT or ROLLBACK inside a trigger → not allowed — Oracle raises an error</p>
+    <p>2. Using :OLD or :NEW without FOR EACH ROW → not available in Statement-Level triggers</p>
+    <p>3. Trying to modify :NEW values in an AFTER trigger → not allowed — data already written</p>
+    <p>4. Using error number outside -20000 to -20999 in RAISE_APPLICATION_ERROR → error</p>
+    <p>5. Forgetting UPPER() when comparing string values → 'miller' ≠ 'MILLER' → trigger fails silently</p>
+  </div>
+</div>
+
+<!-- ===== 15 ===== -->
+<div class="sec-label">15. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What is a trigger in PL/SQL?</div>
+  <div class="qa-a">A trigger is a stored PL/SQL block that Oracle automatically executes in response to a specified database event such as INSERT, UPDATE, DELETE, CREATE, ALTER, or DROP. The developer does not call it manually.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. What is the difference between a stored procedure and a trigger?</div>
+  <div class="qa-a">A stored procedure is called explicitly by the user using EXEC. A trigger fires automatically when a database event occurs. Procedures can accept parameters; triggers cannot. COMMIT and ROLLBACK are allowed in procedures but not in triggers.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. What are :OLD and :NEW in a trigger?</div>
+  <div class="qa-a">:OLD and :NEW are pseudo records available in Row-Level triggers. :OLD holds the column values before the DML operation. :NEW holds the column values after the DML operation. For INSERT — only :NEW is available. For DELETE — only :OLD is available. For UPDATE — both are available.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. What is the difference between BEFORE and AFTER triggers?</div>
+  <div class="qa-a">BEFORE trigger fires before the DML event is applied — used for validation and restricting operations. AFTER trigger fires after the DML event is applied — used for auditing, logging, and history maintenance. BEFORE triggers can modify :NEW values; AFTER triggers cannot.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. What is the difference between a Row-Level and Statement-Level trigger?</div>
+  <div class="qa-a">A Row-Level trigger uses FOR EACH ROW and fires once for every affected row. A Statement-Level trigger fires once per SQL statement regardless of how many rows are affected. Only Row-Level triggers can access :OLD and :NEW values.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. Can we use COMMIT or ROLLBACK inside a trigger?</div>
+  <div class="qa-a">No. Oracle does not allow COMMIT or ROLLBACK inside a normal DML trigger. The trigger runs as part of the same transaction as the triggering statement. Using COMMIT or ROLLBACK inside a trigger raises an ORA-04092 error.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q7. What is RAISE_APPLICATION_ERROR? <span class="extra">Extra</span></div>
+  <div class="qa-a">RAISE_APPLICATION_ERROR is a built-in Oracle procedure that raises a custom user-defined error and stops the current DML operation. The error number must be between -20000 and -20999. Syntax: RAISE_APPLICATION_ERROR(-20001, 'Custom message');</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q8. Can one table have multiple triggers? <span class="extra">Extra</span></div>
+  <div class="qa-a">Yes. Multiple triggers can exist on the same table. For example, a table can have both a BEFORE INSERT trigger for validation and an AFTER INSERT trigger for auditing. Oracle fires them in the order they were created.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q9. What is the difference between AFTER UPDATE and AFTER UPDATE OF column? <span class="extra">Extra</span></div>
+  <div class="qa-a">AFTER UPDATE fires for any UPDATE on the table regardless of which column is changed. AFTER UPDATE OF SAL fires only when the SAL column specifically is updated. Using OF column makes the trigger more precise and avoids unnecessary executions.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q10. How do you view and manage triggers in Oracle? <span class="extra">Extra</span></div>
+  <div class="qa-a">View triggers: SELECT TRIGGER_NAME, TRIGGER_TYPE, STATUS FROM USER_TRIGGERS; Disable: ALTER TRIGGER T1 DISABLE; Enable: ALTER TRIGGER T1 ENABLE; Drop: DROP TRIGGER T1; Disable all on table: ALTER TABLE EMP DISABLE ALL TRIGGERS;</div>
+</div>
+
+<div class="divider"></div>
+<footer>PL/SQL Part 10 — Triggers &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>

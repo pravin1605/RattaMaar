@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Query Parameters & Welcome Files — Notes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 18mm 15mm 20mm;
+    margin: 0 auto;
+    background: #fff;
+    page-break-after: always;
+    border-bottom: 2px dashed #bbb;
+  }
+
+  .page-header {
+    border-top: 3px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 5px 0;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-header .subject { font-size: 10.5px; font-weight: normal; letter-spacing: 1px; text-transform: uppercase; }
+  .page-header .topic-label { font-size: 10.5px; font-weight: bold; letter-spacing: 1px; }
+
+  .main-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid #000;
+    padding: 9px 0;
+    margin-bottom: 16px;
+    background: #000;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-size: 13.5px;
+    font-weight: bold;
+    border-left: 5px solid #000;
+    padding-left: 10px;
+    margin: 14px 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .sub-title {
+    font-size: 12.5px;
+    font-weight: bold;
+    margin: 10px 0 5px 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+  }
+
+  .file-header {
+    background: #000;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 7px 14px;
+    margin: 14px 0 8px 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .def-box {
+    border: 2px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .def-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .interview-box {
+    border: 2px solid #000;
+    padding: 10px 13px;
+    margin: 10px 0;
+    background: #f5f5f5;
+  }
+  .interview-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 8px; padding-bottom: 3px;
+  }
+  .interview-box .q { font-weight: bold; margin-top: 9px; }
+  .interview-box .a { margin-left: 14px; margin-top: 3px; }
+
+  .memory-box {
+    border: 2px dashed #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .memory-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  .example-box {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: #fafafa;
+  }
+  .example-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid #000;
+    margin-bottom: 5px; padding-bottom: 3px;
+  }
+
+  .tip-box {
+    border: 2px solid #000;
+    border-left: 6px solid #000;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .tip-box .box-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #f2f2f2;
+    border: 1px solid #000;
+    border-left: 4px solid #000;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.75;
+    margin: 8px 0;
+    white-space: pre;
+  }
+  .code-block .comment { color: #555; font-style: italic; }
+  .code-block .highlight { font-weight: bold; }
+
+  .file-label {
+    font-size: 10px; font-weight: bold; letter-spacing: 1px;
+    text-transform: uppercase; background: #000; color: #fff;
+    padding: 2px 8px; display: inline-block; margin-bottom: 0;
+  }
+
+  /* URL BREAKDOWN BOX */
+  .url-break {
+    border: 2px solid #000;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+  }
+  .url-break .url-full {
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .url-part-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    font-size: 11.5px;
+  }
+  .url-part {
+    border: 1px solid #000;
+    padding: 4px 8px;
+  }
+  .url-part .part-label { font-weight: bold; font-family: 'Times New Roman', serif; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* FLOW */
+  .flow { display: flex; flex-direction: column; align-items: center; margin: 10px auto; }
+  .flow-box {
+    border: 2px solid #000; padding: 6px 20px; font-weight: bold;
+    font-size: 12px; min-width: 200px; text-align: center; background: #fff;
+  }
+  .flow-box.dark { background: #000; color: #fff; }
+  .flow-arrow { font-size: 17px; font-weight: bold; color: #000; text-align: center; padding: 1px 0; }
+  .flow-label { font-size: 10px; color: #444; text-align: center; font-style: italic; }
+
+  /* STEP FLOW */
+  .step-grid { display: grid; grid-template-columns: 30px 1fr; gap: 5px 10px; margin: 10px 0; }
+  .step-num {
+    background: #000; color: #fff; font-weight: bold;
+    font-size: 12px; text-align: center; padding: 5px 0;
+    height: fit-content; min-width: 30px;
+  }
+  .step-content { border: 1px solid #000; padding: 5px 10px; font-size: 12px; }
+  .step-content strong { display: block; margin-bottom: 2px; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+  th { background: #000; color: #fff; padding: 6px 9px; font-size: 12px; text-align: left; border: 1px solid #000; }
+  td { padding: 5px 9px; border: 1px solid #000; font-size: 12px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f6f6f6; }
+
+  ul.notes-list { list-style: none; margin: 5px 0 5px 10px; padding: 0; }
+  ul.notes-list li { padding: 2px 0 2px 16px; position: relative; }
+  ul.notes-list li::before { content: "▸"; position: absolute; left: 0; font-size: 11px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0; }
+  .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin: 8px 0; }
+
+  code {
+    font-family: 'Courier New', monospace; font-size: 11.5px;
+    background: #efefef; padding: 1px 5px; border: 1px solid #ccc;
+  }
+
+  /* PRIORITY BADGES */
+  .priority-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0; }
+  .priority-card { border: 2px solid #000; text-align: center; padding: 8px 6px; }
+  .priority-card.p1 { background: #000; color: #fff; }
+  .priority-card .p-num { font-size: 11px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid; padding-bottom: 3px; margin-bottom: 5px; }
+  .priority-card .p-name { font-size: 13px; font-weight: bold; }
+  .priority-card .p-desc { font-size: 10px; margin-top: 3px; }
+
+  /* PROJECT STRUCT */
+  .proj-struct {
+    font-family: 'Courier New', monospace; font-size: 11px;
+    border: 1px solid #000; background: #f8f8f8;
+    padding: 8px 14px; margin: 8px 0; line-height: 1.8;
+  }
+
+  /* WELCOME FILE SEQUENCE */
+  .wf-sequence {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+    border: 2px solid #000;
+  }
+  .wf-row {
+    display: grid;
+    grid-template-columns: 30px 1fr 80px;
+    border-bottom: 1px solid #000;
+    align-items: center;
+  }
+  .wf-row:last-child { border-bottom: none; }
+  .wf-num { background: #000; color: #fff; font-weight: bold; text-align: center; padding: 7px 0; font-size: 12px; align-self: stretch; display: flex; align-items: center; justify-content: center; }
+  .wf-file { padding: 7px 10px; font-family: 'Courier New', monospace; font-size: 12px; }
+  .wf-status { padding: 7px 8px; font-size: 11px; font-weight: bold; text-align: center; border-left: 1px solid #000; }
+  .wf-status.found { background: #000; color: #fff; }
+  .wf-status.check { background: #f0f0f0; }
+
+  p { margin: 5px 0; }
+
+  @media print {
+    body { background: #fff; }
+    .page { border-bottom: none; margin: 0; page-break-after: always; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: PROJECT OVERVIEW + QUERY PARAMETERS ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 7 : Query Parameters, Welcome Files &amp; Project Flow</span>
+  </div>
+
+  <div class="main-title">7. Query Parameters, Welcome Files &amp; Project Flow</div>
+
+  <!-- Learning Goals -->
+  <div class="tip-box">
+    <div class="box-label">🎯 What You Learn in This Project</div>
+    <div class="two-col" style="margin-top:5px;">
+      <ul class="notes-list">
+        <li>How data is sent through URL</li>
+        <li>How Servlet receives URL data</li>
+        <li>How <code>request.getParameter()</code> works</li>
+      </ul>
+      <ul class="notes-list">
+        <li>Difference between HTML, JSP, Servlet</li>
+        <li>Welcome File concept in web.xml</li>
+        <li>Complete Browser → Servlet flow</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Priority of Technologies -->
+  <div class="section-title">Priority Order — What to Learn First</div>
+
+  <div class="priority-grid">
+    <div class="priority-card p1">
+      <div class="p-num">Priority 1</div>
+      <div class="p-name">Servlet</div>
+      <div class="p-desc" style="color:#fff;">Business logic, doGet(), doPost() — most interview questions</div>
+    </div>
+    <div class="priority-card">
+      <div class="p-num">Priority 2</div>
+      <div class="p-name">JSP</div>
+      <div class="p-desc">Dynamic content display — View layer in MVC</div>
+    </div>
+    <div class="priority-card">
+      <div class="p-num">Priority 3</div>
+      <div class="p-name">HTML</div>
+      <div class="p-desc">Collect input, forms, links — no business logic</div>
+    </div>
+    <div class="priority-card">
+      <div class="p-num">Priority 4</div>
+      <div class="p-name">web.xml</div>
+      <div class="p-desc">Config file — URL mapping, welcome files, filters</div>
+    </div>
+  </div>
+
+  <!-- Project Structure -->
+  <div class="section-title">Project Structure</div>
+  <div class="proj-struct">servletthirdday/
+ ├── src/main/java/
+ │     └── Queryparameter.java          ← Most Important (Servlet)
+ ├── src/main/webapp/
+ │     ├── queryparameter.html          ← Sends query params via link
+ │     ├── pagea.html                   ← Static page (welcome file demo)
+ │     ├── pageb.html                   ← Static page (welcome file demo)
+ │     ├── paged.html                   ← Static page (welcome file demo)
+ │     ├── pagec.jsp                    ← JSP page (welcome file demo)
+ │     └── WEB-INF/
+ │           └── web.xml               ← Welcome file configuration
+ └── pom.xml</div>
+
+  <!-- WHAT IS QUERY PARAMETER -->
+  <div class="section-title">What is a Query Parameter?</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Definition</div>
+    <p>A <strong>Query Parameter</strong> is data attached to a URL <strong>after the <code>?</code> symbol</strong> in the form of <strong>key-value pairs</strong>.</p>
+    <p>It is used to send small pieces of data from the client (browser) to the server through the URL itself.</p>
+  </div>
+
+  <!-- URL Breakdown -->
+  <div class="sub-title">URL Breakdown — Query Parameter Anatomy</div>
+
+  <div class="url-break">
+    <div class="url-full">query?id=101&amp;name=rohit</div>
+    <div class="url-part-grid">
+      <div class="url-part">
+        <div class="part-label">Servlet URL</div>
+        <code>query</code> → mapped to Queryparameter.java
+      </div>
+      <div class="url-part">
+        <div class="part-label">? Symbol</div>
+        <code>?</code> → marks start of query parameters
+      </div>
+      <div class="url-part">
+        <div class="part-label">Parameter 1</div>
+        <code>id=101</code> → key: <code>id</code>, value: <code>101</code>
+      </div>
+      <div class="url-part">
+        <div class="part-label">&amp; Separator + Parameter 2</div>
+        <code>&amp;name=rohit</code> → key: <code>name</code>, value: <code>rohit</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why used -->
+  <div class="sub-title">Why Query Parameters are Used?</div>
+  <p>Used to send <strong>small data through URL</strong> — no form submission required.</p>
+
+  <table>
+    <thead><tr><th>Use Case</th><th>Example URL</th></tr></thead>
+    <tbody>
+      <tr><td>Search value</td><td><code>google.com/search?q=java+servlet</code></td></tr>
+      <tr><td>Product ID</td><td><code>amazon.com/product?id=1001</code></td></tr>
+      <tr><td>Mobile filter</td><td><code>flipkart.com/mobile?id=2001</code></td></tr>
+      <tr><td>Page number</td><td><code>site.com/list?page=3&amp;size=10</code></td></tr>
+      <tr><td>Student ID</td><td><code>college.com/student?id=101&amp;name=rohit</code></td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<!-- ==================== PAGE 2: HTML FILE + SERVLET FILE ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 7 : Query Parameters, Welcome Files &amp; Project Flow (continued)</span>
+  </div>
+
+  <!-- File 1: queryparameter.html -->
+  <div class="file-header">File 1 — queryparameter.html</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Purpose</div>
+    <p>This HTML page sends data to the Servlet through <strong>URL Query Parameters</strong> using an anchor (<code>&lt;a&gt;</code>) link. No form submission — data travels directly in the URL.</p>
+  </div>
+
+  <div class="file-label">queryparameter.html</div>
+  <div class="code-block">&lt;h1&gt;Hello from request page&lt;/h1&gt;
+
+<span class="comment">&lt;!-- Clicking this link sends: GET /query?id=101&amp;name=rohit --&gt;</span>
+&lt;a href="query?id=101&amp;name=rohit"&gt;
+    click the link to get the data
+&lt;/a&gt;</div>
+
+  <div class="example-box">
+    <div class="box-label">📘 What Happens When Link is Clicked</div>
+    <p>Browser sends: <code>GET /servletthirdday/query?id=101&amp;name=rohit</code></p>
+    <p>Tomcat reads: URL = <code>/query</code> → maps to <code>Queryparameter.java</code></p>
+    <p>Servlet reads: <code>id=101</code> and <code>name=rohit</code> from request</p>
+  </div>
+
+  <!-- File 2: Queryparameter.java (MOST IMPORTANT) -->
+  <div class="file-header">File 2 — Queryparameter.java ⭐ Most Important</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 Purpose</div>
+    <p>Receives GET request from browser, reads query parameters using <code>req.getParameter()</code>, and generates an HTML response sent back to the browser.</p>
+  </div>
+
+  <div class="file-label">Queryparameter.java</div>
+  <div class="code-block"><span class="highlight">@WebServlet("/query")</span>              <span class="comment">// Maps URL /query to this servlet</span>
+public class Queryparameter extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req,
+                         HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        PrintWriter p = resp.getWriter();  <span class="comment">// output stream to browser</span>
+
+        p.print("&lt;html&gt;&lt;body&gt;");
+        p.print("&lt;h1&gt; student details from form &lt;/h1&gt;");
+
+        p.print("&lt;h1&gt; name is : "
+                + <span class="highlight">req.getParameter("name")</span>    <span class="comment">// reads "rohit"</span>
+                + "&lt;/h1&gt;");
+
+        p.print("&lt;h1&gt; Id is : "
+                + <span class="highlight">req.getParameter("id")</span>      <span class="comment">// reads "101"</span>
+                + "&lt;/h1&gt;");
+
+        p.print("&lt;/body&gt;&lt;/html&gt;");
+    }
+}</div>
+
+  <!-- Line by Line Explanation -->
+  <div class="sub-title">Line-by-Line Explanation</div>
+
+  <table>
+    <thead><tr><th>Code</th><th>What It Does</th></tr></thead>
+    <tbody>
+      <tr><td><code>@WebServlet("/query")</code></td><td>Maps URL <code>/query</code> to this class — no web.xml needed</td></tr>
+      <tr><td><code>extends HttpServlet</code></td><td>Marks this class as an HTTP servlet</td></tr>
+      <tr><td><code>doGet()</code></td><td>Handles GET request — browser sends GET when link is clicked</td></tr>
+      <tr><td><code>resp.getWriter()</code></td><td>Gets output stream to write HTML back to browser</td></tr>
+      <tr><td><code>req.getParameter("name")</code></td><td>Reads value of <code>name</code> from URL → returns <code>"rohit"</code></td></tr>
+      <tr><td><code>req.getParameter("id")</code></td><td>Reads value of <code>id</code> from URL → returns <code>"101"</code></td></tr>
+      <tr><td><code>p.print("&lt;h1&gt;...&lt;/h1&gt;")</code></td><td>Writes HTML response that browser will display</td></tr>
+    </tbody>
+  </table>
+
+  <!-- How getParameter works -->
+  <div class="sub-title">How req.getParameter() Works Internally</div>
+
+  <div class="flow">
+    <div class="flow-box">URL: <code>query?id=101&amp;name=rohit</code></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Tomcat parses query string into key-value pairs</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">HttpServletRequest object stores: {id=101, name=rohit}</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark"><code>req.getParameter("id")</code> → returns <code>"101"</code></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box"><code>req.getParameter("name")</code> → returns <code>"rohit"</code></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Response generated: "student details from form | name: rohit | id: 101"</div>
+  </div>
+
+  <!-- Response -->
+  <div class="sub-title">Response Generated in Browser</div>
+  <div class="example-box">
+    <div class="box-label">📘 Browser Output</div>
+    <p><strong>student details from form</strong></p>
+    <p><strong>name is : rohit</strong></p>
+    <p><strong>Id is : 101</strong></p>
+  </div>
+
+  <div class="tip-box">
+    <div class="box-label">⚠️ Important — Key Points About getParameter()</div>
+    <ul class="notes-list">
+      <li><code>getParameter()</code> always returns a <strong>String</strong> — convert to int/double if needed</li>
+      <li>Returns <strong><code>null</code></strong> if the parameter name doesn't exist in the URL</li>
+      <li>Parameter names are <strong>case-sensitive</strong> — <code>"name"</code> ≠ <code>"Name"</code></li>
+      <li>Works for both <strong>URL query params</strong> and <strong>HTML form data</strong></li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 3: JSP + WELCOME FILES ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 7 : Query Parameters, Welcome Files &amp; Project Flow (continued)</span>
+  </div>
+
+  <!-- HTML Pages -->
+  <div class="file-header">Files 3, 4, 5 — Static HTML Pages</div>
+
+  <table>
+    <thead><tr><th>File</th><th>Content</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>pagea.html</code></td><td><code>&lt;h1&gt;page a html&lt;/h1&gt;</code></td><td>Static page — demonstrates welcome file sequence</td></tr>
+      <tr><td><code>pageb.html</code></td><td><code>&lt;h1&gt;page b html&lt;/h1&gt;</code></td><td>Static page — used in welcome file configuration</td></tr>
+      <tr><td><code>paged.html</code></td><td><code>&lt;h1&gt;page d html&lt;/h1&gt;</code></td><td>Static page — used for welcome file demonstration</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip-box">
+    <div class="box-label">📌 Note — Static HTML Pages</div>
+    <p>These HTML pages contain <strong>no business logic</strong>. They are only used to demonstrate how the <strong>welcome file</strong> sequence works in Tomcat.</p>
+  </div>
+
+  <!-- pagec.jsp -->
+  <div class="file-header">File 6 — pagec.jsp</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 What is JSP?</div>
+    <p><strong>JSP (Java Server Pages)</strong> is a server-side technology that allows embedding Java code inside HTML. The server processes the Java code and sends pure HTML to the browser.</p>
+    <p>JSP is mainly used as the <strong>View Layer</strong> in MVC architecture — it displays dynamic data from Servlet/Database.</p>
+  </div>
+
+  <div class="file-label">pagec.jsp</div>
+  <div class="code-block">&lt;h1&gt;hello from jsp page c&lt;/h1&gt;
+
+<span class="comment">&lt;!-- JSP can also display dynamic data like: --&gt;</span>
+&lt;%= request.getParameter("name") %&gt;  <span class="comment">&lt;!-- Expression Tag --&gt;</span></div>
+
+  <table>
+    <thead><tr><th>Technology</th><th>Can Display Static?</th><th>Can Display Dynamic?</th><th>Business Logic?</th></tr></thead>
+    <tbody>
+      <tr><td><strong>HTML</strong></td><td>✅ Yes</td><td>❌ No</td><td>❌ No</td></tr>
+      <tr><td><strong>JSP</strong></td><td>✅ Yes</td><td>✅ Yes</td><td>⚠️ Possible but not recommended</td></tr>
+      <tr><td><strong>Servlet</strong></td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes — Primary use</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Welcome Files -->
+  <div class="file-header">File 7 — web.xml (Welcome File Configuration)</div>
+
+  <div class="def-box">
+    <div class="box-label">📌 What is a Welcome File?</div>
+    <p>A <strong>Welcome File</strong> is the default page that Tomcat opens when a user visits the application <strong>without specifying any page</strong> in the URL.</p>
+    <p>Example: User types <code>http://localhost:8080/servletthirdday/</code> (no page name)</p>
+    <p>Tomcat automatically searches the welcome file list and opens the <strong>first file it finds</strong>.</p>
+  </div>
+
+  <div class="file-label">web.xml</div>
+  <div class="code-block">&lt;welcome-file-list&gt;
+
+    &lt;welcome-file&gt;queryparameter.html&lt;/welcome-file&gt;  <span class="comment">&lt;!-- Checked 1st --&gt;</span>
+    &lt;welcome-file&gt;pageb.html&lt;/welcome-file&gt;           <span class="comment">&lt;!-- Checked 2nd --&gt;</span>
+    &lt;welcome-file&gt;paged.html&lt;/welcome-file&gt;           <span class="comment">&lt;!-- Checked 3rd --&gt;</span>
+    &lt;welcome-file&gt;pagec.jsp&lt;/welcome-file&gt;            <span class="comment">&lt;!-- Checked 4th --&gt;</span>
+
+&lt;/welcome-file-list&gt;</div>
+
+  <!-- Welcome File Sequence -->
+  <div class="sub-title">Welcome File Search Order</div>
+  <p>Tomcat searches files <strong>in order</strong>. It opens the <strong>first file it finds</strong>. If none are found, Tomcat throws a 404 error.</p>
+
+  <div class="wf-sequence">
+    <div class="wf-row">
+      <div class="wf-num">1</div>
+      <div class="wf-file"><code>queryparameter.html</code> → Tomcat looks for this file</div>
+      <div class="wf-status found">FOUND → OPEN</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">2</div>
+      <div class="wf-file"><code>pageb.html</code> → Only checked if #1 not found</div>
+      <div class="wf-status check">CHECK</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">3</div>
+      <div class="wf-file"><code>paged.html</code> → Only checked if #2 not found</div>
+      <div class="wf-status check">CHECK</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">4</div>
+      <div class="wf-file"><code>pagec.jsp</code> → Last resort — only if #3 not found</div>
+      <div class="wf-status check">CHECK</div>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="box-label">📘 Real-World Analogy — Welcome File</div>
+    <p>Think of it like a hotel receptionist's checklist:</p>
+    <p>"Is Suite A available? → Yes → Give Suite A." &nbsp;|&nbsp; "If not → Check Suite B → if not → Suite C"</p>
+    <p>Tomcat follows the same ordered search — first match wins.</p>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — Welcome File</div>
+    <p>Welcome File = <strong>"Hotel Room Priority List"</strong> — VIP guest gets the best room available, checked in order.</p>
+    <p>If <code>queryparameter.html</code> exists → that's the VIP room → open immediately. Otherwise move down the list.</p>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 4: COMPLETE FLOW + INTERVIEW Q&A ==================== -->
+<div class="page">
+  <div class="page-header">
+    <span class="subject">Java Web Technology — Notes</span>
+    <span class="topic-label">Topic 7 : Query Parameters, Welcome Files &amp; Project Flow (continued)</span>
+  </div>
+
+  <!-- Complete Project Flow -->
+  <div class="section-title">Complete Project Flow — Browser to Response</div>
+
+  <div class="step-grid">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <strong>User opens app</strong> → Tomcat reads <code>web.xml</code> → finds <code>queryparameter.html</code> → opens it as Welcome File
+    </div>
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <strong>User sees</strong> the HTML page with the link: "click the link to get the data"
+    </div>
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <strong>User clicks link</strong> → Browser sends: <code>GET /servletthirdday/query?id=101&amp;name=rohit</code>
+    </div>
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <strong>Tomcat receives</strong> request → checks <code>@WebServlet("/query")</code> → maps to <code>Queryparameter.java</code>
+    </div>
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <strong>Container creates</strong> <code>HttpServletRequest</code> and <code>HttpServletResponse</code> objects
+    </div>
+    <div class="step-num">6</div>
+    <div class="step-content">
+      <strong>Container calls</strong> <code>doGet(req, resp)</code> → because request method is GET
+    </div>
+    <div class="step-num">7</div>
+    <div class="step-content">
+      <strong>Servlet reads</strong>: <code>req.getParameter("name")</code> → <code>"rohit"</code> &nbsp;|&nbsp; <code>req.getParameter("id")</code> → <code>"101"</code>
+    </div>
+    <div class="step-num">8</div>
+    <div class="step-content">
+      <strong>Servlet writes</strong> HTML response using <code>resp.getWriter().print()</code>
+    </div>
+    <div class="step-num">9</div>
+    <div class="step-content">
+      <strong>Browser receives</strong> and displays: "student details from form | name: rohit | Id: 101"
+    </div>
+  </div>
+
+  <!-- Visual Flow Diagram -->
+  <div class="section-title">Visual Flow Diagram</div>
+
+  <div class="flow">
+    <div class="flow-box">User opens app without URL → Tomcat checks welcome-file-list</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">queryparameter.html (Welcome File)</div>
+    <div class="flow-label">First file in list — found → displayed</div>
+    <div class="flow-arrow">↓ User clicks link</div>
+    <div class="flow-box">Browser sends: GET <code>/query?id=101&amp;name=rohit</code></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Tomcat → @WebServlet("/query") → Queryparameter.java</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">Container calls doGet(req, resp)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">req.getParameter("name") → "rohit" | req.getParameter("id") → "101"</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box">resp.getWriter().print(HTML)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box dark">Browser displays: name: rohit | Id: 101</div>
+  </div>
+
+  <!-- Summary Table -->
+  <div class="section-title">Summary — Files and Their Roles</div>
+  <table>
+    <thead><tr><th>File</th><th>Type</th><th>Role in Project</th></tr></thead>
+    <tbody>
+      <tr><td><code>queryparameter.html</code></td><td>HTML</td><td>Welcome file + sends query params via link click</td></tr>
+      <tr><td><code>Queryparameter.java</code></td><td>Servlet ⭐</td><td>Receives request, reads params, generates response</td></tr>
+      <tr><td><code>pagea.html</code>, <code>pageb.html</code>, <code>paged.html</code></td><td>HTML</td><td>Static pages — demonstrate welcome file fallback</td></tr>
+      <tr><td><code>pagec.jsp</code></td><td>JSP</td><td>Dynamic view — last in welcome file list</td></tr>
+      <tr><td><code>web.xml</code></td><td>Config</td><td>Welcome file list configuration only</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Interview Q&A -->
+  <div class="interview-box">
+    <div class="box-label">🎯 Interview Q&amp;A</div>
+
+    <div class="q">Q1. What is a Query Parameter?</div>
+    <div class="a">A Query Parameter is data passed through the URL after the <code>?</code> symbol in the form of key-value pairs. Example: <code>query?id=101&amp;name=rohit</code> — here <code>id=101</code> and <code>name=rohit</code> are query parameters.</div>
+
+    <div class="q">Q2. Why do we use request.getParameter()?</div>
+    <div class="a"><code>request.getParameter()</code> is used to retrieve data sent by the client through URL query parameters or HTML form fields. It takes the parameter name as a String and returns the corresponding value as a String.</div>
+
+    <div class="q">Q3. What does request.getParameter() return if the parameter doesn't exist?</div>
+    <div class="a">It returns <strong>null</strong>. Always check for null before using the returned value to avoid NullPointerException.</div>
+
+    <div class="q">Q4. Why is HttpServlet used when link is clicked?</div>
+    <div class="a">Clicking an HTML link (<code>&lt;a href&gt;</code>) sends an HTTP <strong>GET request</strong>. HttpServlet provides the <code>doGet()</code> method which is specifically designed to handle GET requests.</div>
+
+    <div class="q">Q5. What is the purpose of @WebServlet("/query")?</div>
+    <div class="a">It maps the URL <code>/query</code> to the <code>Queryparameter</code> servlet class. When Tomcat receives a request for <code>/query</code>, it automatically invokes this servlet — no web.xml entry needed.</div>
+
+    <div class="q">Q6. What is a Welcome File in Servlet?</div>
+    <div class="a">A Welcome File is the default page Tomcat opens when a user accesses the application without specifying a page in the URL (e.g. <code>http://localhost:8080/app/</code>). It is configured in <code>web.xml</code> inside <code>&lt;welcome-file-list&gt;</code>.</div>
+
+    <div class="q">Q7. How does Tomcat search Welcome Files?</div>
+    <div class="a">Tomcat searches files in the order listed in <code>&lt;welcome-file-list&gt;</code>. It opens the first file it finds in the webapp directory. If no file in the list exists, Tomcat throws a 404 error.</div>
+
+    <div class="q">Q8. What is the difference between HTML and JSP?</div>
+    <div class="a"><strong>HTML</strong> — static only, no Java code, no dynamic content. <strong>JSP</strong> — can embed Java code (<code>&lt;%= %&gt;</code>), can display dynamic data (from DB, session, servlet), processed on server before being sent to browser as HTML.</div>
+
+    <div class="q">Q9. Can we send multiple query parameters? How are they separated?</div>
+    <div class="a">Yes. Multiple query parameters are separated by the <code>&amp;</code> symbol. Example: <code>?id=101&amp;name=rohit&amp;age=23</code> — three parameters sent together.</div>
+  </div>
+
+  <div class="memory-box">
+    <div class="box-label">🧠 Memory Trick — Query Parameter URL</div>
+    <p><strong>"Question Marks Separate Answers"</strong></p>
+    <p><code>URL</code> + <code>?</code> (question) + <code>key=value</code> (answer) + <code>&amp;</code> (and another answer)</p>
+    <p><code>getParameter("key")</code> = Servlet asking: <em>"What is the value of this key?"</em></p>
+  </div>
+
+</div>
+
+</body>
+</html>

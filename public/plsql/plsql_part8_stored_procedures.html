@@ -1,0 +1,514 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:8px 4px 24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#111}
+.topic-bar{background:#1a1a6e;color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:18px}
+.topic-bar .t1{font-size:16px;font-weight:700}
+.topic-bar .t2{font-size:12px;opacity:.8;margin-top:2px}
+.sec-label{font-size:11px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.6px;border-left:4px solid #1a1a6e;padding-left:8px;margin:22px 0 10px}
+.card{background:#fff;border:1px solid #ccc;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.def-box{background:#eef0ff;border-left:5px solid #1a1a6e;padding:10px 14px;margin-bottom:10px}
+.def-box .lbl{font-size:10px;font-weight:700;color:#1a1a6e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.def-box p{font-size:13px;color:#111;margin-top:3px}
+.mem-box{background:#fffde7;border-left:5px solid #f9a825;padding:10px 14px;margin-top:10px}
+.mem-box .lbl{font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mem-box p{font-size:13px;color:#111;margin-top:3px}
+.tip-box{background:#e8f5e9;border-left:5px solid #2e7d32;padding:10px 14px;margin-top:10px}
+.tip-box .lbl{font-size:10px;font-weight:700;color:#2e7d32;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tip-box p{font-size:13px;color:#111;margin-top:3px}
+.warn-box{background:#fce4ec;border-left:5px solid #c62828;padding:10px 14px;margin-top:10px}
+.warn-box .lbl{font-size:10px;font-weight:700;color:#c62828;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.warn-box p{font-size:13px;color:#111;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th{background:#1a1a6e;color:#fff;padding:7px 10px;font-weight:700;text-align:left}
+td{padding:7px 10px;border:1px solid #ccc;color:#111;vertical-align:top}
+tr:nth-child(even) td{background:#f5f6ff}
+.extra{background:#fff3e0;color:#e65100;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:8px 0}
+.mini-card{background:#f5f6ff;border:1px solid #ddd;border-radius:6px;padding:10px 12px}
+.mini-card .mct{font-size:12px;font-weight:700;color:#1a1a6e;margin-bottom:4px}
+.mini-card p,.mini-card li{font-size:12px;color:#333}
+ul{padding-left:18px;margin:4px 0 6px}
+li{font-size:13px;color:#111;margin-bottom:3px}
+.qa{border:1px solid #ccc;border-radius:6px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#eef0ff;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a6e}
+.qa-a{background:#fff;padding:8px 12px;font-size:13px;color:#111}
+.divider{border:none;border-top:1px solid #ddd;margin:18px 0}
+.prog-wrap{margin:10px 0}
+.prog-header{background:#2c2c2c;padding:6px 14px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.prog-label{color:#bbb;font-size:11px;margin-left:6px;font-family:Arial,sans-serif;font-weight:700;letter-spacing:.3px}
+.prog-body{background:#1e1e1e;border-radius:0 0 6px 6px;padding:13px 16px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.9;white-space:pre;overflow-x:auto;color:#d4d4d4}
+.kw{color:#569cd6;font-weight:700}
+.cm{color:#6a9955;font-style:italic}
+.str{color:#ce9178}
+.fn{color:#dcdcaa}
+.tp{color:#4ec9b0}
+.num{color:#b5cea8}
+.out-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:0 0 5px 5px;padding:6px 14px;font-family:'Courier New',monospace;font-size:12.5px;color:#1b5e20;margin-bottom:12px}
+.ex-block{border:1px solid #ccc;border-radius:6px;margin-bottom:14px;overflow:hidden}
+.ex-head{background:#1a1a6e;color:#fff;padding:7px 14px;font-size:13px;font-weight:700}
+.ex-logic{background:#f5f6ff;padding:8px 14px;font-size:12.5px;color:#333;border-bottom:1px solid #ddd}
+.mode-card{border:2px solid #1a1a6e;border-radius:6px;overflow:hidden;margin-bottom:10px}
+.mode-head{background:#1a1a6e;color:#fff;padding:6px 14px;font-size:13px;font-weight:700}
+.mode-body{padding:10px 14px;font-size:13px;color:#111}
+.mode-body p{margin-bottom:4px}
+footer{text-align:center;font-size:11px;color:#888;margin-top:14px}
+</style>
+
+<div class="wrap">
+
+<div class="topic-bar">
+  <div class="t1">PL/SQL — Part 8: Stored Procedures</div>
+  <div class="t2">Oracle Database &nbsp;|&nbsp; IN / OUT / IN OUT Parameters &nbsp;|&nbsp; Orange tag = Extra content</div>
+</div>
+
+<!-- ===== 1 ===== -->
+<div class="sec-label">1. What is a Stored Procedure?</div>
+<div class="card">
+  <div class="def-box">
+    <div class="lbl">Interview Definition</div>
+    <p>A Stored Procedure is a named block of SQL and PL/SQL statements that is saved permanently in the database. It is precompiled and stored in advance, making execution faster. It can accept parameters, perform DML operations, and may or may not return a value.</p>
+  </div>
+  <ul>
+    <li>Once created, it is saved permanently in the Oracle database</li>
+    <li>It is precompiled — so execution is faster than normal SQL statements</li>
+    <li>Can accept parameters using IN, OUT, or IN OUT modes</li>
+    <li>Can perform tasks such as INSERT, UPDATE, DELETE, and SELECT</li>
+    <li>May or may not return a value</li>
+    <li>Reusable — once written, it can be executed multiple times without rewriting the code</li>
+  </ul>
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>Procedure = Named + Stored + Precompiled PL/SQL Block</p>
+    <p>Like a saved function on your calculator — define once, use any number of times</p>
+  </div>
+</div>
+
+<!-- ===== 2 ===== -->
+<div class="sec-label">2. Advantages of Stored Procedures</div>
+<div class="card">
+  <table>
+    <tr><th>Advantage</th><th>Explanation</th></tr>
+    <tr><td>Reusable</td><td>Write the procedure once and use it in multiple programs without rewriting the code</td></tr>
+    <tr><td>Faster Execution</td><td>Precompiled in the database — runs faster than normal SQL statements each time</td></tr>
+    <tr><td>Improved Security</td><td>Users access data through the procedure, preventing unauthorized direct table access</td></tr>
+    <tr><td>Reduced Network Traffic</td><td>Entire procedure runs on the DB server — only the call is sent over the network</td></tr>
+    <tr><td>Easy Maintenance</td><td>Logic is stored in one place — change the procedure and all callers benefit automatically</td></tr>
+  </table>
+</div>
+
+<!-- ===== 3 ===== -->
+<div class="sec-label">3. Parts of a Stored Procedure</div>
+<div class="card">
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mct">Procedure Specification (Header)</div>
+      <ul style="margin-top:4px">
+        <li>Specifies the name of the procedure</li>
+        <li>Defines the parameters and their modes (IN / OUT / IN OUT)</li>
+        <li>Written before IS / AS keyword</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mct">Procedure Body</div>
+      <ul style="margin-top:4px">
+        <li>Contains the actual code to perform the required task</li>
+        <li>Written between BEGIN and END</li>
+        <li>Can include SQL statements, loops, conditions, cursors, and exception handling</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 4 ===== -->
+<div class="sec-label">4. Stored Procedure — Syntax</div>
+<div class="card">
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="prog-label">STORED PROCEDURE — GENERAL SYNTAX</span>
+    </div>
+    <div class="prog-body"><span class="kw">CREATE</span> [<span class="kw">OR REPLACE</span>] <span class="kw">PROCEDURE</span> procedure_name
+(
+   param1  mode  datatype,    <span class="cm">-- mode = IN / OUT / IN OUT</span>
+   param2  mode  datatype
+)
+<span class="kw">IS</span> / <span class="kw">AS</span>
+   <span class="cm">-- Local variables, cursors, exceptions (optional)</span>
+<span class="kw">BEGIN</span>
+   <span class="cm">-- SQL / PL/SQL statements to perform the task</span>
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN OTHERS THEN</span>
+      <span class="cm">-- Optional error handling code</span>
+<span class="kw">END</span> [procedure_name];
+/</div>
+  </div>
+
+  <table style="margin-top:12px">
+    <tr><th>Keyword</th><th>Meaning</th></tr>
+    <tr><td>CREATE PROCEDURE</td><td>Creates a new procedure in the database</td></tr>
+    <tr><td>OR REPLACE</td><td>Optional — replaces the existing procedure if it already exists</td></tr>
+    <tr><td>procedure_name</td><td>Name given to the procedure by the developer</td></tr>
+    <tr><td>IN</td><td>Passes input value into the procedure (default mode)</td></tr>
+    <tr><td>OUT</td><td>Returns output value from the procedure</td></tr>
+    <tr><td>IN OUT</td><td>Passes value in and also returns a value back</td></tr>
+    <tr><td>IS / AS</td><td>Marks the start of the procedure block — both work the same way</td></tr>
+    <tr><td>BEGIN … END</td><td>Main executable section where SQL and PL/SQL statements are written</td></tr>
+    <tr><td>EXCEPTION</td><td>Optional — handles runtime errors inside the procedure</td></tr>
+    <tr><td>END [procedure_name]</td><td>Marks the end of the procedure</td></tr>
+  </table>
+
+  <div class="tip-box">
+    <div class="lbl">Extra — How to Execute a Procedure</div>
+    <p>Syntax: EXEC procedure_name(actual_parameters);</p>
+    <p>Example: EXEC EMP_EMPNO(7369); &nbsp;→ passes 7369 as the EMPNO parameter</p>
+    <p>EXEC and EXECUTE both work the same way.</p>
+  </div>
+
+  <div class="tip-box" style="margin-top:8px">
+    <div class="lbl">Extra — How to View a Procedure's Code</div>
+    <p>To display the source code of a stored procedure:</p>
+    <p>SELECT TEXT FROM USER_SOURCE WHERE NAME = 'PROCEDURE_NAME';</p>
+    <p>Replace PROCEDURE_NAME with the actual name in uppercase.</p>
+  </div>
+</div>
+
+<!-- ===== 5 ===== -->
+<div class="sec-label">5. Parameter Modes — IN / OUT / IN OUT</div>
+<div class="card">
+  <div class="three-col">
+    <div class="mini-card">
+      <div class="mct">IN Mode (Default)</div>
+      <ul style="margin-top:4px">
+        <li>Used to pass input values into the procedure</li>
+        <li>Default mode — if no mode is written, IN is assumed</li>
+        <li>Value cannot be changed inside the procedure</li>
+        <li>Read-only inside the procedure body</li>
+      </ul>
+      <p style="font-size:11px;color:#555;margin-top:6px">Example: P_EMPNO IN NUMBER</p>
+    </div>
+    <div class="mini-card">
+      <div class="mct">OUT Mode</div>
+      <ul style="margin-top:4px">
+        <li>Used to return a value from the procedure</li>
+        <li>Behaves like an uninitialized variable inside the procedure</li>
+        <li>Cannot be read inside the procedure — only assigned</li>
+        <li>Caller receives the value after the procedure runs</li>
+      </ul>
+      <p style="font-size:11px;color:#555;margin-top:6px">Example: A OUT NUMBER</p>
+    </div>
+    <div class="mini-card">
+      <div class="mct">IN OUT Mode</div>
+      <ul style="margin-top:4px">
+        <li>Used to pass a value in AND return a value back</li>
+        <li>Can be both read and modified inside the procedure</li>
+        <li>Caller passes a variable — same variable gets the result back</li>
+      </ul>
+      <p style="font-size:11px;color:#555;margin-top:6px">Example: A IN OUT NUMBER</p>
+    </div>
+  </div>
+
+  <table style="margin-top:10px">
+    <tr><th>Mode</th><th>Direction</th><th>Readable Inside?</th><th>Modifiable Inside?</th><th>Default?</th></tr>
+    <tr><td>IN</td><td>Caller → Procedure</td><td>Yes</td><td>No (read-only)</td><td>Yes</td></tr>
+    <tr><td>OUT</td><td>Procedure → Caller</td><td>No</td><td>Yes (write-only)</td><td>No</td></tr>
+    <tr><td>IN OUT</td><td>Both directions</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+  </table>
+
+  <div class="mem-box">
+    <div class="lbl">Memory Trick</div>
+    <p>IN = Input only (read-only inside) &nbsp;|&nbsp; OUT = Output only (write-only inside) &nbsp;|&nbsp; IN OUT = Both read and write</p>
+    <p>Default mode is always IN — if you write no mode, Oracle assumes IN</p>
+  </div>
+</div>
+
+<!-- ===== 6 ===== -->
+<div class="sec-label">6. Stored Procedure — Program Examples</div>
+<div class="card">
+
+  <!-- EX 1 — IN MODE: Square -->
+  <div class="ex-block">
+    <div class="ex-head">Example 1 — IN Mode: Calculate Square of a Number (Procedure P2)</div>
+    <div class="ex-logic">Task: Create a procedure that accepts a number as IN parameter and displays its square.<br>Logic: N is passed as IN — read inside, squared, and displayed. EXEC P2(6) → 6×6 = 36.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">IN MODE — SQUARE OF A NUMBER</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the procedure</span>
+<span class="kw">CREATE OR REPLACE PROCEDURE</span> P2(N <span class="kw">IN</span> <span class="tp">NUMBER</span>)
+<span class="kw">AS</span>
+   RESULT <span class="tp">NUMBER</span>;
+<span class="kw">BEGIN</span>
+   RESULT := N * N;                          <span class="cm">-- Square the input</span>
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(RESULT);
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Step 2: Execute the procedure</span>
+<span class="kw">EXEC</span> P2(<span class="num">6</span>);</div>
+    </div>
+    <div class="out-bar">Output: 36 &nbsp;→ 6 × 6 = 36</div>
+  </div>
+
+  <!-- EX 2 — OUT MODE -->
+  <div class="ex-block">
+    <div class="ex-head">Example 2 — OUT Mode: Return a Value from Procedure (Procedure P2)</div>
+    <div class="ex-logic">Task: Create a procedure with an OUT parameter. Assign value 100 to it inside the procedure and display it from the caller.<br>Logic: A is OUT — assigned 100 inside. Caller passes variable X → X receives the value 100 after procedure runs.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">OUT MODE — RETURN VALUE FROM PROCEDURE</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the procedure with OUT parameter</span>
+<span class="kw">CREATE OR REPLACE PROCEDURE</span> P2(A <span class="kw">OUT</span> <span class="tp">NUMBER</span>)
+<span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+   A := <span class="num">100</span>;                               <span class="cm">-- Assign value to OUT parameter</span>
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Step 2: Call the procedure using an anonymous block</span>
+<span class="kw">DECLARE</span>
+   X <span class="tp">NUMBER</span>;                               <span class="cm">-- Variable to receive OUT value</span>
+<span class="kw">BEGIN</span>
+   P2(X);                                   <span class="cm">-- X receives the OUT value (100)</span>
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(X);
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: 100 &nbsp;→ X receives value 100 from OUT parameter A</div>
+  </div>
+
+  <!-- EX 3 — IN OUT MODE -->
+  <div class="ex-block">
+    <div class="ex-head">Example 3 — IN OUT Mode: Pass Value In and Get Result Back (Procedure P5)</div>
+    <div class="ex-logic">Task: Create a procedure that takes a number IN OUT, squares it, and returns the result back through the same variable.<br>Logic: X = 10 passed in → A = 10 inside → A := A * A = 100 → X gets back 100 after call.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">IN OUT MODE — SQUARE USING SAME VARIABLE</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the procedure with IN OUT parameter</span>
+<span class="kw">CREATE OR REPLACE PROCEDURE</span> P5(A <span class="kw">IN OUT</span> <span class="tp">NUMBER</span>)
+<span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+   A := A * A;                              <span class="cm">-- Read input (IN) and write result back (OUT)</span>
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Step 2: Call using an anonymous block</span>
+<span class="kw">DECLARE</span>
+   X <span class="tp">NUMBER</span> := <span class="num">10</span>;                         <span class="cm">-- X = 10 passed in</span>
+<span class="kw">BEGIN</span>
+   P5(X);                                   <span class="cm">-- X becomes 10 × 10 = 100</span>
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(X);
+<span class="kw">END</span>;
+/</div>
+    </div>
+    <div class="out-bar">Output: 100 &nbsp;→ X was 10 going in, becomes 100 coming out</div>
+  </div>
+
+  <!-- EX 4 — Fetch by EMPNO -->
+  <div class="ex-block">
+    <div class="ex-head">Example 4 — IN Mode: Fetch Employee Name and Salary by EMPNO</div>
+    <div class="ex-logic">Task: Create a procedure that accepts EMPNO as IN parameter and displays the employee's name and salary. Handle NO_DATA_FOUND if EMPNO does not exist.<br>Logic: EXEC EMP_EMPNO(123) → EMPNO 123 does not exist → NO_DATA_FOUND exception handled.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">IN MODE — FETCH EMPLOYEE BY EMPNO</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the procedure</span>
+<span class="kw">CREATE OR REPLACE PROCEDURE</span> EMP_EMPNO(PEMPNO <span class="tp">NUMBER</span>)
+<span class="kw">AS</span>
+   V_NAME  <span class="tp">VARCHAR2</span>(20);
+   V_SAL   <span class="tp">NUMBER</span>;
+<span class="kw">BEGIN</span>
+   <span class="cm">-- Fetch employee details using the IN parameter</span>
+   <span class="kw">SELECT</span> ENAME, SAL
+   <span class="kw">INTO</span>   V_NAME, V_SAL
+   <span class="kw">FROM</span>   EMP
+   <span class="kw">WHERE</span>  EMPNO = PEMPNO;
+
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(V_NAME || <span class="str">'  '</span> || V_SAL);
+
+<span class="kw">EXCEPTION</span>
+   <span class="kw">WHEN</span> NO_DATA_FOUND <span class="kw">THEN</span>
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'DATA DOES NOT EXIST'</span>);
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Step 2: Execute the procedure</span>
+<span class="kw">EXEC</span> EMP_EMPNO(<span class="num">7369</span>);    <span class="cm">-- Valid EMPNO → displays SMITH 800</span>
+<span class="kw">EXEC</span> EMP_EMPNO(<span class="num">123</span>);     <span class="cm">-- Invalid EMPNO → DATA DOES NOT EXIST</span></div>
+    </div>
+    <div class="out-bar">EXEC EMP_EMPNO(7369) → SMITH  800 &nbsp;|&nbsp; EXEC EMP_EMPNO(123) → DATA DOES NOT EXIST</div>
+  </div>
+
+  <!-- EX 5 — Dept filter with cursor -->
+  <div class="ex-block">
+    <div class="ex-head">Example 5 — IN Mode: Fetch All Employees of a Department Using Cursor</div>
+    <div class="ex-logic">Task: Create a procedure that accepts DEPTNO as IN parameter and displays all employees (name, job, department) of that department using an Explicit Cursor.<br>Logic: Cursor C1 uses P_DEPTNO as filter → OPEN → LOOP FETCH → display each row → CLOSE.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">IN MODE — FETCH EMPLOYEES BY DEPARTMENT USING CURSOR</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the procedure</span>
+<span class="kw">CREATE OR REPLACE PROCEDURE</span> DEPT_EMP(P_DEPTNO <span class="kw">IN</span> <span class="tp">NUMBER</span>)
+<span class="kw">AS</span>
+   I       EMP%ROWTYPE;
+   <span class="kw">CURSOR</span> C1 <span class="kw">IS</span>
+      <span class="kw">SELECT</span> *
+      <span class="kw">FROM</span>   EMP
+      <span class="kw">WHERE</span>  DEPTNO = P_DEPTNO;      <span class="cm">-- Filter using IN parameter</span>
+
+<span class="kw">BEGIN</span>
+   <span class="kw">OPEN</span> C1;
+
+   <span class="kw">LOOP</span>
+      <span class="kw">FETCH</span> C1 <span class="kw">INTO</span> I;
+      <span class="kw">EXIT WHEN</span> C1%NOTFOUND;
+
+      <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(
+         I.ENAME || <span class="str">' '</span> ||
+         I.JOB   || <span class="str">' '</span> ||
+         I.DEPTNO
+      );
+   <span class="kw">END LOOP</span>;
+
+   <span class="kw">CLOSE</span> C1;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Step 2: Execute the procedure</span>
+<span class="kw">EXEC</span> DEPT_EMP(<span class="num">10</span>);</div>
+    </div>
+    <div class="out-bar">Output: CLARK MANAGER 10 &nbsp;→ KING PRESIDENT 10 &nbsp;→ MILLER CLERK 10</div>
+  </div>
+
+  <!-- EX 6 — INSERT into DEPT -->
+  <div class="ex-block">
+    <div class="ex-head">Example 6 — IN Mode: Insert a New Record into DEPT Table</div>
+    <div class="ex-logic">Task: Create a procedure that accepts DEPTNO, DNAME, and LOCATION as IN parameters and inserts a new record into the DEPT table.<br>Logic: EXEC INSERT_RECORDS(50,'TRAINER','MUMBAI') → values passed in → inserted into DEPT table.</div>
+    <div class="prog-wrap" style="margin:0">
+      <div class="prog-header">
+        <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+        <span class="prog-label">IN MODE — INSERT RECORD INTO DEPT TABLE</span>
+      </div>
+      <div class="prog-body"><span class="cm">-- Step 1: Create the procedure</span>
+<span class="kw">CREATE OR REPLACE PROCEDURE</span> INSERT_RECORDS
+(
+   P_DEPTNO    DEPT.DEPTNO<span class="kw">%TYPE</span>,      <span class="cm">-- Anchored to DEPT.DEPTNO column</span>
+   P_DNAME     DEPT.DNAME<span class="kw">%TYPE</span>,
+   P_LOCATION  DEPT.LOC<span class="kw">%TYPE</span>
+)
+<span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+   <span class="cm">-- Insert the new department record</span>
+   <span class="kw">INSERT INTO</span> DEPT(DEPTNO, DNAME, LOC)
+   <span class="kw">VALUES</span>(P_DEPTNO, P_DNAME, P_LOCATION);
+
+   <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'RECORD INSERTED SUCCESSFULLY'</span>);
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Step 2: Execute the procedure</span>
+<span class="kw">EXEC</span> INSERT_RECORDS(<span class="num">50</span>, <span class="str">'TRAINER'</span>, <span class="str">'MUMBAI'</span>);</div>
+    </div>
+    <div class="out-bar">Output: RECORD INSERTED SUCCESSFULLY &nbsp;→ DEPTNO 50, TRAINER, MUMBAI added to DEPT table</div>
+  </div>
+
+</div>
+
+<!-- ===== 7 ===== -->
+<div class="sec-label">7. How to View a Stored Procedure</div>
+<div class="card">
+  <p style="font-size:13px;color:#111;margin-bottom:8px">To display the source code of any stored procedure saved in the database:</p>
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span>
+      <span class="prog-label">VIEW PROCEDURE SOURCE CODE</span>
+    </div>
+    <div class="prog-body"><span class="kw">SELECT</span> TEXT
+<span class="kw">FROM</span>   USER_SOURCE
+<span class="kw">WHERE</span>  NAME = <span class="str">'PROCEDURE_NAME'</span>;   <span class="cm">-- Replace with actual name in UPPERCASE</span></div>
+  </div>
+  <div class="tip-box">
+    <div class="lbl">Extra — USER_SOURCE</div>
+    <p>USER_SOURCE is a data dictionary view in Oracle that stores the source code of all procedures, functions, packages, and triggers created by the current user. The NAME column must always be in UPPERCASE.</p>
+  </div>
+</div>
+
+<!-- ===== 8 ===== -->
+<div class="sec-label">8. Quick Revision — All Keywords</div>
+<div class="card">
+  <table>
+    <tr><th>Keyword / Syntax</th><th>Purpose</th></tr>
+    <tr><td>CREATE OR REPLACE PROCEDURE name</td><td>Create or overwrite a stored procedure</td></tr>
+    <tr><td>param IN datatype</td><td>Input-only parameter (default mode — read-only inside)</td></tr>
+    <tr><td>param OUT datatype</td><td>Output-only parameter (write-only inside — returns value to caller)</td></tr>
+    <tr><td>param IN OUT datatype</td><td>Both input and output (read and write inside)</td></tr>
+    <tr><td>IS / AS</td><td>Starts the procedure block — both are identical</td></tr>
+    <tr><td>BEGIN … END;</td><td>Main executable section of the procedure</td></tr>
+    <tr><td>EXEC procedure_name(values);</td><td>Execute the stored procedure</td></tr>
+    <tr><td>SELECT TEXT FROM USER_SOURCE WHERE NAME = '…'</td><td>View the source code of a stored procedure</td></tr>
+  </table>
+  <div class="warn-box">
+    <div class="lbl">Common Mistakes with Stored Procedures</div>
+    <p>1. Writing ELSEIF instead of ELSIF inside procedure body → PLS-00103 error</p>
+    <p>2. Forgetting OR REPLACE → creates duplicate — old version remains if error occurs</p>
+    <p>3. OUT parameter used with EXEC directly → must use an anonymous block with a variable</p>
+    <p>4. IN parameter modified inside procedure → PLS-00363: expression cannot be used as assignment target</p>
+    <p>5. Procedure name in USER_SOURCE not in UPPERCASE → returns no rows</p>
+  </div>
+</div>
+
+<!-- ===== 9 ===== -->
+<div class="sec-label">9. Frequently Asked Interview Questions</div>
+
+<div class="qa">
+  <div class="qa-q">Q1. What is a stored procedure in PL/SQL?</div>
+  <div class="qa-a">A stored procedure is a named block of SQL and PL/SQL statements that is saved permanently in the database. It is precompiled, reusable, can accept parameters, and may or may not return a value.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q2. What are the advantages of stored procedures?</div>
+  <div class="qa-a">1. Reusable — write once, use multiple times. 2. Faster execution — precompiled in the database. 3. Improved security — users access data through procedures, not directly. 4. Reduced network traffic — entire logic runs on the DB server. 5. Easy maintenance — logic stored in one place.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q3. What are the three parameter modes in PL/SQL procedures?</div>
+  <div class="qa-a">1. IN — passes input values into the procedure. Read-only inside. Default mode. 2. OUT — returns output values from the procedure. Write-only inside. 3. IN OUT — both passes a value in and returns a result back through the same variable.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q4. What is the difference between IN and OUT parameters?</div>
+  <div class="qa-a">IN parameters pass values from the caller into the procedure — they are read-only inside. OUT parameters return values from the procedure to the caller — they behave like uninitialized variables inside and can only be assigned, not read.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q5. What is the default parameter mode in PL/SQL?</div>
+  <div class="qa-a">The default parameter mode in PL/SQL is IN. If no mode is specified, Oracle automatically treats the parameter as IN mode.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q6. What is the difference between a Stored Procedure and an Anonymous Block? <span class="extra">Extra</span></div>
+  <div class="qa-a">An Anonymous Block has no name, is not stored in the database, and cannot be reused. A Stored Procedure has a name, is stored permanently in the database, is precompiled, and can be called and reused multiple times.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q7. How do you execute a stored procedure in Oracle? <span class="extra">Extra</span></div>
+  <div class="qa-a">Using EXEC or EXECUTE command: EXEC procedure_name(parameters); For procedures with OUT or IN OUT parameters, an anonymous block with declared variables must be used to capture the returned values.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q8. What is OR REPLACE in CREATE OR REPLACE PROCEDURE? <span class="extra">Extra</span></div>
+  <div class="qa-a">OR REPLACE is an optional clause that overwrites the existing procedure if it already exists in the database. Without it, trying to create a procedure with the same name will throw an error if the procedure already exists.</div>
+</div>
+<div class="qa">
+  <div class="qa-q">Q9. What is the difference between IN OUT and OUT mode? <span class="extra">Extra</span></div>
+  <div class="qa-a">OUT mode starts as an uninitialized variable — the caller's value is not passed in, only a result is returned. IN OUT mode both receives the caller's value AND returns a result through the same variable. Use IN OUT when the procedure needs to read and modify the caller's variable.</div>
+</div>
+
+<div class="divider"></div>
+<footer>PL/SQL Part 8 — Stored Procedures &nbsp;|&nbsp; Pravin's Interview Notes &nbsp;|&nbsp; Orange = Extra additions</footer>
+
+</div>
