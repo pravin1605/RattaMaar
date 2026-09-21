@@ -149,22 +149,22 @@ const subjects = [
       },
       {
         id: "jdbc-03",
-        title: "Prepared Statement",
+        title: "Statement code",
         file: "/jdbc/part_03_prepared.html",
       },
       {
         id: "jdbc-04",
-        title: "Stored Procedure",
+        title: "Prepared Statement",
         file: "/jdbc/part_04_storedProcedure.html",
       },
       {
         id: "jdbc-05",
-        title: "Exception Handling",
+        title: "Stored Procedure",
         file: "/jdbc/part_05_exception.html",
       },
       {
         id: "jdbc-06",
-        title: "JDBC",
+        title: "Exception Handling",
         file: "/jdbc/part_06.html",
       },
       {
