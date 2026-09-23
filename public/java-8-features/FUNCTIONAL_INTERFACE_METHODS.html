@@ -5,531 +5,381 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Built-in Functional Interfaces</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:#111; color:#e0e0e0; font-family:'Segoe UI',Arial,sans-serif; font-size:13.5px; line-height:1.65; }
-
-.header { background:#111; padding:28px 32px 8px; }
-.header h1 { font-size:28px; font-weight:800; color:#fff; margin-bottom:4px; }
-.header p  { font-size:13px; color:#aaa; }
-
-.sec-label {
-  font-size:11px; font-weight:700; letter-spacing:1.5px;
-  text-transform:uppercase; color:#888;
-  border-bottom:1px solid #333;
-  padding:18px 32px 6px;
-}
-
-.wrap { padding:10px 32px; }
-
-/* GRIDS */
-.g2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0; }
-.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:8px 0; }
-
-/* DEF CARDS */
-.def-card {
-  background:#1a1a2e; border-radius:10px;
-  border-left:4px solid #7c3aed;
-  padding:16px 18px; margin:8px 0;
-}
-.def-card.teal   { border-left-color:#14b8a6; }
-.def-card.orange { border-left-color:#f97316; }
-.def-card.green  { border-left-color:#22c55e; }
-.def-card.yellow { border-left-color:#eab308; }
-.def-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:6px; }
-.def-card p  { font-size:13px; color:#ccc; margin-bottom:4px; }
-
-/* DARK CARD */
-.dark-card {
-  background:#1e1e1e; border-radius:10px;
-  padding:18px 20px; margin:8px 0;
-}
-.dark-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:8px; }
-.dark-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; }
-.dark-card p  { font-size:13px; color:#ccc; margin-bottom:5px; }
-
-/* CODE */
-pre {
-  background:#2a2a2a; color:#d4d4d4;
-  border-radius:6px; padding:12px 14px;
-  font-family:'Courier New',Consolas,monospace;
-  font-size:11.5px; line-height:1.6;
-  margin:8px 0; white-space:pre-wrap;
-}
-.kw  { color:#569cd6; }
-.str { color:#ce9178; }
-.cm  { color:#6a9955; }
-.cls { color:#4ec9b0; }
-.num { color:#b5cea8; }
-
-/* OUTPUT */
-.output-box {
-  background:#2a2a2a; border-radius:6px; padding:12px 14px;
-  font-family:'Courier New',Consolas,monospace;
-  font-size:11.5px; color:#d4d4d4; margin:8px 0;
-}
-
-/* EXPLANATION */
-.expl-card {
-  background:#1a1a2e; border-left:4px solid #7c3aed;
-  border-radius:8px; padding:14px 16px; margin:8px 0;
-}
-.expl-card.teal   { border-left-color:#14b8a6; }
-.expl-card.orange { border-left-color:#f97316; }
-.expl-card.green  { border-left-color:#22c55e; }
-.expl-card.yellow { border-left-color:#eab308; }
-.expl-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:6px; }
-.expl-card p  { font-size:13px; color:#ccc; }
-
-ic { background:#333; padding:2px 6px; border-radius:4px;
-     font-family:'Courier New',monospace; font-size:11px; color:#d4d4d4; }
-
-/* STEP */
-.step-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:7px; font-size:13px; color:#ccc; }
-.step-circle {
-  width:22px; height:22px; border-radius:50%;
-  background:#333; border:1.5px solid #666;
-  color:#ccc; font-size:10.5px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
-}
-
-/* NOTE CARDS (3-col) */
-.note-card {
-  background:#1e1e1e; border-radius:8px; padding:14px 16px;
-  border-top:3px solid #444;
-}
-.note-card.purple { border-top-color:#7c3aed; }
-.note-card.teal   { border-top-color:#14b8a6; }
-.note-card.orange { border-top-color:#f97316; }
-.note-card.green  { border-top-color:#22c55e; }
-.note-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:6px; }
-.note-card p  { font-size:12.5px; color:#aaa; }
-
-/* TABLE */
-.cmp-table { width:100%; border-collapse:collapse; margin:8px 0; font-size:13px; }
-.cmp-table th { background:#2a2a2a; color:#aaa; font-size:11.5px; font-weight:700; padding:9px 14px; text-align:left; }
-.cmp-table td { padding:9px 14px; border-bottom:1px solid #2a2a2a; color:#ccc; }
-.cmp-table td:first-child { font-family:'Courier New',monospace; font-size:11.5px; }
-.cmp-table tr:last-child td { border-bottom:none; }
-
-/* GENERIC UNDERSTANDING */
-.gen-card {
-  background:#1e1e1e; border-radius:8px; padding:14px 16px; margin:8px 0;
-  border-left:3px solid #f97316;
-}
-.gen-card p { font-size:13px; color:#ccc; margin-bottom:5px; }
-
-/* BADGE PILLS */
-.badge-row { display:flex; flex-wrap:wrap; gap:7px; margin:8px 0; }
-.badge {
-  border:1.5px solid #b8860b; border-radius:20px;
-  padding:3px 14px; font-size:12px; font-weight:600;
-  color:#f5d76e; background:transparent;
-}
-
-/* KEY RULE */
-.key-card {
-  background:#1a1a2e; border-left:4px solid #7c3aed;
-  border-radius:10px; padding:16px 18px; margin:14px 0;
-}
-.key-card h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:5px; }
-.key-card p  { font-size:13px; color:#ccc; }
-
-/* INFO NOTE */
-.info-note {
-  background:#2a2a2a; border-radius:6px; padding:10px 14px;
-  font-size:12.5px; color:#aaa; margin-top:6px;
-}
-
-/* EXPL NUMBERED */
-.exp-item { display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; font-size:13px; color:#ccc; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#e0e0e0;font-family:'Georgia',serif}
+.a4-page{width:210mm;min-height:297mm;background:#fff;color:#111;margin:12px auto;padding:14mm 16mm;font-size:12.5px;line-height:1.65;page-break-after:always;border:1px solid #aaa;box-shadow:0 2px 8px rgba(0,0,0,.13)}
+.main-title{text-align:center;font-size:21px;font-weight:700;border:2.5px solid #111;padding:9px 18px;margin-bottom:6px;letter-spacing:1px}
+.sub-title{text-align:center;font-size:12.5px;color:#555;margin-bottom:14px}
+.page-title{text-align:center;font-size:13px;font-weight:700;letter-spacing:.5px;color:#555;margin-bottom:10px;border-bottom:1px solid #ccc;padding-bottom:5px}
+.section{border:1.5px solid #222;margin-bottom:11px}
+.section-header{background:#111;color:#fff;font-size:12.5px;font-weight:700;padding:5px 11px;letter-spacing:.4px}
+.section-body{padding:9px 13px 11px;background:#fff}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.inline-box{border:1px solid #bbb;padding:7px 9px;background:#fafafa}
+.inline-box-title{font-weight:700;font-size:11.5px;margin-bottom:3px;border-bottom:1px solid #ddd;padding-bottom:3px}
+.subsection-title{font-weight:700;font-size:12.5px;margin:7px 0 3px}
+.subsection-title:first-child{margin-top:0}
+.code-block{background:#f5f5f5;border:1px solid #ccc;border-left:3px solid #333;font-family:'Courier New',monospace;font-size:11.5px;padding:7px 10px;margin:6px 0;white-space:pre-wrap;word-break:break-word;line-height:1.6}
+.note-box{border:1.5px dashed #555;padding:6px 10px;margin:7px 0;font-size:12px;background:#fafafa}
+.step-row{display:flex;align-items:flex-start;gap:9px;margin:5px 0}
+.step-num{min-width:22px;height:22px;background:#111;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.badge{display:inline-block;border:1px solid #444;font-size:11px;padding:1px 9px;margin:2px 4px 2px 0;font-weight:600}
+.tag{display:inline-block;background:#111;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;margin-right:4px;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0}
+th{background:#111;color:#fff;padding:5px 9px;text-align:left;font-size:11.5px}
+td{border:1px solid #bbb;padding:5px 9px}
+td:first-child{font-weight:700}
+p{margin:3px 0;font-size:12.5px}
+hr{border:none;border-top:1px solid #ccc;margin:7px 0}
+code{font-family:'Courier New',monospace;font-size:11.5px;background:#eee;padding:1px 4px;border-radius:2px}
+.code-block code{background:none;padding:0}
+@media print{body{background:#fff}.a4-page{margin:0;box-shadow:none;border:none}}
 </style>
 </head>
 <body>
 
-<!-- ═══ HEADER ═══ -->
-<div class="header">
-  <h1>Built-in Functional Interfaces</h1>
-  <p>Complete notes — Predicate, Function, Consumer, Supplier, BiFunction</p>
-</div>
+<!-- PAGE 1 -->
+<div class="a4-page">
+  <div class="main-title">BUILT-IN FUNCTIONAL INTERFACES — COMPLETE NOTES</div>
+  <div class="sub-title">Complete notes — Predicate, Function, Consumer, Supplier, BiFunction</div>
 
-<!-- ═══ INTRODUCTION ═══ -->
-<div class="sec-label">Introduction</div>
-<div class="wrap">
-
-  <div class="def-card">
-    <h3>What are Built-in Functional Interfaces?</h3>
-    <p>Java 8 introduced several predefined Functional Interfaces in the package <ic>java.util.function</ic> . These are called Built-in Functional Interfaces because Java already provides them. They are heavily used with Lambda Expressions, Method References, Stream API, and Functional Programming.</p>
+  <div class="section">
+    <div class="section-header">📘 Introduction — What are Built-in Functional Interfaces?</div>
+    <div class="section-body">
+      <p>Java 8 introduced several predefined Functional Interfaces in the package <code>java.util.function</code>. These are called Built-in Functional Interfaces because Java already provides them. They are heavily used with Lambda Expressions, Method References, Stream API, and Functional Programming.</p>
+    </div>
   </div>
 
-  <div class="def-card teal">
-    <h3>Why Built-in Functional Interfaces?</h3>
-    <p>Before Java 8, whenever we needed a Functional Interface, we created our own. For example:</p>
-    <pre>interface Calculator {
+  <div class="section">
+    <div class="section-header">📘 Why Built-in Functional Interfaces?</div>
+    <div class="section-body">
+      <p>Before Java 8, whenever we needed a Functional Interface, we created our own. For example:</p>
+      <div class="code-block">interface Calculator {
   int calculate(int x, int y);
-}</pre>
-    <p>Java 8 provides many commonly used Functional Interfaces so we don't need to create them again and again. This reduces boilerplate code, development time, and maintenance effort.</p>
+}</div>
+      <p>Java 8 provides many commonly used Functional Interfaces so we don't need to create them again and again. This reduces boilerplate code, development time, and maintenance effort.</p>
+    </div>
   </div>
 
-</div>
-
-<!-- ═══ OVERVIEW TABLE ═══ -->
-<div class="sec-label">Important Functional Interfaces — Overview</div>
-<div class="wrap">
-  <div class="dark-card">
-    <table class="cmp-table">
-      <thead>
+  <div class="section">
+    <div class="section-header">📋 Important Functional Interfaces — Overview</div>
+    <div class="section-body">
+      <table>
         <tr><th>Functional Interface</th><th>Abstract Method</th><th>Purpose</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Predicate&lt;T&gt;</td><td><ic>boolean test(T t)</ic></td><td>Testing / Filtering</td></tr>
-        <tr><td>Function&lt;T,R&gt;</td><td><ic>R apply(T t)</ic></td><td>Transformation</td></tr>
-        <tr><td>Consumer&lt;T&gt;</td><td><ic>void accept(T t)</ic></td><td>Consuming Data</td></tr>
-        <tr><td>Supplier&lt;T&gt;</td><td><ic>T get()</ic></td><td>Supplying Data</td></tr>
-        <tr><td>BiFunction&lt;T,U,R&gt;</td><td><ic>R apply(T t, U u)</ic></td><td>Two Inputs → One Output</td></tr>
-      </tbody>
-    </table>
+        <tr><td>Predicate&lt;T&gt;</td><td><code>boolean test(T t)</code></td><td>Testing / Filtering</td></tr>
+        <tr><td>Function&lt;T,R&gt;</td><td><code>R apply(T t)</code></td><td>Transformation</td></tr>
+        <tr><td>Consumer&lt;T&gt;</td><td><code>void accept(T t)</code></td><td>Consuming Data</td></tr>
+        <tr><td>Supplier&lt;T&gt;</td><td><code>T get()</code></td><td>Supplying Data</td></tr>
+        <tr><td>BiFunction&lt;T,U,R&gt;</td><td><code>R apply(T t, U u)</code></td><td>Two Inputs → One Output</td></tr>
+      </table>
+    </div>
   </div>
 
-  <div class="gen-card">
-    <h4 style="font-size:13.5px;font-weight:700;color:#fff;margin-bottom:8px;">Understanding generic types</h4>
-    <p><ic>Predicate&lt;Integer&gt;</ic> — the type <ic>Integer</ic> represents the datatype Predicate will work on.</p>
-    <p><ic>Function&lt;String, Integer&gt;</ic> — Input: <ic>String</ic> , Output: <ic>Integer</ic></p>
+  <div class="section">
+    <div class="section-header">🔹 Understanding generic types</div>
+    <div class="section-body">
+      <p><code>Predicate&lt;Integer&gt;</code> — the type <code>Integer</code> represents the datatype Predicate will work on.</p>
+      <p style="margin-top:6px;"><code>Function&lt;String, Integer&gt;</code> — Input: <code>String</code>, Output: <code>Integer</code></p>
+    </div>
   </div>
 </div>
 
-<!-- ═══ 1 — PREDICATE<T> ═══ -->
-<div class="sec-label">1 — Predicate&lt;T&gt;</div>
-<div class="wrap">
+<!-- PAGE 2 -->
+<div class="a4-page">
+  <div class="page-title">BUILT-IN FUNCTIONAL INTERFACES | Page 2 — 1. Predicate&lt;T&gt;</div>
+  <div class="section">
+    <div class="section-header">✅ 1 — Predicate&lt;T&gt;</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 Definition</div>
+      <p><code>Predicate&lt;T&gt;</code> is a Functional Interface used to test a condition on an input and return a boolean value.</p>
+      <hr/>
+      <div class="three-col">
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Abstract method</div>
+          <div class="code-block">boolean test(T t);</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Purpose</div>
+          <div class="step-row"><div class="step-num">1</div><div>Checking conditions</div></div>
+          <div class="step-row"><div class="step-num">2</div><div>Filtering data</div></div>
+          <div class="step-row"><div class="step-num">3</div><div>Used in Stream API's <code>filter()</code></div></div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🧠 Memory trick</div>
+          <p>Predicate = Prediction. It answers <strong>TRUE or FALSE</strong> / YES or NO.</p>
+        </div>
+      </div>
 
-  <div class="def-card">
-    <h3>Definition</h3>
-    <p><ic>Predicate&lt;T&gt;</ic> is a Functional Interface used to test a condition on an input and return a boolean value.</p>
-  </div>
+      <div class="subsection-title" style="margin-top:10px;">🔹 Example</div>
+      <div class="code-block">import java.util.function.Predicate;
 
-  <div class="g3">
-    <div class="note-card purple">
-      <h4>Abstract method</h4>
-      <pre>boolean test(T t);</pre>
-    </div>
-    <div class="note-card teal">
-      <h4>Purpose</h4>
-      <div class="step-row"><div class="step-circle">1</div> Checking conditions</div>
-      <div class="step-row"><div class="step-circle">2</div> Filtering data</div>
-      <div class="step-row"><div class="step-circle">3</div> Used in Stream API's <ic>filter()</ic></div>
-    </div>
-    <div class="note-card green">
-      <h4>Memory trick</h4>
-      <p>Predicate = Prediction. It answers <strong>TRUE or FALSE</strong> / YES or NO.</p>
-    </div>
-  </div>
+public class DemoPredi {
+  public static void main(String[] args) {
 
-  <div class="dark-card">
-    <h4>Example</h4>
-    <pre><span class="kw">import</span> java.util.function.Predicate;
+    Predicate&lt;Integer&gt; p = t -&gt; t%2==0;
+    System.out.println(p.test(20));           // true
 
-<span class="kw">public class</span> <span class="cls">DemoPredi</span> {
-  <span class="kw">public static void</span> main(String[] args) {
-
-    Predicate&lt;Integer&gt; p = t -> t%<span class="num">2</span>==<span class="num">0</span>;
-    System.out.println(p.test(<span class="num">20</span>));           <span class="cm">// true</span>
-
-    Predicate&lt;String&gt; p2 = t -> t.length()&gt;=<span class="num">5</span>;
-    System.out.println(p2.test(<span class="str">"programming"</span>)); <span class="cm">// true</span>
-    System.out.println(p2.test(<span class="str">"pro"</span>));         <span class="cm">// false</span>
+    Predicate&lt;String&gt; p2 = t -&gt; t.length()&gt;=5;
+    System.out.println(p2.test("programming")); // true
+    System.out.println(p2.test("pro"));         // false
   }
-}</pre>
-    <div class="output-box">Output:
+}</div>
+      <div class="code-block">Output:
 true
 true
 false</div>
-  </div>
 
-  <div class="expl-card">
-    <h4>Explanation</h4>
-    <div class="exp-item"><div class="step-circle">1</div><span><ic>t%2==0</ic> checks if number is even. <ic>p.test(20)</ic> → 20%2=0 → <ic>true</ic></span></div>
-    <div class="exp-item"><div class="step-circle">2</div><span><ic>t.length()&gt;=5</ic> checks string length. <ic>p2.test("programming")</ic> → length 11 → <ic>true</ic></span></div>
-    <div class="exp-item"><div class="step-circle">3</div><span><ic>p2.test("pro")</ic> → length 3 → <ic>false</ic></span></div>
-  </div>
+      <div class="subsection-title">🔍 Explanation</div>
+      <div class="step-row"><div class="step-num">1</div><div><code>t%2==0</code> checks if number is even. <code>p.test(20)</code> → 20%2=0 → <code>true</code></div></div>
+      <div class="step-row"><div class="step-num">2</div><div><code>t.length()&gt;=5</code> checks string length. <code>p2.test("programming")</code> → length 11 → <code>true</code></div></div>
+      <div class="step-row"><div class="step-num">3</div><div><code>p2.test("pro")</code> → length 3 → <code>false</code></div></div>
 
-  <div class="dark-card">
-    <h4>Real life examples of Predicate</h4>
-    <div class="badge-row">
-      <span class="badge">Age &gt;= 18</span>
-      <span class="badge">Salary &gt; 50000</span>
-      <span class="badge">Marks &gt;= 35</span>
+      <div class="note-box">
+        <strong>🔹 Real life examples of Predicate</strong><br>
+        <span class="badge">Age &gt;= 18</span><span class="badge">Salary &gt; 50000</span><span class="badge">Marks &gt;= 35</span><br>
+        All these conditions return <code>true</code> or <code>false</code> — therefore Predicate is used.
+      </div>
     </div>
-    <p style="font-size:13px;color:#ccc;margin-top:6px;">All these conditions return <ic>true</ic> or <ic>false</ic> — therefore Predicate is used.</p>
   </div>
-
 </div>
 
-<!-- ═══ 2 — FUNCTION<T,R> ═══ -->
-<div class="sec-label">2 — Function&lt;T,R&gt;</div>
-<div class="wrap">
-
-  <div class="def-card teal">
-    <h3>Definition</h3>
-    <p><ic>Function&lt;T,R&gt;</ic> is a Functional Interface that takes one input and returns one output.</p>
-  </div>
-
-  <div class="g3">
-    <div class="note-card purple">
-      <h4>Abstract method</h4>
-      <pre>R apply(T t);</pre>
-    </div>
-    <div class="note-card teal">
-      <h4>Purpose</h4>
-      <div class="step-row"><div class="step-circle">1</div> Data Transformation</div>
-      <div class="step-row"><div class="step-circle">2</div> Data Conversion</div>
-      <div class="step-row"><div class="step-circle">3</div> Mapping Operations</div>
-      <div class="step-row"><div class="step-circle">4</div> Mostly used with Stream API's <ic>map()</ic></div>
-    </div>
-    <div class="note-card green">
-      <h4>Understanding T and R</h4>
-      <pre>Function&lt;String, Integer&gt;
+<!-- PAGE 3 -->
+<div class="a4-page">
+  <div class="page-title">BUILT-IN FUNCTIONAL INTERFACES | Page 3 — 2. Function&lt;T,R&gt;</div>
+  <div class="section">
+    <div class="section-header">✅ 2 — Function&lt;T,R&gt;</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 Definition</div>
+      <p><code>Function&lt;T,R&gt;</code> is a Functional Interface that takes one input and returns one output.</p>
+      <hr/>
+      <div class="three-col">
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Abstract method</div>
+          <div class="code-block">R apply(T t);</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Purpose</div>
+          <div class="step-row"><div class="step-num">1</div><div>Data Transformation</div></div>
+          <div class="step-row"><div class="step-num">2</div><div>Data Conversion</div></div>
+          <div class="step-row"><div class="step-num">3</div><div>Mapping Operations</div></div>
+          <div class="step-row"><div class="step-num">4</div><div>Mostly used with Stream API's <code>map()</code></div></div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Understanding T and R</div>
+          <div class="code-block">Function&lt;String, Integer&gt;
 // Input → String
-// Output → Integer</pre>
-    </div>
-  </div>
+// Output → Integer</div>
+        </div>
+      </div>
 
-  <div class="dark-card">
-    <h4>Example</h4>
-    <pre><span class="kw">import</span> java.util.function.Function;
+      <div class="subsection-title" style="margin-top:10px;">🔹 Example</div>
+      <div class="code-block">import java.util.function.Function;
 
-<span class="kw">public class</span> <span class="cls">DemoFunction</span> {
-  <span class="kw">public static void</span> main(String[] args) {
+public class DemoFunction {
+  public static void main(String[] args) {
 
-    Function&lt;String, Integer&gt; f1 = x -> x.length();
-    System.out.println(f1.apply(<span class="str">"hello"</span>));   <span class="cm">// 5</span>
-    System.out.println(f1.apply(<span class="str">"abcdef"</span>)); <span class="cm">// 6</span>
+    Function&lt;String, Integer&gt; f1 = x -&gt; x.length();
+    System.out.println(f1.apply("hello"));   // 5
+    System.out.println(f1.apply("abcdef")); // 6
   }
-}</pre>
-    <div class="output-box">Output:
+}</div>
+      <div class="code-block">Output:
 5
 6</div>
-  </div>
 
-  <div class="expl-card teal">
-    <h4>Explanation</h4>
-    <p><ic>Function&lt;String, Integer&gt;</ic> — Input: String, Output: Integer. <ic>f1.apply("hello")</ic> → length 5. <ic>f1.apply("abcdef")</ic> → length 6.</p>
-  </div>
+      <div class="subsection-title">🔍 Explanation</div>
+      <p><code>Function&lt;String, Integer&gt;</code> — Input: String, Output: Integer. <code>f1.apply("hello")</code> → length 5. <code>f1.apply("abcdef")</code> → length 6.</p>
 
-  <div class="dark-card">
-    <h4>Real life examples of Function</h4>
-    <div class="badge-row">
-      <span class="badge">Name → Length</span>
-      <span class="badge">Temperature → Fahrenheit</span>
-      <span class="badge">String → Uppercase</span>
+      <div class="note-box">
+        <strong>🔹 Real life examples of Function</strong><br>
+        <span class="badge">Name → Length</span><span class="badge">Temperature → Fahrenheit</span><span class="badge">String → Uppercase</span><br>
+        One value transformed into another.
+      </div>
     </div>
-    <p style="font-size:13px;color:#ccc;margin-top:6px;">One value transformed into another.</p>
   </div>
-
 </div>
 
-<!-- ═══ 3 — CONSUMER<T> ═══ -->
-<div class="sec-label">3 — Consumer&lt;T&gt;</div>
-<div class="wrap">
+<!-- PAGE 4 -->
+<div class="a4-page">
+  <div class="page-title">BUILT-IN FUNCTIONAL INTERFACES | Page 4 — 3. Consumer&lt;T&gt;</div>
+  <div class="section">
+    <div class="section-header">✅ 3 — Consumer&lt;T&gt;</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 Definition</div>
+      <p><code>Consumer&lt;T&gt;</code> is a Functional Interface that accepts one input but returns nothing.</p>
+      <hr/>
+      <div class="three-col">
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Abstract method</div>
+          <div class="code-block">void accept(T t);</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Purpose</div>
+          <div class="step-row"><div class="step-num">1</div><div>Printing</div></div>
+          <div class="step-row"><div class="step-num">2</div><div>Logging</div></div>
+          <div class="step-row"><div class="step-num">3</div><div>Updating</div></div>
+          <div class="step-row"><div class="step-num">4</div><div>Modifying Data</div></div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🧠 Memory trick</div>
+          <p>Consumer = Consumes data, returns nothing.</p>
+        </div>
+      </div>
 
-  <div class="def-card orange">
-    <h3>Definition</h3>
-    <p><ic>Consumer&lt;T&gt;</ic> is a Functional Interface that accepts one input but returns nothing.</p>
-  </div>
+      <div class="subsection-title" style="margin-top:10px;">🔹 Example</div>
+      <div class="code-block">import java.util.function.Consumer;
 
-  <div class="g3">
-    <div class="note-card purple">
-      <h4>Abstract method</h4>
-      <pre>void accept(T t);</pre>
-    </div>
-    <div class="note-card teal">
-      <h4>Purpose</h4>
-      <div class="step-row"><div class="step-circle">1</div> Printing</div>
-      <div class="step-row"><div class="step-circle">2</div> Logging</div>
-      <div class="step-row"><div class="step-circle">3</div> Updating</div>
-      <div class="step-row"><div class="step-circle">4</div> Modifying Data</div>
-    </div>
-    <div class="note-card orange">
-      <h4>Memory trick</h4>
-      <p>Consumer = Consumes data, returns nothing.</p>
-    </div>
-  </div>
+public class DemoConsumer {
+  public static void main(String[] args) {
 
-  <div class="dark-card">
-    <h4>Example</h4>
-    <pre><span class="kw">import</span> java.util.function.Consumer;
-
-<span class="kw">public class</span> <span class="cls">DemoConsumer</span> {
-  <span class="kw">public static void</span> main(String[] args) {
-
-    Consumer&lt;String&gt; c = x -> {
-      System.out.println(<span class="str">"hello "</span> + x);
+    Consumer&lt;String&gt; c = x -&gt; {
+      System.out.println("hello " + x);
     };
 
-    c.accept(<span class="str">"hemanth"</span>);  <span class="cm">// hello hemanth</span>
-    c.accept(<span class="str">"soham"</span>);    <span class="cm">// hello soham</span>
-    c.accept(<span class="str">"salaar"</span>);   <span class="cm">// hello salaar</span>
+    c.accept("hemanth");  // hello hemanth
+    c.accept("soham");    // hello soham
+    c.accept("salaar");   // hello salaar
   }
-}</pre>
-    <div class="output-box">Output:
+}</div>
+      <div class="code-block">Output:
 hello hemanth
 hello soham
 hello salaar</div>
-  </div>
 
-  <div class="expl-card orange">
-    <h4>Explanation</h4>
-    <p><ic>accept()</ic> receives the value and processes it. No value is returned.</p>
-  </div>
+      <div class="subsection-title">🔍 Explanation</div>
+      <p><code>accept()</code> receives the value and processes it. No value is returned.</p>
 
-  <div class="dark-card">
-    <h4>Real life examples of Consumer</h4>
-    <div class="badge-row">
-      <span class="badge">Print Data</span>
-      <span class="badge">Send Email</span>
-      <span class="badge">Write Log</span>
-      <span class="badge">Display Result</span>
+      <div class="note-box">
+        <strong>🔹 Real life examples of Consumer</strong><br>
+        <span class="badge">Print Data</span><span class="badge">Send Email</span><span class="badge">Write Log</span><span class="badge">Display Result</span><br>
+        These operations don't return values — Consumer is used.
+      </div>
     </div>
-    <p style="font-size:13px;color:#ccc;margin-top:6px;">These operations don't return values — Consumer is used.</p>
   </div>
-
 </div>
 
-<!-- ═══ 4 — SUPPLIER<T> ═══ -->
-<div class="sec-label">4 — Supplier&lt;T&gt;</div>
-<div class="wrap">
+<!-- PAGE 5 -->
+<div class="a4-page">
+  <div class="page-title">BUILT-IN FUNCTIONAL INTERFACES | Page 5 — 4. Supplier&lt;T&gt;</div>
+  <div class="section">
+    <div class="section-header">✅ 4 — Supplier&lt;T&gt;</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 Definition</div>
+      <p><code>Supplier&lt;T&gt;</code> is a Functional Interface that takes no input but returns a value.</p>
+      <hr/>
+      <div class="three-col">
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Abstract method</div>
+          <div class="code-block">T get();</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Purpose</div>
+          <p>Used when data needs to be generated or supplied.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🧠 Memory trick</div>
+          <p>Supplier = Supply Data. Input: Nothing. Output: Something.</p>
+        </div>
+      </div>
 
-  <div class="def-card green">
-    <h3>Definition</h3>
-    <p><ic>Supplier&lt;T&gt;</ic> is a Functional Interface that takes no input but returns a value.</p>
-  </div>
+      <div class="subsection-title" style="margin-top:10px;">🔹 Example</div>
+      <div class="code-block">import java.util.function.Supplier;
 
-  <div class="g3">
-    <div class="note-card purple">
-      <h4>Abstract method</h4>
-      <pre>T get();</pre>
-    </div>
-    <div class="note-card teal">
-      <h4>Purpose</h4>
-      <p style="font-size:13px;color:#ccc;margin-top:4px;">Used when data needs to be generated or supplied.</p>
-    </div>
-    <div class="note-card green">
-      <h4>Memory trick</h4>
-      <p>Supplier = Supply Data. Input: Nothing. Output: Something.</p>
-    </div>
-  </div>
+public class DemoSupplier {
+  public static void main(String[] args) {
 
-  <div class="dark-card">
-    <h4>Example</h4>
-    <pre><span class="kw">import</span> java.util.function.Supplier;
-
-<span class="kw">public class</span> <span class="cls">DemoSupplier</span> {
-  <span class="kw">public static void</span> main(String[] args) {
-
-    Supplier&lt;String&gt; s = () -> <span class="str">"hello every one im A DON"</span>;
+    Supplier&lt;String&gt; s = () -&gt; "hello every one im A DON";
 
     System.out.println(s.get());
     System.out.println(s.get());
     System.out.println(s.get());
   }
-}</pre>
-    <div class="output-box">Output:
+}</div>
+      <div class="code-block">Output:
 hello every one im A DON
 hello every one im A DON
 hello every one im A DON</div>
-  </div>
 
-  <div class="expl-card green">
-    <h4>Explanation</h4>
-    <p>Supplier accepts no input. Returns a <ic>String</ic> every time <ic>get()</ic> is called.</p>
-  </div>
+      <div class="subsection-title">🔍 Explanation</div>
+      <p>Supplier accepts no input. Returns a <code>String</code> every time <code>get()</code> is called.</p>
 
-  <div class="dark-card">
-    <h4>Real life examples of Supplier</h4>
-    <div class="badge-row">
-      <span class="badge">Generate OTP</span>
-      <span class="badge">Random Number</span>
-      <span class="badge">Current Date</span>
-      <span class="badge">Current Time</span>
+      <div class="note-box">
+        <strong>🔹 Real life examples of Supplier</strong><br>
+        <span class="badge">Generate OTP</span><span class="badge">Random Number</span><span class="badge">Current Date</span><span class="badge">Current Time</span><br>
+        No input required — Supplier generates the value.
+      </div>
     </div>
-    <p style="font-size:13px;color:#ccc;margin-top:6px;">No input required — Supplier generates the value.</p>
   </div>
-
 </div>
 
-<!-- ═══ 5 — BIFUNCTION<T,U,R> ═══ -->
-<div class="sec-label">5 — BiFunction&lt;T,U,R&gt;</div>
-<div class="wrap">
-
-  <div class="def-card yellow">
-    <h3>Definition</h3>
-    <p><ic>BiFunction&lt;T,U,R&gt;</ic> is a Functional Interface that accepts two inputs and returns one output.</p>
-  </div>
-
-  <div class="g3">
-    <div class="note-card purple">
-      <h4>Abstract method</h4>
-      <pre>R apply(T t, U u);</pre>
-    </div>
-    <div class="note-card teal">
-      <h4>Purpose</h4>
-      <p style="font-size:13px;color:#ccc;margin-top:4px;">Used when two values need to be combined into one result.</p>
-    </div>
-    <div class="note-card orange">
-      <h4>Understanding generics</h4>
-      <pre>BiFunction&lt;Integer,Integer,Integer&gt;
+<!-- PAGE 6 -->
+<div class="a4-page">
+  <div class="page-title">BUILT-IN FUNCTIONAL INTERFACES | Page 6 — 5. BiFunction&lt;T,U,R&gt;</div>
+  <div class="section">
+    <div class="section-header">✅ 5 — BiFunction&lt;T,U,R&gt;</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 Definition</div>
+      <p><code>BiFunction&lt;T,U,R&gt;</code> is a Functional Interface that accepts two inputs and returns one output.</p>
+      <hr/>
+      <div class="three-col">
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Abstract method</div>
+          <div class="code-block">R apply(T t, U u);</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Purpose</div>
+          <p>Used when two values need to be combined into one result.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Understanding generics</div>
+          <div class="code-block">BiFunction&lt;Integer,Integer,Integer&gt;
 // Input1 → Integer
 // Input2 → Integer
-// Output → Integer</pre>
-    </div>
-  </div>
+// Output → Integer</div>
+        </div>
+      </div>
 
-  <div class="dark-card">
-    <h4>Example</h4>
-    <pre><span class="kw">import</span> java.util.function.BiFunction;
+      <div class="subsection-title" style="margin-top:10px;">🔹 Example</div>
+      <div class="code-block">import java.util.function.BiFunction;
 
-<span class="kw">public class</span> <span class="cls">DemoBIfun</span> {
-  <span class="kw">public static void</span> main(String[] args) {
+public class DemoBIfun {
+  public static void main(String[] args) {
 
-    BiFunction&lt;Integer,Integer,Integer&gt; bi = (x,y) -> x+y;
+    BiFunction&lt;Integer,Integer,Integer&gt; bi = (x,y) -&gt; x+y;
 
-    System.out.println(bi.apply(<span class="num">10</span>, <span class="num">20</span>));  <span class="cm">// 30</span>
-    System.out.println(bi.apply(<span class="num">20</span>, <span class="num">30</span>));  <span class="cm">// 50</span>
-    System.out.println(bi.apply(<span class="num">40</span>, <span class="num">20</span>));  <span class="cm">// 60</span>
+    System.out.println(bi.apply(10, 20));  // 30
+    System.out.println(bi.apply(20, 30));  // 50
+    System.out.println(bi.apply(40, 20));  // 60
   }
-}</pre>
-    <div class="output-box">Output:
+}</div>
+      <div class="code-block">Output:
 30
 50
 60</div>
+
+      <div class="subsection-title">🔍 Explanation</div>
+      <p><code>(x,y) -&gt; x+y</code> adds two numbers. <code>bi.apply(10,20)</code> → 30. <code>bi.apply(20,30)</code> → 50. <code>bi.apply(40,20)</code> → 60.</p>
+    </div>
   </div>
 
-  <div class="expl-card yellow">
-    <h4>Explanation</h4>
-    <p><ic>(x,y) -&gt; x+y</ic> adds two numbers. <ic>bi.apply(10,20)</ic> → 30. <ic>bi.apply(20,30)</ic> → 50. <ic>bi.apply(40,20)</ic> → 60.</p>
-  </div>
-
-</div>
-
-<!-- ═══ QUICK REVISION TABLE ═══ -->
-<div class="sec-label">Quick Revision Table</div>
-<div class="wrap">
-  <div class="dark-card">
-    <table class="cmp-table">
-      <thead>
+  <!-- Quick Revision -->
+  <div class="section">
+    <div class="section-header">📋 Quick Revision Table</div>
+    <div class="section-body">
+      <table>
         <tr><th>Interface</th><th>Input</th><th>Output</th><th>Method</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Predicate&lt;T&gt;</td><td>1</td><td>boolean</td><td><ic>test()</ic></td></tr>
-        <tr><td>Function&lt;T,R&gt;</td><td>1</td><td>1</td><td><ic>apply()</ic></td></tr>
-        <tr><td>Consumer&lt;T&gt;</td><td>1</td><td>Nothing</td><td><ic>accept()</ic></td></tr>
-        <tr><td>Supplier&lt;T&gt;</td><td>Nothing</td><td>1</td><td><ic>get()</ic></td></tr>
-        <tr><td>BiFunction&lt;T,U,R&gt;</td><td>2</td><td>1</td><td><ic>apply()</ic></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="key-card">
-    <h4>Key rule to always remember</h4>
-    <p>All built-in Functional Interfaces are in <ic>java.util.function</ic> . Use <ic>Predicate</ic> to test a condition, <ic>Function</ic> to transform data, <ic>Consumer</ic> to consume without returning, <ic>Supplier</ic> to supply without input, and <ic>BiFunction</ic> when you have two inputs and need one output.</p>
+        <tr><td>Predicate&lt;T&gt;</td><td>1</td><td>boolean</td><td><code>test()</code></td></tr>
+        <tr><td>Function&lt;T,R&gt;</td><td>1</td><td>1</td><td><code>apply()</code></td></tr>
+        <tr><td>Consumer&lt;T&gt;</td><td>1</td><td>Nothing</td><td><code>accept()</code></td></tr>
+        <tr><td>Supplier&lt;T&gt;</td><td>Nothing</td><td>1</td><td><code>get()</code></td></tr>
+        <tr><td>BiFunction&lt;T,U,R&gt;</td><td>2</td><td>1</td><td><code>apply()</code></td></tr>
+      </table>
+      <div class="note-box" style="border:2px solid #111;">
+        <span class="tag">★ Most Important</span><strong>Key rule to always remember</strong><br>
+        All built-in Functional Interfaces are in <code>java.util.function</code>. Use <code>Predicate</code> to test a condition, <code>Function</code> to transform data, <code>Consumer</code> to consume without returning, <code>Supplier</code> to supply without input, and <code>BiFunction</code> when you have two inputs and need one output.
+      </div>
+    </div>
   </div>
 </div>
 

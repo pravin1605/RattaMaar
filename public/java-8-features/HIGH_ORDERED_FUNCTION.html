@@ -5,431 +5,314 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Higher Order Functions & Functional Programming</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:#111; color:#e0e0e0; font-family:'Segoe UI',Arial,sans-serif; font-size:13.5px; line-height:1.65; }
-
-.header { background:#111; padding:28px 32px 8px; }
-.header h1 { font-size:28px; font-weight:800; color:#fff; margin-bottom:4px; }
-.header p  { font-size:13px; color:#aaa; }
-
-.sec-label {
-  font-size:11px; font-weight:700; letter-spacing:1.5px;
-  text-transform:uppercase; color:#888;
-  border-bottom:1px solid #333;
-  padding:18px 32px 6px;
-}
-
-.wrap { padding:10px 32px; }
-
-.g2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0; }
-.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:8px 0; }
-
-.def-card {
-  background:#1a1a2e; border-radius:10px;
-  border-left:4px solid #7c3aed;
-  padding:16px 18px; margin:8px 0;
-}
-.def-card.teal { border-left-color:#14b8a6; }
-.def-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:6px; }
-.def-card p  { font-size:13px; color:#ccc; margin-bottom:4px; }
-
-.dark-card {
-  background:#1e1e1e; border-radius:10px;
-  padding:18px 20px; margin:8px 0;
-}
-.dark-card h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:8px; }
-.dark-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; }
-.dark-card p  { font-size:13px; color:#ccc; margin-bottom:5px; }
-
-pre {
-  background:#2a2a2a; color:#d4d4d4;
-  border-radius:6px; padding:12px 14px;
-  font-family:'Courier New',Consolas,monospace;
-  font-size:11.5px; line-height:1.6;
-  margin:8px 0; white-space:pre-wrap;
-}
-.kw { color:#569cd6; }
-.str{ color:#ce9178; }
-.cm { color:#6a9955; }
-.cls{ color:#4ec9b0; }
-.num{ color:#b5cea8; }
-
-ic { background:#333; padding:2px 6px; border-radius:4px;
-     font-family:'Courier New',monospace; font-size:11px; color:#d4d4d4; }
-
-.step-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:7px; font-size:13px; color:#ccc; }
-.step-circle {
-  width:22px; height:22px; border-radius:50%;
-  background:#333; border:1.5px solid #666;
-  color:#ccc; font-size:10.5px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
-}
-
-.why-card {
-  background:#1e1e1e; border-radius:8px; padding:12px 14px;
-  display:flex; align-items:center; gap:10px;
-}
-.why-card span { font-size:13px; color:#e0e0e0; font-weight:500; }
-
-.side-card {
-  background:#1e1e1e; border-radius:10px; padding:16px 18px;
-}
-.side-card.purple { border-left:3px solid #7c3aed; }
-.side-card.teal   { border-left:3px solid #14b8a6; }
-.side-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; }
-
-.note-card {
-  background:#1e1e1e; border-radius:8px; padding:14px 16px;
-  border-top:3px solid #444;
-}
-.note-card.purple { border-top-color:#7c3aed; }
-.note-card.teal   { border-top-color:#14b8a6; }
-.note-card.orange { border-top-color:#f97316; }
-.note-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:6px; }
-.note-card p  { font-size:12.5px; color:#aaa; }
-
-.expl-card {
-  background:#1a1a2e; border-left:4px solid #7c3aed;
-  border-radius:8px; padding:14px 16px; margin:8px 0;
-}
-.expl-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin-bottom:6px; }
-.expl-card p  { font-size:13px; color:#ccc; }
-
-.output-box {
-  background:#2a2a2a; border-radius:6px; padding:12px 14px;
-  font-family:'Courier New',Consolas,monospace;
-  font-size:11.5px; color:#d4d4d4; margin:8px 0;
-}
-
-/* explanation numbered */
-.exp-item { display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; font-size:13px; color:#ccc; }
-
-/* table */
-.cmp-table { width:100%; border-collapse:collapse; margin:8px 0; font-size:13px; }
-.cmp-table th { background:#2a2a2a; color:#aaa; font-size:11.5px; font-weight:700; padding:9px 14px; text-align:left; }
-.cmp-table td { padding:9px 14px; border-bottom:1px solid #2a2a2a; color:#ccc; }
-.cmp-table tr:last-child td { border-bottom:none; }
-
-/* flow */
-.flow-wrap { display:flex; flex-direction:column; align-items:center; gap:0; margin:14px 0; }
-.flow-box-lav  { border:2px solid #b39ddb; border-radius:8px; padding:10px 60px; font-size:13px; font-weight:700; background:#ede7f6; color:#4a148c; text-align:center; min-width:240px; }
-.flow-box-teal { border:2px solid #80cbc4; border-radius:8px; padding:10px 60px; font-size:13px; font-weight:700; background:#e0f2f1; color:#004d40; text-align:center; min-width:240px; }
-.flow-box-org  { border:2px solid #ffcc80; border-radius:8px; padding:10px 60px; font-size:13px; font-weight:700; background:#fff3e0; color:#bf360c; text-align:center; min-width:240px; }
-.flow-box-lgrn { border:2px solid #a5d6a7; border-radius:8px; padding:10px 60px; font-size:13px; font-weight:700; background:#f1f8e9; color:#1b5e20; text-align:center; min-width:240px; }
-.flow-arrow    { font-size:20px; color:#aaa; line-height:1.4; }
-
-/* adv */
-.adv5 { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:8px 0; }
-.adv-card { background:#1e1e1e; border-radius:8px; padding:14px; }
-.adv-num {
-  width:22px; height:22px; border-radius:50%;
-  background:#333; border:1.5px solid #666;
-  color:#ccc; font-size:10.5px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; margin-bottom:8px;
-}
-.adv-card p { font-size:12.5px; color:#ccc; font-weight:500; }
-
-.key-card {
-  background:#1a1a2e; border-left:4px solid #7c3aed;
-  border-radius:10px; padding:16px 18px; margin:14px 0;
-}
-.key-card h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:5px; }
-.key-card p  { font-size:13px; color:#ccc; }
-
-.info-note {
-  background:#2a2a2a; border-radius:6px; padding:10px 14px;
-  font-size:12.5px; color:#aaa; margin-top:6px;
-}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#e0e0e0;font-family:'Georgia',serif}
+.a4-page{width:210mm;min-height:297mm;background:#fff;color:#111;margin:12px auto;padding:14mm 16mm;font-size:12.5px;line-height:1.65;page-break-after:always;border:1px solid #aaa;box-shadow:0 2px 8px rgba(0,0,0,.13)}
+.main-title{text-align:center;font-size:20px;font-weight:700;border:2.5px solid #111;padding:9px 18px;margin-bottom:6px;letter-spacing:1px}
+.sub-title{text-align:center;font-size:12.5px;color:#555;margin-bottom:14px}
+.page-title{text-align:center;font-size:13px;font-weight:700;letter-spacing:.5px;color:#555;margin-bottom:10px;border-bottom:1px solid #ccc;padding-bottom:5px}
+.section{border:1.5px solid #222;margin-bottom:11px}
+.section-header{background:#111;color:#fff;font-size:12.5px;font-weight:700;padding:5px 11px;letter-spacing:.4px}
+.section-body{padding:9px 13px 11px;background:#fff}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.five-col{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.inline-box{border:1px solid #bbb;padding:7px 9px;background:#fafafa}
+.inline-box-title{font-weight:700;font-size:11.5px;margin-bottom:3px;border-bottom:1px solid #ddd;padding-bottom:3px}
+.subsection-title{font-weight:700;font-size:12.5px;margin:7px 0 3px}
+.subsection-title:first-child{margin-top:0}
+.code-block{background:#f5f5f5;border:1px solid #ccc;border-left:3px solid #333;font-family:'Courier New',monospace;font-size:11.5px;padding:7px 10px;margin:6px 0;white-space:pre-wrap;word-break:break-word;line-height:1.6}
+.note-box{border:1.5px dashed #555;padding:6px 10px;margin:7px 0;font-size:12px;background:#fafafa}
+.step-row{display:flex;align-items:flex-start;gap:9px;margin:5px 0}
+.step-num{min-width:22px;height:22px;background:#111;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.flow-box{border:1px solid #444;padding:3px 10px;text-align:center;font-size:12px;font-weight:600;margin:2px auto;background:#fff;width:60%}
+.flow-arrow{text-align:center;font-size:12px;color:#555;margin:1px 0}
+.tag{display:inline-block;background:#111;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;margin-right:4px;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0}
+th{background:#111;color:#fff;padding:5px 9px;text-align:left;font-size:11.5px}
+td{border:1px solid #bbb;padding:5px 9px}
+p{margin:3px 0;font-size:12.5px}
+hr{border:none;border-top:1px solid #ccc;margin:7px 0}
+code{font-family:'Courier New',monospace;font-size:11.5px;background:#eee;padding:1px 4px;border-radius:2px}
+.code-block code{background:none;padding:0}
+@media print{body{background:#fff}.a4-page{margin:0;box-shadow:none;border:none}}
 </style>
 </head>
 <body>
 
-<!-- ═══ HEADER ═══ -->
-<div class="header">
-  <h1>Higher Order Functions &amp; Functional Programming</h1>
-  <p>Complete notes — definition, characteristics, programs, examples, advantages</p>
-</div>
+<!-- PAGE 1 -->
+<div class="a4-page">
+  <div class="main-title">HIGHER ORDER FUNCTIONS &amp; FUNCTIONAL PROGRAMMING</div>
+  <div class="sub-title">Complete notes — definition, characteristics, programs, examples, advantages</div>
 
-<!-- ═══ DEFINITION ═══ -->
-<div class="sec-label">Higher Order Function — Definition</div>
-<div class="wrap">
-  <div class="def-card">
-    <h3>What is a Higher Order Function?</h3>
-    <p>A Higher Order Function is a function (method) that:</p>
-    <div style="margin:8px 0;">
-      <div class="step-row"><div class="step-circle">1</div> Accepts another function (Lambda Expression) as a parameter</div>
-      <div class="step-row"><div class="step-circle">2</div> Returns another function (Lambda Expression)</div>
+  <div class="section">
+    <div class="section-header">📘 Higher Order Function — Definition</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 What is a Higher Order Function?</div>
+      <p>A Higher Order Function is a function (method) that:</p>
+      <div class="step-row"><div class="step-num">1</div><div>Accepts another function (Lambda Expression) as a parameter</div></div>
+      <div class="step-row"><div class="step-num">2</div><div>Returns another function (Lambda Expression)</div></div>
+      <div class="note-box">In Java, since functions cannot exist independently, Functional Interfaces and Lambda Expressions are used to achieve Higher Order Functions.</div>
     </div>
-    <div style="background:#2a2a2a;border-radius:6px;padding:10px 14px;font-size:13px;color:#ccc;margin-top:6px;">
-      In Java, since functions cannot exist independently, Functional Interfaces and Lambda Expressions are used to achieve Higher Order Functions.
+  </div>
+
+  <div class="section">
+    <div class="section-header">📘 Why Higher Order Functions?</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Normally — passing data</div>
+          <p>Methods normally accept data values as parameters.</p>
+          <div class="code-block">add(10, 20);
+// 10 and 20 are data values</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 With Higher Order Functions — passing behavior</div>
+          <p>Sometimes we want to pass behavior (logic) instead of data. Higher Order Functions make this possible.</p>
+          <div class="code-block">(a,b) -&gt; a+b
+(a,b) -&gt; a*b
+// These are behaviors, not data</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">📘 Characteristics of Higher Order Functions</div>
+    <div class="section-body">
+      <div class="three-col" style="margin-bottom:0">
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 1 — Accept function as parameter</div>
+          <div class="code-block">disp((a,b) -&gt; a+b);</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 2 — Return a function</div>
+          <div class="code-block">return (a,b) -&gt; a+b;</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 3 — Work with Lambda Expressions</div>
+          <p>Lambda Expressions make Higher Order Functions possible in Java.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ WHY ═══ -->
-<div class="sec-label">Why Higher Order Functions?</div>
-<div class="wrap">
-  <div class="g2">
-    <div class="dark-card">
-      <h4>Normally — passing data</h4>
-      <p>Methods normally accept data values as parameters.</p>
-      <pre>add(10, 20);
-<span class="cm">// 10 and 20 are data values</span></pre>
-    </div>
-    <div class="dark-card" style="border-left:3px solid #14b8a6;">
-      <h4>With Higher Order Functions — passing behavior</h4>
-      <p>Sometimes we want to pass behavior (logic) instead of data. Higher Order Functions make this possible.</p>
-      <pre>(a,b) -> a+b
-(a,b) -> a*b
-<span class="cm">// These are behaviors, not data</span></pre>
-    </div>
-  </div>
-</div>
+<!-- PAGE 2 -->
+<div class="a4-page">
+  <div class="page-title">HIGHER ORDER FUNCTIONS | Page 2 — Accepting a Lambda Expression</div>
+  <div class="section">
+    <div class="section-header">✅ Higher Order Function — Accepting a Lambda Expression</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 Functional Interface used</div>
+      <div class="code-block">public interface Calculator {
+  int calculate(int a, int b);
+}</div>
 
-<!-- ═══ CHARACTERISTICS ═══ -->
-<div class="sec-label">Characteristics of Higher Order Functions</div>
-<div class="wrap">
-  <div class="g3">
-    <div class="note-card purple">
-      <h4>1 — Accept function as parameter</h4>
-      <pre>disp((a,b) -> a+b);</pre>
-    </div>
-    <div class="note-card teal">
-      <h4>2 — Return a function</h4>
-      <pre>return (a,b) -> a+b;</pre>
-    </div>
-    <div class="note-card orange">
-      <h4>3 — Work with Lambda Expressions</h4>
-      <p>Lambda Expressions make Higher Order Functions possible in Java.</p>
-    </div>
-  </div>
-</div>
+      <div class="subsection-title">🔹 Program — method accepting Lambda as parameter</div>
+      <div class="code-block">public class Test2 {
 
-<!-- ═══ ACCEPTING LAMBDA ═══ -->
-<div class="sec-label">Higher Order Function — Accepting a Lambda Expression</div>
-<div class="wrap">
-
-  <div class="dark-card">
-    <h4>Functional Interface used</h4>
-    <pre><span class="kw">public interface</span> <span class="cls">Calculator</span> {
-  <span class="kw">int</span> calculate(<span class="kw">int</span> a, <span class="kw">int</span> b);
-}</pre>
-  </div>
-
-  <div class="dark-card" style="margin-top:6px;">
-    <h4>Program — method accepting Lambda as parameter</h4>
-    <pre><span class="kw">public class</span> <span class="cls">Test2</span> {
-
-  <span class="cm">// Method accepting function / lambda expression</span>
-  <span class="kw">public static void</span> disp(<span class="cls">Calculator</span> c) {
-    System.out.println(c.calculate(<span class="num">10</span>, <span class="num">20</span>));
+  // Method accepting function / lambda expression
+  public static void disp(Calculator c) {
+    System.out.println(c.calculate(10, 20));
   }
 
-  <span class="kw">public static void</span> main(String[] args) {
-    disp((a,b) -> a+b);  <span class="cm">// 30</span>
-    disp((a,b) -> a-b);  <span class="cm">// -10</span>
-    disp((a,b) -> a/b);  <span class="cm">// 0</span>
-    disp((a,b) -> a*b);  <span class="cm">// 200</span>
+  public static void main(String[] args) {
+    disp((a,b) -&gt; a+b);  // 30
+    disp((a,b) -&gt; a-b);  // -10
+    disp((a,b) -&gt; a/b);  // 0
+    disp((a,b) -&gt; a*b);  // 200
   }
-}</pre>
-  </div>
+}</div>
 
-  <div class="dark-card" style="margin-top:6px;">
-    <h4>Output</h4>
-    <div class="output-box">30
+      <div class="subsection-title">🔹 Output</div>
+      <div class="code-block">30
 -10
 0
 200</div>
-  </div>
 
-  <div class="dark-card" style="margin-top:6px;">
-    <h4>Explanation — call by call</h4>
-    <table class="cmp-table">
-      <thead><tr><th>Call</th><th>Lambda passed</th><th>Calculation</th><th>Output</th></tr></thead>
-      <tbody>
-        <tr><td>Call 1</td><td><ic>(a,b) -&gt; a+b</ic></td><td>10 + 20</td><td>30</td></tr>
-        <tr><td>Call 2</td><td><ic>(a,b) -&gt; a-b</ic></td><td>10 - 20</td><td>-10</td></tr>
-        <tr><td>Call 3</td><td><ic>(a,b) -&gt; a/b</ic></td><td>10 / 20 (integer division)</td><td>0</td></tr>
-        <tr><td>Call 4</td><td><ic>(a,b) -&gt; a*b</ic></td><td>10 * 20</td><td>200</td></tr>
-      </tbody>
-    </table>
-    <div class="info-note">The method <ic>disp()</ic> accepts Lambda Expressions — therefore it is a Higher Order Function. Since Lambda Expressions are implementations of Functional Interfaces, they can be passed directly.</div>
+      <div class="subsection-title">🔍 Explanation — call by call</div>
+      <table>
+        <tr><th>Call</th><th>Lambda passed</th><th>Calculation</th><th>Output</th></tr>
+        <tr><td>Call 1</td><td><code>(a,b) -&gt; a+b</code></td><td>10 + 20</td><td>30</td></tr>
+        <tr><td>Call 2</td><td><code>(a,b) -&gt; a-b</code></td><td>10 - 20</td><td>-10</td></tr>
+        <tr><td>Call 3</td><td><code>(a,b) -&gt; a/b</code></td><td>10 / 20 (integer division)</td><td>0</td></tr>
+        <tr><td>Call 4</td><td><code>(a,b) -&gt; a*b</code></td><td>10 * 20</td><td>200</td></tr>
+      </table>
+      <div class="note-box">The method <code>disp()</code> accepts Lambda Expressions — therefore it is a Higher Order Function. Since Lambda Expressions are implementations of Functional Interfaces, they can be passed directly.</div>
+    </div>
   </div>
-
 </div>
 
-<!-- ═══ RETURNING LAMBDA ═══ -->
-<div class="sec-label">Higher Order Function — Returning a Lambda Expression</div>
-<div class="wrap">
+<!-- PAGE 3 -->
+<div class="a4-page">
+  <div class="page-title">HIGHER ORDER FUNCTIONS | Page 3 — Returning a Lambda Expression</div>
+  <div class="section">
+    <div class="section-header">✅ Higher Order Function — Returning a Lambda Expression</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 Definition</div>
+      <p>If a method returns a Lambda Expression, then that method is called a Higher Order Function.</p>
 
-  <div class="def-card">
-    <h3>Definition</h3>
-    <p>If a method returns a Lambda Expression, then that method is called a Higher Order Function.</p>
-  </div>
+      <div class="subsection-title">🔹 Program — method returning Lambda</div>
+      <div class="code-block">public class MethodReturningLambda {
 
-  <div class="dark-card" style="margin-top:6px;">
-    <h4>Program — method returning Lambda</h4>
-    <pre><span class="kw">public class</span> <span class="cls">MethodReturningLambda</span> {
-
-  <span class="cm">// Method returning a Lambda Expression</span>
-  <span class="kw">public static</span> <span class="cls">Calculator</span> returnCalci() {
-    <span class="kw">return</span> (a,b) -> a+b;
+  // Method returning a Lambda Expression
+  public static Calculator returnCalci() {
+    return (a,b) -&gt; a+b;
   }
 
-  <span class="kw">public static void</span> main(String[] args) {
-    <span class="cls">Calculator</span> c = returnCalci();
-    System.out.println(c.calculate(<span class="num">10</span>, <span class="num">20</span>));
+  public static void main(String[] args) {
+    Calculator c = returnCalci();
+    System.out.println(c.calculate(10, 20));
   }
-}</pre>
+}</div>
+
+      <div class="subsection-title">🔹 Output</div>
+      <div class="code-block">30</div>
+
+      <div class="subsection-title">🔍 Explanation</div>
+      <div class="step-row"><div class="step-num">1</div><div><code>returnCalci()</code> returns the Lambda <code>(a,b) -&gt; a+b</code></div></div>
+      <div class="step-row"><div class="step-num">2</div><div><code>Calculator c = returnCalci();</code> stores the returned Lambda</div></div>
+      <div class="step-row"><div class="step-num">3</div><div><code>c.calculate(10, 20)</code> performs 10 + 20 = 30</div></div>
+    </div>
   </div>
 
-  <div class="dark-card" style="margin-top:6px;">
-    <h4>Output</h4>
-    <div class="output-box">30</div>
+  <div class="section">
+    <div class="section-header">📋 Summary — Higher Order Functions</div>
+    <div class="section-body">
+      <div class="two-col">
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Accepts a function</div>
+          <div class="code-block">disp((a,b) -&gt; a+b);</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 Returns a function</div>
+          <div class="code-block">return (a,b) -&gt; a+b;</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="expl-card" style="margin-top:6px;">
-    <h4>Explanation</h4>
-    <div class="exp-item"><div class="step-circle">1</div><span><ic>returnCalci()</ic> returns the Lambda <ic>(a,b) -&gt; a+b</ic></span></div>
-    <div class="exp-item"><div class="step-circle">2</div><span><ic>Calculator c = returnCalci();</ic> stores the returned Lambda</span></div>
-    <div class="exp-item"><div class="step-circle">3</div><span><ic>c.calculate(10, 20)</ic> performs 10 + 20 = 30</span></div>
-  </div>
-
-</div>
-
-<!-- ═══ SUMMARY ═══ -->
-<div class="sec-label">Summary — Higher Order Functions</div>
-<div class="wrap">
-  <div class="g2">
-    <div class="side-card purple">
-      <h4>Accepts a function</h4>
-      <pre>disp((a,b) -> a+b);</pre>
-    </div>
-    <div class="side-card teal">
-      <h4>Returns a function</h4>
-      <pre>return (a,b) -> a+b;</pre>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ REAL LIFE EXAMPLE ═══ -->
-<div class="sec-label">Real Life Example</div>
-<div class="wrap">
-  <div class="dark-card">
-    <h4>Online shopping — discount calculator</h4>
-    <p>An online shopping application needs to calculate different types of discounts. Instead of creating separate classes for every discount type, Lambda Expressions can be passed dynamically.</p>
-    <table class="cmp-table" style="margin-top:10px;">
-      <thead><tr><th>Lambda</th><th>Discount type</th></tr></thead>
-      <tbody>
-        <tr><td><ic>(a,b) -&gt; a+b</ic></td><td>Festival Discount</td></tr>
-        <tr><td><ic>(a,b) -&gt; a-b</ic></td><td>Coupon Discount</td></tr>
-        <tr><td><ic>(a,b) -&gt; a*b</ic></td><td>Special Offer</td></tr>
-      </tbody>
-    </table>
-    <div class="info-note">This is the practical use of Higher Order Functions — behavior passed dynamically, no separate classes required.</div>
-  </div>
-</div>
-
-<!-- ═══ FUNCTIONAL PROGRAMMING DEFINITION ═══ -->
-<div class="sec-label">Functional Programming — Definition</div>
-<div class="wrap">
-  <div class="def-card">
-    <h3>What is Functional Programming?</h3>
-    <p>Functional Programming is a programming paradigm in which functions are treated as <strong>First-Class Citizens</strong>. Functions can be passed as arguments, returned from methods, and stored in variables.</p>
-  </div>
-  <div class="def-card teal">
-    <h3>Simple definition</h3>
-    <p>Functional Programming is a style of programming where <strong>functions are treated like data</strong>.</p>
-  </div>
-</div>
-
-<!-- ═══ FIRST CLASS CITIZEN ═══ -->
-<div class="sec-label">What is a First-Class Citizen?</div>
-<div class="wrap">
-  <p style="color:#ccc;margin-bottom:10px;">An entity is called a First-Class Citizen if it can do all three of the following:</p>
-  <div class="g3">
-    <div class="note-card purple">
-      <h4>1 — Stored in a variable</h4>
-      <pre>Calculator add = (a,b) -> a+b;</pre>
-    </div>
-    <div class="note-card teal">
-      <h4>2 — Passed as an argument</h4>
-      <pre>disp((a,b) -> a+b);</pre>
-    </div>
-    <div class="note-card orange">
-      <h4>3 — Returned from a method</h4>
-      <pre>return (a,b) -> a+b;</pre>
-    </div>
-  </div>
-  <div class="info-note" style="margin-top:6px;">Since Lambda Expressions can do all three operations, functions behave like First-Class Citizens in Java.</div>
-</div>
-
-<!-- ═══ FEATURES ═══ -->
-<div class="sec-label">Functional Programming Features</div>
-<div class="wrap">
-  <div class="g3">
-    <div class="note-card purple">
-      <h4>1 — Functions as arguments</h4>
-      <pre>disp((a,b) -> a+b);</pre>
-    </div>
-    <div class="note-card teal">
-      <h4>2 — Functions as return values</h4>
-      <pre>return (a,b) -> a+b;</pre>
-    </div>
-    <div class="note-card orange">
-      <h4>3 — Functions stored in variables</h4>
-      <pre>Calculator add = (a,b) -> a+b;</pre>
-    </div>
-  </div>
-  <div class="g3" style="margin-top:0;">
-    <div class="note-card" style="border-top-color:#888;">
-      <h4>4 — Less code</h4>
-      <p>Lambda Expressions significantly reduce code compared to traditional approaches.</p>
-    </div>
-    <div class="note-card" style="border-top-color:#888;">
-      <h4>5 — Better readability</h4>
-      <p>Programs become easier to understand and follow.</p>
-    </div>
-    <div class="note-card" style="border-top-color:#888;">
-      <h4>6 — Stream API support</h4>
-      <p>Functional Programming is heavily used in the Stream API.</p>
-      <pre style="font-size:10.5px;margin-top:6px;">list.stream()
-  .filter(x -> x%2==0)
-  .forEach(System.out::println);</pre>
+  <div class="section">
+    <div class="section-header">🔹 Real Life Example — Online shopping: discount calculator</div>
+    <div class="section-body">
+      <p>An online shopping application needs to calculate different types of discounts. Instead of creating separate classes for every discount type, Lambda Expressions can be passed dynamically.</p>
+      <table style="margin-top:6px;">
+        <tr><th>Lambda</th><th>Discount type</th></tr>
+        <tr><td><code>(a,b) -&gt; a+b</code></td><td>Festival Discount</td></tr>
+        <tr><td><code>(a,b) -&gt; a-b</code></td><td>Coupon Discount</td></tr>
+        <tr><td><code>(a,b) -&gt; a*b</code></td><td>Special Offer</td></tr>
+      </table>
+      <div class="note-box">This is the practical use of Higher Order Functions — behavior passed dynamically, no separate classes required.</div>
     </div>
   </div>
 </div>
 
-<!-- ═══ FLOW ═══ -->
-<div class="sec-label">Functional Programming Flow</div>
-<div class="wrap">
-  <div class="dark-card">
-    <div class="flow-wrap">
-      <div class="flow-box-lav">Lambda Expression</div>
+<!-- PAGE 4 -->
+<div class="a4-page">
+  <div class="page-title">FUNCTIONAL PROGRAMMING | Page 4 — Definition, First-Class Citizen &amp; Features</div>
+
+  <div class="section">
+    <div class="section-header">📘 Functional Programming — Definition</div>
+    <div class="section-body">
+      <div class="subsection-title">🔹 What is Functional Programming?</div>
+      <p>Functional Programming is a programming paradigm in which functions are treated as <strong>First-Class Citizens</strong>. Functions can be passed as arguments, returned from methods, and stored in variables.</p>
+      <div class="subsection-title">🔹 Simple definition</div>
+      <p>Functional Programming is a style of programming where <strong>functions are treated like data</strong>.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">📘 What is a First-Class Citizen?</div>
+    <div class="section-body">
+      <p>An entity is called a First-Class Citizen if it can do all three of the following:</p>
+      <div class="three-col" style="margin-top:6px;margin-bottom:0">
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 1 — Stored in a variable</div>
+          <div class="code-block">Calculator add = (a,b) -&gt; a+b;</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 2 — Passed as an argument</div>
+          <div class="code-block">disp((a,b) -&gt; a+b);</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 3 — Returned from a method</div>
+          <div class="code-block">return (a,b) -&gt; a+b;</div>
+        </div>
+      </div>
+      <div class="note-box">Since Lambda Expressions can do all three operations, functions behave like First-Class Citizens in Java.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">📘 Functional Programming Features</div>
+    <div class="section-body">
+      <div class="three-col">
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 1 — Functions as arguments</div>
+          <div class="code-block">disp((a,b) -&gt; a+b);</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 2 — Functions as return values</div>
+          <div class="code-block">return (a,b) -&gt; a+b;</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 3 — Functions stored in variables</div>
+          <div class="code-block">Calculator add = (a,b) -&gt; a+b;</div>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 4 — Less code</div>
+          <p>Lambda Expressions significantly reduce code compared to traditional approaches.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 5 — Better readability</div>
+          <p>Programs become easier to understand and follow.</p>
+        </div>
+        <div class="inline-box">
+          <div class="inline-box-title">🔹 6 — Stream API support</div>
+          <p>Functional Programming is heavily used in the Stream API.</p>
+          <div class="code-block" style="font-size:10.5px;">list.stream()
+  .filter(x -&gt; x%2==0)
+  .forEach(System.out::println);</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 5 -->
+<div class="a4-page">
+  <div class="page-title">FUNCTIONAL PROGRAMMING | Page 5 — Flow, Advantages &amp; Key Rule</div>
+
+  <div class="section">
+    <div class="section-header">🚀 Functional Programming Flow</div>
+    <div class="section-body">
+      <div class="flow-box">Lambda Expression</div>
       <div class="flow-arrow">↓</div>
-      <div class="flow-box-teal">Functional Interface</div>
+      <div class="flow-box">Functional Interface</div>
       <div class="flow-arrow">↓</div>
-      <div class="flow-box-org">Higher Order Function</div>
+      <div class="flow-box">Higher Order Function</div>
       <div class="flow-arrow">↓</div>
-      <div class="flow-box-lgrn">Functional Programming</div>
+      <div class="flow-box">Functional Programming</div>
     </div>
   </div>
-</div>
 
-<!-- ═══ ADVANTAGES ═══ -->
-<div class="sec-label">Advantages of Functional Programming</div>
-<div class="wrap">
-  <div class="adv5">
-    <div class="adv-card"><div class="adv-num">1</div><p>Less boilerplate code compared to traditional programming</p></div>
-    <div class="adv-card"><div class="adv-num">2</div><p>Better readability — easy to understand</p></div>
-    <div class="adv-card"><div class="adv-num">3</div><p>Easy maintenance due to smaller codebase</p></div>
-    <div class="adv-card"><div class="adv-num">4</div><p>Supports parallel processing — works efficiently with Streams</p></div>
-    <div class="adv-card"><div class="adv-num">5</div><p>Reusable logic — functions can be reused anywhere</p></div>
+  <div class="section">
+    <div class="section-header">📘 Advantages of Functional Programming</div>
+    <div class="section-body">
+      <div class="five-col">
+        <div class="inline-box"><div class="step-num" style="margin-bottom:5px">1</div><p>Less boilerplate code compared to traditional programming</p></div>
+        <div class="inline-box"><div class="step-num" style="margin-bottom:5px">2</div><p>Better readability — easy to understand</p></div>
+        <div class="inline-box"><div class="step-num" style="margin-bottom:5px">3</div><p>Easy maintenance due to smaller codebase</p></div>
+        <div class="inline-box"><div class="step-num" style="margin-bottom:5px">4</div><p>Supports parallel processing — works efficiently with Streams</p></div>
+        <div class="inline-box"><div class="step-num" style="margin-bottom:5px">5</div><p>Reusable logic — functions can be reused anywhere</p></div>
+      </div>
+    </div>
   </div>
 
-  <div class="key-card">
-    <h4>Key rule to always remember</h4>
-    <p>A method is a Higher Order Function if it <strong>accepts</strong> a Lambda Expression as a parameter OR <strong>returns</strong> a Lambda Expression. Lambda Expressions are possible only because of Functional Interfaces.</p>
+  <div class="note-box" style="border:2px solid #111;">
+    <span class="tag">★ Most Important</span><strong>Key rule to always remember</strong><br>
+    A method is a Higher Order Function if it <strong>accepts</strong> a Lambda Expression as a parameter OR <strong>returns</strong> a Lambda Expression. Lambda Expressions are possible only because of Functional Interfaces.
   </div>
 </div>
 

@@ -21,6 +21,8 @@ import QuizReview from "./pages/QuizReview/QuizReview";
 
 import QuizHistory from "./pages/QuizHistory/QuizHistory";
 
+import About from "./pages/About/About";
+
 function App() {
     return (
         <BrowserRouter>
@@ -85,6 +87,11 @@ function App() {
                     path="/settings"
                     element={<Settings />}
                 />
+
+                <Route
+  path="/about"
+  element={<About />}
+/>
 
 
                 <Route path="/quiz" element={<Quiz />} />

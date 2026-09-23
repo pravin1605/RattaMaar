@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Multithreading in Java — Notes</title>
+<style>
+:root{--ink:#000;--paper:#fff;--grey:#f2f2f2;--mid:#777;--line:#000;}
+*{box-sizing:border-box;}
+body{background:#c9c9c9;margin:0;padding:24px 0;font-family:Georgia,'Times New Roman',serif;color:#000;}
+.page{width:210mm;min-height:297mm;background:#fff;margin:0 auto 14mm;padding:16mm 14mm;position:relative;box-shadow:0 2px 14px rgba(0,0,0,.3);page-break-after:always;}
+.page:last-child{page-break-after:auto;}
+@media print{
+  body{background:#fff;padding:0;}
+  .page{box-shadow:none;margin:0;width:auto;min-height:auto;}
+  @page{size:A4;margin:14mm;}
+}
+.strip{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #000;padding-bottom:5px;margin-bottom:16px;}
+.strip .t{font-size:11px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase;}
+.strip .p{font-size:10px;letter-spacing:.05em;color:#444;}
+.cover-title{font-size:36px;font-weight:bold;margin:70px 0 8px;letter-spacing:.01em;}
+.cover-sub{font-size:15px;color:#333;margin:0 0 6px;}
+.cover-line{border-top:3px solid #000;width:70px;margin:22px 0 28px;}
+.sec-title{font-size:15px;font-weight:bold;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid #000;padding-bottom:5px;margin:22px 0 10px;}
+.sec-title:first-of-type{margin-top:0;}
+.card{border:1.5px solid #000;margin-bottom:12px;break-inside:avoid;}
+.card-head{background:#000;color:#fff;padding:6px 10px;font-size:12.5px;font-weight:bold;display:flex;gap:7px;align-items:center;}
+.card-body{padding:10px 12px;font-size:12px;line-height:1.55;}
+.cols-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.cols-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.code{font-family:'Courier New',Courier,monospace;font-size:10px;background:var(--grey);border-left:4px solid #000;padding:8px 10px;white-space:pre-wrap;word-wrap:break-word;line-height:1.5;margin:6px 0 0;}
+.flow{max-width:300px;margin:8px auto 0;}
+.flow-box{border:1.5px solid #000;padding:6px 10px;text-align:center;font-size:11px;font-weight:bold;}
+.flow-box span{display:block;font-size:9.5px;font-weight:normal;color:#333;margin-top:2px;}
+.flow-arrow{text-align:center;font-size:15px;margin:1px 0;}
+.steps .step{display:flex;gap:8px;font-size:11.5px;margin-bottom:5px;align-items:flex-start;}
+.stepnum{width:17px;height:17px;min-width:17px;border-radius:50%;background:#000;color:#fff;font-size:9.5px;font-weight:bold;display:flex;align-items:center;justify-content:center;}
+.interview{background:#000;color:#fff;padding:7px 10px;font-size:11px;margin-top:0;display:flex;gap:6px;}
+.warn{border:1px dashed #000;padding:7px 10px;font-size:11px;margin-top:8px;}
+.important{display:inline-block;border:1.5px solid #000;font-size:9.5px;font-weight:bold;padding:2px 7px;margin-top:6px;}
+.trick{font-size:11px;font-style:italic;color:#333;border-top:1px dotted #999;margin-top:8px;padding-top:6px;}
+table{width:100%;border-collapse:collapse;font-size:11px;}
+th,td{border:1px solid #000;padding:5px 6px;text-align:left;vertical-align:top;}
+th{background:#eee;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;}
+code{font-family:'Courier New',monospace;font-size:10.5px;background:var(--grey);padding:1px 4px;}
+.pill{display:inline-block;font-size:10px;font-weight:bold;border:1px solid #000;padding:2px 8px;margin:2px 3px 2px 0;}
+.contents{font-size:12px;line-height:1.9;}
+.contents li{margin-bottom:2px;}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 — COVER -->
+<div class="page">
+  <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#444;">Java Core Concepts</div>
+  <div class="cover-title">Multithreading in Java</div>
+  <p class="cover-sub">Complete notes — concepts, thread lifecycle, all methods, 9 worked programs with outputs</p>
+  <div class="cover-line"></div>
+  <p style="font-size:12px;color:#333;max-width:70%;">This set keeps every original line of the source notes intact, and adds theory, interview angles, warnings and memory tricks around each topic — printable as A4 pages, front to back.</p>
+
+  <p class="sec-title" style="margin-top:40px;">Contents</p>
+  <ol class="contents">
+    <li>Multitasking &amp; advantages of multithreading</li>
+    <li>What is a Thread · Main thread · Thread properties</li>
+    <li>Creating threads · Runnable · Thread class · constructors</li>
+    <li>Thread class — all methods · start() internals · Scheduler</li>
+    <li>Thread Life Cycle (5 states)</li>
+    <li>Program 1–2 — currentThread(), custom Thread class</li>
+    <li>Program 3–4 — parallel threads, thread properties</li>
+    <li>Program 5–6 — join(), sleep()</li>
+    <li>Program 7–8 — parallel computation, priority demo</li>
+    <li>Program 9 — Runnable interface · Thread vs Runnable</li>
+    <li>Key rules, interview recap &amp; the one rule to remember</li>
+  </ol>
+  <div class="card" style="margin-top:36px;">
+    <div class="card-head">⭐ How to use this set</div>
+    <div class="card-body">Read a card, then read its black 💬 Interview Line out loud — that is the one-sentence answer an interviewer expects. Dashed boxes are traps that examiners love to test. The ★ tag marks the single fact worth memorising on that page above everything else.</div>
+  </div>
+</div>
+
+<!-- PAGE 2 — MULTITASKING -->
+<div class="page">
+  <div class="strip"><span class="t">Multithreading in Java</span><span class="p">01 · Multitasking</span></div>
+
+  <p class="sec-title">🧩 Multitasking</p>
+  <div class="card">
+    <div class="card-head">🧩 What is Multitasking?</div>
+    <div class="card-body">The process of performing more than one task parallelly is called Multitasking. It is of 2 types.
+      <div class="important">★ Most Important — everything in this file is really "thread-based multitasking inside one program"</div>
+    </div>
+  </div>
+  <div class="cols-2">
+    <div class="card">
+      <div class="card-head">🖥️ 1 — Process based (OS level)</div>
+      <div class="card-body">The process of executing more than one task where each task is independent of each other and each task belongs to a different program.
+        <div class="warn"><strong>Examples:</strong><br>Task 1: Browsing on Google<br>Task 2: Watching a YouTube video<br>Task 3: Using Excel<br>Task 4: Typing something on Word</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">🧵 2 — Thread based (Program level)</div>
+      <div class="card-body">The process of executing multiple tasks parallelly, where each task is an independent unit of execution within the same program, is called thread-based multitasking or multithreading.
+        <div class="warn"><strong>Example — Chat app running at same time:</strong><br>Task 1: Receiving messages<br>Task 2: Sending messages<br>Task 3: Showing typing indicator<br>Task 4: Auto-saving chat history</div>
+      </div>
+    </div>
+  </div>
+  <div class="trick">🧠 Memory trick: "Process = different apps sharing the CPU. Thread = different jobs sharing one app." One program, many hands.</div>
+
+  <p class="sec-title" style="margin-top:20px;">🚀 Advantages of Multithreading</p>
+  <div class="cols-2">
+    <div class="card"><div class="card-head">1️⃣ CPU utilisation</div><div class="card-body">Better utilisation of CPU resources — idle cycles (e.g. while one task waits on I/O) get used by another thread instead of sitting empty.</div></div>
+    <div class="card"><div class="card-head">2️⃣ Performance</div><div class="card-body">Faster execution — hence performance will be improved, since independent parts of a task run at the same time instead of one after another.</div></div>
+  </div>
+  <div class="warn">⚠️ Extra theory: multithreading speeds things up only when tasks are genuinely independent. Threads that constantly fight over the same shared data can end up slower than a single thread, once synchronization overhead is added.</div>
+
+  <div class="interview">💬 <strong>Interview Line:</strong> "Multitasking has two flavours — process-based at the OS level and thread-based inside one program; multithreading is the thread-based kind, and it exists mainly to squeeze more performance out of one program without opening a second process."</div>
+</div>
+
+<!-- PAGE 3 — WHAT IS A THREAD / MAIN THREAD / PROPERTIES -->
+<div class="page">
+  <div class="strip"><span class="t">Multithreading in Java</span><span class="p">02 · Thread basics</span></div>
+
+  <p class="sec-title">🧵 What is a Thread?</p>
+  <div class="cols-2">
+    <div class="card">
+      <div class="card-head">📖 Definition — 3 ways to say it</div>
+      <div class="card-body">
+        <div class="steps">
+          <div class="step"><span class="stepnum">1</span>It is a flow of execution</div>
+          <div class="step"><span class="stepnum">2</span>It is a small unit of a program</div>
+          <div class="step"><span class="stepnum">3</span>It is a lightweight process</div>
+        </div>
+        <div class="warn">A thread is called a <strong>lightweight subprocess</strong> because it runs independently (like a process) but uses less memory.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">☕ Thread as an object in Java</div>
+      <div class="card-body">In Java, a thread is actually an object which is used to perform a task.
+      <pre class="code">// Example: 1000 lines of code split between 2 threads
+Thread 1 → executes first 500 lines
+Thread 2 → executes second 500 lines
+// Both run parallelly</pre>
+      </div>
+    </div>
+  </div>
+  <div class="trick">🧠 Memory trick: "Process = heavyweight house. Thread = lightweight room inside it." Rooms share the house's furniture (memory); they don't need a separate one each.</div>
+
+  <p class="sec-title" style="margin-top:16px;">🏁 Default Thread / Main Thread</p>
+  <div class="card">
+    <div class="card-head">🏁 What is the Main Thread?</div>
+    <div class="card-body">
+      <div class="steps">
+        <div class="step"><span class="stepnum">1</span>When a Java program starts, the JVM automatically creates a thread.</div>
+        <div class="step"><span class="stepnum">2</span>This thread is known as the <strong>main thread</strong>.</div>
+        <div class="step"><span class="stepnum">3</span>The JVM uses this main thread to invoke the <code>main(String[] args)</code> method of your class.</div>
+      </div>
+      <div class="important">★ Most Important — every Java program, even single-threaded ones, is already multithreaded to some degree (main + GC + JIT threads).</div>
+    </div>
+  </div>
+
+  <p class="sec-title" style="margin-top:16px;">🏷️ Thread Properties — id, name, priority</p>
+  <div class="card">
+    <div class="card-head">🏷️ Every thread has an id, name, priority</div>
+    <div class="card-body">
+      <table>
+        <tr><th>Property</th><th>Details</th></tr>
+        <tr><td><code>id</code></td><td>Randomly assigned by JVM automatically</td></tr>
+        <tr><td><code>name</code></td><td>Programmer can set it, or JVM gives a default name like Thread-0, Thread-1, etc.</td></tr>
+        <tr><td><code>priority</code></td><td>Range is 1 to 10. Default is 5. Thread scheduler requests OS to execute based on priority, but OS makes the final decision depending on available cores.</td></tr>
+      </table>
+      <div class="warn">Priority constants: <code>MIN_PRIORITY = 1</code>, <code>NORM_PRIORITY = 5</code>, <code>MAX_PRIORITY = 10</code></div>
+    </div>
+  </div>
+  <div class="interview">💬 <strong>Interview Line:</strong> "A thread is a lightweight flow of execution inside a process; the JVM always starts one for you — the main thread — and every thread carries an id, a name and a priority whether you set them or not."</div>
+</div>
+
+<!-- PAGE 4 — CREATION / RUNNABLE / THREAD CLASS / CONSTRUCTORS -->
+<div class="page">
+  <div class="strip"><span class="t">Multithreading in Java</span><span class="p">03 · Creating threads</span></div>
+
+  <p class="sec-title">🛠️ Creation of Thread — 2 ways</p>
+  <div class="cols-2">
+    <div class="card">
+      <div class="card-head">🧬 Way 1 — Extending Thread class</div>
+      <div class="card-body">
+        <div class="steps">
+          <div class="step"><span class="stepnum">1</span>Create a class that extends <code>Thread</code></div>
+          <div class="step"><span class="stepnum">2</span>Override the <code>run()</code> method — write task inside it</div>
+          <div class="step"><span class="stepnum">3</span>Create an object of your class</div>
+          <div class="step"><span class="stepnum">4</span>Call <code>start()</code> to begin execution</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">🔌 Way 2 — Implementing Runnable</div>
+      <div class="card-body">
+        <div class="steps">
+          <div class="step"><span class="stepnum">1</span>Create a class that implements <code>Runnable</code></div>
+          <div class="step"><span class="stepnum">2</span>Override the <code>run()</code> method</div>
+          <div class="step"><span class="stepnum">3</span>Create an object of that class</div>
+          <div class="step"><span class="stepnum">4</span>Pass the object to <code>Thread</code> constructor</div>
+          <div class="step"><span class="stepnum">5</span>Call <code>start()</code> on the Thread object</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="trick">🧠 Memory trick: "Extend when you ARE a thread's job. Implement when you HAVE a job a thread can carry." Prefer HAVE — it keeps your inheritance slot free.</div>
+
+  <p class="sec-title" style="margin-top:16px;">🔌 Runnable Interface</p>
+  <div class="card">
+    <div class="card-head">🔌 About Runnable</div>
+    <div class="card-body">
+      <div class="steps">
+        <div class="step"><span class="stepnum">1</span>It is a <strong>Functional Interface</strong> present in <code>java.lang</code> package.</div>
+        <div class="step"><span class="stepnum">2</span>It contains one abstract method: <code>public void run();</code></div>
+      </div>
+      <div class="warn">⚠️ Because it's a functional interface, it can be implemented with a lambda: <code>Runnable r = () -&gt; System.out.println("hi");</code> — modern code rarely writes a full Runnable class by hand.</div>
+    </div>
+  </div>
+
+  <p class="sec-title" style="margin-top:16px;">🧵 Thread class</p>
+  <div class="cols-2">
+    <div class="card">
+      <div class="card-head">🧵 About Thread class</div>
+      <div class="card-body">
+        <div class="steps">
+          <div class="step"><span class="stepnum">1</span>Present in <code>java.lang</code> package.</div>
+          <div class="step"><span class="stepnum">2</span>It implements the <code>Runnable</code> interface.</div>
+          <div class="step"><span class="stepnum">3</span>It provides an empty implementation for <code>run()</code> method.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">🏗️ Constructors of Thread class</div>
+      <div class="card-body"><pre class="code">Thread(Runnable target)
+Thread(Runnable target, String name)
+Thread(String name)</pre></div>
+    </div>
+  </div>
+  <div class="interview">💬 <strong>Interview Line:</strong> "Thread itself implements Runnable — that's why you can pass a Runnable straight into a Thread constructor; the two approaches to creating a thread are just two ways of filling in run()."</div>
+</div>
+
+<!-- PAGE 5 — METHODS TABLE / start() INTERNALS / SCHEDULER -->
+<div class="page">
+  <div class="strip"><span class="t">Multithreading in Java</span><span class="p">04 · Methods &amp; scheduler</span></div>
+
+  <p class="sec-title">📋 Thread class — all methods</p>
+  <div class="card">
+    <div class="card-head">📋 Method reference</div>
+    <div class="card-body">
+      <table>
+        <tr><th>Method</th><th>Declaration</th><th>Purpose</th></tr>
+        <tr><td><code>start()</code></td><td><code>public void start()</code></td><td>Starts a new thread of execution. Internally calls <code>run()</code> in a separate thread. Heart of multithreading.</td></tr>
+        <tr><td><code>run()</code></td><td><code>public void run()</code></td><td>Contains the task to be executed. If called directly (not via start()), it runs in the main thread — no new thread is created.</td></tr>
+        <tr><td><code>join()</code></td><td><code>public final void join() throws InterruptedException</code></td><td>Waits for the thread to finish. If <code>t1.join()</code> is called, the current thread waits until t1 completes.</td></tr>
+        <tr><td><code>getName()</code></td><td><code>public final String getName()</code></td><td>Returns name of the thread. Default names: Thread-0, Thread-1, etc.</td></tr>
+        <tr><td><code>setName()</code></td><td><code>public final void setName(String name)</code></td><td>Used to set or change the name of the thread.</td></tr>
+        <tr><td><code>getId()</code></td><td><code>public long getId()</code></td><td>Returns the unique ID of the thread. Assigned automatically by JVM.</td></tr>
+        <tr><td><code>getPriority()</code></td><td><code>public final int getPriority()</code></td><td>Returns the priority of the thread (default is 5).</td></tr>
+        <tr><td><code>setPriority()</code></td><td><code>public final void setPriority(int priority)</code></td><td>Sets priority between 1 to 10. 1=MIN, 5=NORM, 10=MAX.</td></tr>
+        <tr><td><code>isAlive()</code></td><td><code>public final boolean isAlive()</code></td><td>Returns true if the thread has been started and has not yet finished.</td></tr>
+        <tr><td><code>sleep()</code> (static)</td><td><code>public static void sleep(long millis) throws InterruptedException</code></td><td>Pauses the current thread for specified milliseconds. <code>Thread.sleep(1000)</code> sleeps for 1 second.</td></tr>
+        <tr><td><code>currentThread()</code> (static)</td><td><code>public static Thread currentThread()</code></td><td>Returns the currently executing thread object. Used to get name, id, or status of the running thread.</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="trick">🧠 Memory trick: group them as "Identity" (getName/setName/getId), "Behaviour" (start/run/join/sleep) and "Rank" (getPriority/setPriority). Interviewers usually ask one from each group.</div>
+
+  <div class="cols-2" style="margin-top:12px;">
+    <div class="card">
+      <div class="card-head">⚙️ What start() does internally</div>
+      <div class="card-body">
+        <div class="steps">
+          <div class="step"><span class="stepnum">1</span>Registers the thread with the Thread Scheduler</div>
+          <div class="step"><span class="stepnum">2</span>After that, invokes <code>run()</code> internally in a new thread</div>
+        </div>
+        <div class="warn">Without calling <code>start()</code> there is no chance of starting a new thread — that's why it's the <strong>heart of multithreading</strong>. Declaration: <code>public synchronized void start();</code> Calling it twice on the same object throws <strong>IllegalThreadStateException</strong>.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">🗓️ Thread Scheduler</div>
+      <div class="card-body">The part of the JVM responsible for deciding, when multiple threads are waiting, in which order they should execute.
+        <div class="warn">Algorithm differs JVM to JVM, so exact output can never be guaranteed. Common OS algorithms: <span class="pill">Round Robin</span><span class="pill">FCFS</span><span class="pill">Priority Scheduling</span>. Scheduler <em>requests</em> — the OS decides, based on core availability.</div>
+      </div>
+    </div>
+  </div>
+  <div class="interview">💬 <strong>Interview Line:</strong> "start() does two things — registers the thread with the scheduler, then internally invokes run() on a new call stack; if you skip start() and call run() yourself, you just made a normal method call on the main thread."</div>
+</div>
+
+<!-- PAGE 6 — LIFECYCLE -->
+<div class="page">
+  <div class="strip"><span class="t">Multithreading in Java</span><span class="p">05 · Thread Life Cycle</span></div>
+
+  <p class="sec-title">🔄 Thread Life Cycle</p>
+  <div class="cols-2">
+    <div class="card">
+      <div class="card-head">🔄 Five states, flowchart</div>
+      <div class="card-body">
+        <div class="flow">
+          <div class="flow-box">NEW<span><code>new CustomThread()</code></span></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-box">RUNNABLE<span><code>ct.start()</code> called</span></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-box">RUNNING<span>Thread Scheduler allocates a core</span></div>
+          <div class="flow-arrow">↕</div>
+          <div class="flow-box">WAITING<span><code>sleep()</code> or <code>join()</code> → back to Runnable when done</span></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-box">DEAD<span><code>run()</code> method completes execution</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">📖 Five states, explained</div>
+      <div class="card-body">
+        <table>
+          <tr><th>State</th><th>When it happens</th></tr>
+          <tr><td>New</td><td>When we create a thread object — <code>CustomThread ct = new CustomThread();</code></td></tr>
+          <tr><td>Runnable</td><td>When we call <code>start()</code> method — <code>ct.start();</code></td></tr>
+          <tr><td>Running</td><td>When thread scheduler allocates a processor (core) to the thread</td></tr>
+          <tr><td>Waiting</td><td><code>sleep()</code> or <code>join()</code> is called. Goes back to Runnable once waiting is over.</td></tr>
+          <tr><td>Dead</td><td>After <code>run()</code> method is completely executed</td></tr>
+        </table>
+        <div class="important">★ Most Important — "Runnable" ≠ "Running". Runnable only means eligible/waiting for a core; Running means it actually has one right now.</div>
+      </div>
+    </div>
+  </div>
+  <div class="warn">⚠️ Extra theory: a thread that calls <code>sleep()</code> or blocks on <code>join()</code>/I-O moves out of Running into Waiting (or Timed Waiting) — it does <em>not</em> go back to New. Once Dead, a thread object can never be restarted, even via a fresh <code>start()</code> call.</div>
+  <div class="trick">🧠 Memory trick: "N-R-R-W-D" — Newborn Runs Really Wonderfully, Dies. Five letters, five states, in order.</div>
+  <div class="interview">💬 <strong>Interview Line:</strong> "A thread moves New → Runnable → Running → (optionally Waiting, then back to Runnable) → Dead; the scheduler controls the Runnable-to-Running hop, and nothing controls the Dead state — once run() finishes, that's final."</div>
+</div>
+
+<!-- PAGE 7 — PROGRAM 1 & 2 -->
+<div class="page">
+  <div class="strip"><span class="t">Multithreading in Java</span><span class="p">06 · Program 1–2</span></div>
+
+  <p class="sec-title">💻 Program 1 — Main thread details using currentThread()</p>
+  <div class="card">
+    <div class="card-head">▶️ Accessing main thread properties</div>
+    <div class="card-body">
+      <span class="pill"><code>currentThread()</code></span><span class="pill"><code>getId()</code></span><span class="pill"><code>getName()</code></span><span class="pill"><code>getPriority()</code></span>
+      <pre class="code">public class _01CurrentThread {
+  public static void main(String[] args) {
+    System.out.println("main started");
+    Thread t = Thread.currentThread();
+    System.out.println(t.threadId());
+    System.out.println(t.getName());
+    System.out.println(t.getPriority());
+    System.out.println("main ended");
+  }
+}</pre>
+      <div class="warn"><strong>Output:</strong><br>main started<br>1  <em>// JVM-assigned thread id (may vary)</em><br>main  <em>// default name of main thread</em><br>5  <em>// default priority is 5</em><br>main ended<br><br><strong>Explanation:</strong> <code>Thread.currentThread()</code> returns the currently running thread object. Here it is the main thread. We can access its id, name, and priority using the methods.</div>
+    </div>
+  </div>
+  <div class="trick">🧠 Extra theory: <code>threadId()</code> replaces the deprecated <code>getId()</code> from Java 19 onward — both still appear in codebases, so recognise either in an interview.</div>
+
+  <p class="sec-title" style="margin-top:14px;">💻 Program 2 — Custom thread by extending Thread class</p>
+  <div class="card">
+    <div class="card-head">▶️ Creating a custom thread — extending Thread</div>
+    <div class="card-body">
+      <span class="pill">extends Thread</span><span class="pill"><code>run()</code></span><span class="pill"><code>start()</code></span>
+      <pre class="code">public class _02CustomThread extends Thread {
+  public void run() {
+    System.out.println(threadId());
+    System.out.println(getName());
+    System.out.println(getPriority());
+    System.out.println(isAlive());
+  }
+  public static void main(String[] args) {
+    _02CustomThread ct = new _02CustomThread();
+    ct.start();
+  }
+}</pre>
+      <div class="warn"><strong>Output:</strong><br>21  <em>// JVM-assigned id (may vary)</em><br>Thread-0  <em>// default name given by JVM</em><br>5  <em>// default priority</em><br>true  <em>// isAlive() = true since thread is currently running</em><br><br><strong>Explanation:</strong> Class extends <code>Thread</code> and overrides <code>run()</code>. <code>ct.start()</code> registers with scheduler and calls <code>run()</code> in a new separate thread.</div>
+    </div>
+  </div>
+  <div class="interview">💬 <strong>Interview Line:</strong> "isAlive() returning true here just confirms the new thread has actually started and hasn't finished run() yet — it's the cheapest way to check a thread's state without touching the lifecycle enum."</div>
+</div>
+
+<!-- PAGE 8 — PROGRAM 3 & 4 -->
+<div class="page">
+  <div class="strip"><span class="t">Multithreading in Java</span><span class="p">07 · Program 3–4</span></div>
+
+  <p class="sec-title">💻 Program 3 — Two threads running parallelly with main thread</p>
+  <div class="card">
+    <div class="card-head">▶️ Multiple threads + main thread — parallel execution</div>
+    <div class="card-body">
+      <span class="pill">extends Thread</span><span class="pill"><code>start()</code></span>
+      <pre class="code">public class part_2 {
+  public static void main(String[] args) {
+    System.out.println("main Start");
+    Mythread mt = new Mythread();
+    mt.start();
+    Mythread1 mt1 = new Mythread1();
+    mt1.start();
+    for (int i = 0; i < 10; i++) {
+      System.out.println("main executing");
+    }
+    System.out.println("main end");
+  }
+}
+class Mythread extends Thread {
+  public void run() {
+    for (int i = 0; i < 10; i++)
+      System.out.println("MYThread execute");
+  }
+}
+class Mythread1 extends Thread {
+  public void run() {
+    for (int i = 0; i < 10; i++)
+      System.out.println("===============");
+  }
+}</pre>
+      <div class="warn"><strong>Output (order may vary — not guaranteed):</strong><br>main Start<br>main executing  <em>// main thread</em><br>MYThread execute  <em>// Mythread</em><br>===============  <em>// Mythread1</em><br>... (mixed output)<br>main end<br><br><strong>Explanation:</strong> All three threads (main, Mythread, Mythread1) run parallelly. The output order is decided by the thread scheduler + OS — not predictable. Calling <code>mt1.start()</code> again on the same object gives <code>IllegalThreadStateException</code>.</div>
+    </div>
+  </div>
+
+  <p class="sec-title" style="margin-top:12px;">💻 Program 4 — Thread properties with multiple thread objects</p>
+  <div class="card">
+    <div class="card-head">▶️ Viewing id, name, priority for multiple thread objects</div>
+    <div class="card-body">
+      <span class="pill"><code>getId()</code></span><span class="pill"><code>getName()</code></span><span class="pill"><code>getPriority()</code></span><span class="pill"><code>setPriority()</code></span>
+      <pre class="code">Thread t = Thread.currentThread();
+t.setPriority(10);
+System.out.println(t.getId() + " " + t.getName() + " " + t.getPriority());
+
+myThread mt  = new myThread();
+myThread mt1 = new myThread();
+myThread mt2 = new myThread();
+
+System.out.println(mt.getId()  + " " + mt.getName()  + " " + mt.getPriority());
+System.out.println(mt1.getId() + " " + mt1.getName() + " " + mt1.getPriority());
+System.out.println(mt2.getId() + " " + mt2.getName() + " " + mt2.getPriority());</pre>
+      <div class="warn"><strong>Output (ids vary — example):</strong><br>1  main  10  <em>// main thread priority changed to 10</em><br>21 Thread-0 5  <em>// mt — default name, default priority</em><br>22 Thread-1 5<br>23 Thread-2 5<br><br><strong>Explanation:</strong> Each thread object gets a unique JVM-assigned id. Default names are Thread-0, Thread-1 etc. Default priority is 5. <code>setPriority(10)</code> changes main thread priority to MAX.</div>
+    </div>
+  </div>
+  <div class="interview">💬 <strong>Interview Line:</strong> "Thread ids and default names are assigned in creation order by the JVM, not start order — that's why mt/mt1/mt2 already have distinct ids the moment new myThread() runs, before start() is ever called."</div>
+</div>
+
+<!-- PAGE 9 — PROGRAM 5 & 6 -->
+<div class="page">
+  <div class="strip"><span class="t">Multithreading in Java</span><span class="p">08 · Program 5–6</span></div>
+
+  <p class="sec-title">💻 Program 5 — join() method</p>
+  <div class="card">
+    <div class="card-head">▶️ join() — wait for thread to complete before main continues</div>
+    <div class="card-body">
+      <span class="pill"><code>join()</code></span><span class="pill"><code>start()</code></span>
+      <pre class="code">public class joinmethod {
+  public static void main(String[] args) throws InterruptedException {
+    System.out.println("main Start");
+    Mythread mt = new Mythread();
+    mt.start();
+    mt.join();   // main waits here until mt finishes
+    for (int i = 0; i < 10; i++) {
+      System.out.println("main executing");
+    }
+    System.out.println("main end");
+  }
+}
+class Mythread extends Thread {
+  public void run() {
+    for (int i = 0; i < 10; i++)
+      System.out.println("MYThread execute");
+  }
+}</pre>
+      <div class="warn"><strong>Output (guaranteed order):</strong><br>main Start<br>MYThread execute (×10)<br>main executing (×10)<br>main end<br><br><strong>Explanation:</strong> Without <code>join()</code>, main and Mythread would run in mixed order. With <code>mt.join()</code>, the main thread pauses and waits until Mythread finishes completely. Only then does main continue. <code>join()</code> throws <code>InterruptedException</code> so it must be handled.</div>
+      <div class="important">★ Most Important — join() is the one method in this whole set that turns unpredictable order into guaranteed order.</div>
+    </div>
+  </div>
+
+  <p class="sec-title" style="margin-top:12px;">💻 Program 6 — sleep() method</p>
+  <div class="card">
+    <div class="card-head">▶️ sleep() — pause thread for a given time</div>
+    <div class="card-body">
+      <span class="pill"><code>sleep()</code></span>
+      <pre class="code">public class sleepmethod {
+  public static void main(String[] args) throws InterruptedException {
+    System.out.println("main start");
+    for (int i = 0; i < 100; i++) {
+      System.out.println("main thread");
+      Thread.sleep(2000); // pause for 2 seconds after each print
+    }
+    System.out.println("main end");
+  }
+}</pre>
+      <div class="warn"><strong>Output:</strong><br>main start<br>main thread  <em>// waits 2 seconds</em><br>main thread  <em>// waits 2 seconds</em><br>... (continues 100 times with 2 second gap each)<br>main end<br><br><strong>Explanation:</strong> <code>Thread.sleep(2000)</code> pauses the current thread for 2000 milliseconds (2 seconds). During sleep, the thread moves to Waiting state. After the sleep duration, it goes back to Runnable state. It is a static method and throws <code>InterruptedException</code>.</div>
+    </div>
+  </div>
+  <div class="trick">🧠 Memory trick: "join() waits for a THREAD. sleep() waits for TIME." One depends on another thread finishing, the other depends only on the clock.</div>
+  <div class="interview">💬 <strong>Interview Line:</strong> "join() and sleep() both put a thread into Waiting, but join() has a target — another thread — while sleep() just waits out a duration; that's the cleanest way to tell them apart under pressure."</div>
+</div>
+
+<!-- PAGE 10 — PROGRAM 7 & 8 -->
+<div class="page">
+  <div class="strip"><span class="t">Multithreading in Java</span><span class="p">09 · Program 7–8</span></div>
+
+  <p class="sec-title">💻 Program 7 — Square and Cube using parallel threads + join()</p>
+  <div class="card">
+    <div class="card-head">▶️ Parallel computation — square and cube simultaneously</div>
+    <div class="card-body">
+      <span class="pill">extends Thread</span><span class="pill"><code>start()</code></span><span class="pill"><code>join()</code></span>
+      <pre class="code">class square extends Thread {
+  int num, sqaure;
+  public square(int num) { this.num = num; }
+  public void run() { sqaure = num * num; }
+}
+class cube extends Thread {
+  int num, cube;
+  public cube(int num) { this.num = num; }
+  public void run() { cube = num * num * num; }
+}
+public class sqaure_cube_parallel {
+  public static void main(String[] args) throws InterruptedException {
+    System.out.println("main start");
+    for (int i = 1; i < 10; i++) {
+      square sq = new square(i);
+      cube cu = new cube(i);
+      sq.start();
+      cu.start();
+      sq.join();  // wait for both to finish
+      cu.join();
+      System.out.println("square=" + sq.sqaure + " Cube=" + cu.cube);
+    }
+  }
+}</pre>
+      <div class="warn"><strong>Output:</strong><br>main start<br>square=1  Cube=1<br>square=4  Cube=8<br>square=9  Cube=27<br>square=16 Cube=64<br>square=25 Cube=125<br>square=36 Cube=216<br>square=49 Cube=343<br>square=64 Cube=512<br>square=81 Cube=729<br><br><strong>Explanation:</strong> For each number, both square and cube threads start parallelly. <code>sq.join()</code> and <code>cu.join()</code> make main wait until both complete. Then the result is printed. This demonstrates true parallel computation — both calculations happen at the same time, not one after the other.</div>
+    </div>
+  </div>
+  <div class="trick">🧠 Extra theory: two new thread objects get created on every loop iteration here — fine for a demo, but in real systems this pattern is replaced by a reusable thread pool (ExecutorService) to avoid the cost of constant thread creation.</div>
+
+  <p class="sec-title" style="margin-top:12px;">💻 Program 8 — Thread priority demo</p>
+  <div class="card">
+    <div class="card-head">▶️ Setting and observing thread priorities</div>
+    <div class="card-body">
+      <span class="pill"><code>setPriority()</code></span><span class="pill"><code>getPriority()</code></span><span class="pill"><code>setName()</code></span><span class="pill"><code>getName()</code></span>
+      <pre class="code">class myThread extends Thread {
+  public void run() {
+    for (int i = 0; i <= 10; i++) {
+      System.out.println("name = " + getName());
+    }
+  }
+}
+public class priority {
+  public static void main(String[] args) {
+    myThread m1 = new myThread();
+    myThread m2 = new myThread();
+    myThread m3 = new myThread();
+    m1.setName("Pravin");
+    m2.setName("mayuresh");
+    m3.setName("saskshi");
+    m1.setPriority(1);   // MIN_PRIORITY
+    m2.setPriority(5);   // NORM_PRIORITY
+    m3.setPriority(10);  // MAX_PRIORITY
+    m1.start();
+    m2.start();
+    m3.start();
+    System.out.println("main end");
+  }
+}</pre>
+      <div class="warn"><strong>Output (order may vary — not guaranteed):</strong><br>name = saskshi   <em>// priority 10 — likely executes more</em><br>name = mayuresh<br>name = Pravin    <em>// priority 1 — least preferred</em><br>... (mixed, repeated 11 times each)<br>main end<br><br><strong>Explanation:</strong> <code>setName()</code> assigns custom names. <code>setPriority()</code> sets priority. m3 (saskshi) has the highest priority (10) so the thread scheduler prefers it, but the OS makes the final decision. Output order is not guaranteed. <code>setPriority()</code> is a request, not a command.</div>
+    </div>
+  </div>
+  <div class="interview">💬 <strong>Interview Line:</strong> "Priority is a hint, not a guarantee — on most modern OS schedulers, higher priority just means the thread is favoured more often, it doesn't mean it always runs first."</div>
+</div>
+
+<!-- PAGE 11 — PROGRAM 9 / THREAD VS RUNNABLE -->
+<div class="page">
+  <div class="strip"><span class="t">Multithreading in Java</span><span class="p">10 · Program 9 &amp; comparison</span></div>
+
+  <p class="sec-title">💻 Program 9 — Thread by implementing Runnable interface</p>
+  <div class="card">
+    <div class="card-head">▶️ Runnable interface implementation</div>
+    <div class="card-body">
+      <span class="pill">implements Runnable</span><span class="pill">Thread(Runnable, name)</span><span class="pill"><code>start()</code></span>
+      <pre class="code">class ExRunnable implements Runnable {
+  public void run() {
+    for (int i = 0; i < 10; i++) {
+      System.out.println(Thread.currentThread().getName());
+    }
+  }
+}
+public class Driver {
+  public static void main(String[] args) {
+    Runnable r = new ExRunnable();
+    Thread t1 = new Thread(r, "MyThread"); // pass runnable + name
+    t1.start();
+    for (int i = 0; i < 10; i++) {
+      System.out.println(Thread.currentThread().getName());
+    }
+  }
+}</pre>
+      <div class="warn"><strong>Output (order may vary):</strong><br>MyThread  <em>// custom thread printing its name</em><br>main  <em>// main thread printing its name</em><br>... (mixed 10 times each)<br><br><strong>Explanation:</strong> <code>ExRunnable</code> implements <code>Runnable</code>. The object is passed to <code>Thread</code> constructor with the name "MyThread". <code>t1.start()</code> starts the custom thread while main loop runs simultaneously.</div>
+    </div>
+  </div>
+
+  <p class="sec-title" style="margin-top:14px;">⚖️ Extending Thread vs Implementing Runnable</p>
+  <div class="card">
+    <div class="card-head">⚖️ Side-by-side comparison</div>
+    <div class="card-body">
+      <table>
+        <tr><th>Feature</th><th>Extending Thread</th><th>Implementing Runnable</th></tr>
+        <tr><td>Inheritance</td><td>Uses up the single inheritance slot</td><td>Free to extend another class</td></tr>
+        <tr><td>Flexibility</td><td>Less flexible</td><td>More flexible — preferred approach</td></tr>
+        <tr><td>Object creation</td><td><code>MyThread t = new MyThread(); t.start();</code></td><td><code>Thread t = new Thread(new MyRunnable()); t.start();</code></td></tr>
+        <tr><td>Code reuse</td><td>Class tightly coupled to Thread</td><td>Task logic separated from Thread</td></tr>
+        <tr><td>Recommended</td><td>Simple cases</td><td>Always preferred in professional code</td></tr>
+      </table>
+      <div class="important">★ Most Important — in real projects, prefer Runnable (or Callable with ExecutorService); "extends Thread" is mostly a teaching device.</div>
+    </div>
+  </div>
+  <div class="trick">🧠 Memory trick: "IS-A vs HAS-A." extends Thread → your class IS a thread. implements Runnable → your class HAS a task. Favour HAS-A for reusable, testable code.</div>
+  <div class="interview">💬 <strong>Interview Line:</strong> "I'd implement Runnable over extending Thread almost every time — it keeps my class free to extend something else, and it separates 'what the task does' from 'how it's run', which matters once you move to thread pools."</div>
+</div>
+
+<!-- PAGE 12 — KEY RULES / RECAP -->
+<div class="page">
+  <div class="strip"><span class="t">Multithreading in Java</span><span class="p">11 · Key rules &amp; recap</span></div>
+
+  <p class="sec-title">🔑 Key Rules and Important Notes</p>
+  <div class="cols-2">
+    <div class="card">
+      <div class="card-head">🚫 IllegalThreadStateException</div>
+      <div class="card-body">Calling <code>start()</code> more than once on the same thread object throws <code>IllegalThreadStateException</code>. One thread object can start only once.</div>
+    </div>
+    <div class="card">
+      <div class="card-head">🔀 run() vs start()</div>
+      <div class="card-body">If you call <code>run()</code> directly instead of <code>start()</code>, it executes in the main thread — no new thread is created. Always use <code>start()</code> to create a new thread.</div>
+    </div>
+    <div class="card">
+      <div class="card-head">🎲 Output not guaranteed</div>
+      <div class="card-body">In multithreading there is no guarantee of exact output order. Thread scheduler + OS decide execution order based on priority and core availability.</div>
+    </div>
+    <div class="card">
+      <div class="card-head">🙋 setPriority() is a request</div>
+      <div class="card-body"><code>setPriority()</code> is just a request — not a command. The JVM listens but the OS decides which thread runs.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:4px;">
+    <div class="card-head">🏆 Key rule to always remember</div>
+    <div class="card-body"><code>start()</code> is the heart of multithreading. It registers with scheduler and invokes <code>run()</code> in a new thread. Never call <code>run()</code> directly. Use <code>join()</code> when you need to wait for a thread to finish before continuing. Use <code>sleep()</code> to pause a thread. Priority is a hint — the OS makes the final call. Thread output order is never guaranteed.
+      <div class="important">★ Most Important — of everything in this file, this one card is the exam-ready summary.</div>
+    </div>
+  </div>
+
+  <p class="sec-title" style="margin-top:16px;">🎯 Interview Recap — rapid fire</p>
+  <div class="card">
+    <div class="card-body">
+      <table>
+        <tr><th>Question</th><th>One-line answer</th></tr>
+        <tr><td>Thread vs Process?</td><td>Thread is a lightweight flow of execution inside a process; threads share the process's memory, processes don't share each other's.</td></tr>
+        <tr><td>Why prefer Runnable?</td><td>Keeps your inheritance slot free and separates the task from the execution mechanism.</td></tr>
+        <tr><td>run() called directly?</td><td>Executes on the caller's thread — no new thread, no parallelism.</td></tr>
+        <tr><td>start() called twice?</td><td>IllegalThreadStateException — a thread object can only ever start once.</td></tr>
+        <tr><td>join() vs sleep()?</td><td>join() waits for another thread to die; sleep() just waits out a duration.</td></tr>
+        <tr><td>Is priority a guarantee?</td><td>No — it's a scheduling hint; the OS makes the final call.</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="warn">⚠️ Warning to remember for exams: none of the "Output" sections in these programs are contractually guaranteed by the JVM spec unless <code>join()</code> is used — treat every unordered output shown here as "one likely example," not "the answer."</div>
+  <div class="interview">💬 <strong>Interview Line:</strong> "If I had to compress this whole topic into one sentence: start() launches a thread, join() and sleep() control its waiting, and priority only ever influences — never controls — who runs next."</div>
+</div>
+
+</body>
+</html>

@@ -648,51 +648,59 @@ function Settings() {
             ABOUT
         =================================================== */}
 
-        <section className="settings-section">
+        {/* ===================================================
+    ABOUT
+=================================================== */}
 
-          <div className="settings-section-title">
-            <span>About</span>
-          </div>
+<section className="settings-section">
 
-          <div className="settings-about-card">
+  <div className="settings-section-title">
+    <span>About</span>
+  </div>
 
-            <div className="settings-about-logo">
-              ▤
-            </div>
+  <button
+    type="button"
+    className="settings-about-link"
+    onClick={() => navigate("/about")}
+  >
 
-            <div>
-              <h2>
-                Notes Web
-              </h2>
+    <div className="settings-about-card">
 
-              <p>
-                Learn. Read. Remember.
-              </p>
+      <div className="settings-about-logo">
+        N
+      </div>
 
-              <span>
-                Version 1.0.0
-              </span>
-            </div>
+      <div className="settings-about-content">
 
-          </div>
+        <div className="settings-about-heading">
 
-
-          <div className="settings-about-info">
-
-            <span className="settings-info-icon">
-              i
-            </span>
+          <div>
+            <h2>
+              Notes Web
+            </h2>
 
             <p>
-              A simple, mobile-first notes
-              application designed for focused
-              learning and quick revision.
+              Learn. Read. Remember.
             </p>
-
           </div>
 
-        </section>
+          <span className="settings-about-arrow">
+            ›
+          </span>
 
+        </div>
+
+        <span className="settings-about-version">
+          About Us · Version 1.0.0
+        </span>
+
+      </div>
+
+    </div>
+
+  </button>
+
+</section>
 
         <div className="settings-bottom-space" />
 
