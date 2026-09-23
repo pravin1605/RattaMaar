@@ -17,20 +17,21 @@ const subjects = [
         title: "ORM",
         file: "/hibernate/part_02_Orm.html",
       },
-      {
+
+       {
         id: "hibernate-03",
+        title: "Persistence.xml",
+        file: "/hibernate/part_05_Persistence.html",
+      },
+      {
+        id: "hibernate-04",
         title: "JPA",
         file: "/hibernate/part_03_jpa.html",
       },
       {
-        id: "hibernate-04",
+        id: "hibernate-05",
         title: "Life Cycle",
         file: "/hibernate/part_04_lifeCycle.html",
-      },
-      {
-        id: "hibernate-05",
-        title: "Persistence",
-        file: "/hibernate/part_05_Persistence.html",
       },
       {
         id: "hibernate-06",

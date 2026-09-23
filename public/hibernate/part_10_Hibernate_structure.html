@@ -1,193 +1,580 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Hibernate Project Structure — DTO, DAO &amp; Driver</title>
+
 <style>
-  @page { size: A4; margin: 18mm 14mm; }
-  * { box-sizing: border-box; }
+
+/* =========================================================
+   MASTER JAVA NOTES DESIGN
+   Same visual system as Hibernate CRUD Index
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+body {
+  background: #e0e0e0;
+  font-family: "Georgia", serif;
+  color: #111;
+  line-height: 1.65;
+  margin: 0;
+  padding: 12px 0;
+}
+
+/* =========================================================
+   A4 PAGE
+   ========================================================= */
+
+.a4-page {
+  width: 210mm;
+  min-height: 297mm;
+  background: #fff;
+  margin: 0 auto 12px;
+  padding: 13mm 15mm;
+  border: 1px solid #aaa;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  page-break-after: always;
+  font-size: 12.5px;
+}
+
+.a4-page:last-child {
+  page-break-after: auto;
+}
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+h1 {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+  border: 2.5px solid #111;
+  padding: 9px 18px;
+  margin: 0 auto 5px;
+  letter-spacing: 1px;
+  line-height: 1.35;
+}
+
+.subtitle {
+  text-align: center;
+  color: #555;
+  font-size: 11.5px;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+/* =========================================================
+   SECTION HEADINGS
+   ========================================================= */
+
+h2 {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+  margin: 11px 0 8px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
+  line-height: 1.4;
+  page-break-after: avoid;
+}
+
+h3 {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #111;
+  margin: 8px 0 4px;
+  page-break-after: avoid;
+}
+
+/* =========================================================
+   INLINE CODE
+   ========================================================= */
+
+code.inline {
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  background: #eee;
+  color: #222;
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+/* =========================================================
+   TABLE OF CONTENTS
+   ========================================================= */
+
+.toc {
+  border: 1.5px solid #222;
+  margin-bottom: 11px;
+  padding: 9px 13px;
+  background: #fff;
+  page-break-inside: avoid;
+}
+
+.toc > b {
+  display: block;
+  background: #111;
+  color: #fff;
+  margin: -9px -13px 7px;
+  padding: 5px 11px;
+  font-size: 12px;
+}
+
+.toc ol {
+  margin: 3px 0;
+  padding-left: 20px;
+}
+
+.toc li {
+  margin: 2px 0;
+  font-size: 11.5px;
+}
+
+.toc a {
+  color: #111;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.card {
+  border: 1.5px solid #222;
+  background: #fff;
+  margin: 8px 0 10px;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  page-break-inside: avoid;
+}
+
+.card.extra {
+  border: 1.5px dashed #555;
+  background: #fafafa;
+}
+
+.card.theory {
+  border: 1.5px solid #222;
+  background: #fff;
+}
+
+/* =========================================================
+   TAGS
+   ========================================================= */
+
+.tag {
+  display: inline-block;
+  background: #111;
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 2px;
+  margin: 7px 0 4px 9px;
+  letter-spacing: 0.3px;
+}
+
+.tag-orig {
+  background: #111;
+  color: #fff;
+}
+
+.tag-extra {
+  background: #555;
+  color: #fff;
+}
+
+.tag-qa {
+  background: #111;
+  color: #fff;
+}
+
+.tag-theory {
+  background: #111;
+  color: #fff;
+}
+
+/* =========================================================
+   GENERAL TEXT
+   ========================================================= */
+
+p {
+  font-size: 12px;
+  margin: 3px 12px;
+}
+
+strong,
+b {
+  color: #111;
+}
+
+ul,
+ol {
+  margin: 4px 13px 10px 28px;
+  padding: 0;
+}
+
+li {
+  margin: 2px 0;
+  font-size: 12px;
+}
+
+/* =========================================================
+   CODE BLOCKS
+   ========================================================= */
+
+pre {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  font-family: "Courier New", monospace;
+  font-size: 10.5px;
+  padding: 9px 12px;
+  margin: 5px 9px 9px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: hidden;
+  line-height: 1.65;
+  border-left: 4px solid #555;
+  border-radius: 0;
+  tab-size: 4;
+}
+
+pre[style] {
+  background: #1e1e1e !important;
+  color: #d4d4d4 !important;
+}
+
+/* =========================================================
+   JAVA SYNTAX COLORS
+   ========================================================= */
+
+.kw {
+  color: #569cd6;
+}
+
+.type {
+  color: #4ec9b0;
+}
+
+.str {
+  color: #ce9178;
+}
+
+.cmt {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.method {
+  color: #dcdcaa;
+}
+
+.ann {
+  color: #dcdcaa;
+}
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 7px 0;
+  font-size: 10.8px;
+}
+
+th {
+  background: #111;
+  color: #fff;
+  padding: 5px 7px;
+  text-align: left;
+  font-weight: 700;
+  border: 1px solid #111;
+}
+
+td {
+  padding: 4px 7px;
+  border: 1px solid #ccc;
+  vertical-align: top;
+}
+
+tr:nth-child(even) td {
+  background: #fafafa;
+}
+
+/* =========================================================
+   FLOW DIAGRAMS
+   ========================================================= */
+
+.flow {
+  background: #fff;
+  border: 1.5px solid #333;
+  border-radius: 0;
+  padding: 7px 12px;
+  margin: 7px 9px;
+  font-family: "Courier New", monospace;
+  font-size: 11.5px;
+  color: #222;
+  white-space: pre-wrap;
+  line-height: 1.55;
+  text-align: center;
+  page-break-inside: avoid;
+}
+
+.layer-box {
+  display: block;
+  background: #111 !important;
+  color: #fff !important;
+  text-align: center;
+  padding: 5px 8px;
+  border-radius: 0;
+  margin: 4px auto;
+  max-width: 260px;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.arrow-down {
+  text-align: center;
+  color: #555 !important;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* =========================================================
+   Q&A
+   ========================================================= */
+
+.qa-item {
+  border-bottom: 1px solid #ddd;
+  padding: 7px 0;
+  margin: 0 12px;
+}
+
+.qa-item:last-child {
+  border-bottom: none;
+}
+
+.q {
+  font-weight: 700;
+  color: #111;
+  font-size: 12px;
+}
+
+.a {
+  color: #333;
+  margin-top: 3px;
+  font-size: 11.8px;
+}
+
+/* =========================================================
+   MEMORY TRICKS
+   ========================================================= */
+
+.memory-trick {
+  border: 1.5px dashed #555;
+  padding: 6px 10px;
+  margin: 7px 9px;
+  font-size: 11.8px;
+  background: #fafafa;
+  color: #222;
+  page-break-inside: avoid;
+}
+
+.memory-trick b {
+  color: #111;
+}
+
+/* =========================================================
+   DEFINITION BOX
+   ========================================================= */
+
+.definition-box {
+  border: 1.5px dashed #555;
+  background: #fafafa;
+  padding: 8px 11px;
+  margin: 8px 9px;
+  font-size: 11.8px;
+  color: #222;
+  font-style: italic;
+  page-break-inside: avoid;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer-note {
+  margin-top: 11px;
+  padding-top: 6px;
+  border-top: 1px solid #ccc;
+  color: #555;
+  font-size: 10px;
+  text-align: center;
+}
+
+/* =========================================================
+   PAGE BREAK
+   ========================================================= */
+
+.page-break {
+  page-break-before: always;
+}
+
+/* =========================================================
+   PRINT
+   ========================================================= */
+
+@media print {
+
+  html,
   body {
-    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-    color: #1a1a1a;
-    background: #ffffff;
-    line-height: 1.6;
+    width: 210mm;
+    background: #fff;
+    padding: 0;
     margin: 0;
-    padding: 24px;
-    max-width: 900px;
-    margin: 0 auto;
   }
-  h1 {
-    font-size: 26px;
-    border-bottom: 3px solid #2563eb;
-    padding-bottom: 8px;
-    margin-bottom: 4px;
-    color: #111827;
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+    padding: 13mm 15mm;
   }
-  .subtitle { color: #4b5563; font-size: 14px; margin-bottom: 26px; }
-  h2 {
-    font-size: 19px;
-    margin-top: 34px;
-    color: #1e3a8a;
-    border-left: 5px solid #2563eb;
-    padding-left: 10px;
-    page-break-after: avoid;
-  }
-  h3 {
-    font-size: 15.5px;
-    margin-top: 18px;
-    color: #b45309;
-    page-break-after: avoid;
-  }
-  .card {
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 16px 18px;
-    margin: 14px 0;
-    background: #f9fafb;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+
+  .card,
+  .toc,
+  .flow,
+  .memory-trick,
+  .definition-box {
     page-break-inside: avoid;
   }
-  .card.extra { border-left: 5px solid #f59e0b; background: #fffbeb; }
-  .card.theory { border-left: 5px solid #2563eb; background: #eff6ff; }
-  .tag {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 9px;
-    border-radius: 20px;
-    margin-bottom: 8px;
-    letter-spacing: 0.4px;
+
+  h1,
+  h2,
+  h3 {
+    page-break-after: avoid;
   }
-  .tag-orig { background: #dbeafe; color: #1e40af; }
-  .tag-extra { background: #fef3c7; color: #92400e; }
-  .tag-qa { background: #dcfce7; color: #166534; }
-  .tag-theory { background: #dbeafe; color: #1e3a8a; }
+
   pre {
-    background: #1e1e2e;
-    color: #cdd6f4;
-    padding: 14px 16px;
-    border-radius: 8px;
-    overflow-x: hidden;
-    white-space: pre-wrap;
-    word-break: break-word;
-    font-family: 'Consolas', 'Fira Code', monospace;
-    font-size: 12.5px;
-    line-height: 1.5;
-    margin: 10px 0;
+    page-break-inside: avoid;
   }
-  .kw { color: #cba6f7; }
-  .type { color: #89dceb; }
-  .str { color: #a6e3a1; }
-  .cmt { color: #6c7086; font-style: italic; }
-  .method { color: #f9e2af; }
-  .ann { color: #fab387; }
-  code.inline {
-    background: #eef2ff;
-    color: #3730a3;
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-family: 'Consolas', monospace;
-    font-size: 13px;
-  }
+
   table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 12px 0;
-    font-size: 13.5px;
+    page-break-inside: auto;
   }
-  th, td {
-    border: 1px solid #d1d5db;
-    padding: 8px 10px;
-    text-align: left;
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
   }
-  th { background: #2563eb; color: white; }
-  tr:nth-child(even) { background: #f3f4f6; }
-  .flow {
-    background: #eff6ff;
-    border: 1px dashed #93c5fd;
-    border-radius: 8px;
-    padding: 14px 20px;
-    font-family: 'Consolas', monospace;
-    font-size: 13px;
-    color: #1e3a8a;
-    white-space: pre;
-    margin: 10px 0;
-    text-align: center;
+
+  .page-break {
+    page-break-before: always;
   }
-  .qa-item {
-    border-bottom: 1px solid #e5e7eb;
-    padding: 10px 0;
+
+  a {
+    color: #111;
+    text-decoration: none;
   }
-  .qa-item:last-child { border-bottom: none; }
-  .q { font-weight: 700; color: #111827; }
-  .a { color: #374151; margin-top: 4px; }
-  .memory-trick {
-    background: #fdf4ff;
-    border: 1px solid #e9d5ff;
-    border-radius: 8px;
-    padding: 10px 14px;
-    margin: 10px 0;
-    font-size: 13.5px;
-    color: #6b21a8;
-  }
-  .memory-trick b { color: #581c87; }
-  .definition-box {
-    background: #f0fdf4;
-    border: 1px solid #86efac;
-    border-radius: 8px;
-    padding: 14px 18px;
-    margin: 12px 0;
-    font-size: 14px;
-    color: #14532d;
-    font-style: italic;
-  }
-  ul { margin: 6px 0; padding-left: 22px; }
-  li { margin: 3px 0; }
-  .toc {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 14px 20px;
-    margin-bottom: 24px;
-  }
-  .toc a { color: #2563eb; text-decoration: none; font-size: 13.5px; }
-  .toc ol { margin: 6px 0; }
-  .page-break { page-break-before: always; }
-  .footer-note {
-    margin-top: 40px;
-    padding-top: 14px;
-    border-top: 1px solid #e5e7eb;
-    color: #6b7280;
-    font-size: 12px;
-    text-align: center;
-  }
-  .layer-box {
-    display: block;
-    background: #2563eb;
-    color: white;
-    text-align: center;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 800px) {
+
+  body {
     padding: 8px;
-    border-radius: 6px;
-    margin: 4px auto;
-    max-width: 260px;
-    font-weight: 600;
-    font-size: 13px;
   }
-  .arrow-down {
-    text-align: center;
-    color: #93c5fd;
+
+  .a4-page {
+    width: 100%;
+    min-height: auto;
+    padding: 20px;
+    margin: 8px auto;
+  }
+
+  h1 {
     font-size: 18px;
-    margin: 0;
   }
+
+  .subtitle {
+    font-size: 10.5px;
+  }
+
+  pre {
+    font-size: 9.5px;
+    padding: 7px 9px;
+  }
+
+  table {
+    font-size: 9px;
+    display: block;
+    overflow-x: auto;
+  }
+
+  th,
+  td {
+    padding: 4px 5px;
+  }
+
+  .flow {
+    font-size: 10px;
+  }
+}
+
 </style>
 </head>
+
 <body>
 
+<div class="a4-page">
+
 <h1>Hibernate Project Structure — DTO, DAO &amp; Driver</h1>
-<div class="subtitle">Layered Architecture with Laptop Example — Packages: <code class="inline">com.DTO</code>, <code class="inline">com.DAO</code>, <code class="inline">com.ty</code></div>
+
+<div class="subtitle">
+Layered Architecture with Laptop Example —
+Packages:
+<code class="inline">com.DTO</code>,
+<code class="inline">com.DAO</code>,
+<code class="inline">com.ty</code>
+</div>
+
+
+<!-- =====================================================
+     TABLE OF CONTENTS
+     ===================================================== -->
 
 <div class="toc">
+
   <b>Contents</b>
+
   <ol>
     <li><a href="#intro">Introduction</a></li>
     <li><a href="#why">Why Do We Need Project Structure?</a></li>
@@ -201,131 +588,281 @@
     <li><a href="#qa">Interview Q&amp;A</a></li>
     <li><a href="#tricks">Memory Tricks</a></li>
   </ol>
+
 </div>
 
-<h2 id="intro">1. Introduction</h2>
+
+<!-- =====================================================
+     1. INTRODUCTION
+     ===================================================== -->
+
+<h2 id="intro">
+1. Introduction
+</h2>
+
 <div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-  <p>When developing a Hibernate application, writing all the code inside a single Java class is not a good practice. As the application grows, the code becomes lengthy, difficult to understand, maintain, and debug.</p>
-  <p>To overcome this problem, Hibernate applications follow a <b>layered architecture</b>, where different responsibilities are divided into different classes and packages. This approach makes the project clean, reusable, scalable, and easy to maintain.</p>
-  <p>Instead of writing Entity classes, database operations, and the main execution logic in one place, we separate them into different layers such as <b>DTO</b>, <b>DAO</b>, and <b>Driver (Controller)</b>.</p>
-  <p>This separation of responsibilities is one of the most common practices followed in enterprise-level Java applications.</p>
+
+<span class="tag tag-theory">THEORY</span>
+
+<p>
+When developing a Hibernate application, writing all the code inside a single Java class is not a good practice. As the application grows, the code becomes lengthy, difficult to understand, maintain, and debug.
+</p>
+
+<p>
+To overcome this problem, Hibernate applications follow a <b>layered architecture</b>, where different responsibilities are divided into different classes and packages. This approach makes the project clean, reusable, scalable, and easy to maintain.
+</p>
+
+<p>
+Instead of writing Entity classes, database operations, and the main execution logic in one place, we separate them into different layers such as <b>DTO</b>, <b>DAO</b>, and <b>Driver (Controller)</b>.
+</p>
+
+<p>
+This separation of responsibilities is one of the most common practices followed in enterprise-level Java applications.
+</p>
+
 </div>
 
-<h2 id="why">2. Why Do We Need Project Structure?</h2>
+
+<!-- =====================================================
+     2. WHY STRUCTURE
+     ===================================================== -->
+
+<h2 id="why">
+2. Why Do We Need Project Structure?
+</h2>
+
 <div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-  <p>Suppose we create a Hibernate project and write everything inside one class:</p>
+
+<span class="tag tag-theory">THEORY</span>
+
+<p>
+Suppose we create a Hibernate project and write everything inside one class:
+</p>
+
 <pre><span class="kw">public class</span> <span class="type">Driver</span> {
-	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
-		<span class="cmt">// Create Entity Object</span>
-		<span class="cmt">// Insert Data</span>
-		<span class="cmt">// Fetch Data</span>
-		<span class="cmt">// Update Data</span>
-		<span class="cmt">// Delete Data</span>
-		<span class="cmt">// Print Output</span>
-	}
+
+    <span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+
+        <span class="cmt">// Create Entity Object</span>
+        <span class="cmt">// Insert Data</span>
+        <span class="cmt">// Fetch Data</span>
+        <span class="cmt">// Update Data</span>
+        <span class="cmt">// Delete Data</span>
+        <span class="cmt">// Print Output</span>
+
+    }
 }</pre>
-  <p>Initially, this seems simple. But imagine the application contains:</p>
-  <ul>
-    <li>20 Entity Classes</li>
-    <li>200 Database Operations</li>
-    <li>Thousands of lines of code</li>
-  </ul>
-  <p>Everything inside one class becomes difficult to understand.</p>
-  <p><b>Problems:</b></p>
-  <ul>
-    <li>❌ Large code</li>
-    <li>❌ Difficult debugging</li>
-    <li>❌ Difficult maintenance</li>
-    <li>❌ Code duplication</li>
-    <li>❌ Poor readability</li>
-    <li>❌ Low reusability</li>
-    <li>❌ Not suitable for enterprise applications</li>
-  </ul>
-  <p>Therefore, we divide the application into different layers.</p>
+
+<p>
+Initially, this seems simple. But imagine the application contains:
+</p>
+
+<ul>
+<li>20 Entity Classes</li>
+<li>200 Database Operations</li>
+<li>Thousands of lines of code</li>
+</ul>
+
+<p>
+Everything inside one class becomes difficult to understand.
+</p>
+
+<p><b>Problems:</b></p>
+
+<ul>
+<li>❌ Large code</li>
+<li>❌ Difficult debugging</li>
+<li>❌ Difficult maintenance</li>
+<li>❌ Code duplication</li>
+<li>❌ Poor readability</li>
+<li>❌ Low reusability</li>
+<li>❌ Not suitable for enterprise applications</li>
+</ul>
+
+<p>
+Therefore, we divide the application into different layers.
+</p>
+
 </div>
 
-<h2 id="layered">3. What is Layered Architecture?</h2>
+
+<!-- =====================================================
+     3. LAYERED ARCHITECTURE
+     ===================================================== -->
+
+<h2 id="layered">
+3. What is Layered Architecture?
+</h2>
+
 <div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-  <p><b>Layered Architecture</b> is a software design approach in which the application is divided into multiple layers. Each layer has a specific responsibility and communicates only with the required layer.</p>
-  <p>Instead of mixing all the logic together, every layer performs a single task. This makes the application:</p>
-  <ul>
-    <li>Modular</li>
-    <li>Reusable</li>
-    <li>Easy to maintain</li>
-    <li>Easy to test</li>
-    <li>Easy to extend</li>
-  </ul>
+
+<span class="tag tag-theory">THEORY</span>
+
+<p>
+<b>Layered Architecture</b> is a software design approach in which the application is divided into multiple layers. Each layer has a specific responsibility and communicates only with the required layer.
+</p>
+
+<p>
+Instead of mixing all the logic together, every layer performs a single task. This makes the application:
+</p>
+
+<ul>
+<li>Modular</li>
+<li>Reusable</li>
+<li>Easy to maintain</li>
+<li>Easy to test</li>
+<li>Easy to extend</li>
+</ul>
+
 </div>
+
 
 <h3>Hibernate Project Architecture</h3>
+
 <div class="flow">
-<span class="layer-box" style="display:block;">User</span>
+
+<span class="layer-box">User</span>
+
 <div class="arrow-down">↓</div>
-<span class="layer-box" style="display:block;">Driver (Controller)</span>
+
+<span class="layer-box">Driver (Controller)</span>
+
 <div class="arrow-down">↓</div>
-<span class="layer-box" style="display:block;">DAO Layer</span>
+
+<span class="layer-box">DAO Layer</span>
+
 <div class="arrow-down">↓</div>
-<span class="layer-box" style="display:block;">Hibernate (JPA API)</span>
+
+<span class="layer-box">Hibernate (JPA API)</span>
+
 <div class="arrow-down">↓</div>
-<span class="layer-box" style="display:block;">PostgreSQL Database</span>
+
+<span class="layer-box">PostgreSQL Database</span>
+
 </div>
 
-<h2 id="package">4. Project Package Structure</h2>
+
+<!-- =====================================================
+     4. PACKAGE STRUCTURE
+     ===================================================== -->
+
+<h2 id="package">
+4. Project Package Structure
+</h2>
+
 <div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-<pre><span class="cmt">src/main/java</span>
+
+<span class="tag tag-theory">THEORY</span>
+
+<pre>src/main/java
+
 com.DTO
   └── Laptop.java
+
 com.DAO
   └── LaptopDao.java
+
 com.ty
   └── DriverLaptop.java</pre>
+
 </div>
 
-<h2 id="responsibility">5. Purpose of Each Package &amp; Layer Responsibilities</h2>
+
+<!-- =====================================================
+     5. RESPONSIBILITIES
+     ===================================================== -->
+
+<h2 id="responsibility">
+5. Purpose of Each Package &amp; Layer Responsibilities
+</h2>
+
 <table>
-<tr><th>Package</th><th>Responsibility</th></tr>
-<tr><td><code class="inline">com.DTO</code></td><td>Represents database tables using Entity classes.</td></tr>
-<tr><td><code class="inline">com.DAO</code></td><td>Contains all database operations such as Insert, Fetch, Update, and Delete.</td></tr>
-<tr><td><code class="inline">com.ty</code></td><td>Contains the Driver class with the <code class="inline">main()</code> method to execute the application.</td></tr>
+
+<tr>
+<th>Package</th>
+<th>Responsibility</th>
+</tr>
+
+<tr>
+<td><code class="inline">com.DTO</code></td>
+<td>Represents database tables using Entity classes.</td>
+</tr>
+
+<tr>
+<td><code class="inline">com.DAO</code></td>
+<td>Contains all database operations such as Insert, Fetch, Update, and Delete.</td>
+</tr>
+
+<tr>
+<td><code class="inline">com.ty</code></td>
+<td>Contains the Driver class with the <code class="inline">main()</code> method to execute the application.</td>
+</tr>
+
 </table>
 
+
 <div class="card">
-  <h3 style="margin-top:0;">DTO Layer</h3>
-  <p>Responsible for:</p>
-  <ul>
-    <li>Representing database tables</li>
-    <li>Holding data</li>
-    <li>Mapping Java Objects with database tables</li>
-  </ul>
-  <p>It <b>does not</b> perform database operations.</p>
 
-  <h3>DAO Layer</h3>
-  <p>Responsible for:</p>
-  <ul>
-    <li>Insert</li>
-    <li>Fetch</li>
-    <li>Update</li>
-    <li>Delete</li>
-  </ul>
-  <p>It contains all persistence logic. It <b>does not</b> contain the <code class="inline">main()</code> method.</p>
+<h3 style="margin:7px 12px 4px;">DTO Layer</h3>
 
-  <h3>Driver (Controller) Layer</h3>
-  <p>Responsible for:</p>
-  <ul>
-    <li>Starting the application</li>
-    <li>Creating objects</li>
-    <li>Calling DAO methods</li>
-    <li>Displaying results</li>
-  </ul>
-  <p>It <b>does not</b> contain persistence logic.</p>
+<p>Responsible for:</p>
+
+<ul>
+<li>Representing database tables</li>
+<li>Holding data</li>
+<li>Mapping Java Objects with database tables</li>
+</ul>
+
+<p>
+It <b>does not</b> perform database operations.
+</p>
+
+
+<h3 style="margin:8px 12px 4px;">DAO Layer</h3>
+
+<p>Responsible for:</p>
+
+<ul>
+<li>Insert</li>
+<li>Fetch</li>
+<li>Update</li>
+<li>Delete</li>
+</ul>
+
+<p>
+It contains all persistence logic. It <b>does not</b> contain the
+<code class="inline">main()</code> method.
+</p>
+
+
+<h3 style="margin:8px 12px 4px;">Driver (Controller) Layer</h3>
+
+<p>Responsible for:</p>
+
+<ul>
+<li>Starting the application</li>
+<li>Creating objects</li>
+<li>Calling DAO methods</li>
+<li>Displaying results</li>
+</ul>
+
+<p>
+It <b>does not</b> contain persistence logic.
+</p>
+
 </div>
 
-<h2 id="flow">6. Execution Flow</h2>
-<div class="flow">Application Starts
+
+<!-- =====================================================
+     6. EXECUTION FLOW
+     ===================================================== -->
+
+<h2 id="flow">
+6. Execution Flow
+</h2>
+
+<div class="flow">
+Application Starts
       ↓
 Driver Class Executes
       ↓
@@ -341,10 +878,14 @@ PostgreSQL Executes Query
       ↓
 Result Returned
       ↓
-Displayed to User</div>
+Displayed to User
+</div>
+
 
 <h3>Complete Layered Flow</h3>
-<div class="flow">Driver Class
+
+<div class="flow">
+Driver Class
       ↓
 LaptopDao.java
       ↓
@@ -354,13 +895,28 @@ Hibernate Framework
       ↓
 PostgreSQL Database
       ↑
-Laptop Entity Class</div>
+Laptop Entity Class
+</div>
 
-<h2 id="realworld">7. Real-Life Example</h2>
+
+<!-- =====================================================
+     7. REAL WORLD
+     ===================================================== -->
+
+<h2 id="realworld">
+7. Real-Life Example
+</h2>
+
 <div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-  <p>Imagine an online shopping application:</p>
-  <div class="flow">Customer
+
+<span class="tag tag-theory">THEORY</span>
+
+<p>
+Imagine an online shopping application:
+</p>
+
+<div class="flow">
+Customer
     ↓
 Website (Controller)
     ↓
@@ -368,17 +924,25 @@ Service Executive (DAO)
     ↓
 Product Information (DTO)
     ↓
-Warehouse (Database)</div>
-  <p><b>Explanation:</b></p>
-  <ul>
-    <li>The <b>Customer</b> places a request.</li>
-    <li>The <b>Website (Controller)</b> receives the request.</li>
-    <li>The <b>Service Executive (DAO)</b> processes the request and communicates with the warehouse.</li>
-    <li>The <b>Product Information (DTO)</b> carries the product details.</li>
-    <li>The <b>Warehouse (Database)</b> stores the actual data.</li>
-  </ul>
-  <p>Similarly, in a Hibernate application:</p>
-  <div class="flow">User
+Warehouse (Database)
+</div>
+
+<p><b>Explanation:</b></p>
+
+<ul>
+<li>The <b>Customer</b> places a request.</li>
+<li>The <b>Website (Controller)</b> receives the request.</li>
+<li>The <b>Service Executive (DAO)</b> processes the request and communicates with the warehouse.</li>
+<li>The <b>Product Information (DTO)</b> carries the product details.</li>
+<li>The <b>Warehouse (Database)</b> stores the actual data.</li>
+</ul>
+
+<p>
+Similarly, in a Hibernate application:
+</p>
+
+<div class="flow">
+User
   ↓
 Driver Class
   ↓
@@ -386,14 +950,31 @@ DAO Class
   ↓
 Entity Class
   ↓
-Database</div>
+Database
 </div>
 
-<h2 id="code" class="page-break">8. Code — Laptop Entity, LaptopDao, Driverlaptop</h2>
+</div>
 
-<h3>8.1 Entity — <code class="inline">Laptop.java</code> (com.DTO)</h3>
+
+<!-- =====================================================
+     8. CODE
+     ===================================================== -->
+
+<h2 id="code" class="page-break">
+8. Code — Laptop Entity, LaptopDao, Driverlaptop
+</h2>
+
+
+<!-- ENTITY -->
+
+<h3>
+8.1 Entity — <code class="inline">Laptop.java</code> (com.DTO)
+</h3>
+
 <div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+
+<span class="tag tag-orig">ORIGINAL CODE</span>
+
 <pre><span class="kw">package</span> com.DTO;
 
 <span class="kw">import</span> javax.annotation.processing.Generated;
@@ -404,51 +985,93 @@ Database</div>
 
 @Entity
 <span class="kw">public class</span> <span class="type">Laptop</span> {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	<span class="kw">private</span> <span class="type">int</span> id;
-	@Override
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">toString</span>() {
-		<span class="kw">return</span> <span class="str">"Laptop [id="</span> + id + <span class="str">", name="</span> + name + <span class="str">", price="</span> + price + <span class="str">"]"</span>;
-	}
-	<span class="kw">private</span> <span class="type">String</span> name;
-	<span class="kw">private</span> <span class="type">int</span> price;
-	
-	<span class="kw">public</span> <span class="type">int</span> <span class="method">getId</span>() {
-		<span class="kw">return</span> id;
-	}
-	<span class="kw">public void</span> <span class="method">setId</span>(<span class="type">int</span> id) {
-		<span class="kw">this</span>.id = id;
-	}
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">getName</span>() {
-		<span class="kw">return</span> name;
-	}
-	<span class="kw">public void</span> <span class="method">setName</span>(<span class="type">String</span> name) {
-		<span class="kw">this</span>.name = name;
-	}
-	<span class="kw">public</span> <span class="type">int</span> <span class="method">getPrice</span>() {
-		<span class="kw">return</span> price;
-	}
-	<span class="kw">public void</span> <span class="method">setPrice</span>(<span class="type">int</span> price) {
-		<span class="kw">this</span>.price = price;
-	}
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    <span class="kw">private</span> <span class="type">int</span> id;
+
+    @Override
+    <span class="kw">public</span> <span class="type">String</span> <span class="method">toString</span>() {
+        <span class="kw">return</span> <span class="str">"Laptop [id="</span> + id + <span class="str">", name="</span> + name + <span class="str">", price="</span> + price + <span class="str">"]"</span>;
+    }
+
+    <span class="kw">private</span> <span class="type">String</span> name;
+    <span class="kw">private</span> <span class="type">int</span> price;
+
+    <span class="kw">public</span> <span class="type">int</span> <span class="method">getId</span>() {
+        <span class="kw">return</span> id;
+    }
+
+    <span class="kw">public void</span> <span class="method">setId</span>(<span class="type">int</span> id) {
+        <span class="kw">this</span>.id = id;
+    }
+
+    <span class="kw">public</span> <span class="type">String</span> <span class="method">getName</span>() {
+        <span class="kw">return</span> name;
+    }
+
+    <span class="kw">public void</span> <span class="method">setName</span>(<span class="type">String</span> name) {
+        <span class="kw">this</span>.name = name;
+    }
+
+    <span class="kw">public</span> <span class="type">int</span> <span class="method">getPrice</span>() {
+        <span class="kw">return</span> price;
+    }
+
+    <span class="kw">public void</span> <span class="method">setPrice</span>(<span class="type">int</span> price) {
+        <span class="kw">this</span>.price = price;
+    }
 
 }</pre>
-</div>
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
-  <ul>
-    <li><code class="inline">@GeneratedValue(strategy = GenerationType.IDENTITY)</code> — unlike the earlier <code class="inline">Person</code> entity, here the primary key <code class="inline">id</code> is <b>auto-generated by the database</b> (e.g. PostgreSQL <code class="inline">SERIAL</code>/identity column) rather than assigned manually in Java code.</li>
-    <li><code class="inline">GenerationType.IDENTITY</code> relies on the database's own auto-increment column — Hibernate does an INSERT and reads back the generated key immediately (this disables JDBC batching for inserts, worth knowing for interviews).</li>
-    <li><code class="inline">toString()</code> is overridden so <code class="inline">System.out.println(l1)</code> in <code class="inline">findAll()</code> prints a readable representation instead of the default <code class="inline">Object.toString()</code> hash.</li>
-    <li>The unused import <code class="inline">javax.annotation.processing.Generated</code> is unrelated to JPA's <code class="inline">@GeneratedValue</code> — likely an IDE auto-import mistake; it has no effect here.</li>
-  </ul>
+
 </div>
 
-<h3>8.2 DAO — <code class="inline">LaptopDao.java</code> (com.DAO)</h3>
+
+<div class="card extra">
+
+<span class="tag tag-extra">EXTRA — Explanation</span>
+
+<ul>
+
+<li>
+<code class="inline">@GeneratedValue(strategy = GenerationType.IDENTITY)</code>
+— unlike the earlier <code class="inline">Person</code> entity, here the primary key
+<code class="inline">id</code> is <b>auto-generated by the database</b>.
+</li>
+
+<li>
+<code class="inline">GenerationType.IDENTITY</code> relies on the database's own
+auto-increment column.
+</li>
+
+<li>
+<code class="inline">toString()</code> is overridden so
+<code class="inline">System.out.println(l1)</code> in
+<code class="inline">findAll()</code> prints a readable representation.
+</li>
+
+<li>
+The unused import
+<code class="inline">javax.annotation.processing.Generated</code>
+is unrelated to JPA's
+<code class="inline">@GeneratedValue</code>.
+</li>
+
+</ul>
+
+</div>
+
+
+<!-- DAO -->
+
+<h3>
+8.2 DAO — <code class="inline">LaptopDao.java</code> (com.DAO)
+</h3>
+
 <div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+
+<span class="tag tag-orig">ORIGINAL CODE</span>
+
 <pre><span class="kw">package</span> com.DAO;
 
 <span class="kw">import</span> java.util.List;
@@ -461,74 +1084,162 @@ Database</div>
 <span class="kw">import</span> com.DTO.Laptop;
 
 <span class="kw">public class</span> <span class="type">LaptopDao</span> {
-	EntityManagerFactory emf = Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"pravin"</span>);
-	EntityManager em = emf.<span class="method">createEntityManager</span>();
-	EntityTransaction et = em.<span class="method">getTransaction</span>();
-	
-	<span class="kw">public void</span> <span class="method">insertData</span>(Laptop l) {
-		et.<span class="method">begin</span>();
-		em.<span class="method">persist</span>(l);
-		et.<span class="method">commit</span>();
-		System.out.<span class="method">println</span>(<span class="str">"data inserted....."</span>);
-	}
-	<span class="kw">public void</span> <span class="method">findById</span>(<span class="type">int</span> lid) {
-		Laptop l =em.<span class="method">find</span>(Laptop.<span class="kw">class</span>,lid );
-		
-		System.out.<span class="method">println</span>(l.<span class="method">getId</span>()+<span class="str">" "</span>+l.<span class="method">getName</span>());
-		
-	}
-	
-	<span class="kw">public void</span> <span class="method">findAll</span>() {
-		List&lt;Laptop&gt; l=em.<span class="method">createQuery</span>(<span class="str">"select l from Laptop l"</span>).<span class="method">getResultList</span>();
-		<span class="kw">for</span>(Laptop l1 : l) {
-			System.out.<span class="method">println</span>(l1);
-		}
-	}
-	
-	<span class="kw">public void</span> <span class="method">updateBrand</span>(<span class="type">int</span> id,<span class="type">String</span> lbrand) {
-		Laptop l =em.<span class="method">find</span>(Laptop.<span class="kw">class</span>, id);
-		l.<span class="method">setName</span>(lbrand);
-		et.<span class="method">begin</span>();
-		em.<span class="method">merge</span>(l);
-		et.<span class="method">commit</span>();
-		
-	}
-	
-	<span class="kw">public void</span> <span class="method">replaceObject</span>(<span class="type">int</span> id,Laptop newlaptop) {
-		Laptop oldlaptop = em.<span class="method">find</span>(Laptop.<span class="kw">class</span>, id);
-		et.<span class="method">begin</span>();
-		<span class="kw">if</span>(oldlaptop!=<span class="kw">null</span>) {
-			newlaptop.<span class="method">setId</span>(oldlaptop.<span class="method">getId</span>());
-			em.<span class="method">merge</span>(newlaptop);
-		}
-		et.<span class="method">commit</span>();
-		
-	}
-	
-	<span class="kw">public void</span> <span class="method">deletelaptop</span>(<span class="type">int</span> id) {
-		Laptop l = em.<span class="method">find</span>(Laptop.<span class="kw">class</span>, id);
-		
-		et.<span class="method">begin</span>();
-		em.<span class="method">remove</span>(l);
-		et.<span class="method">commit</span>();
-	}
+
+    EntityManagerFactory emf =
+        Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"pravin"</span>);
+
+    EntityManager em =
+        emf.<span class="method">createEntityManager</span>();
+
+    EntityTransaction et =
+        em.<span class="method">getTransaction</span>();
+
+    <span class="kw">public void</span> <span class="method">insertData</span>(Laptop l) {
+
+        et.<span class="method">begin</span>();
+
+        em.<span class="method">persist</span>(l);
+
+        et.<span class="method">commit</span>();
+
+        System.out.<span class="method">println</span>(
+            <span class="str">"data inserted....."</span>
+        );
+    }
+
+    <span class="kw">public void</span> <span class="method">findById</span>(<span class="type">int</span> lid) {
+
+        Laptop l =
+            em.<span class="method">find</span>(Laptop.<span class="kw">class</span>, lid);
+
+        System.out.<span class="method">println</span>(
+            l.<span class="method">getId</span>() + <span class="str">" "</span> + l.<span class="method">getName</span>()
+        );
+    }
+
+    <span class="kw">public void</span> <span class="method">findAll</span>() {
+
+        List&lt;Laptop&gt; l =
+            em.<span class="method">createQuery</span>(
+                <span class="str">"select l from Laptop l"</span>
+            ).<span class="method">getResultList</span>();
+
+        <span class="kw">for</span> (Laptop l1 : l) {
+
+            System.out.<span class="method">println</span>(l1);
+        }
+    }
+
+    <span class="kw">public void</span> <span class="method">updateBrand</span>(
+        <span class="type">int</span> id,
+        <span class="type">String</span> lbrand
+    ) {
+
+        Laptop l =
+            em.<span class="method">find</span>(Laptop.<span class="kw">class</span>, id);
+
+        l.<span class="method">setName</span>(lbrand);
+
+        et.<span class="method">begin</span>();
+
+        em.<span class="method">merge</span>(l);
+
+        et.<span class="method">commit</span>();
+    }
+
+    <span class="kw">public void</span> <span class="method">replaceObject</span>(
+        <span class="type">int</span> id,
+        Laptop newlaptop
+    ) {
+
+        Laptop oldlaptop =
+            em.<span class="method">find</span>(Laptop.<span class="kw">class</span>, id);
+
+        et.<span class="method">begin</span>();
+
+        <span class="kw">if</span> (oldlaptop != <span class="kw">null</span>) {
+
+            newlaptop.<span class="method">setId</span>(
+                oldlaptop.<span class="method">getId</span>()
+            );
+
+            em.<span class="method">merge</span>(newlaptop);
+        }
+
+        et.<span class="method">commit</span>();
+    }
+
+    <span class="kw">public void</span> <span class="method">deletelaptop</span>(<span class="type">int</span> id) {
+
+        Laptop l =
+            em.<span class="method">find</span>(Laptop.<span class="kw">class</span>, id);
+
+        et.<span class="method">begin</span>();
+
+        em.<span class="method">remove</span>(l);
+
+        et.<span class="method">commit</span>();
+    }
 
 }</pre>
-</div>
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
-  <ul>
-    <li><b>DAO owns the persistence resources</b> — <code class="inline">EntityManagerFactory</code>, <code class="inline">EntityManager</code>, and <code class="inline">EntityTransaction</code> are instance fields, created once when a <code class="inline">LaptopDao</code> object is constructed, and reused across all its methods. This is different from the earlier standalone driver classes, which created a fresh <code class="inline">EntityManager</code> inside every <code class="inline">main()</code>.</li>
-    <li><code class="inline">updateBrand()</code> uses <code class="inline">em.merge(l)</code> even though <code class="inline">l</code> was just loaded via <code class="inline">find()</code> and is already managed — here <code class="inline">merge()</code> is redundant but harmless, since <code class="inline">l</code> is still attached (plain dirty checking, like in the earlier <code class="inline">UpdateById</code> example, would have worked without it).</li>
-    <li><code class="inline">replaceObject()</code> shows a genuine, correct use of <code class="inline">merge()</code>: <code class="inline">newlaptop</code> is a <b>separate, Detached/Transient</b> object (passed in from outside), not the one returned by <code class="inline">find()</code>. Copying the old ID onto it and calling <code class="inline">merge()</code> tells Hibernate "treat this object's state as the new state for that row."</li>
-    <li><code class="inline">findById()</code> and <code class="inline">deletelaptop()</code> don't null-check the result of <code class="inline">find()</code> — if the ID doesn't exist, <code class="inline">l</code> will be <code class="inline">null</code> and calling <code class="inline">l.getId()</code> / <code class="inline">em.remove(l)</code> will throw a <code class="inline">NullPointerException</code>. (Compare with <code class="inline">FetchById</code>/<code class="inline">DeleteById</code> from the earlier notes, which do check <code class="inline">if (p != null)</code>.)</li>
-    <li>Because <code class="inline">et</code> (the <code class="inline">EntityTransaction</code>) is a single shared field, calling <code class="inline">et.begin()</code> twice in a row without an intervening <code class="inline">commit()</code>/<code class="inline">rollback()</code> would throw <code class="inline">IllegalStateException: Transaction already active</code> — safe here since each method begins and commits its own transaction before returning.</li>
-  </ul>
+
 </div>
 
-<h3>8.3 Driver — <code class="inline">Driverlaptop.java</code> (com.ty)</h3>
+
+<div class="card extra">
+
+<span class="tag tag-extra">EXTRA — Explanation</span>
+
+<ul>
+
+<li>
+<b>DAO owns the persistence resources</b> —
+<code class="inline">EntityManagerFactory</code>,
+<code class="inline">EntityManager</code>, and
+<code class="inline">EntityTransaction</code> are instance fields.
+</li>
+
+<li>
+<code class="inline">updateBrand()</code> uses
+<code class="inline">em.merge(l)</code> even though
+<code class="inline">l</code> was just loaded via
+<code class="inline">find()</code> and is already managed.
+</li>
+
+<li>
+<code class="inline">replaceObject()</code> shows a genuine use of
+<code class="inline">merge()</code>: <code class="inline">newlaptop</code>
+is a separate object passed from outside.
+</li>
+
+<li>
+<code class="inline">findById()</code> and
+<code class="inline">deletelaptop()</code> don't null-check the result of
+<code class="inline">find()</code>.
+</li>
+
+<li>
+Because <code class="inline">et</code> is a shared transaction field,
+calling <code class="inline">begin()</code> while another transaction is
+already active can throw
+<code class="inline">IllegalStateException</code>.
+</li>
+
+</ul>
+
+</div>
+
+
+<!-- DRIVER -->
+
+<h3>
+8.3 Driver — <code class="inline">Driverlaptop.java</code> (com.ty)
+</h3>
+
 <div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+
+<span class="tag tag-orig">ORIGINAL CODE</span>
+
 <pre><span class="kw">package</span> com.ty;
 
 <span class="kw">import</span> javax.persistence.EntityManager;
@@ -540,120 +1251,360 @@ Database</div>
 <span class="kw">import</span> com.DTO.Laptop;
 
 <span class="kw">public class</span> <span class="type">Driverlaptop</span> {
-	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
-		Laptop l = <span class="kw">new</span> <span class="method">Laptop</span>();
-<span class="cmt">//		l.setName("lenovo");
-//		l.setPrice(50000);
-//		</span>
-		LaptopDao dao = <span class="kw">new</span> <span class="method">LaptopDao</span>();
-<span class="cmt">//		dao.insertData(l);
-		
-//		dao.findById(1);
-//		dao.findAll();
-//		
-//		dao.updateBrand(2, "dell");
-//		dao.findAll();
-//		
-//		dao.replaceObject(0, l);
-//		dao.deletelaptop(2);
-//		dao.deletelaptop(3);
-//		dao.deletelaptop(4);
-//		dao.deletelaptop(5);
-//		dao.deletelaptop(6);
-//		dao.deletelaptop(7);</span>
-		
-		
-	}
-	
+
+    <span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+
+        Laptop l =
+            <span class="kw">new</span> <span class="method">Laptop</span>();
+
+<span class="cmt">//      l.setName("lenovo");
+//      l.setPrice(50000);</span>
+
+        LaptopDao dao =
+            <span class="kw">new</span> <span class="method">LaptopDao</span>();
+
+<span class="cmt">//      dao.insertData(l);
+//
+//      dao.findById(1);
+//      dao.findAll();
+//
+//      dao.updateBrand(2, "dell");
+//      dao.findAll();
+//
+//      dao.replaceObject(0, l);
+//      dao.deletelaptop(2);
+//      dao.deletelaptop(3);
+//      dao.deletelaptop(4);
+//      dao.deletelaptop(5);
+//      dao.deletelaptop(6);
+//      dao.deletelaptop(7);</span>
+
+    }
 
 }</pre>
-</div>
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
-  <ul>
-    <li>This class is a clean example of the <b>Driver/Controller layer</b> from the theory above: it does not touch <code class="inline">EntityManager</code> directly at all — it only creates a <code class="inline">Laptop</code> object and a <code class="inline">LaptopDao</code>, then calls DAO methods. All persistence logic stays inside the DAO.</li>
-    <li>The commented-out lines are a common real-world pattern while testing: each DAO method is tried one at a time by uncommenting it, running, then commenting it out again before testing the next one — useful to keep in notes since it explains why so much is commented.</li>
-    <li>The unused imports (<code class="inline">EntityManager</code>, <code class="inline">EntityManagerFactory</code>, <code class="inline">EntityTransaction</code>, <code class="inline">Persistence</code>) are leftover from an earlier version of this class before the logic was moved into <code class="inline">LaptopDao</code> — a good example of why the Driver class shouldn't need these imports once DAO takes over persistence duties.</li>
-  </ul>
+
 </div>
 
-<h2 id="advantages">9. Advantages of This Structure</h2>
+
+<div class="card extra">
+
+<span class="tag tag-extra">EXTRA — Explanation</span>
+
+<ul>
+
+<li>
+This class is the <b>Driver/Controller layer</b>. It does not touch
+<code class="inline">EntityManager</code> directly.
+</li>
+
+<li>
+The commented-out lines show testing of different DAO methods one at a time.
+</li>
+
+<li>
+The unused imports are leftover from an earlier version before persistence
+logic was moved into <code class="inline">LaptopDao</code>.
+</li>
+
+</ul>
+
+</div>
+
+
+<!-- =====================================================
+     9. ADVANTAGES
+     ===================================================== -->
+
+<h2 id="advantages">
+9. Advantages of This Structure
+</h2>
+
 <table>
-<tr><th>#</th><th>Advantage</th><th>Why it matters</th></tr>
-<tr><td>1</td><td>Separation of Concerns</td><td>Each class performs only one specific task.</td></tr>
-<tr><td>2</td><td>Easy Maintenance</td><td>If database logic changes, only the DAO class needs modification.</td></tr>
-<tr><td>3</td><td>Code Reusability</td><td>DAO methods can be called from multiple classes without rewriting the same code.</td></tr>
-<tr><td>4</td><td>Better Readability</td><td>The project is well organized, making it easier for developers to understand.</td></tr>
-<tr><td>5</td><td>Easy Debugging</td><td>Errors can be identified quickly because each layer has a specific responsibility.</td></tr>
-<tr><td>6</td><td>Easy Testing</td><td>Each layer can be tested independently.</td></tr>
-<tr><td>7</td><td>Enterprise Standard</td><td>Most Java, Hibernate, Spring Boot, and enterprise applications follow this layered architecture.</td></tr>
+
+<tr>
+<th>#</th>
+<th>Advantage</th>
+<th>Why it matters</th>
+</tr>
+
+<tr>
+<td>1</td>
+<td>Separation of Concerns</td>
+<td>Each class performs only one specific task.</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>Easy Maintenance</td>
+<td>If database logic changes, only the DAO class needs modification.</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>Code Reusability</td>
+<td>DAO methods can be called from multiple classes without rewriting the same code.</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>Better Readability</td>
+<td>The project is well organized, making it easier for developers to understand.</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>Easy Debugging</td>
+<td>Errors can be identified quickly because each layer has a specific responsibility.</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>Easy Testing</td>
+<td>Each layer can be tested independently.</td>
+</tr>
+
+<tr>
+<td>7</td>
+<td>Enterprise Standard</td>
+<td>Most Java, Hibernate, Spring Boot, and enterprise applications follow this layered architecture.</td>
+</tr>
+
 </table>
 
-<h2 id="qa">10. Interview Q&amp;A</h2>
+
+<!-- =====================================================
+     10. Q&A
+     ===================================================== -->
+
+<h2 id="qa">
+10. Interview Q&amp;A
+</h2>
+
 <div class="card">
-  <span class="tag tag-qa">INTERVIEW PREP</span>
 
-  <div class="qa-item">
-    <div class="q">Q1. What is layered architecture in a Hibernate application?</div>
-    <div class="a">A design approach that divides the application into separate layers — DTO (entity/data representation), DAO (persistence logic), and Driver/Controller (execution flow) — where each layer has one responsibility and communicates only with the layer it needs.</div>
-  </div>
+<span class="tag tag-qa">INTERVIEW PREP</span>
 
-  <div class="qa-item">
-    <div class="q">Q2. What is the responsibility of the DTO layer?</div>
-    <div class="a">Represents database tables as Java objects, holds data, and maps fields to columns via JPA annotations (<code class="inline">@Entity</code>, <code class="inline">@Id</code>, <code class="inline">@GeneratedValue</code>). It performs no database operations itself.</div>
-  </div>
 
-  <div class="qa-item">
-    <div class="q">Q3. What is the responsibility of the DAO layer?</div>
-    <div class="a">Contains all persistence logic — Insert, Fetch, Update, Delete — using <code class="inline">EntityManager</code>. It never contains the <code class="inline">main()</code> method.</div>
-  </div>
+<div class="qa-item">
 
-  <div class="qa-item">
-    <div class="q">Q4. What is the responsibility of the Driver (Controller) layer?</div>
-    <div class="a">Starts the application, creates entity objects, calls DAO methods, and displays results. It contains no persistence logic of its own.</div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">Q5. Why is <code class="inline">GenerationType.IDENTITY</code> used in the <code class="inline">Laptop</code> entity but not in the earlier <code class="inline">Person</code> entity?</div>
-    <div class="a"><code class="inline">Person</code> assigned its ID manually in application code (<code class="inline">setP_id(1)</code>). <code class="inline">Laptop</code> instead delegates ID generation to the database's identity/auto-increment column via <code class="inline">@GeneratedValue(strategy = GenerationType.IDENTITY)</code>, so the ID is created automatically on insert.</div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">Q6. In <code class="inline">replaceObject()</code>, why is <code class="inline">merge()</code> the correct choice rather than plain dirty checking?</div>
-    <div class="a">Dirty checking only works on entities managed by the current persistence context. <code class="inline">newlaptop</code> is a separate object passed in from outside — it was never loaded via <code class="inline">find()</code> — so it isn't managed. <code class="inline">merge()</code> copies its state onto (or creates) a managed entity with the matching ID.</div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">Q7. What real-world bug exists in <code class="inline">findById()</code> and <code class="inline">deletelaptop()</code>?</div>
-    <div class="a">Neither method null-checks the object returned by <code class="inline">find()</code>. If the given ID doesn't exist, <code class="inline">find()</code> returns <code class="inline">null</code>, and the next line (<code class="inline">l.getId()</code> or <code class="inline">em.remove(l)</code>) throws a <code class="inline">NullPointerException</code>.</div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">Q8. Why does keeping <code class="inline">EntityManager</code> as an instance field in the DAO matter?</div>
-    <div class="a">It means all methods in that <code class="inline">LaptopDao</code> instance share the same persistence context — entities loaded by one method stay managed and visible to later calls on the same DAO object, which is what allows dirty checking to work across method calls within the same instance.</div>
-  </div>
+<div class="q">
+Q1. What is layered architecture in a Hibernate application?
 </div>
 
-<h2 id="tricks">11. Memory Tricks</h2>
+<div class="a">
+A design approach that divides the application into separate layers —
+DTO, DAO, and Driver/Controller — where each layer has one responsibility
+and communicates only with the layer it needs.
+</div>
+
+</div>
+
+
+<div class="qa-item">
+
+<div class="q">
+Q2. What is the responsibility of the DTO layer?
+</div>
+
+<div class="a">
+Represents database tables as Java objects, holds data, and maps fields
+to columns via JPA annotations such as
+<code class="inline">@Entity</code>,
+<code class="inline">@Id</code>, and
+<code class="inline">@GeneratedValue</code>.
+</div>
+
+</div>
+
+
+<div class="qa-item">
+
+<div class="q">
+Q3. What is the responsibility of the DAO layer?
+</div>
+
+<div class="a">
+Contains all persistence logic — Insert, Fetch, Update, Delete —
+using <code class="inline">EntityManager</code>.
+</div>
+
+</div>
+
+
+<div class="qa-item">
+
+<div class="q">
+Q4. What is the responsibility of the Driver layer?
+</div>
+
+<div class="a">
+Starts the application, creates entity objects, calls DAO methods,
+and displays results. It contains no persistence logic of its own.
+</div>
+
+</div>
+
+
+<div class="qa-item">
+
+<div class="q">
+Q5. Why is <code class="inline">GenerationType.IDENTITY</code> used
+in the <code class="inline">Laptop</code> entity?
+</div>
+
+<div class="a">
+It delegates primary-key generation to the database's identity or
+auto-increment mechanism instead of assigning the ID manually in Java.
+</div>
+
+</div>
+
+
+<div class="qa-item">
+
+<div class="q">
+Q6. In <code class="inline">replaceObject()</code>, why is
+<code class="inline">merge()</code> used?
+</div>
+
+<div class="a">
+<code class="inline">newlaptop</code> is a separate object passed from
+outside and is not the managed object returned by
+<code class="inline">find()</code>. <code class="inline">merge()</code>
+copies its state to a managed entity.
+</div>
+
+</div>
+
+
+<div class="qa-item">
+
+<div class="q">
+Q7. What bug exists in <code class="inline">findById()</code> and
+<code class="inline">deletelaptop()</code>?
+</div>
+
+<div class="a">
+Neither method checks whether <code class="inline">find()</code> returned
+<code class="inline">null</code>. A missing ID can therefore lead to a
+<code class="inline">NullPointerException</code>.
+</div>
+
+</div>
+
+
+<div class="qa-item">
+
+<div class="q">
+Q8. Why does keeping EntityManager as an instance field matter?
+</div>
+
+<div class="a">
+It means methods on the same DAO instance share the same persistence
+context, allowing entities loaded by that EntityManager to remain managed.
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     11. MEMORY TRICKS
+     ===================================================== -->
+
+<h2 id="tricks">
+11. Memory Tricks
+</h2>
+
+
 <div class="memory-trick">
-  <b>DTO / DAO / Driver:</b> "<b>D</b>ata shape, <b>D</b>atabase actions, <b>D</b>irects the flow" — three D's, three jobs: DTO = what the data <i>looks like</i>, DAO = what you <i>do</i> to it, Driver = <i>when/why</i> you do it.
-</div>
-<div class="memory-trick">
-  <b>Layer flow:</b> User → Driver → DAO → Hibernate → Database — remember as <b>"U</b>ncle <b>D</b>rives <b>D</b>own <b>H</b>ighway to <b>D</b>estination".
-</div>
-<div class="memory-trick">
-  <b>merge() vs dirty checking:</b> If the object came from <code class="inline">find()</code> in <i>this same</i> EntityManager and is still attached → just change it, dirty checking handles the rest. If the object came from <i>outside</i> (a new/detached instance) → use <code class="inline">merge()</code>.
-</div>
-<div class="memory-trick">
-  <b>Real-world analogy:</b> Online shopping — Customer (User) → Website (Driver/Controller) → Service Executive (DAO) → Product Info (DTO) → Warehouse (Database).
+
+<b>DTO / DAO / Driver:</b>
+
+"<b>D</b>ata shape,
+<b>D</b>atabase actions,
+<b>D</b>irects the flow"
+
+— three D's, three jobs.
+
 </div>
 
-<h2>12. Interview Definition (Ready to Recite)</h2>
+
+<div class="memory-trick">
+
+<b>Layer flow:</b>
+
+User → Driver → DAO → Hibernate → Database
+
+— remember as
+
+<b>"U</b>ncle <b>D</b>rives <b>D</b>own
+<b>H</b>ighway to <b>D</b>estination".
+
+</div>
+
+
+<div class="memory-trick">
+
+<b>merge() vs dirty checking:</b>
+
+If the object came from
+<code class="inline">find()</code> in the same
+EntityManager and is still attached → change it and dirty checking handles it.
+
+If the object came from outside → use
+<code class="inline">merge()</code>.
+
+</div>
+
+
+<div class="memory-trick">
+
+<b>Real-world analogy:</b>
+
+Online shopping —
+
+Customer → Website → Service Executive → Product Information → Warehouse.
+
+</div>
+
+
+<!-- =====================================================
+     12. INTERVIEW DEFINITION
+     ===================================================== -->
+
+<h2>
+12. Interview Definition (Ready to Recite)
+</h2>
+
 <div class="definition-box">
-  "Hibernate Project Structure is a layered architecture that separates the application into different packages such as DTO, DAO, and Driver (Controller). Each layer has a specific responsibility: the DTO represents database entities, the DAO handles all persistence operations, and the Driver class controls the execution of the application. This separation improves code readability, maintainability, reusability, scalability, and follows enterprise application development best practices."
+
+"Hibernate Project Structure is a layered architecture that separates the
+application into different packages such as DTO, DAO, and Driver (Controller).
+Each layer has a specific responsibility: the DTO represents database entities,
+the DAO handles all persistence operations, and the Driver class controls the
+execution of the application. This separation improves code readability,
+maintainability, reusability, scalability, and follows enterprise application
+development best practices."
+
 </div>
 
-<div class="footer-note">Hibernate Layered Architecture Notes — DTO (com.DTO) / DAO (com.DAO) / Driver (com.ty) — Original code preserved exactly; theory, explanations, tables, and Q&amp;A added as supplementary study material.</div>
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
+<div class="footer-note">
+
+Hibernate Layered Architecture Notes —
+DTO (<code class="inline">com.DTO</code>) /
+DAO (<code class="inline">com.DAO</code>) /
+Driver (<code class="inline">com.ty</code>)
+
+</div>
+
+</div>
 
 </body>
 </html>
