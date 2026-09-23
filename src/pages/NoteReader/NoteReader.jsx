@@ -1,4 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import subjects from "../../data/subjects";
@@ -20,6 +25,38 @@ function NoteReader() {
   const [showTopButton, setShowTopButton] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
   const [iframeHeight, setIframeHeight] = useState(800);
+
+  /* =========================================================
+     TEMPORARY HIGHLIGHTER STATE
+
+     This highlighter no longer touches the note's own
+     text/DOM at all. Instead it draws an electric-orange
+     "pen stripe" on a transparent overlay layer that sits
+     on TOP of the note, styled to look like a real marker
+     stroke (angled ends, ink-blend, slightly uneven edges).
+     Because nothing about the note's own HTML is changed:
+
+       - it can never re-arrange or reflow the note's text
+       - it works exactly the same over images, tables,
+         code blocks, or anything else, since the overlay
+         does not care what is underneath it
+  ========================================================= */
+
+  const [isHighlighterActive, setIsHighlighterActive] =
+    useState(false);
+
+  const iframeRef = useRef(null);
+
+  /*
+    Bumped every time the iframe finishes loading a
+    document. The highlighter effect depends on this so it
+    re-installs the overlay + listeners on the FRESH
+    document whenever a note (re)loads - navigating the
+    iframe destroys anything previously attached to the
+    old document.
+  */
+  const [iframeReloadTick, setIframeReloadTick] =
+    useState(0);
 
   /* =========================================================
      FIND SUBJECT
@@ -64,22 +101,13 @@ function NoteReader() {
       : null;
 
   /* =========================================================
-     FAVORITE STORAGE KEY
+     STORAGE KEYS
   ========================================================= */
 
   const favoriteStorageKey = useMemo(
     () => `notes-web-favorite-${noteId}`,
     [noteId]
   );
-
-  /* =========================================================
-     READING PROGRESS STORAGE KEY
-     
-     Every subject + note gets its own progress.
-     
-     Example:
-     notes-web-progress-java-part-01
-  ========================================================= */
 
   const progressStorageKey = useMemo(
     () =>
@@ -88,13 +116,7 @@ function NoteReader() {
   );
 
   /* =========================================================
-     STEP 8.3
      SAVE NOTE TO RECENT HISTORY
-
-     Whenever a valid note is opened:
-     - Remove old copy of same note
-     - Put latest opening at the top
-     - Keep maximum 20 notes
   ========================================================= */
 
   useEffect(() => {
@@ -131,14 +153,6 @@ function NoteReader() {
         recentKey,
         JSON.stringify(updated)
       );
-
-      console.log(
-        "Recent note saved:",
-        {
-          subjectId: subject.id,
-          noteId: note.id,
-        }
-      );
     } catch (error) {
       console.error(
         "Unable to save recent note:",
@@ -148,7 +162,7 @@ function NoteReader() {
   }, [subject, note]);
 
   /* =========================================================
-     LOAD FAVORITE STATUS
+     LOAD FAVORITE
   ========================================================= */
 
   useEffect(() => {
@@ -168,11 +182,7 @@ function NoteReader() {
   ]);
 
   /* =========================================================
-     STEP 8.5 + 8.6
-     
      RESET READER WHEN NOTE CHANGES
-     
-     AND LOAD SAVED READING PROGRESS
   ========================================================= */
 
   useEffect(() => {
@@ -180,6 +190,11 @@ function NoteReader() {
     setNoteError(false);
     setShowTopButton(false);
     setIframeHeight(800);
+
+    /*
+      Turn highlighter OFF whenever another note opens.
+    */
+    setIsHighlighterActive(false);
 
     try {
       const savedProgress = Number(
@@ -212,12 +227,6 @@ function NoteReader() {
       setReadingProgress(0);
     }
 
-    /*
-      We initially move to the top.
-
-      After the iframe loads, we will restore
-      the saved position.
-    */
     window.scrollTo({
       top: 0,
       behavior: "auto",
@@ -228,14 +237,7 @@ function NoteReader() {
   ]);
 
   /* =========================================================
-     STEP 8.7
-     
      READING PROGRESS
-     
-     - Calculate percentage
-     - Save percentage to localStorage
-     - Update progress bar
-     - Show scroll-to-top button
   ========================================================= */
 
   useEffect(() => {
@@ -271,12 +273,6 @@ function NoteReader() {
         safeProgress
       );
 
-      /*
-        Save reading progress.
-
-        Example:
-        72
-      */
       try {
         localStorage.setItem(
           progressStorageKey,
@@ -320,14 +316,7 @@ function NoteReader() {
   ]);
 
   /* =========================================================
-     RESTORE SAVED SCROLL POSITION
-     
-     This runs after the iframe has loaded.
-     
-     Example:
-     saved progress = 72%
-     
-     The page scrolls to approximately 72%.
+     RESTORE READING POSITION
   ========================================================= */
 
   function restoreReadingPosition() {
@@ -348,11 +337,7 @@ function NoteReader() {
         return;
       }
 
-      /*
-        Give the browser a little time to finish
-        calculating the iframe/document height.
-      */
-      setTimeout(() => {
+      const restore = () => {
         const documentHeight =
           document.documentElement
             .scrollHeight;
@@ -388,47 +373,10 @@ function NoteReader() {
         setReadingProgress(
           safeProgress
         );
-      }, 150);
+      };
 
-      /*
-        Second attempt.
-
-        This helps when the iframe/document
-        needs additional time to calculate height.
-      */
-      setTimeout(() => {
-        const documentHeight =
-          document.documentElement
-            .scrollHeight;
-
-        const availableHeight =
-          documentHeight -
-          window.innerHeight;
-
-        if (
-          availableHeight <= 0
-        ) {
-          return;
-        }
-
-        const safeProgress =
-          Math.min(
-            100,
-            Math.max(
-              0,
-              savedProgress
-            )
-          );
-
-        const targetScroll =
-          (safeProgress / 100) *
-          availableHeight;
-
-        window.scrollTo({
-          top: targetScroll,
-          behavior: "auto",
-        });
-      }, 500);
+      setTimeout(restore, 150);
+      setTimeout(restore, 500);
     } catch (error) {
       console.error(
         "Unable to restore reading position:",
@@ -436,6 +384,363 @@ function NoteReader() {
       );
     }
   }
+
+  /* =========================================================
+     GET IFRAME DOCUMENT
+  ========================================================= */
+
+  function getIframeDocument() {
+    const iframe = iframeRef.current;
+
+    if (!iframe) {
+      return null;
+    }
+
+    try {
+      return (
+        iframe.contentDocument ||
+        iframe.contentWindow?.document ||
+        null
+      );
+    } catch (error) {
+      console.error(
+        "Unable to access note iframe:",
+        error
+      );
+
+      return null;
+    }
+  }
+
+  /* =========================================================
+     HIGHLIGHTER PEN (OVERLAY BASED)
+
+     How it works:
+
+     1. A single transparent "overlay" <div> is appended
+        on top of the note (position: absolute, covering
+        the full scrollable height of the note document).
+        It never blocks clicks/selection
+        (pointer-events: none) - drawing is driven by
+        listeners on the document itself, not the overlay.
+
+     2. While the pen is ON:
+          - pointerdown  -> start a new orange marker
+            stripe at the cursor position
+          - pointermove  -> resize that stripe to follow
+            the drag, like dragging a real highlighter pen
+          - pointerup    -> finish the stripe. If the user
+            simply tapped/clicked (e.g. on a picture,
+            where there is no text to drag-select) a small
+            default-sized stripe is placed at that point.
+
+     3. Each stripe fades out and is removed after
+        5 seconds.
+
+     Because this NEVER edits the note's own HTML - no
+     wrapping, no surroundContents, no TreeWalker - it:
+       - works identically over plain text, headings,
+         tables, code blocks AND images
+       - can never shift/reflow the note's own layout
+  ========================================================= */
+
+  function installHighlighterStyles(iframeDocument) {
+    if (iframeDocument.getElementById("notes-web-highlighter-style")) return;
+
+    const style = iframeDocument.createElement("style");
+    style.id = "notes-web-highlighter-style";
+    style.textContent = `
+      body.nr-pen-mode,
+      body.nr-pen-mode * {
+        cursor: crosshair !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        -webkit-touch-callout: none !important;
+        touch-action: none !important;
+      }
+
+      body.nr-pen-mode ::selection {
+        background: transparent !important;
+        color: inherit !important;
+      }
+
+      .nr-pen-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        pointer-events: none;
+        z-index: 2147483000;
+        overflow: visible;
+      }
+
+      /* ---------------------------------------------------
+         ELECTRIC ORANGE MARKER STROKE
+
+         mix-blend-mode: multiply makes the stripe behave
+         like real highlighter ink sitting on top of the
+         text underneath it (darkens/tints instead of
+         flatly covering), and the asymmetric border-radius
+         + slight rotation give each stroke a hand-drawn,
+         felt-tip look instead of a perfect rectangle.
+      --------------------------------------------------- */
+
+      .nr-pen-box {
+        position: absolute;
+        box-sizing: border-box;
+        min-width: 8px;
+        min-height: 8px;
+        background: linear-gradient(
+          90deg,
+          rgba(204, 74, 0, 0.62),
+          rgba(255, 106, 0, 0.82),
+          rgba(204, 74, 0, 0.62)
+        );
+        border: 1px solid rgba(153, 55, 0, 0.55);
+        border-radius: 3px 8px 3px 8px / 8px 3px 8px 3px;
+        mix-blend-mode: multiply;
+        box-shadow:
+          0 1px 3px rgba(120, 45, 0, 0.28),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+          inset 0 -3px 5px rgba(140, 50, 0, 0.22);
+        opacity: 1;
+        transform: translateZ(0) rotate(-0.4deg);
+        pointer-events: none;
+        will-change: opacity, transform;
+        transition: opacity 0.45s ease, transform 0.45s ease;
+      }
+
+      .nr-pen-box.nr-pen-drawing {
+        background: linear-gradient(
+          90deg,
+          rgba(179, 64, 0, 0.72),
+          rgba(255, 106, 0, 0.92),
+          rgba(179, 64, 0, 0.72)
+        );
+        border-color: rgba(140, 50, 0, 0.65);
+        box-shadow:
+          0 2px 7px rgba(120, 45, 0, 0.32),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.10),
+          inset 0 -3px 6px rgba(140, 50, 0, 0.28);
+      }
+
+      .nr-pen-box.nr-pen-fade {
+        opacity: 0;
+        transform: translateY(-1px) scale(0.99) rotate(-0.4deg);
+      }
+    `;
+    (iframeDocument.head || iframeDocument.documentElement).appendChild(style);
+  }
+
+  function clearNativeSelection(iframeWindow) {
+    try {
+      const selection = iframeWindow?.getSelection?.();
+      if (selection && selection.rangeCount > 0) {
+        selection.removeAllRanges();
+      }
+    } catch (error) {
+      // Selection access can fail briefly in some embedded documents.
+    }
+  }
+
+  function setupHighlighterPen(iframeDocument, iframeWindow) {
+    if (!iframeDocument || !iframeWindow) return;
+
+    installHighlighterStyles(iframeDocument);
+
+    const body =
+      iframeDocument.body ||
+      iframeDocument.documentElement;
+
+    if (!body) return;
+
+    let overlay =
+      iframeDocument.getElementById("nr-pen-overlay");
+
+    if (!overlay) {
+      overlay = iframeDocument.createElement("div");
+      overlay.id = "nr-pen-overlay";
+      overlay.className = "nr-pen-overlay";
+      body.appendChild(overlay);
+    }
+
+    function refreshOverlayHeight() {
+      const height = Math.max(
+        iframeDocument.documentElement?.scrollHeight || 0,
+        body?.scrollHeight || 0,
+        iframeWindow.innerHeight || 0,
+        600
+      );
+      overlay.style.height = `${height}px`;
+    }
+
+    refreshOverlayHeight();
+
+    if (iframeDocument.__nrPenAttached) return;
+    iframeDocument.__nrPenAttached = true;
+
+    let drawing = false;
+    let startX = 0;
+    let startY = 0;
+    let activeBox = null;
+
+    function getPoint(event) {
+      return {
+        x: typeof event.pageX === "number" ? event.pageX : event.clientX,
+        y: typeof event.pageY === "number" ? event.pageY : event.clientY,
+      };
+    }
+
+    function preventPenSelection(event) {
+      if (!iframeWindow.__notesPenActive) return;
+      event.preventDefault();
+      event.stopPropagation();
+      clearNativeSelection(iframeWindow);
+    }
+
+    function startDraw(event) {
+      if (!iframeWindow.__notesPenActive) return;
+
+      preventPenSelection(event);
+      refreshOverlayHeight();
+
+      const point = getPoint(event);
+      drawing = true;
+      startX = point.x;
+      startY = point.y;
+
+      activeBox = iframeDocument.createElement("div");
+      activeBox.className = "nr-pen-box nr-pen-drawing";
+      activeBox.style.left = `${startX}px`;
+      activeBox.style.top = `${startY - 13}px`;
+      activeBox.style.width = "8px";
+      activeBox.style.height = "26px";
+      overlay.appendChild(activeBox);
+
+      if (
+        event.pointerId != null &&
+        body.setPointerCapture
+      ) {
+        try {
+          body.setPointerCapture(event.pointerId);
+        } catch (error) {}
+      }
+    }
+
+    function moveDraw(event) {
+      if (!drawing || !activeBox || !iframeWindow.__notesPenActive) {
+        return;
+      }
+
+      preventPenSelection(event);
+
+      const point = getPoint(event);
+      const dx = point.x - startX;
+      const dy = point.y - startY;
+      const left = Math.min(startX, point.x);
+      const width = Math.max(Math.abs(dx), 8);
+
+      if (Math.abs(dy) <= 18) {
+        activeBox.style.left = `${left}px`;
+        activeBox.style.top = `${startY - 13}px`;
+        activeBox.style.width = `${width}px`;
+        activeBox.style.height = "26px";
+      } else {
+        activeBox.style.left = `${left}px`;
+        activeBox.style.top = `${Math.min(startY, point.y)}px`;
+        activeBox.style.width = `${width}px`;
+        activeBox.style.height = `${Math.max(Math.abs(dy), 12)}px`;
+      }
+    }
+
+    function finishDraw() {
+      if (!drawing) return;
+
+      drawing = false;
+      const finishedBox = activeBox;
+      activeBox = null;
+
+      clearNativeSelection(iframeWindow);
+
+      if (!finishedBox) return;
+
+      finishedBox.classList.remove("nr-pen-drawing");
+
+      const width =
+        parseFloat(finishedBox.style.width) || 0;
+
+      if (width < 12) {
+        finishedBox.style.width = "96px";
+        finishedBox.style.height = "26px";
+        finishedBox.style.left = `${startX - 48}px`;
+        finishedBox.style.top = `${startY - 13}px`;
+      }
+
+      iframeWindow.setTimeout(() => {
+        finishedBox.classList.add("nr-pen-fade");
+
+        iframeWindow.setTimeout(() => {
+          finishedBox.remove();
+        }, 500);
+      }, 5000);
+    }
+
+    function cancelDraw() {
+      if (!drawing) return;
+
+      drawing = false;
+
+      if (activeBox) {
+        activeBox.remove();
+      }
+
+      activeBox = null;
+      clearNativeSelection(iframeWindow);
+    }
+
+    body.addEventListener("pointerdown", startDraw, { passive: false });
+    iframeDocument.addEventListener("pointermove", moveDraw, { passive: false });
+    iframeDocument.addEventListener("pointerup", finishDraw, { passive: false });
+    iframeDocument.addEventListener("pointercancel", cancelDraw, { passive: false });
+    iframeDocument.addEventListener("dragstart", preventPenSelection, { passive: false });
+    iframeDocument.addEventListener("selectstart", preventPenSelection, { passive: false });
+  }
+  /*
+    Keep the pen's on/off state - and the crosshair
+    cursor cue - in sync with whatever document is
+    currently loaded in the iframe.
+  */
+
+  useEffect(() => {
+    const iframeWindow =
+      iframeRef.current?.contentWindow;
+
+    const iframeDocument =
+      getIframeDocument();
+
+    if (!iframeWindow || !iframeDocument) {
+      return;
+    }
+
+    iframeWindow.__notesPenActive =
+      isHighlighterActive;
+
+    const body =
+      iframeDocument.body ||
+      iframeDocument.documentElement;
+
+    if (body) {
+      body.classList.toggle(
+        "nr-pen-mode",
+        isHighlighterActive
+      );
+    }
+  }, [
+    isHighlighterActive,
+    iframeReloadTick,
+  ]);
 
   /* =========================================================
      IFRAME LOAD
@@ -463,13 +768,28 @@ function NoteReader() {
         return;
       }
 
+      setupHighlighterPen(
+        iframeDocument,
+        iframe.contentWindow
+      );
+
+      iframe.contentWindow.__notesPenActive =
+        isHighlighterActive;
+
+      /*
+        Tell the highlighter-sync effect that a
+        (possibly new) document is now loaded.
+      */
+      setIframeReloadTick(
+        (tick) => tick + 1
+      );
+
       const bodyHeight =
         iframeDocument.body
           ?.scrollHeight || 0;
 
       const documentHeight =
-        iframeDocument
-          .documentElement
+        iframeDocument.documentElement
           ?.scrollHeight || 0;
 
       const height =
@@ -483,10 +803,6 @@ function NoteReader() {
         height + 20
       );
 
-      /*
-        Restore saved reading position
-        after iframe has loaded.
-      */
       restoreReadingPosition();
     } catch (error) {
       console.error(
@@ -542,15 +858,14 @@ function NoteReader() {
           note.title
         ),
 
-      text: `Read ${note.title} on Notes Web`,
+      text:
+        `Read ${note.title} on Notes Web`,
 
-      url: window.location.href,
+      url:
+        window.location.href,
     };
 
     try {
-      /*
-        Mobile / supported browsers
-      */
       if (
         navigator.share &&
         typeof navigator.share ===
@@ -563,14 +878,10 @@ function NoteReader() {
         return;
       }
 
-      /*
-        Clipboard fallback
-      */
       if (
         navigator.clipboard &&
         typeof navigator
-          .clipboard
-          .writeText ===
+          .clipboard.writeText ===
           "function"
       ) {
         await navigator.clipboard.writeText(
@@ -583,36 +894,35 @@ function NoteReader() {
 
         setTimeout(() => {
           setShareMessage("");
-        }, 2000);
+        }, 2500);
 
         return;
       }
 
-      /*
-        Final fallback
-      */
       setShareMessage(
-        "Copy the URL from your browser"
+        "Copy this page URL to share the note."
       );
 
       setTimeout(() => {
         setShareMessage("");
-      }, 2500);
+      }, 3000);
     } catch (error) {
       if (
-        error?.name !==
+        error?.name ===
         "AbortError"
       ) {
-        console.error(
-          "Unable to share note:",
-          error
-        );
+        return;
       }
+
+      console.error(
+        "Unable to share note:",
+        error
+      );
     }
   }
 
   /* =========================================================
-     OPEN PREVIOUS / NEXT NOTE
+     OPEN NOTE
   ========================================================= */
 
   function openNote(
@@ -628,7 +938,7 @@ function NoteReader() {
   }
 
   /* =========================================================
-     SCROLL TO TOP
+     SCROLL TOP
   ========================================================= */
 
   function scrollToTop() {
@@ -645,6 +955,7 @@ function NoteReader() {
   if (!subject || !note) {
     return (
       <div className="reader-error-page">
+
         <div
           className="reader-error-icon"
           aria-hidden="true"
@@ -673,12 +984,13 @@ function NoteReader() {
         >
           Back to Notes
         </button>
+
       </div>
     );
   }
 
   /* =========================================================
-     NOTE DOCUMENT URL
+     NOTE URL
   ========================================================= */
 
   const noteUrl =
@@ -693,9 +1005,7 @@ function NoteReader() {
   return (
     <div className="note-reader-page">
 
-      {/* ===================================================
-          READING PROGRESS BAR
-      =================================================== */}
+      {/* READING PROGRESS */}
 
       <div
         className="reader-progress-container"
@@ -704,18 +1014,17 @@ function NoteReader() {
         <div
           className="reader-progress-bar"
           style={{
-            width: `${readingProgress}%`,
+            width:
+              `${readingProgress}%`,
           }}
         />
       </div>
 
-      {/* ===================================================
-          HEADER
-      =================================================== */}
+      {/* HEADER */}
 
       <header className="reader-header">
 
-        {/* Back */}
+        {/* BACK */}
 
         <button
           type="button"
@@ -732,9 +1041,10 @@ function NoteReader() {
           </span>
         </button>
 
-        {/* Title */}
+        {/* TITLE */}
 
         <div className="reader-title">
+
           <span>
             {subject.name}
           </span>
@@ -742,13 +1052,14 @@ function NoteReader() {
           <h1>
             {note.title}
           </h1>
+
         </div>
 
-        {/* Actions */}
+        {/* ACTIONS */}
 
         <div className="reader-actions">
 
-          {/* Favorite */}
+          {/* FAVORITE */}
 
           <button
             type="button"
@@ -776,7 +1087,43 @@ function NoteReader() {
             </span>
           </button>
 
-          {/* Share */}
+          {/* =================================================
+              TEMPORARY HIGHLIGHTER
+          ================================================= */}
+
+          <button
+            type="button"
+            className={`reader-icon-button highlighter-button ${
+              isHighlighterActive
+                ? "highlighter-active"
+                : ""
+            }`}
+            onClick={() =>
+              setIsHighlighterActive(
+                (current) =>
+                  !current
+              )
+            }
+            aria-label={
+              isHighlighterActive
+                ? "Turn off highlighter"
+                : "Turn on highlighter"
+            }
+            aria-pressed={
+              isHighlighterActive
+            }
+            title={
+              isHighlighterActive
+                ? "Highlighter on"
+                : "Temporary highlighter"
+            }
+          >
+            <span aria-hidden="true">
+              🖊️
+            </span>
+          </button>
+
+          {/* SHARE */}
 
           <button
             type="button"
@@ -791,7 +1138,7 @@ function NoteReader() {
             </span>
           </button>
 
-          {/* More */}
+          {/* MORE */}
 
           <button
             type="button"
@@ -804,11 +1151,10 @@ function NoteReader() {
           </button>
 
         </div>
+
       </header>
 
-      {/* ===================================================
-          SHARE MESSAGE
-      =================================================== */}
+      {/* SHARE MESSAGE */}
 
       {shareMessage && (
         <div
@@ -824,15 +1170,11 @@ function NoteReader() {
         </div>
       )}
 
-      {/* ===================================================
-          MAIN
-      =================================================== */}
+      {/* MAIN */}
 
       <main className="reader-main">
 
-        {/* =================================================
-            META
-        ================================================= */}
+        {/* META */}
 
         <div className="reader-meta">
 
@@ -850,13 +1192,11 @@ function NoteReader() {
 
         </div>
 
-        {/* =================================================
-            NOTE FRAME
-        ================================================= */}
+        {/* NOTE FRAME */}
 
         <section className="note-frame-container">
 
-          {/* Loading */}
+          {/* LOADING */}
 
           {loading && (
             <div
@@ -877,7 +1217,7 @@ function NoteReader() {
             </div>
           )}
 
-          {/* Error */}
+          {/* ERROR */}
 
           {noteError && (
             <div
@@ -911,17 +1251,19 @@ function NoteReader() {
             </div>
           )}
 
-          {/* Iframe */}
+          {/* IFRAME */}
 
           {!noteError && (
             <iframe
+              ref={iframeRef}
               className="note-iframe"
               src={noteUrl}
               title={getNoteIframeTitle(
                 note.title
               )}
               style={{
-                height: `${iframeHeight}px`,
+                height:
+                  `${iframeHeight}px`,
               }}
               onLoad={
                 handleIframeLoad
@@ -934,13 +1276,11 @@ function NoteReader() {
 
         </section>
 
-        {/* =================================================
-            PREVIOUS / NEXT
-        ================================================= */}
+        {/* PREVIOUS / NEXT */}
 
         <section className="reader-navigation">
 
-          {/* Previous */}
+          {/* PREVIOUS */}
 
           <button
             type="button"
@@ -972,7 +1312,7 @@ function NoteReader() {
             </div>
           </button>
 
-          {/* Next */}
+          {/* NEXT */}
 
           <button
             type="button"
@@ -1008,9 +1348,7 @@ function NoteReader() {
 
       </main>
 
-      {/* ===================================================
-          SCROLL TOP
-      =================================================== */}
+      {/* SCROLL TOP */}
 
       {showTopButton && (
         <button
