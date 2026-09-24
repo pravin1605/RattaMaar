@@ -1,703 +1,41 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Chapter 13 — Hibernate Mapping (Many-to-One)</title>
-
-<style>
-/* =========================================================
-   MASTER NOTES DESIGN
-   A4 • Academic • Professional • Print Friendly
-   ========================================================= */
-
-@page {
-  size: A4;
-  margin: 0;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  padding: 28px 0;
-  background: #e9e9e9;
-  color: #1a1a1a;
-  font-family: Georgia, "Times New Roman", serif;
-  line-height: 1.55;
-}
-
-/* Main A4 document */
-body::before {
-  content: "";
-  display: block;
-  width: 210mm;
-  min-height: 297mm;
-  margin: 0 auto;
-  background: #ffffff;
-  position: fixed;
-  z-index: -1;
-}
-
-/* =========================================================
-   TYPOGRAPHY
-   ========================================================= */
-
-h1 {
-  max-width: 180mm;
-  margin: 0 auto 6px;
-  padding: 14px 16px 10px;
-  text-align: center;
-  font-size: 25px;
-  line-height: 1.25;
-  color: #111111;
-  border: 1.5px solid #222222;
-  background: #ffffff;
-}
-
-.subtitle {
-  max-width: 180mm;
-  margin: 0 auto 22px;
-  padding: 7px 10px;
-  color: #555555;
-  font-size: 13px;
-  text-align: center;
-  font-style: italic;
-  border-bottom: 1px solid #bdbdbd;
-}
-
-/* Section headings */
-h2 {
-  max-width: 180mm;
-  margin: 28px auto 12px;
-  padding: 7px 10px;
-  color: #111111;
-  font-size: 18px;
-  line-height: 1.3;
-  text-align: left;
-  border-top: 1.5px solid #222222;
-  border-bottom: 1px solid #777777;
-  background: #f4f4f4;
-  page-break-after: avoid;
-}
-
-h3 {
-  max-width: 180mm;
-  margin: 20px auto 9px;
-  color: #222222;
-  font-size: 15px;
-  line-height: 1.35;
-  page-break-after: avoid;
-}
-
-p {
-  margin: 7px 0;
-}
-
-b {
-  color: #111111;
-}
-
-ul,
-ol {
-  margin: 6px 0;
-  padding-left: 24px;
-}
-
-li {
-  margin: 4px 0;
-}
-
-/* =========================================================
-   TOC
-   ========================================================= */
-
-.toc {
-  max-width: 180mm;
-  margin: 0 auto 22px;
-  padding: 12px 18px;
-  background: #f7f7f7;
-  border: 1.5px solid #333333;
-  page-break-inside: avoid;
-}
-
-.toc b {
-  display: block;
-  margin-bottom: 5px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #999999;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.toc ol {
-  margin: 5px 0;
-}
-
-.toc a {
-  color: #222222;
-  text-decoration: none;
-  font-size: 13px;
-}
-
-.toc a:hover {
-  text-decoration: underline;
-}
-
-/* =========================================================
-   CARDS
-   ========================================================= */
-
-.card {
-  max-width: 180mm;
-  margin: 12px auto;
-  padding: 13px 15px;
-  background: #ffffff;
-  border: 1.5px solid #333333;
-  border-radius: 0;
-  box-shadow: none;
-  page-break-inside: avoid;
-}
-
-.card.extra {
-  border: 1px dashed #666666;
-  background: #f5f5f5;
-}
-
-.card.theory {
-  border-left: 5px solid #222222;
-  background: #fafafa;
-}
-
-.card.bug {
-  border-left: 5px solid #111111;
-  background: #f3f3f3;
-}
-
-/* =========================================================
-   TAGS
-   ========================================================= */
-
-.tag {
-  display: inline-block;
-  padding: 2px 8px;
-  margin-bottom: 7px;
-  border: 1px solid #555555;
-  border-radius: 0;
-  background: #eeeeee;
-  color: #222222;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.tag-orig,
-.tag-extra,
-.tag-qa,
-.tag-theory,
-.tag-bug {
-  background: #eeeeee;
-  color: #222222;
-  border-color: #555555;
-}
-
-/* =========================================================
-   INLINE CODE
-   ========================================================= */
-
-code.inline {
-  display: inline;
-  padding: 1px 5px;
-  border: 1px solid #d0d0d0;
-  border-radius: 0;
-  background: #eeeeee;
-  color: #222222;
-  font-family: "Consolas", "Courier New", monospace;
-  font-size: 12px;
-}
-
-/* =========================================================
-   CODE BLOCKS
-   ========================================================= */
-
-pre {
-  margin: 10px 0;
-  padding: 13px 15px;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-break: break-word;
-
-  background: #1e1e1e;
-  color: #d4d4d4;
-
-  border: 1px solid #111111;
-  border-radius: 0;
-
-  font-family: "Consolas", "Courier New", monospace;
-  font-size: 12px;
-  line-height: 1.5;
-
-  page-break-inside: avoid;
-}
-
-/* VS Code inspired syntax colors */
-.kw {
-  color: #569cd6;
-}
-
-.type {
-  color: #4ec9b0;
-}
-
-.str {
-  color: #ce9178;
-}
-
-.cmt {
-  color: #6a9955;
-  font-style: italic;
-}
-
-.method {
-  color: #dcdcaa;
-}
-
-.ann {
-  color: #d7ba7d;
-}
-
-/* =========================================================
-   TABLES
-   ========================================================= */
-
-table {
-  width: 100%;
-  max-width: 180mm;
-  margin: 12px auto;
-  border-collapse: collapse;
-  font-size: 12.5px;
-  background: #ffffff;
-  page-break-inside: avoid;
-}
-
-th,
-td {
-  padding: 7px 9px;
-  border: 1px solid #444444;
-  text-align: left;
-  vertical-align: top;
-}
-
-th {
-  background: #222222;
-  color: #ffffff;
-  font-weight: 700;
-}
-
-tr:nth-child(even) {
-  background: #f3f3f3;
-}
-
-/* =========================================================
-   FLOW / DIAGRAM BOXES
-   ========================================================= */
-
-.flow {
-  margin: 10px auto;
-  padding: 11px 16px;
-
-  max-width: 170mm;
-
-  background: #f5f5f5;
-  border: 1.5px dashed #555555;
-
-  border-radius: 0;
-
-  color: #222222;
-  font-family: "Consolas", "Courier New", monospace;
-  font-size: 12.5px;
-  line-height: 1.5;
-
-  white-space: pre-wrap;
-  text-align: center;
-}
-
-/* =========================================================
-   INTERVIEW Q&A
-   ========================================================= */
-
-.qa-item {
-  padding: 9px 0;
-  border-bottom: 1px solid #cccccc;
-  page-break-inside: avoid;
-}
-
-.qa-item:last-child {
-  border-bottom: none;
-}
-
-.q {
-  color: #111111;
-  font-weight: 700;
-}
-
-.a {
-  margin-top: 4px;
-  color: #333333;
-}
-
-/* =========================================================
-   MEMORY TRICKS
-   ========================================================= */
-
-.memory-trick {
-  max-width: 180mm;
-  margin: 9px auto;
-  padding: 10px 13px;
-
-  background: #f1f1f1;
-  border: 1px dashed #666666;
-
-  border-radius: 0;
-
-  color: #222222;
-  font-size: 13px;
-}
-
-.memory-trick b {
-  color: #111111;
-}
-
-/* =========================================================
-   BOX / FLOW ELEMENTS
-   ========================================================= */
-
-.box {
-  display: block;
-  max-width: 260px;
-  margin: 4px auto;
-  padding: 7px 9px;
-
-  background: #222222;
-  color: #ffffff;
-
-  border: 1px solid #111111;
-  border-radius: 0;
-
-  text-align: center;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.arrow-down {
-  margin: 0;
-  color: #444444;
-  font-size: 18px;
-  text-align: center;
-}
-
-/* =========================================================
-   PAGE BREAKS
-   ========================================================= */
-
-.page-break {
-  page-break-before: always;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.footer-note {
-  max-width: 180mm;
-  margin: 35px auto 0;
-  padding: 11px 10px 0;
-
-  border-top: 1px solid #777777;
-
-  color: #555555;
-  font-size: 11px;
-  line-height: 1.45;
-  text-align: center;
-}
-
-/* =========================================================
-   PRINT
-   ========================================================= */
-
-@media print {
-
-  body {
-    padding: 0;
-    background: #ffffff;
-  }
-
-  body::before {
-    display: none;
-  }
-
-  h1,
-  h2,
-  h3,
-  .subtitle,
-  .toc,
-  .card,
-  table,
-  .flow,
-  .memory-trick,
-  .footer-note {
-    max-width: none;
-  }
-
-  h1 {
-    margin-top: 0;
-  }
-
-  a {
-    color: #111111;
-  }
-
-  pre {
-    overflow: visible;
-  }
-
-  .card,
-  table,
-  .flow,
-  .memory-trick,
-  .qa-item {
-    break-inside: avoid;
-  }
-
-  h2,
-  h3 {
-    break-after: avoid;
-  }
-}
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media screen and (max-width: 760px) {
-
-  body {
-    padding: 12px;
-    background: #e9e9e9;
-  }
-
-  body::before {
-    display: none;
-  }
-
-  h1,
-  h2,
-  h3,
-  .subtitle,
-  .toc,
-  .card,
-  table,
-  .flow,
-  .memory-trick,
-  .footer-note {
-    max-width: 100%;
-  }
-
-  h1 {
-    font-size: 21px;
-    padding: 12px 10px;
-  }
-
-  h2 {
-    font-size: 16px;
-  }
-
-  h3 {
-    font-size: 14px;
-  }
-
-  .card {
-    padding: 11px 12px;
-  }
-
-  pre {
-    font-size: 11px;
-    padding: 11px;
-  }
-
-  table {
-    font-size: 11px;
-  }
-
-  th,
-  td {
-    padding: 6px 7px;
-  }
-
-  .flow {
-    font-size: 11px;
-    text-align: left;
-    overflow-x: auto;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<h1>Chapter 18: Hibernate Mapping — Many-to-One</h1>
-
-<div class="subtitle">
-  Account ↔ Bank Example (Unidirectional) —
-  Packages: <code class="inline">com.DTO</code>,
-  <code class="inline">com.DAO</code>,
-  <code class="inline">com.Controller</code>
-</div>
-
-<div class="toc">
-  <b>Contents</b>
-  <ol>
-    <li><a href="#what">What is Many-to-One Mapping?</a></li>
-    <li><a href="#realworld">Real-Life Example</a></li>
-    <li><a href="#dbdiagram">Database Diagram</a></li>
-    <li><a href="#why">Why Many-to-One is Needed?</a></li>
-    <li><a href="#annotations">Explanation of Annotations</a></li>
-    <li><a href="#structure">Project Package Structure</a></li>
-    <li><a href="#code">Code — Bank, Account, AccountDAO, Driver</a></li>
-    <li><a href="#bugs">Bugs &amp; Gotchas in This Code</a></li>
-    <li><a href="#flow">Execution Flow</a></li>
-    <li><a href="#qa">Interview Q&amp;A</a></li>
-    <li><a href="#tricks">Memory Tricks</a></li>
-  </ol>
-</div>
-
-<h2 id="what">1. What is Many-to-One Mapping?</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY — DEFINITION</span>
-
-  <p>
-    <b>Many-To-One</b> mapping represents a relationship where many records
-    of one table are associated with one record of another table.
-  </p>
-
-  <p>
-    In simple words:
-    <b>many child objects can belong to one parent object.</b>
-  </p>
-</div>
-
-<h2 id="realworld">2. Real-Life Example</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>Consider a Banking System. One bank can have many accounts.</p>
-
-  <div class="flow">Bank : SBI
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Hibernate Mapping (Many-to-One)</title><style>*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#e0e0e0;font-family:'Georgia',serif}
+.a4-page{width:210mm;min-height:297mm;background:#fff;color:#111;margin:12px auto;padding:14mm 16mm;font-size:12.5px;line-height:1.6;page-break-after:always;border:1px solid #aaa;box-shadow:0 2px 8px rgba(0,0,0,.13)}
+.main-title{text-align:center;font-size:21px;font-weight:700;border:2.5px solid #111;padding:9px 18px;margin-bottom:6px;letter-spacing:1px}
+.sub-title{text-align:center;font-size:12.5px;color:#555;margin-bottom:12px}
+.page-title{text-align:center;font-size:13px;font-weight:700;letter-spacing:.5px;color:#555;margin-bottom:10px;border-bottom:1px solid #ccc;padding-bottom:5px}
+.section{border:1.5px solid #222;margin-bottom:11px}
+.section-header{background:#111;color:#fff;font-size:12.5px;font-weight:700;padding:5px 11px;letter-spacing:.4px}
+.section-body{padding:9px 13px 11px;background:#fff}
+.subsection-title{font-weight:700;font-size:12.5px;margin:8px 0 3px}
+.subsection-title:first-child{margin-top:0}
+.code-block{background:#f5f5f5;border:1px solid #ccc;border-left:3px solid #333;font-family:'Courier New',monospace;font-size:10.5px;padding:6px 10px;margin:6px 0;white-space:pre-wrap;word-break:break-word;line-height:1.5}
+.note-box{border:1.5px dashed #555;padding:6px 10px;margin:7px 0;font-size:12px;background:#fafafa}
+.flow-box{border:1px solid #444;padding:3px 10px;text-align:center;font-size:12px;font-weight:600;margin:2px auto;background:#fff;width:55%}
+.flow-arrow{text-align:center;font-size:12px;color:#555;margin:1px 0}
+.tag{display:inline-block;background:#111;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;margin:0 4px 4px 0;letter-spacing:.3px;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}
+th{background:#111;color:#fff;padding:5px 9px;text-align:left;font-size:11.5px}
+td{border:1px solid #bbb;padding:5px 9px;vertical-align:top}
+p{margin:4px 0;font-size:12.5px}
+ul,ol{padding-left:20px;margin:4px 0}
+li{margin-bottom:3px;font-size:12.5px}
+code{font-family:'Courier New',monospace;font-size:11px;background:#eee;padding:1px 4px;border-radius:2px}
+.code-block code{background:none;padding:0}
+.qa{padding:6px 0;border-bottom:1px solid #ccc}
+.qa:last-child{border-bottom:none}
+.q{font-weight:700}
+.toc{border:1.5px solid #222;padding:8px 14px;margin-bottom:11px}
+.toc a{color:#111;text-decoration:none;font-size:12.5px}
+.footer{border-top:1px solid #777;margin-top:16px;padding-top:8px;text-align:center;font-size:11px;color:#555}
+@media print{body{background:#fff}.a4-page{margin:0;box-shadow:none;border:none}}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}</style></head><body><div class="a4-page"><div class="main-title">CHAPTER 13: HIBERNATE MAPPING — MANY-TO-ONE</div>
+<div class="sub-title">Account ↔ Bank Example (Unidirectional) — Packages: <code>com.DTO</code>, <code>com.DAO</code>, <code>com.Controller</code></div>
+<div class="toc"><strong>Contents</strong><ol>
+<li><a href="#what">What is Many-to-One Mapping?</a></li><li><a href="#realworld">Real-Life Example</a></li><li><a href="#dbdiagram">Database Diagram</a></li><li><a href="#why">Why Many-to-One is Needed?</a></li><li><a href="#annotations">Explanation of Annotations</a></li><li><a href="#structure">Project Package Structure</a></li><li><a href="#code">Code — Bank, Account, AccountDAO, Driver</a></li><li><a href="#bugs">Bugs &amp; Gotchas in This Code</a></li><li><a href="#flow">Execution Flow</a></li><li><a href="#qa">Interview Q&amp;A</a></li><li><a href="#tricks">Memory Tricks</a></li></ol></div><div class="section" id="what"><div class="section-header">📘 1. What is Many-to-One Mapping?</div><div class="section-body"><span class="tag">THEORY — DEFINITION</span><p><strong>Many-To-One</strong> mapping represents a relationship where many records of one table are associated with one record of another table.</p><p>In simple words: <strong>many child objects can belong to one parent object.</strong></p></div></div><div class="section" id="realworld"><div class="section-header">📘 2. Real-Life Example</div><div class="section-body"><span class="tag">THEORY</span><p>Consider a Banking System. One bank can have many accounts.</p><div class="code-block">Bank : SBI
    ├── Account 1
    ├── Account 2
-   └── Account 3</div>
-
-  <p>Here: One Bank, Many Accounts. So the relationship is:</p>
-
-  <div class="flow">Many Accounts  →  One Bank</div>
-</div>
-
-<h2 id="dbdiagram">3. Database Diagram</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <table>
-    <tr><th colspan="2">Bank</th></tr>
-    <tr><td>bankId (PK)</td><td>1</td></tr>
-    <tr><td>bankName</td><td>SBI</td></tr>
-  </table>
-
-  <table>
-    <tr><th colspan="2">Account</th></tr>
-    <tr><td>accountId (PK)</td><td>101</td></tr>
-    <tr><td>accountName</td><td>Savings</td></tr>
-    <tr><td>bank_bankId (FK)</td><td>1</td></tr>
-  </table>
-
-  <p>
-    Notice the <b>Foreign Key</b> inside the Account table —
-    the "many" side always holds the foreign key pointing to the "one" side.
-  </p>
-</div>
-
-<h2 id="why">4. Why Many-to-One is Needed?</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>
-    Without mapping, we would have to manually store and manage foreign keys.
-    Hibernate automatically:
-  </p>
-
-  <ul>
-    <li>Creates relationships.</li>
-    <li>Maintains foreign keys.</li>
-    <li>Fetches related objects.</li>
-    <li>Reduces SQL coding.</li>
-  </ul>
-</div>
-
-<h2 id="annotations">5. Explanation of Annotations</h2>
-
-<table>
-  <tr>
-    <th>Annotation</th>
-    <th>Purpose</th>
-  </tr>
-
-  <tr>
-    <td><code class="inline">@Entity</code></td>
-    <td>Marks class as Entity.</td>
-  </tr>
-
-  <tr>
-    <td><code class="inline">@Id</code></td>
-    <td>Primary Key.</td>
-  </tr>
-
-  <tr>
-    <td><code class="inline">@GeneratedValue</code></td>
-    <td>Auto-generates IDs.</td>
-  </tr>
-
-  <tr>
-    <td><code class="inline">@ManyToOne</code></td>
-    <td>Many accounts belong to one bank.</td>
-  </tr>
-
-  <tr>
-    <td><code class="inline">CascadeType.ALL</code></td>
-    <td>Operations on Account affect Bank.</td>
-  </tr>
-
-  <tr>
-    <td><code class="inline">FetchType.LAZY</code></td>
-    <td>Bank is fetched only when needed.</td>
-  </tr>
-</table>
-
-<h2 id="structure">6. Project Package Structure</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-<pre>src/main/java
+   └── Account 3</div><p>Here: One Bank, Many Accounts. So the relationship is:</p><div class="code-block">Many Accounts  →  One Bank</div></div></div><div class="section" id="dbdiagram"><div class="section-header">📘 3. Database Diagram</div><div class="section-body"><span class="tag">THEORY</span><div class="two-col"><div><table><tr><th colspan="2" style="text-align:center">Bank</th></tr><tr><td>bankId (PK)</td><td>1</td></tr><tr><td>bankName</td><td>SBI</td></tr></table></div><div><table><tr><th colspan="2" style="text-align:center">Account</th></tr><tr><td>accountId (PK)</td><td>101</td></tr><tr><td>accountName</td><td>Savings</td></tr><tr><td>bank_bankId (FK)</td><td>1</td></tr></table></div></div><p>Notice the <strong>Foreign Key</strong> inside the Account table — the "many" side always holds the foreign key pointing to the "one" side.</p></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-ONE | Page 2 — Why, Annotations &amp; Structure</div><div class="section" id="why"><div class="section-header">📘 4. Why Many-to-One is Needed?</div><div class="section-body"><span class="tag">THEORY</span><p>Without mapping, we would have to manually store and manage foreign keys. Hibernate automatically:</p><ul><li>Creates relationships.</li><li>Maintains foreign keys.</li><li>Fetches related objects.</li><li>Reduces SQL coding.</li></ul></div></div><div class="section" id="annotations"><div class="section-header">📋 5. Explanation of Annotations</div><div class="section-body"><table><tr><th>Annotation</th><th>Purpose</th></tr><tr><td><code>@Entity</code></td><td>Marks class as Entity.</td></tr><tr><td><code>@Id</code></td><td>Primary Key.</td></tr><tr><td><code>@GeneratedValue</code></td><td>Auto-generates IDs.</td></tr><tr><td><code>@ManyToOne</code></td><td>Many accounts belong to one bank.</td></tr><tr><td><code>CascadeType.ALL</code></td><td>Operations on Account affect Bank.</td></tr><tr><td><code>FetchType.LAZY</code></td><td>Bank is fetched only when needed.</td></tr></table></div></div><div class="section" id="structure"><div class="section-header">📘 6. Project Package Structure</div><div class="section-body"><span class="tag">THEORY</span><div class="code-block">src/main/java
 │
 ├── com.DTO
 │     ├── Bank.java
@@ -712,820 +50,376 @@ tr:nth-child(even) {
 src/main/resources
 │
 └── META-INF
-      └── persistence.xml</pre>
-</div>
+      └── persistence.xml</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-ONE | Page 3 — Bank.java &amp; Account.java</div><div class="section" id="code"><div class="section-header">💻 7. Code — Bank, Account, AccountDAO, Driver</div><div class="section-body"><div class="subsection-title">🔹 7.1 Entity — <code>Bank.java</code> (com.DTO) — the "One" side</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.DTO;
 
-<h2 id="code" class="page-break">
-  7. Code — Bank, Account, AccountDAO, Driver
-</h2>
-
-<h3>
-  7.1 Entity — <code class="inline">Bank.java</code>
-  (com.DTO) — the "One" side
-</h3>
-
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
-
-<pre><span class="kw">package</span> com.DTO;
-
-<span class="kw">import</span> javax.persistence.Entity;
-<span class="kw">import</span> javax.persistence.GeneratedValue;
-<span class="kw">import</span> javax.persistence.GenerationType;
-<span class="kw">import</span> javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-<span class="kw">public class</span> <span class="type">Bank</span> {
+public class Bank {
 
-	<span class="cmt">// Primary Key</span>
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	<span class="kw">private</span> <span class="type">int</span> bankId;
+    // Primary Key
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int bankId;
 
-	<span class="cmt">// Bank Name</span>
-	<span class="kw">private</span> <span class="type">String</span> bankName;
+    // Bank Name
+    private String bankName;
 
-	<span class="cmt">// Getter and Setter</span>
-	<span class="kw">public</span> <span class="type">int</span> <span class="method">getBankId</span>() {
-		<span class="kw">return</span> bankId;
-	}
+    // Getter and Setter
+    public int getBankId() {
+        return bankId;
+    }
 
-	<span class="kw">public void</span> <span class="method">setBankId</span>(<span class="type">int</span> bankId) {
-		<span class="kw">this</span>.bankId = bankId;
-	}
+    public void setBankId(int bankId) {
+        this.bankId = bankId;
+    }
 
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">getBankName</span>() {
-		<span class="kw">return</span> bankName;
-	}
+    public String getBankName() {
+        return bankName;
+    }
 
-	<span class="kw">public void</span> <span class="method">setBankName</span>(<span class="type">String</span> bankName) {
-		<span class="kw">this</span>.bankName = bankName;
-	}
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
 
-	<span class="cmt">// Optional toString()</span>
-	@Override
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">toString</span>() {
-		<span class="kw">return</span> <span class="str">"Bank [bankId="</span> + bankId + <span class="str">", bankName="</span> + bankName + <span class="str">"]"</span>;
-	}
+    // Optional toString()
+    @Override
+    public String toString() {
+        return "Bank [bankId=" + bankId + ", bankName=" + bankName + "]";
+    }
 
-}</pre>
-</div>
+}</div><div class="subsection-title">🔹 7.2 Entity — <code>Account.java</code> (com.DTO) — the "Many" side</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.DTO;
 
-<h3>
-  7.2 Entity — <code class="inline">Account.java</code>
-  (com.DTO) — the "Many" side
-</h3>
-
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
-
-<pre><span class="kw">package</span> com.DTO;
-
-<span class="kw">import</span> javax.persistence.CascadeType;
-<span class="kw">import</span> javax.persistence.Entity;
-<span class="kw">import</span> javax.persistence.FetchType;
-<span class="kw">import</span> javax.persistence.GeneratedValue;
-<span class="kw">import</span> javax.persistence.GenerationType;
-<span class="kw">import</span> javax.persistence.Id;
-<span class="kw">import</span> javax.persistence.ManyToOne;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
-<span class="kw">public class</span> <span class="type">Account</span> {
-
-	<span class="cmt">// Primary Key</span>
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	<span class="kw">private</span> <span class="type">int</span> accountId;
-
-	<span class="cmt">// Account Name</span>
-	<span class="kw">private</span> <span class="type">String</span> accountName;
-
-	<span class="cmt">/*
-	 * Many Accounts
-	 *        ↓
-	 *      One Bank
-	 */</span>
-
-	@ManyToOne(
-			cascade = CascadeType.ALL,
-			fetch = FetchType.LAZY)
-
-	<span class="kw">private</span> Bank bank;
-
-	<span class="cmt">// Getter Setter</span>
-
-	<span class="kw">public</span> <span class="type">int</span> <span class="method">getAccountId</span>() {
-		<span class="kw">return</span> accountId;
-	}
-
-	<span class="kw">public void</span> <span class="method">setAccountId</span>(<span class="type">int</span> accountId) {
-		<span class="kw">this</span>.accountId = accountId;
-	}
-
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">getAccountName</span>() {
-		<span class="kw">return</span> accountName;
-	}
-
-	<span class="kw">public void</span> <span class="method">setAccountName</span>(<span class="type">String</span> accountName) {
-		<span class="kw">this</span>.accountName = accountName;
-	}
-
-	<span class="kw">public</span> Bank <span class="method">getBank</span>() {
-		<span class="kw">return</span> bank;
-	}
-
-	<span class="kw">public void</span> <span class="method">setBank</span>(Bank bank) {
-		<span class="kw">this</span>.bank = bank;
-	}
-
-	@Override
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">toString</span>() {
-		<span class="kw">return</span> <span class="str">"Account [accountId="</span> + accountId +
-				<span class="str">", accountName="</span> + accountName + <span class="str">"]"</span>;
-	}
-
-}</pre>
-</div>
-
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
-
-  <ul>
-    <li>
-      This is the mirror image of the earlier Company/Employee
-      (One-to-Many) chapter — here the
-      <code class="inline">@ManyToOne</code> annotation sits on the
-      "many" side (<code class="inline">Account</code>), directly on a
-      single <code class="inline">Bank bank</code> field, not a collection.
-      This is the more common, simpler direction to model in Hibernate —
-      the "many" side naturally owns the foreign key.
-    </li>
-
-    <li>
-      <b>No <code class="inline">@JoinColumn</code> is specified</b> —
-      Hibernate will default to a foreign key column named
-      <code class="inline">bank_bankId</code> in the
-      <code class="inline">Account</code> table (as shown in the Database
-      Diagram above), based on the referenced entity name + its primary
-      key field.
-    </li>
-
-    <li>
-      <b><code class="inline">cascade = CascadeType.ALL</code></b>
-      is a key difference from the earlier Car/Engine and
-      Company/Employee examples, which had no cascade at all.
-      Here, persisting/merging/removing an
-      <code class="inline">Account</code> automatically cascades the same
-      operation to its linked <code class="inline">Bank</code> —
-      this is exactly why <code class="inline">insertData()</code> below
-      still explicitly calls
-      <code class="inline">manager.persist(account.getBank())</code>
-      too, which is actually <b>redundant</b> given the cascade
-      (though harmless).
-    </li>
-
-    <li>
-      <b><code class="inline">fetch = FetchType.LAZY</code></b> means the
-      <code class="inline">Bank</code> object is not loaded from the
-      database immediately when an <code class="inline">Account</code>
-      is fetched — it's only loaded the first time
-      <code class="inline">account.getBank()</code> is actually called.
-      This is more efficient but means <code class="inline">getBank()</code>
-      must be called while the <code class="inline">EntityManager</code>/
-      session is still open, or it throws
-      <code class="inline">LazyInitializationException</code>.
-    </li>
+public class Account {
 
-    <li>
-      <code class="inline">@ManyToOne</code>'s default fetch type is
-      actually <code class="inline">EAGER</code> (unlike
-      <code class="inline">@OneToMany</code>, which defaults to
-      <code class="inline">LAZY</code>) — so explicitly setting
-      <code class="inline">FetchType.LAZY</code> here is a deliberate
-      override of the default, worth remembering for interviews.
-    </li>
-  </ul>
-</div>
+    // Primary Key
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int accountId;
 
-<h3>
-  7.3 DAO — <code class="inline">AccountDAO.java</code>
-  (com.DAO)
-</h3>
+    // Account Name
+    private String accountName;
 
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+    /*
+     * Many Accounts
+     *        ↓
+     *      One Bank
+     */
 
-<pre><span class="kw">package</span> com.DAO;
+    @ManyToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
 
-<span class="kw">import</span> java.util.List;
+    private Bank bank;
 
-<span class="kw">import</span> javax.persistence.EntityManager;
-<span class="kw">import</span> javax.persistence.EntityManagerFactory;
-<span class="kw">import</span> javax.persistence.EntityTransaction;
-<span class="kw">import</span> javax.persistence.Persistence;
-<span class="kw">import</span> javax.persistence.Query;
+    // Getter Setter
 
-<span class="kw">import</span> com.DTO.Account;
-<span class="kw">import</span> com.DTO.Bank;
+    public int getAccountId() {
+        return accountId;
+    }
 
-<span class="kw">public class</span> <span class="type">AccountDAO</span> {
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
 
-	<span class="cmt">// Create EntityManagerFactory</span>
-	EntityManagerFactory factory =
-			Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"orm"</span>);
+    public String getAccountName() {
+        return accountName;
+    }
 
-	<span class="cmt">// Create EntityManager</span>
-	EntityManager manager =
-			factory.<span class="method">createEntityManager</span>();
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
 
-	<span class="cmt">// Create Transaction</span>
-	EntityTransaction transaction =
-			manager.<span class="method">getTransaction</span>();
+    public Bank getBank() {
+        return bank;
+    }
 
-	<span class="cmt">// =========================
-	// INSERT
-	// =========================</span>
+    public void setBank(Bank bank) {
+        this.bank = bank;
+    }
 
-	<span class="kw">public void</span> <span class="method">insertData</span>(List&lt;Account&gt; accounts) {
+    @Override
+    public String toString() {
+        return "Account [accountId=" + accountId +
+                ", accountName=" + accountName + "]";
+    }
 
-		transaction.<span class="method">begin</span>();
+}</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-ONE | Page 4 — Explanation &amp; AccountDAO.java</div><div class="section"><div class="section-header">💻 Code (continued)</div><div class="section-body"><div class="note-box"><span class="tag">EXTRA — Explanation</span><ul><li>This is the mirror image of the earlier Company/Employee (One-to-Many) chapter — here the <code>@ManyToOne</code> annotation sits on the "many" side (<code>Account</code>), directly on a single <code>Bank bank</code> field, not a collection. This is the more common, simpler direction to model in Hibernate — the "many" side naturally owns the foreign key.</li><li><strong>No <code>@JoinColumn</code> is specified</strong> — Hibernate will default to a foreign key column named <code>bank_bankId</code> in the <code>Account</code> table (as shown in the Database Diagram above), based on the referenced entity name + its primary key field.</li><li><strong><code>cascade = CascadeType.ALL</code></strong> is a key difference from the earlier Car/Engine and Company/Employee examples, which had no cascade at all. Here, persisting/merging/removing an <code>Account</code> automatically cascades the same operation to its linked <code>Bank</code> — this is exactly why <code>insertData()</code> below still explicitly calls <code>manager.persist(account.getBank())</code> too, which is actually <strong>redundant</strong> given the cascade (though harmless).</li><li><strong><code>fetch = FetchType.LAZY</code></strong> means the <code>Bank</code> object is not loaded from the database immediately when an <code>Account</code> is fetched — it's only loaded the first time <code>account.getBank()</code> is actually called. This is more efficient but means <code>getBank()</code> must be called while the <code>EntityManager</code>/session is still open, or it throws <code>LazyInitializationException</code>.</li><li><code>@ManyToOne</code>'s default fetch type is actually <code>EAGER</code> (unlike <code>@OneToMany</code>, which defaults to <code>LAZY</code>) — so explicitly setting <code>FetchType.LAZY</code> here is a deliberate override of the default, worth remembering for interviews.</li></ul></div><div class="subsection-title">🔹 7.3 DAO — <code>AccountDAO.java</code> (com.DAO)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.DAO;
 
-		<span class="kw">for</span> (Account account : accounts) {
+import java.util.List;
 
-			manager.<span class="method">persist</span>(account);
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 
-			manager.<span class="method">persist</span>(account.<span class="method">getBank</span>());
+import com.DTO.Account;
+import com.DTO.Bank;
 
-		}
+public class AccountDAO {
 
-		transaction.<span class="method">commit</span>();
+    // Create EntityManagerFactory
+    EntityManagerFactory factory =
+            Persistence.createEntityManagerFactory("orm");
 
-		System.out.<span class="method">println</span>(<span class="str">"Inserted Successfully"</span>);
+    // Create EntityManager
+    EntityManager manager =
+            factory.createEntityManager();
 
-	}
+    // Create Transaction
+    EntityTransaction transaction =
+            manager.getTransaction();
 
-	<span class="cmt">// =========================
-	// FETCH BY ID
-	// =========================</span>
+    // =========================
+    // INSERT
+    // =========================
 
-	<span class="kw">public</span> Account <span class="method">fetchById</span>(<span class="type">int</span> id) {
+    public void insertData(List&lt;Account&gt; accounts) {
 
-		Account account =
-				manager.<span class="method">find</span>(Account.<span class="kw">class</span>, id);
+        transaction.begin();
 
-		<span class="kw">if</span> (account != <span class="kw">null</span>) {
+        for (Account account : accounts) {
 
-			System.out.<span class="method">println</span>(<span class="str">"Account Id : "</span>
-					+ account.<span class="method">getAccountId</span>());
+            manager.persist(account);
 
-			System.out.<span class="method">println</span>(<span class="str">"Account Name : "</span>
-					+ account.<span class="method">getAccountName</span>());
+            manager.persist(account.getBank());
 
-			System.out.<span class="method">println</span>(<span class="str">"Bank Name : "</span>
-					+ account.<span class="method">getBank</span>().<span class="method">getBankName</span>());
+        }
 
-		}
+        transaction.commit();
 
-		<span class="kw">return</span> account;
+        System.out.println("Inserted Successfully");
 
-	}
+    }
 
-	<span class="cmt">// =========================
-	// FETCH ALL
-	// =========================</span>
+    // =========================
+    // FETCH BY ID
+    // =========================
 
-	<span class="kw">public</span> List&lt;Account&gt; <span class="method">fetchAll</span>() {
+    public Account fetchById(int id) {
 
-		Query query =
-				manager.<span class="method">createQuery</span>(<span class="str">"SELECT a FROM Account a"</span>);
+        Account account =
+                manager.find(Account.class, id);
 
-		List&lt;Account&gt; accounts =
-				query.<span class="method">getResultList</span>();
+        if (account != null) {
 
-		<span class="kw">for</span> (Account account : accounts) {
+            System.out.println("Account Id : "
+                    + account.getAccountId());
 
-			System.out.<span class="method">println</span>();
+            System.out.println("Account Name : "
+                    + account.getAccountName());
 
-			System.out.<span class="method">println</span>(account.<span class="method">getAccountId</span>());
+            System.out.println("Bank Name : "
+                    + account.getBank().getBankName());
 
-			System.out.<span class="method">println</span>(account.<span class="method">getAccountName</span>());
+        }
 
-			System.out.<span class="method">println</span>(account.<span class="method">getBank</span>().<span class="method">getBankName</span>());
+        return account;
 
-		}
+    }
 
-		<span class="kw">return</span> accounts;
+    // =========================
+    // FETCH ALL
+    // =========================
 
-	}
+    public List&lt;Account&gt; fetchAll() {
 
-	<span class="cmt">// =========================
-	// UPDATE
-	// =========================</span>
+        Query query =
+                manager.createQuery("SELECT a FROM Account a");
 
-	<span class="kw">public void</span> <span class="method">update</span>(<span class="type">int</span> accountId,
-					   <span class="type">String</span> accountName,
-					   <span class="type">String</span> bankName) {
+        List&lt;Account&gt; accounts =
+                query.getResultList();
 
-		Account account =
-				manager.<span class="method">find</span>(Account.<span class="kw">class</span>, accountId);
+        for (Account account : accounts) {
 
-		<span class="kw">if</span> (account != <span class="kw">null</span>) {
+            System.out.println();
 
-			account.<span class="method">setAccountName</span>(accountName);
+            System.out.println(account.getAccountId());
 
-			account.<span class="method">getBank</span>().<span class="method">setBankName</span>(bankName);
+            System.out.println(account.getAccountName());
 
-			transaction.<span class="method">begin</span>();
+            System.out.println(account.getBank().getBankName());
 
-			manager.<span class="method">merge</span>(account);
+        }
 
-			manager.<span class="method">merge</span>(account.<span class="method">getBank</span>());
+        return accounts;
 
-			transaction.<span class="method">commit</span>();
+    }
 
-			System.out.<span class="method">println</span>(<span class="str">"Updated Successfully"</span>);
+    // =========================
+    // UPDATE
+    // =========================
 
-		}
+    public void update(int accountId,
+                       String accountName,
+                       String bankName) {
 
-	}
+        Account account =
+                manager.find(Account.class, accountId);
 
-	<span class="cmt">// =========================
-	// DELETE ACCOUNT
-	// =========================</span>
+        if (account != null) {
 
-	<span class="kw">public void</span> <span class="method">deleteAccount</span>(<span class="type">int</span> accountId) {
+            account.setAccountName(accountName);
 
-		Account account =
-				manager.<span class="method">find</span>(Account.<span class="kw">class</span>, accountId);
+            account.getBank().setBankName(bankName);
 
-		<span class="kw">if</span> (account != <span class="kw">null</span>) {
+            transaction.begin();
 
-			transaction.<span class="method">begin</span>();
+            manager.merge(account);
 
-			manager.<span class="method">remove</span>(account);
+            manager.merge(account.getBank());
 
-			transaction.<span class="method">commit</span>();
+            transaction.commit();
 
-			System.out.<span class="method">println</span>(<span class="str">"Account Deleted"</span>);
+            System.out.println("Updated Successfully");
 
-		}
+        }
 
-	}
+    }
 
-	<span class="cmt">// =========================
-	// DELETE ACCOUNT & BANK
-	// =========================</span>
+    // =========================
+    // DELETE ACCOUNT
+    // =========================
 
-	<span class="kw">public void</span> <span class="method">deleteBoth</span>(<span class="type">int</span> accountId) {
+    public void deleteAccount(int accountId) {
 
-		Account account =
-				manager.<span class="method">find</span>(Account.<span class="kw">class</span>, accountId);
+        Account account =
+                manager.find(Account.class, accountId);
 
-		<span class="kw">if</span> (account != <span class="kw">null</span>) {
+        if (account != null) {
 
-			Bank bank = account.<span class="method">getBank</span>();
+            transaction.begin();
 
-			transaction.<span class="method">begin</span>();
+            manager.remove(account);
 
-			account.<span class="method">setBank</span>(<span class="kw">null</span>);
+            transaction.commit();
 
-			manager.<span class="method">remove</span>(account);
+            System.out.println("Account Deleted");
 
-			<span class="kw">if</span> (manager.<span class="method">contains</span>(bank)) {
+        }
 
-				manager.<span class="method">remove</span>(bank);
+    }
 
-			}
+    // =========================
+    // DELETE ACCOUNT &amp; BANK
+    // =========================
 
-			transaction.<span class="method">commit</span>();
+    public void deleteBoth(int accountId) {
 
-			System.out.<span class="method">println</span>(<span class="str">"Account and Bank Deleted"</span>);
+        Account account =
+                manager.find(Account.class, accountId);
 
-		}
+        if (account != null) {
 
-	}
+            Bank bank = account.getBank();
 
-}</pre>
-</div>
+            transaction.begin();
 
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
+            account.setBank(null);
 
-  <ul>
-    <li>
-      <code class="inline">insertData()</code> loops over a
-      <code class="inline">List&lt;Account&gt;</code> and persists each —
-      since <code class="inline">Account.bank</code> uses
-      <code class="inline">CascadeType.ALL</code>, the explicit
-      <code class="inline">manager.persist(account.getBank())</code>
-      call is technically redundant (persisting the account alone would
-      cascade to its bank), but it's harmless and explicit.
-    </li>
+            manager.remove(account);
 
-    <li>
-      <code class="inline">deleteBoth()</code> is the most interesting
-      method here. It calls
-      <code class="inline">account.setBank(null)</code>
-      <b>before</b> removing the account — this breaks the in-memory link
-      so the later <code class="inline">manager.contains(bank)</code>
-      check still has a valid reference to test, while avoiding any
-      cascade-triggered double-removal confusion from removing the account
-      first while it still pointed at the bank.
-    </li>
+            if (manager.contains(bank)) {
 
-    <li>
-      <code class="inline">manager.contains(bank)</code> checks whether
-      <code class="inline">bank</code> is still a <b>managed</b> entity
-      in the current persistence context before trying to remove it —
-      a defensive check, since calling
-      <code class="inline">remove()</code> on a detached entity throws
-      <code class="inline">IllegalArgumentException</code>.
-    </li>
+                manager.remove(bank);
 
-    <li>
-      This is the first DAO across all these notes to use
-      <code class="inline">manager.contains()</code> — a genuinely good
-      practice worth remembering for interviews and for your own code
-      going forward.
-    </li>
-  </ul>
-</div>
+            }
 
-<h3>
-  7.4 Driver — <code class="inline">Driver.java</code>
-  (com.Controller)
-</h3>
+            transaction.commit();
 
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+            System.out.println("Account and Bank Deleted");
 
-<pre><span class="kw">package</span> com.Controller;
+        }
 
-<span class="kw">import</span> java.util.ArrayList;
-<span class="kw">import</span> java.util.List;
+    }
 
-<span class="kw">import</span> com.DAO.AccountDAO;
-<span class="kw">import</span> com.DTO.Account;
-<span class="kw">import</span> com.DTO.Bank;
+}</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-ONE | Page 5 — DAO Notes &amp; Driver.java</div><div class="section"><div class="section-header">💻 Code (continued)</div><div class="section-body"><div class="note-box"><span class="tag">EXTRA — Explanation</span><ul><li><code>insertData()</code> loops over a <code>List&lt;Account&gt;</code> and persists each — since <code>Account.bank</code> uses <code>CascadeType.ALL</code>, the explicit <code>manager.persist(account.getBank())</code> call is technically redundant (persisting the account alone would cascade to its bank), but it's harmless and explicit.</li><li><code>deleteBoth()</code> is the most interesting method here. It calls <code>account.setBank(null)</code> <strong>before</strong> removing the account — this breaks the in-memory link so the later <code>manager.contains(bank)</code> check still has a valid reference to test, while avoiding any cascade-triggered double-removal confusion from removing the account first while it still pointed at the bank.</li><li><code>manager.contains(bank)</code> checks whether <code>bank</code> is still a <strong>managed</strong> entity in the current persistence context before trying to remove it — a defensive check, since calling <code>remove()</code> on a detached entity throws <code>IllegalArgumentException</code>.</li><li>This is the first DAO across all these notes to use <code>manager.contains()</code> — a genuinely good practice worth remembering for interviews and for your own code going forward.</li></ul></div><div class="subsection-title">🔹 7.4 Driver — <code>Driver.java</code> (com.Controller)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.Controller;
 
-<span class="kw">public class</span> <span class="type">Driver</span> {
+import java.util.ArrayList;
+import java.util.List;
 
-	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+import com.DAO.AccountDAO;
+import com.DTO.Account;
+import com.DTO.Bank;
 
-		<span class="cmt">// Create DAO Object</span>
-		AccountDAO dao = <span class="kw">new</span> <span class="method">AccountDAO</span>();
+public class Driver {
 
-		<span class="cmt">// Create Bank Object</span>
-		Bank bank = <span class="kw">new</span> <span class="method">Bank</span>();
-		bank.<span class="method">setBankName</span>(<span class="str">"SBI"</span>);
+    public static void main(String[] args) {
 
-		<span class="cmt">// Create Account 1</span>
-		Account account1 = <span class="kw">new</span> <span class="method">Account</span>();
-		account1.<span class="method">setAccountName</span>(<span class="str">"Savings"</span>);
-		account1.<span class="method">setBank</span>(bank);
+        // Create DAO Object
+        AccountDAO dao = new AccountDAO();
 
-		<span class="cmt">// Create Account 2</span>
-		Account account2 = <span class="kw">new</span> <span class="method">Account</span>();
-		account2.<span class="method">setAccountName</span>(<span class="str">"Current"</span>);
-		account2.<span class="method">setBank</span>(bank);
+        // Create Bank Object
+        Bank bank = new Bank();
+        bank.setBankName("SBI");
 
-		<span class="cmt">// Store Accounts in List</span>
-		List&lt;Account&gt; accounts = <span class="kw">new</span> <span class="method">ArrayList</span>&lt;&gt;();
+        // Create Account 1
+        Account account1 = new Account();
+        account1.setAccountName("Savings");
+        account1.setBank(bank);
 
-		accounts.<span class="method">add</span>(account1);
-		accounts.<span class="method">add</span>(account2);
+        // Create Account 2
+        Account account2 = new Account();
+        account2.setAccountName("Current");
+        account2.setBank(bank);
 
-		<span class="cmt">// ==========================
-		// INSERT
-		// ==========================</span>
+        // Store Accounts in List
+        List&lt;Account&gt; accounts = new ArrayList&lt;&gt;();
 
-<span class="cmt">//		dao.insertData(accounts);</span>
+        accounts.add(account1);
+        accounts.add(account2);
 
-		<span class="cmt">// ==========================
-		// FETCH BY ID
-		// ==========================</span>
+        // ==========================
+        // INSERT
+        // ==========================
 
-<span class="cmt">//		dao.fetchById(1);</span>
+//      dao.insertData(accounts);
 
-		<span class="cmt">// ==========================
-		// FETCH ALL
-		// ==========================</span>
+        // ==========================
+        // FETCH BY ID
+        // ==========================
 
-<span class="cmt">//		dao.fetchAll();</span>
+//      dao.fetchById(1);
 
-		<span class="cmt">// ==========================
-		// UPDATE
-		// ==========================</span>
+        // ==========================
+        // FETCH ALL
+        // ==========================
 
-<span class="cmt">//		dao.update(1,
-//				"Salary Account",
-//				"HDFC Bank");</span>
+//      dao.fetchAll();
 
-		<span class="cmt">// ==========================
-		// DELETE ACCOUNT
-		// ==========================</span>
+        // ==========================
+        // UPDATE
+        // ==========================
 
-<span class="cmt">//		dao.deleteAccount(1);</span>
+//      dao.update(1,
+//              "Salary Account",
+//              "HDFC Bank");
 
-		<span class="cmt">// ==========================
-		// DELETE ACCOUNT & BANK
-		// ==========================</span>
+        // ==========================
+        // DELETE ACCOUNT
+        // ==========================
 
-<span class="cmt">//		dao.deleteBoth(1);</span>
+//      dao.deleteAccount(1);
 
-	}
+        // ==========================
+        // DELETE ACCOUNT &amp; BANK
+        // ==========================
 
-}</pre>
-</div>
+//      dao.deleteBoth(1);
 
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
+    }
 
-  <ul>
-    <li>
-      Both <code class="inline">account1</code> and
-      <code class="inline">account2</code> point at the
-      <b>same</b> <code class="inline">bank</code> object in memory —
-      this correctly models "many accounts, one bank."
-      When <code class="inline">insertData()</code> runs, Hibernate should
-      recognize (via the shared reference and cascade) that only one Bank
-      row needs to be inserted, and both Account rows reference it via the
-      same foreign key.
-    </li>
-
-    <li>
-      Note the persistence unit name here is
-      <code class="inline">"orm"</code>, not
-      <code class="inline">"pravin"</code> as in all the earlier chapters —
-      this DAO points to a different
-      <code class="inline">persistence.xml</code> configuration.
-    </li>
-  </ul>
-</div>
-
-<h2 id="bugs" class="page-break">
-  8. Bugs &amp; Gotchas in This Code
-</h2>
-
-<div class="card bug">
-  <span class="tag tag-bug">
-    ⚠ BUGS — Worth Knowing for Debugging &amp; Interviews
-  </span>
-
-  <ul>
-    <li>
-      <b>
-        <code class="inline">FetchType.LAZY</code> +
-        printing <code class="inline">getBank().getBankName()</code>
-        outside a transaction:
-      </b>
-      in <code class="inline">fetchById()</code> and
-      <code class="inline">fetchAll()</code>,
-      <code class="inline">account.getBank()</code> is called to print
-      the bank name. Since fetch is LAZY, this triggers an on-demand DB
-      query — it will only work correctly while the
-      <code class="inline">EntityManager</code>/session is still open.
-      If this DAO's <code class="inline">manager</code> were ever closed
-      before these getters ran, it would throw
-      <code class="inline">LazyInitializationException</code>.
-      It works here only because <code class="inline">manager</code> is a
-      long-lived instance field, never explicitly closed.
-    </li>
-
-    <li>
-      <b>
-        <code class="inline">update()</code> calls both
-        <code class="inline">merge()</code> and mutates in place:
-      </b>
-      <code class="inline">account</code> was loaded via
-      <code class="inline">find()</code> (so it's already managed and dirty
-      checking alone would work), yet the code also explicitly calls
-      <code class="inline">manager.merge(account)</code> and
-      <code class="inline">manager.merge(account.getBank())</code>.
-      This is redundant but not wrong — merge on an already-managed entity
-      is a safe no-op beyond returning the same managed instance.
-    </li>
-
-    <li>
-      <b>
-        Cascade double-effect risk in
-        <code class="inline">deleteBoth()</code>:
-      </b>
-      because <code class="inline">Account.bank</code> has
-      <code class="inline">CascadeType.ALL</code> (which includes
-      <code class="inline">REMOVE</code>), simply calling
-      <code class="inline">manager.remove(account)</code>
-      <i>while it still referenced its bank</i> would already cascade-delete
-      the Bank automatically. The code avoids this by nulling the reference
-      first (<code class="inline">account.setBank(null)</code>) before
-      removing the account, then manually removing the bank separately —
-      a deliberate workaround to control the deletion order rather than
-      trust the cascade.
-    </li>
-
-    <li>
-      <b>
-        No null-check on the DAO's return value used inside
-        <code class="inline">Driver</code>
-      </b>
-      isn't an issue here since all DAO calls are commented out —
-      but as usual, none of the DAO methods guard against a missing bank
-      reference if an <code class="inline">Account</code> were ever inserted
-      without one.
-    </li>
-  </ul>
-</div>
-
-<h2 id="flow">9. Execution Flow</h2>
-
-<div class="flow">Driver Creates Bank + Accounts
-      ↓
-Accounts Share Same Bank Reference
-      ↓
-AccountDAO.insertData()
-      ↓
-persist(account)  →  cascades to Bank (CascadeType.ALL)
-      ↓
-Hibernate Generates SQL
-      ↓
-Database: Bank row + Account rows (with bank_bankId FK)
-      ↓
-fetchById() / fetchAll()
-      ↓
-getBank() triggers LAZY load if not already fetched
-      ↓
-Displayed to User</div>
-
-<h2 id="qa">10. Interview Q&amp;A</h2>
-
-<div class="card">
-  <span class="tag tag-qa">INTERVIEW PREP</span>
-
-  <div class="qa-item">
-    <div class="q">
-      Q1. What is Many-to-One mapping? Give the example from this code.
-    </div>
-
-    <div class="a">
-      Many records of one table associate with one record of another table —
-      many child objects belong to one parent. Here, many
-      <code class="inline">Account</code>s belong to one
-      <code class="inline">Bank</code>, modeled with
-      <code class="inline">@ManyToOne private Bank bank;</code>
-      inside <code class="inline">Account</code>.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q2. Which side holds the foreign key in a Many-to-One relationship,
-      and why?
-    </div>
-
-    <div class="a">
-      The "many" side — here, <code class="inline">Account</code> —
-      holds the foreign key (<code class="inline">bank_bankId</code>),
-      because each Account row needs to point to exactly one Bank row,
-      while a Bank row is referenced by potentially many Account rows.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q3. What is the default fetch type for
-      <code class="inline">@ManyToOne</code>, and what does this code do
-      differently?
-    </div>
-
-    <div class="a">
-      The JPA default for <code class="inline">@ManyToOne</code> is
-      <code class="inline">FetchType.EAGER</code>. This code explicitly
-      overrides it to <code class="inline">FetchType.LAZY</code>, so the
-      associated <code class="inline">Bank</code> is only loaded from the
-      database when <code class="inline">getBank()</code> is actually
-      called.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q4. What risk does <code class="inline">FetchType.LAZY</code>
-      introduce, and how is it avoided here?
-    </div>
-
-    <div class="a">
-      If the entity manager/session is closed before the lazy field is
-      accessed, calling the getter throws
-      <code class="inline">LazyInitializationException</code>.
-      It's avoided here because the DAO's
-      <code class="inline">manager</code> is a long-lived instance field
-      that stays open for the DAO's lifetime.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q5. What does <code class="inline">CascadeType.ALL</code> do on the
-      <code class="inline">@ManyToOne</code> field here?
-    </div>
-
-    <div class="a">
-      It propagates persist, merge, remove (and other) operations performed
-      on an <code class="inline">Account</code> to its associated
-      <code class="inline">Bank</code> automatically — so saving or
-      deleting an Account can also save or delete its linked Bank without
-      a separate explicit call.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q6. Why does <code class="inline">deleteBoth()</code> call
-      <code class="inline">account.setBank(null)</code> before removing
-      the account?
-    </div>
-
-    <div class="a">
-      To break the object reference before removal so the code can control
-      bank deletion explicitly and safely, rather than relying on
-      <code class="inline">CascadeType.ALL</code> to auto-delete the Bank
-      as a side effect of removing the Account — giving predictable,
-      intentional control over the deletion order.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q7. What does <code class="inline">manager.contains(bank)</code>
-      check, and why is it used before removing?
-    </div>
-
-    <div class="a">
-      It checks whether <code class="inline">bank</code> is currently a
-      managed entity within the persistence context. It's used defensively
-      because calling <code class="inline">remove()</code> on a detached
-      (non-managed) entity throws
-      <code class="inline">IllegalArgumentException</code>.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q8. How does this Many-to-One example relate to the earlier
-      One-to-Many (Company/Employee) example?
-    </div>
-
-    <div class="a">
-      They represent the same kind of relationship shape from opposite
-      sides. Company/Employee modeled it as One-to-Many with
-      <code class="inline">@OneToMany</code> +
-      <code class="inline">@JoinColumn</code> on the "one" side (Company).
-      Bank/Account instead models it as Many-to-One with
-      <code class="inline">@ManyToOne</code> directly on the "many" side
-      (Account) — generally the simpler, more natural direction to
-      implement in Hibernate.
-    </div>
-  </div>
-</div>
-
-<h2 id="tricks">11. Memory Tricks</h2>
-
-<div class="memory-trick">
-  <b>Many-to-One = "Many kids, one parent."</b>
-  The FK always lives on the "many" (child) side —
-  Account holds <code class="inline">bank_bankId</code>,
-  not the other way around.
-</div>
-
-<div class="memory-trick">
-  <b>Default fetch types:</b>
-  "<b>Many</b>ToOne is <b>M</b>ostly <b>E</b>ager
-  (default EAGER); <b>One</b>ToMany is
-  <b>O</b>ften <b>L</b>azy (default LAZY)."
-  Remember it flips depending on which side you're on.
-</div>
-
-<div class="memory-trick">
-  <b>manager.contains(entity):</b>
-  "Is it still in the room?" — checks if an entity is managed before you
-  try to remove/act on it, avoiding
-  <code class="inline">IllegalArgumentException</code> on detached entities.
-</div>
-
-<div class="memory-trick">
-  <b>Cascade ALL + manual removal order:</b>
-  If cascade will auto-delete a child, and you want to control that yourself,
-  break the reference first (<code class="inline">setX(null)</code>)
-  before removing the parent — exactly what
-  <code class="inline">deleteBoth()</code> does.
-</div>
-
-<div class="footer-note">
-  Hibernate Many-to-One Mapping Notes — Bank/Account (com.DTO),
-  AccountDAO (com.DAO), Driver (com.Controller) —
-  Original code preserved exactly; theory, explanations, bug notes,
-  and Q&amp;A added as supplementary study material.
-</div>
-
-</body>
-</html>
+}</div><div class="note-box"><span class="tag">EXTRA — Explanation</span><ul><li>Both <code>account1</code> and <code>account2</code> point at the <strong>same</strong> <code>bank</code> object in memory — this correctly models "many accounts, one bank." When <code>insertData()</code> runs, Hibernate should recognize (via the shared reference and cascade) that only one Bank row needs to be inserted, and both Account rows reference it via the same foreign key.</li><li>Note the persistence unit name here is <code>"orm"</code>, not <code>"pravin"</code> as in all the earlier chapters — this DAO points to a different <code>persistence.xml</code> configuration.</li></ul></div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-ONE | Page 6 — Bugs &amp; Execution Flow</div><div class="section" id="bugs"><div class="section-header">⚠️ 8. Bugs &amp; Gotchas in This Code</div><div class="section-body"><span class="tag">⚠ BUGS — Worth Knowing for Debugging &amp; Interviews</span><ul><li><strong><code>FetchType.LAZY</code> + printing <code>getBank().getBankName()</code> outside a transaction:</strong> in <code>fetchById()</code> and <code>fetchAll()</code>, <code>account.getBank()</code> is called to print the bank name. Since fetch is LAZY, this triggers an on-demand DB query — it will only work correctly while the <code>EntityManager</code>/session is still open. If this DAO's <code>manager</code> were ever closed before these getters ran, it would throw <code>LazyInitializationException</code>. It works here only because <code>manager</code> is a long-lived instance field, never explicitly closed.</li><li><strong><code>update()</code> calls both <code>merge()</code> and mutates in place:</strong> <code>account</code> was loaded via <code>find()</code> (so it's already managed and dirty checking alone would work), yet the code also explicitly calls <code>manager.merge(account)</code> and <code>manager.merge(account.getBank())</code>. This is redundant but not wrong — merge on an already-managed entity is a safe no-op beyond returning the same managed instance.</li><li><strong>Cascade double-effect risk in <code>deleteBoth()</code>:</strong> because <code>Account.bank</code> has <code>CascadeType.ALL</code> (which includes <code>REMOVE</code>), simply calling <code>manager.remove(account)</code> <em>while it still referenced its bank</em> would already cascade-delete the Bank automatically. The code avoids this by nulling the reference first (<code>account.setBank(null)</code>) before removing the account, then manually removing the bank separately — a deliberate workaround to control the deletion order rather than trust the cascade.</li><li><strong>No null-check on the DAO's return value used inside <code>Driver</code></strong> isn't an issue here since all DAO calls are commented out — but as usual, none of the DAO methods guard against a missing bank reference if an <code>Account</code> were ever inserted without one.</li></ul></div></div><div class="section" id="flow"><div class="section-header">🚀 9. Execution Flow</div><div class="section-body"><div class="flow-box">Driver Creates Bank + Accounts</div><div class="flow-arrow">↓</div><div class="flow-box">Accounts Share Same Bank Reference</div><div class="flow-arrow">↓</div><div class="flow-box">AccountDAO.insertData()</div><div class="flow-arrow">↓</div><div class="flow-box">persist(account) → cascades to Bank (CascadeType.ALL)</div><div class="flow-arrow">↓</div><div class="flow-box">Hibernate Generates SQL</div><div class="flow-arrow">↓</div><div class="flow-box">Database: Bank row + Account rows (with bank_bankId FK)</div><div class="flow-arrow">↓</div><div class="flow-box">fetchById() / fetchAll()</div><div class="flow-arrow">↓</div><div class="flow-box">getBank() triggers LAZY load if not already fetched</div><div class="flow-arrow">↓</div><div class="flow-box">Displayed to User</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-ONE | Page 7 — Interview Q&amp;A</div><div class="section" id="qa"><div class="section-header">🎯 10. Interview Q&amp;A</div><div class="section-body"><span class="tag">INTERVIEW PREP</span><div class="qa"><div class="q">Q1. What is Many-to-One mapping? Give the example from this code.</div><div>Many records of one table associate with one record of another table — many child objects belong to one parent. Here, many <code>Account</code>s belong to one <code>Bank</code>, modeled with <code>@ManyToOne private Bank bank;</code> inside <code>Account</code>.</div></div><div class="qa"><div class="q">Q2. Which side holds the foreign key in a Many-to-One relationship, and why?</div><div>The "many" side — here, <code>Account</code> — holds the foreign key (<code>bank_bankId</code>), because each Account row needs to point to exactly one Bank row, while a Bank row is referenced by potentially many Account rows.</div></div><div class="qa"><div class="q">Q3. What is the default fetch type for <code>@ManyToOne</code>, and what does this code do differently?</div><div>The JPA default for <code>@ManyToOne</code> is <code>FetchType.EAGER</code>. This code explicitly overrides it to <code>FetchType.LAZY</code>, so the associated <code>Bank</code> is only loaded from the database when <code>getBank()</code> is actually called.</div></div><div class="qa"><div class="q">Q4. What risk does <code>FetchType.LAZY</code> introduce, and how is it avoided here?</div><div>If the entity manager/session is closed before the lazy field is accessed, calling the getter throws <code>LazyInitializationException</code>. It's avoided here because the DAO's <code>manager</code> is a long-lived instance field that stays open for the DAO's lifetime.</div></div><div class="qa"><div class="q">Q5. What does <code>CascadeType.ALL</code> do on the <code>@ManyToOne</code> field here?</div><div>It propagates persist, merge, remove (and other) operations performed on an <code>Account</code> to its associated <code>Bank</code> automatically — so saving or deleting an Account can also save or delete its linked Bank without a separate explicit call.</div></div><div class="qa"><div class="q">Q6. Why does <code>deleteBoth()</code> call <code>account.setBank(null)</code> before removing the account?</div><div>To break the object reference before removal so the code can control bank deletion explicitly and safely, rather than relying on <code>CascadeType.ALL</code> to auto-delete the Bank as a side effect of removing the Account — giving predictable, intentional control over the deletion order.</div></div><div class="qa"><div class="q">Q7. What does <code>manager.contains(bank)</code> check, and why is it used before removing?</div><div>It checks whether <code>bank</code> is currently a managed entity within the persistence context. It's used defensively because calling <code>remove()</code> on a detached (non-managed) entity throws <code>IllegalArgumentException</code>.</div></div><div class="qa"><div class="q">Q8. How does this Many-to-One example relate to the earlier One-to-Many (Company/Employee) example?</div><div>They represent the same kind of relationship shape from opposite sides. Company/Employee modeled it as One-to-Many with <code>@OneToMany</code> + <code>@JoinColumn</code> on the "one" side (Company). Bank/Account instead models it as Many-to-One with <code>@ManyToOne</code> directly on the "many" side (Account) — generally the simpler, more natural direction to implement in Hibernate.</div></div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-ONE | Page 8 — Memory Tricks</div><div class="section" id="tricks"><div class="section-header">🧠 11. Memory Tricks</div><div class="section-body"><div class="note-box">🧠 <strong>Many-to-One = "Many kids, one parent."</strong> The FK always lives on the "many" (child) side — Account holds <code>bank_bankId</code>, not the other way around.</div><div class="note-box">🧠 <strong>Default fetch types:</strong> "<strong>Many</strong>ToOne is <strong>M</strong>ostly <strong>E</strong>ager (default EAGER); <strong>One</strong>ToMany is <strong>O</strong>ften <strong>L</strong>azy (default LAZY)." Remember it flips depending on which side you're on.</div><div class="note-box">🧠 <strong>manager.contains(entity):</strong> "Is it still in the room?" — checks if an entity is managed before you try to remove/act on it, avoiding <code>IllegalArgumentException</code> on detached entities.</div><div class="note-box">🧠 <strong>Cascade ALL + manual removal order:</strong> If cascade will auto-delete a child, and you want to control that yourself, break the reference first (<code>setX(null)</code>) before removing the parent — exactly what <code>deleteBoth()</code> does.</div></div></div><div class="footer">Hibernate Many-to-One Mapping Notes — Bank/Account (com.DTO), AccountDAO (com.DAO), Driver (com.Controller) — Original code preserved exactly; theory, explanations, bug notes, and Q&amp;A added as supplementary study material.</div></div></body></html>

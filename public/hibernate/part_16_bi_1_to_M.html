@@ -1,693 +1,45 @@
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Chapter 16 — Hibernate Bidirectional One-to-Many Mapping</title>
-
-<style>
-/* =========================================================
-   MASTER INDEX STYLE
-   Hibernate Notes — Academic / A4 / Print Friendly
-   ========================================================= */
-
-@page {
-  size: A4;
-  margin: 0;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  padding: 28px 0;
-  background: #e8e8e8;
-  color: #111;
-  font-family: Georgia, "Times New Roman", serif;
-  line-height: 1.55;
-  font-size: 14px;
-}
-
-/* =========================================================
-   MAIN PAGE
-   ========================================================= */
-
-body > * {
-  max-width: 820px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-h1 {
-  max-width: 820px;
-  margin-top: 0;
-  margin-bottom: 6px;
-  padding: 12px 14px 10px;
-  background: #fff;
-  border: 1.5px solid #222;
-  text-align: center;
-  font-size: 24px;
-  line-height: 1.3;
-  color: #111;
-  font-weight: 700;
-}
-
-.subtitle {
-  max-width: 820px;
-  margin-bottom: 22px;
-  padding: 0 6px;
-  color: #555;
-  font-size: 12.5px;
-  font-style: italic;
-  text-align: center;
-}
-
-h2 {
-  margin-top: 28px;
-  margin-bottom: 12px;
-  padding: 7px 10px;
-  border-bottom: 1.5px solid #333;
-  color: #111;
-  font-size: 18px;
-  line-height: 1.3;
-  font-weight: 700;
-  page-break-after: avoid;
-}
-
-h3 {
-  margin-top: 20px;
-  margin-bottom: 9px;
-  color: #222;
-  font-size: 15px;
-  line-height: 1.35;
-  font-weight: 700;
-  page-break-after: avoid;
-}
-
-/* =========================================================
-   TABLE OF CONTENTS
-   ========================================================= */
-
-.toc {
-  background: #fff;
-  border: 1.5px solid #222;
-  padding: 13px 18px;
-  margin-bottom: 22px;
-  page-break-inside: avoid;
-}
-
-.toc b {
-  display: block;
-  margin-bottom: 6px;
-  color: #111;
-  font-size: 15px;
-}
-
-.toc ol {
-  margin: 5px 0;
-  padding-left: 22px;
-}
-
-.toc li {
-  margin: 3px 0;
-}
-
-.toc a {
-  color: #222;
-  text-decoration: none;
-  font-size: 13px;
-}
-
-.toc a:hover {
-  text-decoration: underline;
-}
-
-/* =========================================================
-   CARDS
-   ========================================================= */
-
-.card {
-  background: #fff;
-  border: 1.5px solid #222;
-  padding: 14px 16px;
-  margin: 13px 0;
-  page-break-inside: avoid;
-}
-
-.card.extra {
-  background: #f4f4f4;
-  border: 1.5px dashed #555;
-}
-
-.card.theory {
-  background: #fff;
-  border: 1.5px solid #222;
-}
-
-.card.bug {
-  background: #f5f5f5;
-  border: 1.5px solid #444;
-}
-
-.card.note {
-  background: #f2f2f2;
-  border: 1.5px solid #333;
-}
-
-/* =========================================================
-   TAGS
-   ========================================================= */
-
-.tag {
-  display: inline-block;
-  padding: 3px 8px;
-  margin-bottom: 7px;
-  border: 1px solid #444;
-  background: #ededed;
-  color: #222;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.tag-orig {
-  background: #222;
-  color: #fff;
-  border-color: #222;
-}
-
-.tag-extra {
-  background: #e8e8e8;
-  color: #222;
-}
-
-.tag-qa {
-  background: #e8e8e8;
-  color: #111;
-}
-
-.tag-theory {
-  background: #e8e8e8;
-  color: #111;
-}
-
-.tag-bug {
-  background: #ddd;
-  color: #111;
-}
-
-.tag-note {
-  background: #e8e8e8;
-  color: #111;
-}
-
-/* =========================================================
-   TEXT
-   ========================================================= */
-
-p {
-  margin: 7px 0;
-}
-
-b {
-  color: #111;
-}
-
-ul {
-  margin: 6px 0;
-  padding-left: 22px;
-}
-
-li {
-  margin: 3px 0;
-}
-
-strong {
-  color: #111;
-}
-
-/* =========================================================
-   INLINE CODE
-   ========================================================= */
-
-code.inline {
-  display: inline;
-  padding: 1px 4px;
-  background: #eeeeee;
-  border: 1px solid #d0d0d0;
-  border-radius: 0;
-  color: #222;
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 12px;
-}
-
-/* =========================================================
-   CODE BLOCKS
-   ========================================================= */
-
-pre {
-  margin: 10px 0;
-  padding: 14px 15px;
-  background: #1e1e1e;
-  color: #d4d4d4;
-  border: 1px solid #111;
-  border-radius: 0;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-break: break-word;
-
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 11.5px;
-  line-height: 1.48;
-
-  page-break-inside: auto;
-}
-
-/* Java syntax colors */
-
-.kw {
-  color: #569cd6;
-}
-
-.type {
-  color: #4ec9b0;
-}
-
-.str {
-  color: #ce9178;
-}
-
-.cmt {
-  color: #6a9955;
-  font-style: italic;
-}
-
-.method {
-  color: #dcdcaa;
-}
-
-/* =========================================================
-   TABLES
-   ========================================================= */
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 12px 0;
-  background: #fff;
-  font-size: 12.5px;
-}
-
-th,
-td {
-  border: 1px solid #333;
-  padding: 7px 9px;
-  text-align: left;
-  vertical-align: top;
-}
-
-th {
-  background: #222;
-  color: #fff;
-  font-weight: 700;
-}
-
-tr:nth-child(even) {
-  background: #f1f1f1;
-}
-
-/* =========================================================
-   FLOW DIAGRAM
-   ========================================================= */
-
-.flow {
-  margin: 12px 0;
-  padding: 13px 15px;
-  background: #fafafa;
-  border: 1.5px dashed #555;
-  border-radius: 0;
-
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 12px;
-  line-height: 1.5;
-
-  color: #222;
-  white-space: pre-wrap;
-  text-align: center;
-
-  page-break-inside: avoid;
-}
-
-.box {
-  display: block;
-  max-width: 260px;
-  margin: 5px auto;
-  padding: 7px 9px;
-
-  background: #222;
-  color: #fff;
-
-  border: 1px solid #111;
-  border-radius: 0;
-
-  text-align: center;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 12.5px;
-  font-weight: 700;
-}
-
-.box.inverse {
-  background: #555;
-}
-
-.arrow-down {
-  margin: 1px 0;
-  color: #333;
-  font-size: 18px;
-  text-align: center;
-}
-
-/* =========================================================
-   Q&A
-   ========================================================= */
-
-.qa-item {
-  padding: 9px 0;
-  border-bottom: 1px solid #ccc;
-  page-break-inside: avoid;
-}
-
-.qa-item:last-child {
-  border-bottom: none;
-}
-
-.q {
-  color: #111;
-  font-weight: 700;
-}
-
-.a {
-  margin-top: 4px;
-  color: #333;
-}
-
-/* =========================================================
-   MEMORY TRICKS
-   ========================================================= */
-
-.memory-trick {
-  margin: 10px 0;
-  padding: 10px 13px;
-
-  background: #f1f1f1;
-  border: 1px dashed #555;
-  border-radius: 0;
-
-  color: #222;
-  font-size: 13px;
-
-  page-break-inside: avoid;
-}
-
-.memory-trick b {
-  color: #111;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.footer-note {
-  margin-top: 34px;
-  padding-top: 12px;
-
-  border-top: 1px solid #555;
-
-  color: #666;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 10.5px;
-  line-height: 1.45;
-  text-align: center;
-}
-
-/* =========================================================
-   PAGE BREAK
-   ========================================================= */
-
-.page-break {
-  page-break-before: always;
-}
-
-/* =========================================================
-   PRINT
-   ========================================================= */
-
-@media print {
-
-  body {
-    padding: 0;
-    background: #fff;
-    font-size: 13px;
-  }
-
-  body > * {
-    max-width: none;
-  }
-
-  h1 {
-    margin-top: 0;
-  }
-
-  .card,
-  .flow,
-  .toc,
-  .memory-trick,
-  table {
-    page-break-inside: avoid;
-  }
-
-  pre {
-    page-break-inside: auto;
-  }
-
-  a {
-    color: #111;
-    text-decoration: none;
-  }
-}
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media screen and (max-width: 700px) {
-
-  body {
-    padding: 12px;
-    font-size: 13px;
-  }
-
-  body > * {
-    max-width: 100%;
-  }
-
-  h1 {
-    font-size: 20px;
-    padding: 10px;
-  }
-
-  h2 {
-    font-size: 16px;
-  }
-
-  h3 {
-    font-size: 14px;
-  }
-
-  .card {
-    padding: 11px 12px;
-  }
-
-  pre {
-    font-size: 10.5px;
-    padding: 11px;
-  }
-
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: normal;
-    font-size: 11.5px;
-  }
-
-  th,
-  td {
-    min-width: 130px;
-  }
-
-  .flow {
-    font-size: 10.5px;
-    text-align: left;
-    overflow-x: auto;
-  }
-}
-</style>
-
-</head>
-
-<body>
-
-<h1>Chapter 16: Hibernate Bidirectional One-to-Many Mapping</h1>
-
-<div class="subtitle">
-  Department ↔ Employee Example — Packages:
-  <code class="inline">com.DTO</code>,
-  <code class="inline">com.DAO</code>,
-  <code class="inline">com.Controller</code>
-</div>
-
-<div class="toc">
-  <b>Contents</b>
-
-  <ol>
-    <li><a href="#what">What is Bidirectional One-to-Many?</a></li>
-    <li><a href="#ownerinverse">Owning Side vs Inverse Side — Here</a></li>
-    <li><a href="#structure">Project Structure</a></li>
-    <li><a href="#code">Code — Department, Employee, DepartmentDAO, Driver</a></li>
-    <li><a href="#note">Author's Note — Enterprise-Style Callout</a></li>
-    <li><a href="#bugs">Extra — Gaps &amp; Gotchas in This Code</a></li>
-    <li><a href="#compare">Comparison — Unidirectional (Ch.17) vs Bidirectional (Ch.21)</a></li>
-    <li><a href="#flow">Execution Flow</a></li>
-    <li><a href="#qa">Interview Q&amp;A</a></li>
-    <li><a href="#tricks">Memory Tricks</a></li>
-  </ol>
-</div>
-
-<h2 id="what">1. What is Bidirectional One-to-Many?</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>
-    This chapter revisits the <b>One-to-Many</b> relationship from Chapter 17
-    (Company/Employee), but this time makes it <b>bidirectional</b> —
-    both sides know about each other, so navigation works both ways:
-  </p>
-
-  <ul>
-    <li>
-      <code class="inline">department.getEmployees()</code>
-      — navigate Parent → Children
-    </li>
-
-```
-<li>
-  <code class="inline">employee.getDepartment()</code>
-  — navigate Child → Parent
-</li>
-```
-
-  </ul>
-
-  <p>
-    This is the enterprise-standard way to model One-to-Many in Hibernate:
-    the "many" side (<code class="inline">Employee</code>) holds the actual
-    foreign key via <code class="inline">@ManyToOne</code>, and the "one" side
-    (<code class="inline">Department</code>) uses
-    <code class="inline">@OneToMany(mappedBy = ...)</code> to expose the reverse
-    collection without creating a redundant join table or second foreign key.
-  </p>
-
-  <div class="flow">Department
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Hibernate Bidirectional One-to-Many</title><style>*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#e0e0e0;font-family:'Georgia',serif}
+.a4-page{width:210mm;min-height:297mm;background:#fff;color:#111;margin:12px auto;padding:14mm 16mm;font-size:12.5px;line-height:1.6;page-break-after:always;border:1px solid #aaa;box-shadow:0 2px 8px rgba(0,0,0,.13)}
+.main-title{text-align:center;font-size:21px;font-weight:700;border:2.5px solid #111;padding:9px 18px;margin-bottom:6px;letter-spacing:1px}
+.sub-title{text-align:center;font-size:12.5px;color:#555;margin-bottom:12px}
+.page-title{text-align:center;font-size:13px;font-weight:700;letter-spacing:.5px;color:#555;margin-bottom:10px;border-bottom:1px solid #ccc;padding-bottom:5px}
+.section{border:1.5px solid #222;margin-bottom:11px}
+.section-header{background:#111;color:#fff;font-size:12.5px;font-weight:700;padding:5px 11px;letter-spacing:.4px}
+.section-body{padding:9px 13px 11px;background:#fff}
+.subsection-title{font-weight:700;font-size:12.5px;margin:8px 0 3px}
+.subsection-title:first-child{margin-top:0}
+.code-block{background:#f5f5f5;border:1px solid #ccc;border-left:3px solid #333;font-family:'Courier New',monospace;font-size:10.5px;padding:6px 10px;margin:6px 0;white-space:pre-wrap;word-break:break-word;line-height:1.5}
+.note-box{border:1.5px dashed #555;padding:6px 10px;margin:7px 0;font-size:12px;background:#fafafa}
+.flow-box{border:1px solid #444;padding:3px 10px;text-align:center;font-size:12px;font-weight:600;margin:2px auto;background:#fff;width:55%}
+.flow-arrow{text-align:center;font-size:12px;color:#555;margin:1px 0}
+.tag{display:inline-block;background:#111;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;margin:0 4px 4px 0;letter-spacing:.3px;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}
+th{background:#111;color:#fff;padding:5px 9px;text-align:left;font-size:11.5px}
+td{border:1px solid #bbb;padding:5px 9px;vertical-align:top}
+p{margin:4px 0;font-size:12.5px}
+ul,ol{padding-left:20px;margin:4px 0}
+li{margin-bottom:3px;font-size:12.5px}
+code{font-family:'Courier New',monospace;font-size:11px;background:#eee;padding:1px 4px;border-radius:2px}
+.code-block code{background:none;padding:0}
+.qa{padding:6px 0;border-bottom:1px solid #ccc}
+.qa:last-child{border-bottom:none}
+.q{font-weight:700}
+.toc{border:1.5px solid #222;padding:8px 14px;margin-bottom:11px}
+.toc a{color:#111;text-decoration:none;font-size:12.5px}
+.footer{border-top:1px solid #777;margin-top:16px;padding-top:8px;text-align:center;font-size:11px;color:#555}
+@media print{body{background:#fff}.a4-page{margin:0;box-shadow:none;border:none}}</style></head><body><div class="a4-page"><div class="main-title">CHAPTER 16: HIBERNATE BIDIRECTIONAL ONE-TO-MANY MAPPING</div>
+<div class="sub-title">Department ↔ Employee Example — Packages: <code>com.DTO</code>, <code>com.DAO</code>, <code>com.Controller</code></div>
+<div class="toc"><strong>Contents</strong><ol>
+<li><a href="#what">What is Bidirectional One-to-Many?</a></li><li><a href="#ownerinverse">Owning Side vs Inverse Side — Here</a></li><li><a href="#structure">Project Structure</a></li><li><a href="#code">Code — Department, Employee, DepartmentDAO, Driver</a></li><li><a href="#note">Author's Note — Enterprise-Style Callout</a></li><li><a href="#bugs">Extra — Gaps &amp; Gotchas in This Code</a></li><li><a href="#compare">Comparison — Unidirectional (Ch.17) vs Bidirectional (Ch.21)</a></li><li><a href="#flow">Execution Flow</a></li><li><a href="#qa">Interview Q&amp;A</a></li><li><a href="#tricks">Memory Tricks</a></li></ol></div><div class="section" id="what"><div class="section-header">📘 1. What is Bidirectional One-to-Many?</div><div class="section-body"><span class="tag">THEORY</span><p>This chapter revisits the <strong>One-to-Many</strong> relationship from Chapter 17 (Company/Employee), but this time makes it <strong>bidirectional</strong> — both sides know about each other, so navigation works both ways:</p><ul><li><code>department.getEmployees()</code> — navigate Parent → Children</li><li><code>employee.getDepartment()</code> — navigate Child → Parent</li></ul><p>This is the enterprise-standard way to model One-to-Many in Hibernate: the "many" side (<code>Employee</code>) holds the actual foreign key via <code>@ManyToOne</code>, and the "one" side (<code>Department</code>) uses <code>@OneToMany(mappedBy = ...)</code> to expose the reverse collection without creating a redundant join table or second foreign key.</p><div class="code-block">Department
    │
    ├── Employee 1 (Pravin)
    ├── Employee 2 (Mayuresh)
    └── Employee 3 (Shravan)
 
 department.getEmployees()  →  [e1, e2, e3]
-e1.getDepartment()          →  department</div>
-
-</div>
-
-<h2 id="ownerinverse">2. Owning Side vs Inverse Side — Here</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>
-    Following the same owning/inverse concept from Chapter 20
-    (Person/Passport), but now applied to a collection-based relationship
-    instead of a single reference:
-  </p>
-
-  <table>
-    <tr>
-      <th>Side</th>
-      <th>Entity</th>
-      <th>Annotation</th>
-      <th>Role</th>
-    </tr>
-
-```
-<tr>
-  <td>Owning Side</td>
-  <td><code class="inline">Employee</code></td>
-  <td>
-    <code class="inline">@ManyToOne</code> +
-    <code class="inline">@JoinColumn(name = "department_id")</code>
-  </td>
-  <td>
-    Holds the actual foreign key column; what Hibernate persists to SQL.
-  </td>
-</tr>
-
-<tr>
-  <td>Inverse Side</td>
-  <td><code class="inline">Department</code></td>
-  <td>
-    <code class="inline">@OneToMany(mappedBy = "department")</code>
-  </td>
-  <td>
-    Exposes the reverse collection for navigation; does not own the FK.
-  </td>
-</tr>
-```
-
-  </table>
-</div>
-
-<div class="flow">
-
-<span class="box inverse">Department</span>
-
-<div style="font-size:11px; color:#444;">
-Inverse Side — mappedBy = "department"
-</div>
-
-<div class="arrow-down">↕ One-to-Many</div>
-
-<span class="box">Employee</span>
-
-<div style="font-size:11px; color:#222;">
-Owning Side — @ManyToOne + @JoinColumn
-</div>
-
-</div>
-
-<h2 id="structure">3. Project Structure</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-<pre>Hibernate_Bidirectional_OneToMany
+e1.getDepartment()          →  department</div></div></div><div class="section" id="ownerinverse"><div class="section-header">📘 2. Owning Side vs Inverse Side — Here</div><div class="section-body"><span class="tag">THEORY</span><p>Following the same owning/inverse concept from Chapter 20 (Person/Passport), but now applied to a collection-based relationship instead of a single reference:</p><table><tr><th>Side</th><th>Entity</th><th>Annotation</th><th>Role</th></tr><tr><td>Owning Side</td><td><code>Employee</code></td><td><code>@ManyToOne</code> + <code>@JoinColumn(name = "department_id")</code></td><td>Holds the actual foreign key column; what Hibernate persists to SQL.</td></tr><tr><td>Inverse Side</td><td><code>Department</code></td><td><code>@OneToMany(mappedBy = "department")</code></td><td>Exposes the reverse collection for navigation; does not own the FK.</td></tr></table><div class="flow-box">Department</div><div class="flow-arrow" style="font-size:11px">Inverse Side — mappedBy = "department"</div><div class="flow-arrow">↕ One-to-Many</div><div class="flow-box">Employee</div><div class="flow-arrow" style="font-size:11px">Owning Side — @ManyToOne + @JoinColumn</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE BIDIRECTIONAL ONE-TO-MANY | Page 2 — Structure &amp; Department.java</div><div class="section" id="structure"><div class="section-header">📘 3. Project Structure</div><div class="section-body"><span class="tag">THEORY</span><div class="code-block">Hibernate_Bidirectional_OneToMany
 src/main/java
 │
 ├── com.DTO
@@ -698,921 +50,432 @@ src/main/java
 │      └── DepartmentDAO.java
 │
 └── com.Controller
-       └── Driver.java</pre>
+       └── Driver.java</div></div></div><div class="section" id="code"><div class="section-header">💻 4. Code — Department, Employee, DepartmentDAO, Driver</div><div class="section-body"><div class="subsection-title">🔹 4.1 Entity — <code>Department.java</code> (com.DTO) — Parent / Inverse Side</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.DTO;
 
-</div>
+import java.util.List;
 
-<h2 id="code" class="page-break">
-  4. Code — Department, Employee, DepartmentDAO, Driver
-</h2>
-
-<h3>
-  4.1 Entity —
-  <code class="inline">Department.java</code>
-  (com.DTO) — Parent / Inverse Side
-</h3>
-
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
-
-<pre><span class="kw">package</span> com.DTO;
-
-<span class="kw">import</span> java.util.List;
-
-<span class="kw">import</span> javax.persistence.CascadeType;
-<span class="kw">import</span> javax.persistence.Entity;
-<span class="kw">import</span> javax.persistence.FetchType;
-<span class="kw">import</span> javax.persistence.GeneratedValue;
-<span class="kw">import</span> javax.persistence.GenerationType;
-<span class="kw">import</span> javax.persistence.Id;
-<span class="kw">import</span> javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
-<span class="kw">public class</span> <span class="type">Department</span> {
+public class Department {
 
-	<span class="cmt">// Primary Key</span>
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	<span class="kw">private</span> <span class="type">int</span> departmentId;
+    // Primary Key
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int departmentId;
 
-	<span class="cmt">// Department Name</span>
-	<span class="kw">private</span> <span class="type">String</span> departmentName;
+    // Department Name
+    private String departmentName;
 
-	<span class="cmt">/*
-	 * One Department
-	 *        ↓
-	 * Many Employees
-	 *
-	 * mappedBy = "department"
-	 * tells Hibernate that Employee owns the relationship.
-	 */</span>
+    /*
+     * One Department
+     *        ↓
+     * Many Employees
+     *
+     * mappedBy = "department"
+     * tells Hibernate that Employee owns the relationship.
+     */
 
-	@OneToMany(
-			mappedBy = <span class="str">"department"</span>,
-			cascade = CascadeType.ALL,
-			fetch = FetchType.EAGER)
+    @OneToMany(
+            mappedBy = "department",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
 
-	<span class="kw">private</span> List&lt;Employee&gt; employees;
+    private List&lt;Employee&gt; employees;
 
-	<span class="cmt">// ======================
-	// Getter Setter
-	// ======================</span>
+    // ======================
+    // Getter Setter
+    // ======================
 
-	<span class="kw">public</span> <span class="type">int</span> <span class="method">getDepartmentId</span>() {
-		<span class="kw">return</span> departmentId;
-	}
+    public int getDepartmentId() {
+        return departmentId;
+    }
 
-	<span class="kw">public void</span> <span class="method">setDepartmentId</span>(<span class="type">int</span> departmentId) {
-		<span class="kw">this</span>.departmentId = departmentId;
-	}
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
+    }
 
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">getDepartmentName</span>() {
-		<span class="kw">return</span> departmentName;
-	}
+    public String getDepartmentName() {
+        return departmentName;
+    }
 
-	<span class="kw">public void</span> <span class="method">setDepartmentName</span>(<span class="type">String</span> departmentName) {
-		<span class="kw">this</span>.departmentName = departmentName;
-	}
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
 
-	<span class="kw">public</span> List&lt;Employee&gt; <span class="method">getEmployees</span>() {
-		<span class="kw">return</span> employees;
-	}
+    public List&lt;Employee&gt; getEmployees() {
+        return employees;
+    }
 
-	<span class="kw">public void</span> <span class="method">setEmployees</span>(List&lt;Employee&gt; employees) {
-		<span class="kw">this</span>.employees = employees;
-	}
+    public void setEmployees(List&lt;Employee&gt; employees) {
+        this.employees = employees;
+    }
 
-	@Override
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">toString</span>() {
-		<span class="kw">return</span> <span class="str">"Department [departmentId="</span> + departmentId +
-				<span class="str">", departmentName="</span> + departmentName + <span class="str">"]"</span>;
-	}
+    @Override
+    public String toString() {
+        return "Department [departmentId=" + departmentId +
+                ", departmentName=" + departmentName + "]";
+    }
 
-}</pre>
+}</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE BIDIRECTIONAL ONE-TO-MANY | Page 3 — Employee.java</div><div class="section"><div class="section-header">💻 Code (continued)</div><div class="section-body"><div class="subsection-title">🔹 4.2 Entity — <code>Employee.java</code> (com.DTO) — Child / Owning Side</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.DTO;
 
-</div>
-
-<h3>
-  4.2 Entity —
-  <code class="inline">Employee.java</code>
-  (com.DTO) — Child / Owning Side
-</h3>
-
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
-
-<pre><span class="kw">package</span> com.DTO;
-
-<span class="kw">import</span> javax.persistence.Entity;
-<span class="kw">import</span> javax.persistence.GeneratedValue;
-<span class="kw">import</span> javax.persistence.GenerationType;
-<span class="kw">import</span> javax.persistence.Id;
-<span class="kw">import</span> javax.persistence.JoinColumn;
-<span class="kw">import</span> javax.persistence.ManyToOne;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
-<span class="kw">public class</span> <span class="type">Employee</span> {
-
-	<span class="cmt">// Primary Key</span>
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	<span class="kw">private</span> <span class="type">int</span> employeeId;
-
-	<span class="kw">private</span> <span class="type">String</span> employeeName;
-
-	<span class="kw">private</span> <span class="type">double</span> salary;
-
-	<span class="cmt">/*
-	 * Many Employees
-	 *        ↓
-	 * One Department
-	 *
-	 * Employee is the Owning Side.
-	 */</span>
-
-	@ManyToOne
-	@JoinColumn(name = <span class="str">"department_id"</span>)
-	<span class="kw">private</span> Department department;
-
-	<span class="cmt">// ======================
-	// Getter Setter
-	// ======================</span>
-
-	<span class="kw">public</span> <span class="type">int</span> <span class="method">getEmployeeId</span>() {
-		<span class="kw">return</span> employeeId;
-	}
-
-	<span class="kw">public void</span> <span class="method">setEmployeeId</span>(<span class="type">int</span> employeeId) {
-		<span class="kw">this</span>.employeeId = employeeId;
-	}
-
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">getEmployeeName</span>() {
-		<span class="kw">return</span> employeeName;
-	}
-
-	<span class="kw">public void</span> <span class="method">setEmployeeName</span>(<span class="type">String</span> employeeName) {
-		<span class="kw">this</span>.employeeName = employeeName;
-	}
-
-	<span class="kw">public</span> <span class="type">double</span> <span class="method">getSalary</span>() {
-		<span class="kw">return</span> salary;
-	}
-
-	<span class="kw">public void</span> <span class="method">setSalary</span>(<span class="type">double</span> salary) {
-		<span class="kw">this</span>.salary = salary;
-	}
-
-	<span class="kw">public</span> Department <span class="method">getDepartment</span>() {
-		<span class="kw">return</span> department;
-	}
-
-	<span class="kw">public void</span> <span class="method">setDepartment</span>(Department department) {
-		<span class="kw">this</span>.department = department;
-	}
+public class Employee {
 
-	@Override
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">toString</span>() {
-		<span class="kw">return</span> <span class="str">"Employee [employeeId="</span> + employeeId +
-				<span class="str">", employeeName="</span> + employeeName +
-				<span class="str">", salary="</span> + salary + <span class="str">"]"</span>;
-	}
+    // Primary Key
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int employeeId;
 
-}</pre>
+    private String employeeName;
 
-</div>
+    private double salary;
 
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
+    /*
+     * Many Employees
+     *        ↓
+     * One Department
+     *
+     * Employee is the Owning Side.
+     */
 
-  <ul>
-    <li>
-      This is a direct structural upgrade of Chapter 17's Company/Employee:
-      there, <code class="inline">Employee</code> had <b>no</b> back-reference
-      to <code class="inline">Company</code> (unidirectional). Here,
-      <code class="inline">Employee</code> gets a proper
-      <code class="inline">@ManyToOne Department department</code> field,
-      making full bidirectional navigation possible.
-    </li>
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
-```
-<li>
-  <code class="inline">mappedBy = "department"</code> on the
-  <code class="inline">Department</code> side refers to the
-  <b>field name</b> <code class="inline">department</code> inside
-  <code class="inline">Employee</code> — same rule as Chapter 20's
-  Person/Passport example.
-</li>
+    // ======================
+    // Getter Setter
+    // ======================
 
-<li>
-  <code class="inline">cascade = CascadeType.ALL</code> combined with
-  <code class="inline">fetch = FetchType.EAGER</code> on the
-  <code class="inline">Department.employees</code> field means:
-  persisting/removing a Department cascades to all its Employees
-  automatically, and fetching a Department always eagerly loads its full
-  Employee list in the same query/round-trip.
-</li>
+    public int getEmployeeId() {
+        return employeeId;
+    }
 
-<li>
-  No <code class="inline">cascade</code> is specified on the
-  <code class="inline">Employee.department</code> field (the owning side)
-  — cascade is only configured on the <code class="inline">Department</code>
-  side here, which is the more common real-world direction.
-</li>
-```
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
 
-  </ul>
-</div>
+    public String getEmployeeName() {
+        return employeeName;
+    }
 
-<h3>
-  4.3 DAO —
-  <code class="inline">DepartmentDAO.java</code>
-  (com.DAO)
-</h3>
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
 
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+    public double getSalary() {
+        return salary;
+    }
 
-<pre><span class="kw">package</span> com.DAO;
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
 
-<span class="kw">import</span> java.util.List;
+    public Department getDepartment() {
+        return department;
+    }
 
-<span class="kw">import</span> javax.persistence.EntityManager;
-<span class="kw">import</span> javax.persistence.EntityManagerFactory;
-<span class="kw">import</span> javax.persistence.EntityTransaction;
-<span class="kw">import</span> javax.persistence.Persistence;
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
-<span class="kw">import</span> com.DTO.Department;
-<span class="kw">import</span> com.DTO.Employee;
+    @Override
+    public String toString() {
+        return "Employee [employeeId=" + employeeId +
+                ", employeeName=" + employeeName +
+                ", salary=" + salary + "]";
+    }
 
-<span class="kw">public class</span> <span class="type">DepartmentDAO</span> {
+}</div><div class="note-box"><span class="tag">EXTRA — Explanation</span><ul><li>This is a direct structural upgrade of Chapter 17's Company/Employee: there, <code>Employee</code> had <strong>no</strong> back-reference to <code>Company</code> (unidirectional). Here, <code>Employee</code> gets a proper <code>@ManyToOne Department department</code> field, making full bidirectional navigation possible.</li><li><code>mappedBy = "department"</code> on the <code>Department</code> side refers to the <strong>field name</strong> <code>department</code> inside <code>Employee</code> — same rule as Chapter 20's Person/Passport example.</li><li><code>cascade = CascadeType.ALL</code> combined with <code>fetch = FetchType.EAGER</code> on the <code>Department.employees</code> field means: persisting/removing a Department cascades to all its Employees automatically, and fetching a Department always eagerly loads its full Employee list in the same query/round-trip.</li><li>No <code>cascade</code> is specified on the <code>Employee.department</code> field (the owning side) — cascade is only configured on the <code>Department</code> side here, which is the more common real-world direction.</li></ul></div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE BIDIRECTIONAL ONE-TO-MANY | Page 4 — DepartmentDAO.java</div><div class="section"><div class="section-header">💻 Code (continued)</div><div class="section-body"><div class="subsection-title">🔹 4.3 DAO — <code>DepartmentDAO.java</code> (com.DAO)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.DAO;
 
-	EntityManagerFactory emf =
-			Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"pravin"</span>);
+import java.util.List;
 
-	EntityManager em =
-			emf.<span class="method">createEntityManager</span>();
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 
-	EntityTransaction et =
-			em.<span class="method">getTransaction</span>();
+import com.DTO.Department;
+import com.DTO.Employee;
 
-	<span class="cmt">// ===========================
-	// INSERT
-	// ===========================</span>
+public class DepartmentDAO {
 
-	<span class="kw">public void</span> <span class="method">insertDepartment</span>(Department department) {
+    EntityManagerFactory emf =
+            Persistence.createEntityManagerFactory("pravin");
 
-		et.<span class="method">begin</span>();
+    EntityManager em =
+            emf.createEntityManager();
 
-		em.<span class="method">persist</span>(department);
+    EntityTransaction et =
+            em.getTransaction();
 
-		et.<span class="method">commit</span>();
+    // ===========================
+    // INSERT
+    // ===========================
 
-		System.out.<span class="method">println</span>(<span class="str">"Department Inserted Successfully."</span>);
+    public void insertDepartment(Department department) {
 
-	}
+        et.begin();
 
-	<span class="cmt">// ===========================
-	// FETCH BY ID
-	// ===========================</span>
+        em.persist(department);
 
-	<span class="kw">public void</span> <span class="method">fetchById</span>(<span class="type">int</span> id) {
+        et.commit();
 
-		Department department =
-				em.<span class="method">find</span>(Department.<span class="kw">class</span>, id);
+        System.out.println("Department Inserted Successfully.");
 
-		System.out.<span class="method">println</span>(department);
+    }
 
-		<span class="kw">for</span> (Employee employee : department.<span class="method">getEmployees</span>()) {
+    // ===========================
+    // FETCH BY ID
+    // ===========================
 
-			System.out.<span class="method">println</span>(employee);
+    public void fetchById(int id) {
 
-		}
+        Department department =
+                em.find(Department.class, id);
 
-	}
+        System.out.println(department);
 
-	<span class="cmt">// ===========================
-	// FETCH ALL
-	// ===========================</span>
+        for (Employee employee : department.getEmployees()) {
 
-	<span class="kw">public void</span> <span class="method">fetchAll</span>() {
+            System.out.println(employee);
 
-		List&lt;Department&gt; departments =
-				em.<span class="method">createQuery</span>(<span class="str">"SELECT d FROM Department d"</span>, Department.<span class="kw">class</span>)
-						.<span class="method">getResultList</span>();
+        }
 
-		<span class="kw">for</span> (Department department : departments) {
+    }
 
-			System.out.<span class="method">println</span>();
+    // ===========================
+    // FETCH ALL
+    // ===========================
 
-			System.out.<span class="method">println</span>(department);
+    public void fetchAll() {
 
-			<span class="kw">for</span> (Employee employee : department.<span class="method">getEmployees</span>()) {
+        List&lt;Department&gt; departments =
+                em.createQuery("SELECT d FROM Department d", Department.class)
+                        .getResultList();
 
-				System.out.<span class="method">println</span>(employee);
+        for (Department department : departments) {
 
-			}
+            System.out.println();
 
-		}
+            System.out.println(department);
 
-	}
+            for (Employee employee : department.getEmployees()) {
 
-	<span class="cmt">// ===========================
-	// UPDATE
-	// ===========================</span>
+                System.out.println(employee);
 
-	<span class="kw">public void</span> <span class="method">updateDepartment</span>(<span class="type">int</span> deptId,
-								 <span class="type">String</span> deptName) {
+            }
 
-		Department department =
-				em.<span class="method">find</span>(Department.<span class="kw">class</span>, deptId);
+        }
 
-		<span class="kw">if</span> (department != <span class="kw">null</span>) {
+    }
 
-			department.<span class="method">setDepartmentName</span>(deptName);
+    // ===========================
+    // UPDATE
+    // ===========================
 
-			et.<span class="method">begin</span>();
+    public void updateDepartment(int deptId,
+                                 String deptName) {
 
-			em.<span class="method">merge</span>(department);
+        Department department =
+                em.find(Department.class, deptId);
 
-			et.<span class="method">commit</span>();
+        if (department != null) {
 
-			System.out.<span class="method">println</span>(<span class="str">"Department Updated."</span>);
+            department.setDepartmentName(deptName);
 
-		}
+            et.begin();
 
-	}
+            em.merge(department);
 
-	<span class="cmt">// ===========================
-	// UPDATE EMPLOYEE
-	// ===========================</span>
+            et.commit();
 
-	<span class="kw">public void</span> <span class="method">updateEmployee</span>(<span class="type">int</span> empId,
-							   <span class="type">String</span> name,
-							   <span class="type">double</span> salary) {
+            System.out.println("Department Updated.");
 
-		Employee employee =
-				em.<span class="method">find</span>(Employee.<span class="kw">class</span>, empId);
+        }
 
-		<span class="kw">if</span> (employee != <span class="kw">null</span>) {
+    }
 
-			employee.<span class="method">setEmployeeName</span>(name);
+    // ===========================
+    // UPDATE EMPLOYEE
+    // ===========================
 
-			employee.<span class="method">setSalary</span>(salary);
+    public void updateEmployee(int empId,
+                               String name,
+                               double salary) {
 
-			et.<span class="method">begin</span>();
+        Employee employee =
+                em.find(Employee.class, empId);
 
-			em.<span class="method">merge</span>(employee);
+        if (employee != null) {
 
-			et.<span class="method">commit</span>();
+            employee.setEmployeeName(name);
 
-			System.out.<span class="method">println</span>(<span class="str">"Employee Updated."</span>);
+            employee.setSalary(salary);
 
-		}
+            et.begin();
 
-	}
+            em.merge(employee);
 
-	<span class="cmt">// ===========================
-	// DELETE EMPLOYEE
-	// ===========================</span>
+            et.commit();
 
-	<span class="kw">public void</span> <span class="method">removeEmployee</span>(<span class="type">int</span> empId) {
+            System.out.println("Employee Updated.");
 
-		Employee employee =
-				em.<span class="method">find</span>(Employee.<span class="kw">class</span>, empId);
+        }
 
-		<span class="kw">if</span> (employee != <span class="kw">null</span>) {
+    }
 
-			Department department =
-					employee.<span class="method">getDepartment</span>();
+    // ===========================
+    // DELETE EMPLOYEE
+    // ===========================
 
-			department.<span class="method">getEmployees</span>().<span class="method">remove</span>(employee);
+    public void removeEmployee(int empId) {
 
-			et.<span class="method">begin</span>();
+        Employee employee =
+                em.find(Employee.class, empId);
 
-			em.<span class="method">remove</span>(employee);
+        if (employee != null) {
 
-			et.<span class="method">commit</span>();
+            Department department =
+                    employee.getDepartment();
 
-			System.out.<span class="method">println</span>(<span class="str">"Employee Deleted."</span>);
+            department.getEmployees().remove(employee);
 
-		}
+            et.begin();
 
-	}
+            em.remove(employee);
 
-	<span class="cmt">// ===========================
-	// DELETE DEPARTMENT
-	// ===========================</span>
+            et.commit();
 
-	<span class="kw">public void</span> <span class="method">removeDepartment</span>(<span class="type">int</span> deptId) {
+            System.out.println("Employee Deleted.");
 
-		Department department =
-				em.<span class="method">find</span>(Department.<span class="kw">class</span>, deptId);
+        }
 
-		<span class="kw">if</span> (department != <span class="kw">null</span>) {
+    }
 
-			et.<span class="method">begin</span>();
+    // ===========================
+    // DELETE DEPARTMENT
+    // ===========================
 
-			em.<span class="method">remove</span>(department);
+    public void removeDepartment(int deptId) {
 
-			et.<span class="method">commit</span>();
+        Department department =
+                em.find(Department.class, deptId);
 
-			System.out.<span class="method">println</span>(<span class="str">"Department Deleted."</span>);
+        if (department != null) {
 
-		}
+            et.begin();
 
-	}
+            em.remove(department);
 
-}</pre>
+            et.commit();
 
-</div>
+            System.out.println("Department Deleted.");
 
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
+        }
 
-  <ul>
-    <li>
-      This is the fullest DAO in the whole mapping series — it covers insert,
-      fetch by ID, fetch all, update on both sides, delete employee, and delete
-      department, all in one class.
-    </li>
+    }
 
-```
-<li>
-  <code class="inline">fetchAll()</code> uses the <b>typed query</b> form:
-  <code class="inline">em.createQuery("SELECT d FROM Department d", Department.class)</code>
-  — passing <code class="inline">Department.class</code> as a second
-  argument avoids the unchecked-cast warning seen in earlier chapters.
-</li>
+}</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE BIDIRECTIONAL ONE-TO-MANY | Page 5 — DAO Notes &amp; Driver.java</div><div class="section"><div class="section-header">💻 Code (continued)</div><div class="section-body"><div class="note-box"><span class="tag">EXTRA — Explanation</span><ul><li>This is the fullest DAO in the whole mapping series — it covers insert, fetch by ID, fetch all, update on both sides, delete employee, and delete department, all in one class.</li><li><code>fetchAll()</code> uses the <strong>typed query</strong> form: <code>em.createQuery("SELECT d FROM Department d", Department.class)</code> — passing <code>Department.class</code> as a second argument avoids the unchecked-cast warning seen in earlier chapters.</li><li><strong><code>removeEmployee()</code> does something important and correct:</strong> before removing the Employee entity, it calls <code>department.getEmployees().remove(employee)</code> to also take the employee out of the Department's in-memory collection.</li><li><code>removeDepartment()</code> relies entirely on <code>cascade = CascadeType.ALL</code> to also remove all associated Employees — no explicit employee-removal loop is needed.</li></ul></div><div class="subsection-title">🔹 4.4 Driver — <code>Driver.java</code> (com.Controller)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.Controller;
 
-<li>
-  <b><code class="inline">removeEmployee()</code> does something important
-  and correct:</b> before removing the Employee entity, it calls
-  <code class="inline">department.getEmployees().remove(employee)</code>
-  to also take the employee out of the Department's in-memory collection.
-</li>
+import java.util.ArrayList;
+import java.util.List;
 
-<li>
-  <code class="inline">removeDepartment()</code> relies entirely on
-  <code class="inline">cascade = CascadeType.ALL</code> to also remove all
-  associated Employees — no explicit employee-removal loop is needed.
-</li>
-```
+import com.DAO.DepartmentDAO;
+import com.DTO.Department;
+import com.DTO.Employee;
 
-  </ul>
-</div>
+public class Driver {
 
-<h3>
-  4.4 Driver —
-  <code class="inline">Driver.java</code>
-  (com.Controller)
-</h3>
+    public static void main(String[] args) {
 
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+        DepartmentDAO dao = new DepartmentDAO();
 
-<pre><span class="kw">package</span> com.Controller;
+        // Create Department
+        Department department = new Department();
+        department.setDepartmentName("Development");
 
-<span class="kw">import</span> java.util.ArrayList;
-<span class="kw">import</span> java.util.List;
+        // Create Employees
+        Employee e1 = new Employee();
+        e1.setEmployeeName("Pravin");
+        e1.setSalary(50000);
 
-<span class="kw">import</span> com.DAO.DepartmentDAO;
-<span class="kw">import</span> com.DTO.Department;
-<span class="kw">import</span> com.DTO.Employee;
+        Employee e2 = new Employee();
+        e2.setEmployeeName("Mayuresh");
+        e2.setSalary(60000);
 
-<span class="kw">public class</span> <span class="type">Driver</span> {
+        Employee e3 = new Employee();
+        e3.setEmployeeName("Shravan");
+        e3.setSalary(70000);
 
-	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+        // Child → Parent
+        e1.setDepartment(department);
+        e2.setDepartment(department);
+        e3.setDepartment(department);
 
-		DepartmentDAO dao = <span class="kw">new</span> <span class="method">DepartmentDAO</span>();
+        // Parent → Children
+        List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();
 
-		<span class="cmt">// Create Department</span>
-		Department department = <span class="kw">new</span> <span class="method">Department</span>();
-		department.<span class="method">setDepartmentName</span>(<span class="str">"Development"</span>);
+        employees.add(e1);
+        employees.add(e2);
+        employees.add(e3);
 
-		<span class="cmt">// Create Employees</span>
-		Employee e1 = <span class="kw">new</span> <span class="method">Employee</span>();
-		e1.<span class="method">setEmployeeName</span>(<span class="str">"Pravin"</span>);
-		e1.<span class="method">setSalary</span>(50000);
+        department.setEmployees(employees);
 
-		Employee e2 = <span class="kw">new</span> <span class="method">Employee</span>();
-		e2.<span class="method">setEmployeeName</span>(<span class="str">"Mayuresh"</span>);
-		e2.<span class="method">setSalary</span>(60000);
+        // =========================
+        // INSERT
+        // =========================
 
-		Employee e3 = <span class="kw">new</span> <span class="method">Employee</span>();
-		e3.<span class="method">setEmployeeName</span>(<span class="str">"Shravan"</span>);
-		e3.<span class="method">setSalary</span>(70000);
+//      dao.insertDepartment(department);
 
-		<span class="cmt">// Child → Parent</span>
-		e1.<span class="method">setDepartment</span>(department);
-		e2.<span class="method">setDepartment</span>(department);
-		e3.<span class="method">setDepartment</span>(department);
+        // =========================
+        // FETCH BY ID
+        // =========================
 
-		<span class="cmt">// Parent → Children</span>
-		List&lt;Employee&gt; employees = <span class="kw">new</span> <span class="method">ArrayList</span>&lt;&gt;();
+//      dao.fetchById(1);
 
-		employees.<span class="method">add</span>(e1);
-		employees.<span class="method">add</span>(e2);
-		employees.<span class="method">add</span>(e3);
+        // =========================
+        // FETCH ALL
+        // =========================
 
-		department.<span class="method">setEmployees</span>(employees);
+//      dao.fetchAll();
 
-		<span class="cmt">// =========================
-		// INSERT
-		// =========================</span>
+        // =========================
+        // UPDATE DEPARTMENT
+        // =========================
 
-<span class="cmt">//		dao.insertDepartment(department);</span>
+//      dao.updateDepartment(1, "Testing");
 
-		<span class="cmt">// =========================
-		// FETCH BY ID
-		// =========================</span>
+        // =========================
+        // UPDATE EMPLOYEE
+        // =========================
 
-<span class="cmt">//		dao.fetchById(1);</span>
+//      dao.updateEmployee(2, "Onkar", 85000);
 
-		<span class="cmt">// =========================
-		// FETCH ALL
-		// =========================</span>
+        // =========================
+        // DELETE EMPLOYEE
+        // =========================
 
-<span class="cmt">//		dao.fetchAll();</span>
+//      dao.removeEmployee(3);
 
-		<span class="cmt">// =========================
-		// UPDATE DEPARTMENT
-		// =========================</span>
+        // =========================
+        // DELETE DEPARTMENT
+        // =========================
 
-<span class="cmt">//		dao.updateDepartment(1, "Testing");</span>
+//      dao.removeDepartment(1);
 
-		<span class="cmt">// =========================
-		// UPDATE EMPLOYEE
-		// =========================</span>
-
-<span class="cmt">//		dao.updateEmployee(2, "Onkar", 85000);</span>
-
-		<span class="cmt">// =========================
-		// DELETE EMPLOYEE
-		// =========================</span>
-
-<span class="cmt">//		dao.removeEmployee(3);</span>
-
-		<span class="cmt">// =========================
-		// DELETE DEPARTMENT
-		// =========================</span>
-
-<span class="cmt">//		dao.removeDepartment(1);</span>
-
-	}
-}</pre>
-
-</div>
-
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
-
-  <ul>
-    <li>
-      The Driver explicitly labels the two linking directions with comments —
-      <code class="inline">// Child → Parent</code>
-      (<code class="inline">e1.setDepartment(department)</code> etc.) and
-      <code class="inline">// Parent → Children</code>
-      (<code class="inline">department.setEmployees(employees)</code>).
-    </li>
-
-```
-<li>
-  Unlike <code class="inline">e1</code>/<code class="inline">e2</code>/<code class="inline">e3</code>
-  in Chapter 19's Student example, each Employee here gets its own
-  individual object.
-</li>
-
-<li>
-  Because <code class="inline">Department.employees</code> uses
-  <code class="inline">CascadeType.ALL</code>, calling
-  <code class="inline">dao.insertDepartment(department)</code> alone
-  (if uncommented) is sufficient to persist the Department and all three
-  Employees together.
-</li>
-```
-
-  </ul>
-</div>
-
-<h2 id="note" class="page-break">
-  5. Author's Note — Enterprise-Style Callout
-</h2>
-
-<div class="card note">
-  <span class="tag tag-note">NOTE — FROM YOUR SOURCE MATERIAL</span>
-
-  <p>
-    This is the recommended enterprise-style implementation for
-    Bidirectional One-to-Many:
-  </p>
-
-  <ul>
-    <li>
-      <code class="inline">Employee</code> is the <b>Owning Side</b> because it
-      contains <code class="inline">@ManyToOne</code> and
-      <code class="inline">@JoinColumn</code>.
-    </li>
-
-```
-<li>
-  <code class="inline">Department</code> is the <b>Inverse Side</b>
-  because it uses
-  <code class="inline">mappedBy = "department"</code>.
-</li>
-
-<li>
-  With <code class="inline">cascade = CascadeType.ALL</code>, calling
-  <code class="inline">em.persist(department)</code> automatically
-  persists all associated employees.
-</li>
-```
-
-  </ul>
-</div>
-
-<h2 id="bugs">
-  6. Extra — Gaps &amp; Gotchas in This Code
-</h2>
-
-<div class="card bug">
-  <span class="tag tag-bug">WORTH KNOWING</span>
-
-  <ul>
-    <li>
-      <b>No null-check on <code class="inline">department</code> in
-      <code class="inline">fetchById()</code></b> — a missing ID would throw
-      <code class="inline">NullPointerException</code>.
-    </li>
-
-```
-<li>
-  <b>No helper method to keep both sides in sync</b> — the Driver manually
-  sets both <code class="inline">e1.setDepartment(department)</code> and
-  <code class="inline">department.setEmployees(employees)</code>.
-</li>
-
-<li>
-  <b><code class="inline">removeEmployee()</code>'s manual list removal
-  is necessary specifically because
-  <code class="inline">fetch = FetchType.EAGER</code></b> — the loaded
-  collection needs to remain consistent with the database.
-</li>
-
-<li>
-  <b>The Department's <code class="inline">employees</code> field could be
-  <code class="inline">null</code></b> if a Department is created without
-  calling <code class="inline">setEmployees()</code>.
-</li>
-```
-
-  </ul>
-</div>
-
-<h2 id="compare">
-  7. Comparison — Unidirectional (Ch.17) vs Bidirectional (Ch.21)
-</h2>
-
-<table>
-  <tr>
-    <th>Aspect</th>
-    <th>Ch. 17 — Company/Employee (Unidirectional)</th>
-    <th>Ch. 21 — Department/Employee (Bidirectional)</th>
-  </tr>
-
-  <tr>
-    <td>Child → Parent navigation</td>
-    <td>
-      Not possible — Employee has no Company field
-    </td>
-    <td>
-      Possible —
-      <code class="inline">employee.getDepartment()</code>
-    </td>
-  </tr>
-
-  <tr>
-    <td>Annotation on child</td>
-    <td>
-      None (no relationship field at all)
-    </td>
-    <td>
-      <code class="inline">@ManyToOne</code> +
-      <code class="inline">@JoinColumn</code>
-    </td>
-  </tr>
-
-  <tr>
-    <td>Foreign key location</td>
-    <td>
-      <code class="inline">company_id</code> in Employee
-      (via <code class="inline">@JoinColumn</code> on Company side)
-    </td>
-    <td>
-      <code class="inline">department_id</code> in Employee
-      (via <code class="inline">@JoinColumn</code> on Employee side)
-    </td>
-  </tr>
-
-  <tr>
-    <td>Cascade configured?</td>
-    <td>No</td>
-    <td>
-      Yes —
-      <code class="inline">CascadeType.ALL</code>
-      on the parent's collection
-    </td>
-  </tr>
-
-  <tr>
-    <td>Deleting parent</td>
-    <td>
-      Would require manual child cleanup (no cascade)
-    </td>
-    <td>
-      Automatically cascades to delete all children
-    </td>
-  </tr>
-</table>
-
-<h2 id="flow">8. Execution Flow</h2>
-
-<div class="flow">Driver Creates Department + Employees
-      ↓
-Link Child → Parent (each Employee.setDepartment)
-      ↓
-Link Parent → Children (Department.setEmployees)
-      ↓
-DepartmentDAO.insertDepartment()
-      ↓
-persist(department)  →  cascades to all Employees (CascadeType.ALL)
-      ↓
-Hibernate Generates SQL
-      ↓
-Database: Department row + Employee rows (with department_id FK)
-      ↓
-fetchById() / fetchAll()
-      ↓
-Employees EAGER-loaded automatically with Department
-      ↓
-Displayed to User</div>
-
-<h2 id="qa">9. Interview Q&amp;A</h2>
-
-<div class="card">
-  <span class="tag tag-qa">INTERVIEW PREP</span>
-
-  <div class="qa-item">
-    <div class="q">
-      Q1. In this Department/Employee example, which side owns the relationship, and why?
-    </div>
-
-```
-<div class="a">
-  <code class="inline">Employee</code> owns it, because it carries
-  <code class="inline">@ManyToOne</code> with
-  <code class="inline">@JoinColumn(name = "department_id")</code>
-  — the actual foreign key column that Hibernate writes to SQL.
-</div>
-```
-
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q2. What does <code class="inline">Department</code> use instead of
-      <code class="inline">@JoinColumn</code>, and why?
-    </div>
-
-```
-<div class="a">
-  It uses
-  <code class="inline">@OneToMany(mappedBy = "department")</code>.
-  Since Department is the inverse side, it doesn't own a foreign key;
-  it exposes the reverse collection view.
-</div>
-```
-
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q3. Why does <code class="inline">removeEmployee()</code> call
-      <code class="inline">department.getEmployees().remove(employee)</code>
-      before removing the employee itself?
-    </div>
-
-```
-<div class="a">
-  To keep the in-memory Department object's already-loaded (EAGER)
-  employee collection consistent with the database after deletion.
-</div>
-```
-
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q4. Why doesn't <code class="inline">removeDepartment()</code> need to
-      manually delete each Employee first?
-    </div>
-
-```
-<div class="a">
-  Because <code class="inline">Department.employees</code> is configured
-  with <code class="inline">cascade = CascadeType.ALL</code>, which
-  includes <code class="inline">REMOVE</code>.
-</div>
-```
-
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q5. How does this chapter's design differ from Chapter 17's
-      Company/Employee mapping?
-    </div>
-
-```
-<div class="a">
-  Chapter 17 was unidirectional — Employee had no reference back to
-  Company. This chapter is bidirectional and uses the recommended
-  enterprise pattern where Employee owns the foreign key and Department
-  uses <code class="inline">mappedBy</code>.
-</div>
-```
-
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q6. What's the benefit of the typed query form
-      <code class="inline">em.createQuery("SELECT d FROM Department d", Department.class)</code>
-      over the untyped form used in earlier chapters?
-    </div>
-
-```
-<div class="a">
-  Passing the entity class as a second argument gives a compile-time
-  checked, typed <code class="inline">TypedQuery&lt;Department&gt;</code>.
-</div>
-```
-
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q7. If <code class="inline">fetch = FetchType.LAZY</code> were used
-      instead of EAGER on <code class="inline">Department.employees</code>,
-      what would change?
-    </div>
-
-```
-<div class="a">
-  The Employee list wouldn't be loaded automatically when a Department
-  is fetched. It would load when
-  <code class="inline">department.getEmployees()</code> is called while
-  the EntityManager/session is still open.
-</div>
-```
-
-  </div>
-
-</div>
-
-<h2 id="tricks">10. Memory Tricks</h2>
-
-<div class="memory-trick">
-  <b>Enterprise pattern rule of thumb:</b>
-  "Many side owns the key
-  (<code class="inline">@ManyToOne</code> +
-  <code class="inline">@JoinColumn</code>),
-  One side just watches
-  (<code class="inline">@OneToMany</code> +
-  <code class="inline">mappedBy</code>)."
-</div>
-
-<div class="memory-trick">
-  <b>Cascade lives on the parent, not the child:</b>
-  <code class="inline">CascadeType.ALL</code> sits on
-  <code class="inline">Department.employees</code>, not on
-  <code class="inline">Employee.department</code>.
-</div>
-
-<div class="memory-trick">
-  <b>Deleting a child from a loaded EAGER collection:</b>
-  always remove it from the parent's in-memory list too
-  (<code class="inline">parent.getChildren().remove(child)</code>)
-  before/alongside
-  <code class="inline">em.remove(child)</code>.
-</div>
-
-<div class="footer-note">
-  Hibernate Bidirectional One-to-Many Mapping Notes —
-  Department/Employee (com.DTO), DepartmentDAO (com.DAO),
-  Driver (com.Controller) —
-  Original code preserved exactly; theory, explanations,
-  bug notes, and Q&amp;A added as supplementary study material.
-</div>
-
-</body>
-</html>
+    }
+}</div><div class="note-box"><span class="tag">EXTRA — Explanation</span><ul><li>The Driver explicitly labels the two linking directions with comments — <code>// Child → Parent</code> (<code>e1.setDepartment(department)</code> etc.) and <code>// Parent → Children</code> (<code>department.setEmployees(employees)</code>).</li><li>Unlike <code>e1</code>/<code>e2</code>/<code>e3</code> in Chapter 19's Student example, each Employee here gets its own individual object.</li><li>Because <code>Department.employees</code> uses <code>CascadeType.ALL</code>, calling <code>dao.insertDepartment(department)</code> alone (if uncommented) is sufficient to persist the Department and all three Employees together.</li></ul></div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE BIDIRECTIONAL ONE-TO-MANY | Page 6 — Author's Note, Gaps, Comparison &amp; Flow</div><div class="section" id="note"><div class="section-header">📘 5. Author's Note — Enterprise-Style Callout</div><div class="section-body"><span class="tag">NOTE — FROM YOUR SOURCE MATERIAL</span><p>This is the recommended enterprise-style implementation for Bidirectional One-to-Many:</p><ul><li><code>Employee</code> is the <strong>Owning Side</strong> because it contains <code>@ManyToOne</code> and <code>@JoinColumn</code>.</li><li><code>Department</code> is the <strong>Inverse Side</strong> because it uses <code>mappedBy = "department"</code>.</li><li>With <code>cascade = CascadeType.ALL</code>, calling <code>em.persist(department)</code> automatically persists all associated employees.</li></ul></div></div><div class="section" id="bugs"><div class="section-header">⚠️ 6. Extra — Gaps &amp; Gotchas in This Code</div><div class="section-body"><span class="tag">WORTH KNOWING</span><ul><li><strong>No null-check on <code>department</code> in <code>fetchById()</code></strong> — a missing ID would throw <code>NullPointerException</code>.</li><li><strong>No helper method to keep both sides in sync</strong> — the Driver manually sets both <code>e1.setDepartment(department)</code> and <code>department.setEmployees(employees)</code>.</li><li><strong><code>removeEmployee()</code>'s manual list removal is necessary specifically because <code>fetch = FetchType.EAGER</code></strong> — the loaded collection needs to remain consistent with the database.</li><li><strong>The Department's <code>employees</code> field could be <code>null</code></strong> if a Department is created without calling <code>setEmployees()</code>.</li></ul></div></div><div class="section" id="compare"><div class="section-header">📋 7. Comparison — Unidirectional  vs Bidirectional </div><div class="section-body"><table><tr><th>Aspect</th><th>Ch. 15 — Company/Employee (Unidirectional)</th><th> — Department/Employee (Bidirectional)</th></tr><tr><td>Child → Parent navigation</td><td>Not possible — Employee has no Company field</td><td>Possible — <code>employee.getDepartment()</code></td></tr><tr><td>Annotation on child</td><td>None (no relationship field at all)</td><td><code>@ManyToOne</code> + <code>@JoinColumn</code></td></tr><tr><td>Foreign key location</td><td><code>company_id</code> in Employee (via <code>@JoinColumn</code> on Company side)</td><td><code>department_id</code> in Employee (via <code>@JoinColumn</code> on Employee side)</td></tr><tr><td>Cascade configured?</td><td>No</td><td>Yes — <code>CascadeType.ALL</code> on the parent's collection</td></tr><tr><td>Deleting parent</td><td>Would require manual child cleanup (no cascade)</td><td>Automatically cascades to delete all children</td></tr></table></div></div><div class="section" id="flow"><div class="section-header">🚀 8. Execution Flow</div><div class="section-body"><div class="flow-box">Driver Creates Department + Employees</div><div class="flow-arrow">↓</div><div class="flow-box">Link Child → Parent (each Employee.setDepartment)</div><div class="flow-arrow">↓</div><div class="flow-box">Link Parent → Children (Department.setEmployees)</div><div class="flow-arrow">↓</div><div class="flow-box">DepartmentDAO.insertDepartment()</div><div class="flow-arrow">↓</div><div class="flow-box">persist(department) → cascades to all Employees (CascadeType.ALL)</div><div class="flow-arrow">↓</div><div class="flow-box">Hibernate Generates SQL</div><div class="flow-arrow">↓</div><div class="flow-box">Database: Department row + Employee rows (with department_id FK)</div><div class="flow-arrow">↓</div><div class="flow-box">fetchById() / fetchAll()</div><div class="flow-arrow">↓</div><div class="flow-box">Employees EAGER-loaded automatically with Department</div><div class="flow-arrow">↓</div><div class="flow-box">Displayed to User</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE BIDIRECTIONAL ONE-TO-MANY | Page 7 — Interview Q&amp;A</div><div class="section" id="qa"><div class="section-header">🎯 9. Interview Q&amp;A</div><div class="section-body"><span class="tag">INTERVIEW PREP</span><div class="qa"><div class="q">Q1. In this Department/Employee example, which side owns the relationship, and why?</div><div><code>Employee</code> owns it, because it carries <code>@ManyToOne</code> with <code>@JoinColumn(name = "department_id")</code> — the actual foreign key column that Hibernate writes to SQL.</div></div><div class="qa"><div class="q">Q2. What does <code>Department</code> use instead of <code>@JoinColumn</code>, and why?</div><div>It uses <code>@OneToMany(mappedBy = "department")</code>. Since Department is the inverse side, it doesn't own a foreign key; it exposes the reverse collection view.</div></div><div class="qa"><div class="q">Q3. Why does <code>removeEmployee()</code> call <code>department.getEmployees().remove(employee)</code> before removing the employee itself?</div><div>To keep the in-memory Department object's already-loaded (EAGER) employee collection consistent with the database after deletion.</div></div><div class="qa"><div class="q">Q4. Why doesn't <code>removeDepartment()</code> need to manually delete each Employee first?</div><div>Because <code>Department.employees</code> is configured with <code>cascade = CascadeType.ALL</code>, which includes <code>REMOVE</code>.</div></div><div class="qa"><div class="q">Q5. How does this chapter's design differ from Chapter 17's Company/Employee mapping?</div><div>Chapter 17 was unidirectional — Employee had no reference back to Company. This chapter is bidirectional and uses the recommended enterprise pattern where Employee owns the foreign key and Department uses <code>mappedBy</code>.</div></div><div class="qa"><div class="q">Q6. What's the benefit of the typed query form <code>em.createQuery("SELECT d FROM Department d", Department.class)</code> over the untyped form used in earlier chapters?</div><div>Passing the entity class as a second argument gives a compile-time checked, typed <code>TypedQuery&lt;Department&gt;</code>.</div></div><div class="qa"><div class="q">Q7. If <code>fetch = FetchType.LAZY</code> were used instead of EAGER on <code>Department.employees</code>, what would change?</div><div>The Employee list wouldn't be loaded automatically when a Department is fetched. It would load when <code>department.getEmployees()</code> is called while the EntityManager/session is still open.</div></div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE BIDIRECTIONAL ONE-TO-MANY | Page 8 — Memory Tricks</div><div class="section" id="tricks"><div class="section-header">🧠 10. Memory Tricks</div><div class="section-body"><div class="note-box">🧠 <strong>Enterprise pattern rule of thumb:</strong> "Many side owns the key (<code>@ManyToOne</code> + <code>@JoinColumn</code>), One side just watches (<code>@OneToMany</code> + <code>mappedBy</code>)."</div><div class="note-box">🧠 <strong>Cascade lives on the parent, not the child:</strong> <code>CascadeType.ALL</code> sits on <code>Department.employees</code>, not on <code>Employee.department</code>.</div><div class="note-box">🧠 <strong>Deleting a child from a loaded EAGER collection:</strong> always remove it from the parent's in-memory list too (<code>parent.getChildren().remove(child)</code>) before/alongside <code>em.remove(child)</code>.</div></div></div><div class="footer">Hibernate Bidirectional One-to-Many Mapping Notes — Department/Employee (com.DTO), DepartmentDAO (com.DAO), Driver (com.Controller) — Original code preserved exactly; theory, explanations, bug notes, and Q&amp;A added as supplementary study material.</div></div></body></html>

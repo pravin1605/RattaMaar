@@ -1,693 +1,38 @@
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Chapter 15 — Hibernate Mapping (Many-to-Many)</title>
-
-<style>
-/* =========================================================
-   MASTER NOTES DESIGN
-   A4 • Academic • Black / Gray • Print Friendly
-   ========================================================= */
-
-@page {
-  size: A4;
-  margin: 0;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: Georgia, "Times New Roman", serif;
-  color: #111111;
-  background: #e9e9e9;
-  line-height: 1.55;
-  margin: 0;
-  padding: 28px 0;
-}
-
-/* Main A4 document area */
-body::before {
-  content: "";
-  display: block;
-  width: 210mm;
-  min-height: 297mm;
-  margin: 0 auto;
-  background: #ffffff;
-  position: fixed;
-  z-index: -1;
-}
-
-/* =========================================================
-   HEADINGS
-   ========================================================= */
-
-h1 {
-  width: 94%;
-  margin: 0 auto 6px;
-  padding: 12px 14px 9px;
-  font-size: 25px;
-  line-height: 1.25;
-  text-align: center;
-  color: #111111;
-  border: 2px solid #111111;
-  background: #ffffff;
-  page-break-after: avoid;
-}
-
-.subtitle {
-  width: 94%;
-  margin: 0 auto 24px;
-  color: #555555;
-  font-size: 13px;
-  text-align: center;
-  font-style: italic;
-}
-
-h2 {
-  width: 94%;
-  margin: 28px auto 12px;
-  padding: 7px 10px;
-  font-size: 18px;
-  line-height: 1.3;
-  color: #111111;
-  text-align: center;
-  border-top: 1.5px solid #222222;
-  border-bottom: 1.5px solid #777777;
-  background: #f2f2f2;
-  page-break-after: avoid;
-}
-
-h3 {
-  width: 94%;
-  margin: 18px auto 8px;
-  font-size: 15px;
-  color: #222222;
-  border-bottom: 1px solid #b5b5b5;
-  padding-bottom: 3px;
-  page-break-after: avoid;
-}
-
-p {
-  margin: 7px 0;
-}
-
-b {
-  color: #111111;
-}
-
-i {
-  color: #333333;
-}
-
-/* =========================================================
-   CONTENT WIDTH
-   ========================================================= */
-
-.card,
-.flow,
-table,
-.toc,
-.memory-trick,
-.footer-note {
-  width: 94%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* =========================================================
-   CARDS
-   ========================================================= */
-
-.card {
-  border: 1.5px solid #222222;
-  padding: 13px 16px;
-  margin-top: 11px;
-  margin-bottom: 14px;
-  background: #ffffff;
-  page-break-inside: avoid;
-}
-
-.card.extra {
-  border: 1.5px dashed #777777;
-  background: #f5f5f5;
-}
-
-.card.theory {
-  border-left: 5px solid #222222;
-  background: #fafafa;
-}
-
-.card.bug {
-  border-left: 5px solid #333333;
-  background: #eeeeee;
-}
-
-/* =========================================================
-   TAGS
-   ========================================================= */
-
-.tag {
-  display: inline-block;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  padding: 3px 7px;
-  margin-bottom: 7px;
-  border: 1px solid #555555;
-  background: #eeeeee;
-  color: #111111;
-}
-
-.tag-orig {
-  background: #eeeeee;
-  color: #111111;
-}
-
-.tag-extra {
-  background: #e5e5e5;
-  color: #333333;
-}
-
-.tag-qa {
-  background: #dddddd;
-  color: #111111;
-}
-
-.tag-theory {
-  background: #e8e8e8;
-  color: #222222;
-}
-
-.tag-bug {
-  background: #d8d8d8;
-  color: #111111;
-}
-
-/* =========================================================
-   CODE BLOCKS
-   ========================================================= */
-
-pre {
-  background: #1e1e1e;
-  color: #d4d4d4;
-  border: 1px solid #000000;
-  padding: 13px 15px;
-  margin: 10px 0;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-break: break-word;
-
-  font-family: "Consolas", "Courier New", monospace;
-  font-size: 11.5px;
-  line-height: 1.5;
-
-  border-radius: 0;
-  box-shadow: none;
-  page-break-inside: avoid;
-}
-
-/* Java / syntax highlighting */
-.kw {
-  color: #569cd6;
-}
-
-.type {
-  color: #4ec9b0;
-}
-
-.str {
-  color: #ce9178;
-}
-
-.cmt {
-  color: #6a9955;
-  font-style: italic;
-}
-
-.method {
-  color: #dcdcaa;
-}
-
-/* Inline code */
-
-code.inline {
-  background: #eeeeee;
-  color: #222222;
-  border: 1px solid #d0d0d0;
-  padding: 1px 5px;
-  border-radius: 0;
-
-  font-family: "Consolas", "Courier New", monospace;
-  font-size: 12px;
-}
-
-/* =========================================================
-   TABLES
-   ========================================================= */
-
-table {
-  border-collapse: collapse;
-  margin-top: 11px;
-  margin-bottom: 14px;
-  font-size: 12.5px;
-  background: #ffffff;
-  page-break-inside: avoid;
-}
-
-th,
-td {
-  border: 1px solid #555555;
-  padding: 7px 9px;
-  text-align: left;
-  vertical-align: top;
-}
-
-th {
-  background: #222222;
-  color: #ffffff;
-  font-weight: bold;
-}
-
-tr:nth-child(even) {
-  background: #f2f2f2;
-}
-
-tr:nth-child(odd) {
-  background: #ffffff;
-}
-
-/* =========================================================
-   FLOW DIAGRAMS
-   ========================================================= */
-
-.flow {
-  background: #fafafa;
-  border: 1.5px dashed #555555;
-  padding: 12px 16px;
-  margin-top: 10px;
-  margin-bottom: 13px;
-
-  font-family: "Consolas", "Courier New", monospace;
-  font-size: 12px;
-  line-height: 1.5;
-  color: #222222;
-
-  white-space: pre-wrap;
-  text-align: center;
-
-  border-radius: 0;
-  page-break-inside: avoid;
-}
-
-/* Flow boxes */
-
-.box {
-  display: block;
-  background: #222222;
-  color: #ffffff;
-  text-align: center;
-  padding: 7px 9px;
-  margin: 4px auto;
-  max-width: 260px;
-
-  border: 1px solid #111111;
-  border-radius: 0;
-
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 600;
-  font-size: 12px;
-}
-
-.arrow-down {
-  text-align: center;
-  color: #333333;
-  font-size: 17px;
-  margin: 0;
-  line-height: 1.1;
-}
-
-/* =========================================================
-   TABLE OF CONTENTS
-   ========================================================= */
-
-.toc {
-  background: #f5f5f5;
-  border: 1.5px solid #444444;
-  padding: 12px 18px;
-  margin-bottom: 22px;
-  page-break-inside: avoid;
-}
-
-.toc b {
-  display: block;
-  text-align: center;
-  font-size: 15px;
-  border-bottom: 1px solid #999999;
-  padding-bottom: 5px;
-  margin-bottom: 7px;
-}
-
-.toc ol {
-  margin: 6px 0;
-  padding-left: 22px;
-}
-
-.toc li {
-  margin: 2px 0;
-}
-
-.toc a {
-  color: #222222;
-  text-decoration: none;
-  font-size: 13px;
-}
-
-.toc a:hover {
-  text-decoration: underline;
-}
-
-/* =========================================================
-   LISTS
-   ========================================================= */
-
-ul {
-  margin: 6px 0;
-  padding-left: 22px;
-}
-
-ol {
-  padding-left: 22px;
-}
-
-li {
-  margin: 3px 0;
-}
-
-/* =========================================================
-   INTERVIEW Q&A
-   ========================================================= */
-
-.qa-item {
-  border-bottom: 1px solid #bdbdbd;
-  padding: 9px 0;
-}
-
-.qa-item:last-child {
-  border-bottom: none;
-}
-
-.q {
-  font-weight: 700;
-  color: #111111;
-}
-
-.a {
-  color: #333333;
-  margin-top: 4px;
-}
-
-/* =========================================================
-   MEMORY TRICKS
-   ========================================================= */
-
-.memory-trick {
-  background: #f3f3f3;
-  border: 1.5px dashed #666666;
-  padding: 9px 13px;
-  margin-top: 9px;
-  margin-bottom: 9px;
-
-  font-size: 13px;
-  color: #222222;
-
-  border-radius: 0;
-  page-break-inside: avoid;
-}
-
-.memory-trick b {
-  color: #111111;
-}
-
-/* =========================================================
-   PAGE BREAK
-   ========================================================= */
-
-.page-break {
-  page-break-before: always;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.footer-note {
-  margin-top: 32px;
-  padding-top: 10px;
-  border-top: 1px solid #777777;
-
-  color: #555555;
-  font-size: 11px;
-  text-align: center;
-}
-
-/* =========================================================
-   PRINT
-   ========================================================= */
-
-@media print {
-
-  body {
-    background: #ffffff;
-    padding: 0;
-  }
-
-  body::before {
-    display: none;
-  }
-
-  h1,
-  h2,
-  h3,
-  .card,
-  .flow,
-  table,
-  .toc,
-  .memory-trick,
-  .footer-note {
-    width: 100%;
-  }
-
-  a {
-    color: #111111 !important;
-    text-decoration: none;
-  }
-
-  .card,
-  .flow,
-  table,
-  .toc,
-  .memory-trick {
-    break-inside: avoid;
-  }
-
-  pre {
-    break-inside: avoid;
-  }
-}
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media screen and (max-width: 700px) {
-
-  body {
-    padding: 10px;
-  }
-
-  body::before {
-    display: none;
-  }
-
-  h1,
-  h2,
-  h3,
-  .card,
-  .flow,
-  table,
-  .toc,
-  .memory-trick,
-  .footer-note {
-    width: 100%;
-  }
-
-  h1 {
-    font-size: 21px;
-  }
-
-  h2 {
-    font-size: 17px;
-  }
-
-  h3 {
-    font-size: 14px;
-  }
-
-  .subtitle {
-    width: 100%;
-    font-size: 12px;
-  }
-
-  .card {
-    padding: 11px 12px;
-  }
-
-  pre {
-    font-size: 10.5px;
-    padding: 10px;
-  }
-
-  table {
-    font-size: 11px;
-    display: block;
-    overflow-x: auto;
-  }
-
-  th,
-  td {
-    padding: 6px 7px;
-  }
-
-  .flow {
-    font-size: 10.5px;
-    padding: 10px;
-    overflow-x: auto;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<h1>Chapter 15: Hibernate Mapping — Many-to-Many</h1>
-
-<div class="subtitle">
-  Student ↔ Subject Example (Unidirectional) —
-  Packages:
-  <code class="inline">com.DTO</code>,
-  <code class="inline">com.DAO</code>,
-  <code class="inline">com.Controller</code>
-</div>
-
-<div class="toc">
-  <b>Contents</b>
-  <ol>
-    <li><a href="#what">What is Many-to-Many Mapping?</a></li>
-    <li><a href="#realworld">Real-Life Example</a></li>
-    <li><a href="#dbrep">Database Representation &amp; Join Table</a></li>
-    <li><a href="#why">Why Many-to-Many Mapping is Needed?</a></li>
-    <li><a href="#annotation">The @ManyToMany Annotation</a></li>
-    <li><a href="#cascade">Cascade Type &amp; Fetch Type</a></li>
-    <li><a href="#structure">Project Package Structure</a></li>
-    <li><a href="#code">Code — Student, Subject, StudentDAO, Driver</a></li>
-    <li><a href="#bugs">Bugs &amp; Gotchas in This Code</a></li>
-    <li><a href="#crud">CRUD Flow Summary</a></li>
-    <li><a href="#comparison">All Mapping Types — Final Comparison</a></li>
-    <li><a href="#qa">Interview Q&amp;A</a></li>
-    <li><a href="#tricks">Memory Tricks</a></li>
-  </ol>
-</div>
-
-<h2 id="what">1. What is Many-to-Many Mapping?</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY — DEFINITION (Interview Point of View)</span>
-
-  <p>
-    <b>Many-To-Many Mapping</b> is a relationship where multiple records
-    of one table can be associated with multiple records of another table.
-  </p>
-
-  <p>In this relationship:</p>
-
-  <ul>
-    <li>One object can have many related objects.</li>
-    <li>Those related objects can also belong to many other objects.</li>
-  </ul>
-
-  <p>
-    Hibernate manages this relationship by creating an additional table
-    called a <b>Join Table</b>.
-  </p>
-</div>
-
-<h3>Simple Meaning</h3>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>
-    Many students can study many subjects. Similarly, one subject can be
-    studied by many students. Therefore:
-  </p>
-
-  <div class="flow">Many Students   ↕   Many Subjects</div>
-
-  <p>
-    This is called a <b>Many-To-Many Relationship</b>.
-  </p>
-</div>
-
-<h2 id="realworld">2. Real-Life Example</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>
-    Suppose there are three students — Pravin, Mayuresh, Rahul — and three
-    available subjects: Java, SQL, Hibernate.
-  </p>
-
-  <table>
-    <tr>
-      <th>Student</th>
-      <th>Studies</th>
-    </tr>
-    <tr>
-      <td>Pravin</td>
-      <td>Java, SQL</td>
-    </tr>
-    <tr>
-      <td>Mayuresh</td>
-      <td>Java, Hibernate</td>
-    </tr>
-    <tr>
-      <td>Rahul</td>
-      <td>SQL, Hibernate</td>
-    </tr>
-  </table>
-
-  <p>
-    Notice carefully — Java belongs to multiple students, SQL belongs to
-    multiple students, Hibernate belongs to multiple students. Similarly,
-    Pravin studies multiple subjects, Mayuresh studies multiple subjects.
-    Hence:
-  </p>
-
-  <div class="flow">Many Students   ↕   Many Subjects</div>
-
-  <h3 style="margin-top:16px;">Object Representation</h3>
-
-  <div class="flow">Student
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Hibernate Mapping (Many-to-Many)</title><style>*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#e0e0e0;font-family:'Georgia',serif}
+.a4-page{width:210mm;min-height:297mm;background:#fff;color:#111;margin:12px auto;padding:14mm 16mm;font-size:12.5px;line-height:1.6;page-break-after:always;border:1px solid #aaa;box-shadow:0 2px 8px rgba(0,0,0,.13)}
+.main-title{text-align:center;font-size:21px;font-weight:700;border:2.5px solid #111;padding:9px 18px;margin-bottom:6px;letter-spacing:1px}
+.sub-title{text-align:center;font-size:12.5px;color:#555;margin-bottom:12px}
+.page-title{text-align:center;font-size:13px;font-weight:700;letter-spacing:.5px;color:#555;margin-bottom:10px;border-bottom:1px solid #ccc;padding-bottom:5px}
+.section{border:1.5px solid #222;margin-bottom:11px}
+.section-header{background:#111;color:#fff;font-size:12.5px;font-weight:700;padding:5px 11px;letter-spacing:.4px}
+.section-body{padding:9px 13px 11px;background:#fff}
+.subsection-title{font-weight:700;font-size:12.5px;margin:8px 0 3px}
+.subsection-title:first-child{margin-top:0}
+.code-block{background:#f5f5f5;border:1px solid #ccc;border-left:3px solid #333;font-family:'Courier New',monospace;font-size:10.5px;padding:6px 10px;margin:6px 0;white-space:pre-wrap;word-break:break-word;line-height:1.5}
+.note-box{border:1.5px dashed #555;padding:6px 10px;margin:7px 0;font-size:12px;background:#fafafa}
+.flow-box{border:1px solid #444;padding:3px 10px;text-align:center;font-size:12px;font-weight:600;margin:2px auto;background:#fff;width:55%}
+.flow-arrow{text-align:center;font-size:12px;color:#555;margin:1px 0}
+.tag{display:inline-block;background:#111;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;margin:0 4px 4px 0;letter-spacing:.3px;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}
+th{background:#111;color:#fff;padding:5px 9px;text-align:left;font-size:11.5px}
+td{border:1px solid #bbb;padding:5px 9px;vertical-align:top}
+p{margin:4px 0;font-size:12.5px}
+ul,ol{padding-left:20px;margin:4px 0}
+li{margin-bottom:3px;font-size:12.5px}
+code{font-family:'Courier New',monospace;font-size:11px;background:#eee;padding:1px 4px;border-radius:2px}
+.code-block code{background:none;padding:0}
+.qa{padding:6px 0;border-bottom:1px solid #ccc}
+.qa:last-child{border-bottom:none}
+.q{font-weight:700}
+.toc{border:1.5px solid #222;padding:8px 14px;margin-bottom:11px}
+.toc a{color:#111;text-decoration:none;font-size:12.5px}
+.footer{border-top:1px solid #777;margin-top:16px;padding-top:8px;text-align:center;font-size:11px;color:#555}
+@media print{body{background:#fff}.a4-page{margin:0;box-shadow:none;border:none}}.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.four-col{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.four-col .flow-box{width:92%;font-size:10.5px;padding:2px 4px}.four-col .cap{font-weight:700;font-size:11px;text-align:center;border-bottom:1px solid #999;margin-bottom:4px}</style></head><body><div class="a4-page"><div class="main-title">CHAPTER 15: HIBERNATE MAPPING — MANY-TO-MANY</div>
+<div class="sub-title">Student ↔ Subject Example (Unidirectional) — Packages: <code>com.DTO</code>, <code>com.DAO</code>, <code>com.Controller</code></div>
+<div class="toc"><strong>Contents</strong><ol>
+<li><a href="#what">What is Many-to-Many Mapping?</a></li><li><a href="#realworld">Real-Life Example</a></li><li><a href="#dbrep">Database Representation &amp; Join Table</a></li><li><a href="#why">Why Many-to-Many Mapping is Needed?</a></li><li><a href="#annotation">The @ManyToMany Annotation</a></li><li><a href="#cascade">Cascade Type &amp; Fetch Type</a></li><li><a href="#structure">Project Package Structure</a></li><li><a href="#code">Code — Student, Subject, StudentDAO, Driver</a></li><li><a href="#bugs">Bugs &amp; Gotchas in This Code</a></li><li><a href="#crud">CRUD Flow Summary</a></li><li><a href="#comparison">All Mapping Types — Final Comparison</a></li><li><a href="#qa">Interview Q&amp;A</a></li><li><a href="#tricks">Memory Tricks</a></li></ol></div><div class="section" id="what"><div class="section-header">📘 1. What is Many-to-Many Mapping?</div><div class="section-body"><span class="tag">THEORY — DEFINITION (Interview Point of View)</span><p><strong>Many-To-Many Mapping</strong> is a relationship where multiple records of one table can be associated with multiple records of another table.</p><p>In this relationship:</p><ul><li>One object can have many related objects.</li><li>Those related objects can also belong to many other objects.</li></ul><p>Hibernate manages this relationship by creating an additional table called a <strong>Join Table</strong>.</p><div class="subsection-title">🔹 Simple Meaning</div><span class="tag">THEORY</span><p>Many students can study many subjects. Similarly, one subject can be studied by many students. Therefore:</p><div class="code-block">Many Students   ↕   Many Subjects</div><p>This is called a <strong>Many-To-Many Relationship</strong>.</p></div></div><div class="section" id="realworld"><div class="section-header">📘 2. Real-Life Example</div><div class="section-body"><span class="tag">THEORY</span><p>Suppose there are three students — Pravin, Mayuresh, Rahul — and three available subjects: Java, SQL, Hibernate.</p><table><tr><th>Student</th><th>Studies</th></tr><tr><td>Pravin</td><td>Java, SQL</td></tr><tr><td>Mayuresh</td><td>Java, Hibernate</td></tr><tr><td>Rahul</td><td>SQL, Hibernate</td></tr></table><p>Notice carefully — Java belongs to multiple students, SQL belongs to multiple students, Hibernate belongs to multiple students. Similarly, Pravin studies multiple subjects, Mayuresh studies multiple subjects. Hence:</p><div class="code-block">Many Students   ↕   Many Subjects</div><div class="subsection-title">🔹 Object Representation</div><div class="code-block">Student
  Pravin
    ├── Java
    └── SQL
@@ -696,242 +41,13 @@ li {
    └── Hibernate
  Rahul
    ├── SQL
-   └── Hibernate</div>
-</div>
-
-<h2 id="dbrep">3. Database Representation &amp; Join Table</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <table>
-    <tr>
-      <th colspan="2">STUDENT</th>
-    </tr>
-    <tr>
-      <th>Student_ID</th>
-      <th>Student_Name</th>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>Pravin</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>Mayuresh</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>Rahul</td>
-    </tr>
-  </table>
-
-  <table>
-    <tr>
-      <th colspan="2">SUBJECT</th>
-    </tr>
-    <tr>
-      <th>Subject_ID</th>
-      <th>Subject_Name</th>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>Java</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>SQL</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>Hibernate</td>
-    </tr>
-  </table>
-
-  <table>
-    <tr>
-      <th colspan="2">STUDENT_SUBJECT (Join Table)</th>
-    </tr>
-    <tr>
-      <th>Student_ID</th>
-      <th>Subject_ID</th>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>3</td>
-    </tr>
-  </table>
-
-  <p>
-    Notice — there is no duplicate data, only IDs are stored. Hibernate
-    automatically creates this table.
-  </p>
-
-  <h3>Why Join Table is Needed?</h3>
-
-  <p>
-    Suppose the Student table stores
-    <code class="inline">Subject_ID</code> directly:
-  </p>
-
-  <div class="flow">Student
-1  Pravin  Java</div>
-
-  <p>
-    But Pravin studies SQL also — one column cannot store multiple foreign
-    keys. Similarly, the Subject table cannot store multiple Student IDs.
-    Therefore, Hibernate creates a third table called a <b>Join Table</b>,
-    which stores <code class="inline">Student_ID</code> and
-    <code class="inline">Subject_ID</code>.
-  </p>
-</div>
-
-<h3>Complete Architecture</h3>
-
-<div class="flow">
-<span class="box">Student Object</span>
-<div class="arrow-down">↓</div>
-<span class="box">Hibernate ORM</span>
-<div class="arrow-down">↓</div>
-<span class="box">Student Table</span>
-<span class="box">Subject Table</span>
-<span class="box">Student_Subject Table</span>
-<div class="arrow-down">↓</div>
-<span class="box">PostgreSQL</span>
-</div>
-
-<h2 id="why">4. Why Many-to-Many Mapping is Needed?</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p><b>Without Hibernate</b>, the developer manually creates:</p>
-
-  <ul>
-    <li>Foreign Keys</li>
-    <li>Join Tables</li>
-    <li>Insert Queries</li>
-    <li>Delete Queries</li>
-  </ul>
-
-  <p><b>With Hibernate</b>, simply write:</p>
-
-<pre>@ManyToMany
-<span class="kw">private</span> List&lt;Subject&gt; subjects;</pre>
-
-  <p>Hibernate automatically:</p>
-
-  <ul>
-    <li>Creates Join Table</li>
-    <li>Maintains Relationships</li>
-    <li>Inserts Foreign Keys</li>
-    <li>Fetches Related Objects</li>
-  </ul>
-</div>
-
-<h2 id="annotation">5. The @ManyToMany Annotation</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>
-    <b>Definition:</b> This annotation is used to create a Many-To-Many
-    relationship between two entity classes.
-  </p>
-
-<pre>@ManyToMany
-<span class="kw">private</span> List&lt;Subject&gt; subjects;</pre>
-
-  <h3>Why List?</h3>
-
-  <p>One Student studies multiple Subjects. Therefore:</p>
-
-  <div class="flow">One Student
+   └── Hibernate</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-MANY | Page 2 — Database Representation &amp; Join Table</div><div class="section" id="dbrep"><div class="section-header">📘 3. Database Representation &amp; Join Table</div><div class="section-body"><span class="tag">THEORY</span><div class="three-col"><div><table><tr><th colspan="2" style="text-align:center">STUDENT</th></tr><tr><th style="background:#555">Student_ID</th><th style="background:#555">Student_Name</th></tr><tr><td>1</td><td>Pravin</td></tr><tr><td>2</td><td>Mayuresh</td></tr><tr><td>3</td><td>Rahul</td></tr></table></div><div><table><tr><th colspan="2" style="text-align:center">SUBJECT</th></tr><tr><th style="background:#555">Subject_ID</th><th style="background:#555">Subject_Name</th></tr><tr><td>1</td><td>Java</td></tr><tr><td>2</td><td>SQL</td></tr><tr><td>3</td><td>Hibernate</td></tr></table></div><div><table><tr><th colspan="2" style="text-align:center">STUDENT_SUBJECT (Join Table)</th></tr><tr><th style="background:#555">Student_ID</th><th style="background:#555">Subject_ID</th></tr><tr><td>1</td><td>1</td></tr><tr><td>1</td><td>2</td></tr><tr><td>2</td><td>1</td></tr><tr><td>2</td><td>3</td></tr><tr><td>3</td><td>2</td></tr><tr><td>3</td><td>3</td></tr></table></div></div><p>Notice — there is no duplicate data, only IDs are stored. Hibernate automatically creates this table.</p><div class="subsection-title">🔹 Why Join Table is Needed?</div><p>Suppose the Student table stores <code>Subject_ID</code> directly:</p><div class="code-block">Student
+1  Pravin  Java</div><p>But Pravin studies SQL also — one column cannot store multiple foreign keys. Similarly, the Subject table cannot store multiple Student IDs. Therefore, Hibernate creates a third table called a <strong>Join Table</strong>, which stores <code>Student_ID</code> and <code>Subject_ID</code>.</p><div class="subsection-title">🔹 Complete Architecture</div><div class="flow-box">Student Object</div><div class="flow-arrow">↓</div><div class="flow-box">Hibernate ORM</div><div class="flow-arrow">↓</div><div class="flow-box">Student Table</div><div class="flow-arrow"></div><div class="flow-box">Subject Table</div><div class="flow-arrow"></div><div class="flow-box">Student_Subject Table</div><div class="flow-arrow">↓</div><div class="flow-box">PostgreSQL</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-MANY | Page 3 — Why, Annotation, Cascade &amp; Structure</div><div class="section" id="why"><div class="section-header">📘 4. Why Many-to-Many Mapping is Needed?</div><div class="section-body"><span class="tag">THEORY</span><p><strong>Without Hibernate</strong>, the developer manually creates:</p><ul><li>Foreign Keys</li><li>Join Tables</li><li>Insert Queries</li><li>Delete Queries</li></ul><p><strong>With Hibernate</strong>, simply write:</p><div class="code-block">@ManyToMany
+private List&lt;Subject&gt; subjects;</div><p>Hibernate automatically:</p><ul><li>Creates Join Table</li><li>Maintains Relationships</li><li>Inserts Foreign Keys</li><li>Fetches Related Objects</li></ul></div></div><div class="section" id="annotation"><div class="section-header">📘 5. The @ManyToMany Annotation</div><div class="section-body"><span class="tag">THEORY</span><p><strong>Definition:</strong> This annotation is used to create a Many-To-Many relationship between two entity classes.</p><div class="code-block">@ManyToMany
+private List&lt;Subject&gt; subjects;</div><div class="subsection-title">🔹 Why List?</div><p>One Student studies multiple Subjects. Therefore:</p><div class="code-block">One Student
      ↓
-Many Subjects</div>
-
-  <p>
-    Hence a <b>Collection</b> is required — usually
-    <code class="inline">List</code> or <code class="inline">Set</code>
-    is used.
-  </p>
-</div>
-
-<h2 id="cascade">6. Cascade Type &amp; Fetch Type</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <h3 style="margin-top:0;">
-    Cascade Type —
-    <code class="inline">cascade = CascadeType.ALL</code>
-  </h3>
-
-  <p>
-    Meaning: whenever a Student operation happens, Hibernate performs the
-    same operation on Subjects. Examples: Persist, Merge, Remove, Refresh,
-    Detach.
-  </p>
-
-  <h3>
-    Fetch Type —
-    <code class="inline">fetch = FetchType.EAGER</code>
-  </h3>
-
-  <p>
-    Meaning: whenever Student is fetched, Subjects are automatically
-    fetched.
-  </p>
-
-<pre>Student student =
-    manager.<span class="method">find</span>(Student.<span class="kw">class</span>,1);</pre>
-
-  <p>
-    Hibernate automatically loads Student + Subjects because of
-    <code class="inline">FetchType.EAGER</code>.
-  </p>
-
-  <p>
-    If <code class="inline">FetchType.LAZY</code>, then Subjects load only
-    when <code class="inline">student.getSubjects();</code> is executed.
-  </p>
-
-  <h3>Generated Tables</h3>
-
-  <p>
-    Hibernate creates:
-    <code class="inline">Student</code>,
-    <code class="inline">Subject</code>,
-    <code class="inline">Student_Subject</code>.
-  </p>
-</div>
-
-<h2 id="structure">7. Project Package Structure</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-<pre>src/main/java
+Many Subjects</div><p>Hence a <strong>Collection</strong> is required — usually <code>List</code> or <code>Set</code> is used.</p></div></div><div class="section" id="cascade"><div class="section-header">📘 6. Cascade Type &amp; Fetch Type</div><div class="section-body"><span class="tag">THEORY</span><div class="subsection-title">🔹 Cascade Type — <code>cascade = CascadeType.ALL</code></div><p>Meaning: whenever a Student operation happens, Hibernate performs the same operation on Subjects. Examples: Persist, Merge, Remove, Refresh, Detach.</p><div class="subsection-title">🔹 Fetch Type — <code>fetch = FetchType.EAGER</code></div><p>Meaning: whenever Student is fetched, Subjects are automatically fetched.</p><div class="code-block">Student student =
+    manager.find(Student.class,1);</div><p>Hibernate automatically loads Student + Subjects because of <code>FetchType.EAGER</code>.</p><p>If <code>FetchType.LAZY</code>, then Subjects load only when <code>student.getSubjects();</code> is executed.</p><div class="subsection-title">🔹 Generated Tables</div><p>Hibernate creates: <code>Student</code>, <code>Subject</code>, <code>Student_Subject</code>.</p></div></div><div class="section" id="structure"><div class="section-header">📘 7. Project Package Structure</div><div class="section-body"><span class="tag">THEORY</span><div class="code-block">src/main/java
 │
 ├── com.DTO
 │     ├── Student.java
@@ -946,933 +62,426 @@ Many Subjects</div>
 src/main/resources
 │
 └── META-INF
-      └── persistence.xml</pre>
-</div>
+      └── persistence.xml</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-MANY | Page 4 — Student.java &amp; Subject.java</div><div class="section" id="code"><div class="section-header">💻 8. Code — Student, Subject, StudentDAO, Driver</div><div class="section-body"><div class="subsection-title">🔹 8.1 Entity — <code>Student.java</code> (com.DTO)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.DTO;
 
-<h2 id="code" class="page-break">
-  8. Code — Student, Subject, StudentDAO, Driver
-</h2>
+import java.util.List;
 
-<h3>
-  8.1 Entity —
-  <code class="inline">Student.java</code>
-  (com.DTO)
-</h3>
-
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
-
-<pre><span class="kw">package</span> com.DTO;
-
-<span class="kw">import</span> java.util.List;
-
-<span class="kw">import</span> javax.persistence.CascadeType;
-<span class="kw">import</span> javax.persistence.Entity;
-<span class="kw">import</span> javax.persistence.FetchType;
-<span class="kw">import</span> javax.persistence.GeneratedValue;
-<span class="kw">import</span> javax.persistence.GenerationType;
-<span class="kw">import</span> javax.persistence.Id;
-<span class="kw">import</span> javax.persistence.ManyToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
-<span class="kw">public class</span> <span class="type">Student</span> {
+public class Student {
 
-	<span class="cmt">// Primary Key</span>
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	<span class="kw">private</span> <span class="type">int</span> studentId;
+    // Primary Key
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private int studentId;
 
-	<span class="cmt">// Student Name</span>
-	<span class="kw">private</span> <span class="type">String</span> studentName;
+    // Student Name
+    private String studentName;
 
-	<span class="cmt">/*
-	 * One Student
-	 *      ↓
-	 * Many Subjects
-	 */</span>
+    /*
+     * One Student
+     *      ↓
+     * Many Subjects
+     */
 
-	@ManyToMany(
-			cascade = CascadeType.ALL,
-			fetch = FetchType.EAGER)
-	<span class="kw">private</span> List&lt;Subject&gt; subjects;
+    @ManyToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
+    private List&lt;Subject&gt; subjects;
 
-	<span class="cmt">// Getter Setter</span>
+    // Getter Setter
 
-	<span class="kw">public</span> <span class="type">int</span> <span class="method">getStudentId</span>() {
-		<span class="kw">return</span> studentId;
-	}
+    public int getStudentId() {
+        return studentId;
+    }
 
-	<span class="kw">public void</span> <span class="method">setStudentId</span>(<span class="type">int</span> studentId) {
-		<span class="kw">this</span>.studentId = studentId;
-	}
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
+    }
 
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">getStudentName</span>() {
-		<span class="kw">return</span> studentName;
-	}
+    public String getStudentName() {
+        return studentName;
+    }
 
-	<span class="kw">public void</span> <span class="method">setStudentName</span>(<span class="type">String</span> studentName) {
-		<span class="kw">this</span>.studentName = studentName;
-	}
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
 
-	<span class="kw">public</span> List&lt;Subject&gt; <span class="method">getSubjects</span>() {
-		<span class="kw">return</span> subjects;
-	}
+    public List&lt;Subject&gt; getSubjects() {
+        return subjects;
+    }
 
-	<span class="kw">public void</span> <span class="method">setSubjects</span>(List&lt;Subject&gt; subjects) {
-		<span class="kw">this</span>.subjects = subjects;
-	}
+    public void setSubjects(List&lt;Subject&gt; subjects) {
+        this.subjects = subjects;
+    }
 
-	@Override
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">toString</span>() {
-		<span class="kw">return</span> <span class="str">"Student [studentId="</span> + studentId +
-				<span class="str">", studentName="</span> + studentName + <span class="str">"]"</span>;
-	}
+    @Override
+    public String toString() {
+        return "Student [studentId=" + studentId +
+                ", studentName=" + studentName + "]";
+    }
 
-}</pre>
-</div>
+}</div><div class="subsection-title">🔹 8.2 Entity — <code>Subject.java</code> (com.DTO)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.DTO;
 
-<h3>
-  8.2 Entity —
-  <code class="inline">Subject.java</code>
-  (com.DTO)
-</h3>
-
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
-
-<pre><span class="kw">package</span> com.DTO;
-
-<span class="kw">import</span> javax.persistence.Entity;
-<span class="kw">import</span> javax.persistence.GeneratedValue;
-<span class="kw">import</span> javax.persistence.GenerationType;
-<span class="kw">import</span> javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-<span class="kw">public class</span> <span class="type">Subject</span> {
-
-	<span class="cmt">// Primary Key</span>
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	<span class="kw">private</span> <span class="type">int</span> subjectId;
-
-	<span class="cmt">// Subject Name</span>
-	<span class="kw">private</span> <span class="type">String</span> subjectName;
-
-	<span class="cmt">// Getter Setter</span>
-
-	<span class="kw">public</span> <span class="type">int</span> <span class="method">getSubjectId</span>() {
-		<span class="kw">return</span> subjectId;
-	}
-
-	<span class="kw">public void</span> <span class="method">setSubjectId</span>(<span class="type">int</span> subjectId) {
-		<span class="kw">this</span>.subjectId = subjectId;
-	}
-
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">getSubjectName</span>() {
-		<span class="kw">return</span> subjectName;
-	}
-
-	<span class="kw">public void</span> <span class="method">setSubjectName</span>(<span class="type">String</span> subjectName) {
-		<span class="kw">this</span>.subjectName = subjectName;
-	}
+public class Subject {
 
-	@Override
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">toString</span>() {
-		<span class="kw">return</span> <span class="str">"Subject [subjectId="</span> + subjectId +
-				<span class="str">", subjectName="</span> + subjectName + <span class="str">"]"</span>;
-	}
+    // Primary Key
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private int subjectId;
 
-}</pre>
-</div>
+    // Subject Name
+    private String subjectName;
 
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
+    // Getter Setter
 
-  <ul>
-    <li>
-      Only <code class="inline">Student</code> carries the
-      <code class="inline">@ManyToMany</code> annotation —
-      <code class="inline">Subject</code> has no reference back to
-      <code class="inline">Student</code>. This makes the mapping
-      <b>unidirectional</b>: you can navigate Student → Subjects, but not
-      Subject → Students, exactly as the diagram filename
-      (<code class="inline">Hibernate_ManyToMany_Unidirectional</code>)
-      suggests.
-    </li>
+    public int getSubjectId() {
+        return subjectId;
+    }
 
-    <li>
-      Both entities use <code class="inline">GenerationType.TABLE</code>
-      instead of <code class="inline">IDENTITY</code> or
-      <code class="inline">SEQUENCE</code> seen in earlier chapters —
-      this strategy uses a separate database table to simulate a sequence,
-      generating unique keys across all entities that share it. It's more
-      portable across databases that lack native sequence support, but
-      slower than <code class="inline">SEQUENCE</code>/<code class="inline">IDENTITY</code>
-      since it requires an extra row lock/update per ID generated.
-    </li>
+    public void setSubjectId(int subjectId) {
+        this.subjectId = subjectId;
+    }
 
-    <li>
-      With no <code class="inline">@JoinTable</code> annotation specified,
-      Hibernate falls back to default naming for the join table — typically
-      <code class="inline">Student_Subject</code> with columns
-      <code class="inline">Student_studentId</code> and
-      <code class="inline">subjects_subjectId</code> (exact naming can vary
-      by Hibernate version). You can override this explicitly with
-      <code class="inline">@JoinTable(name="Student_Subject", joinColumns=..., inverseJoinColumns=...)</code>
-      for full control.
-    </li>
-  </ul>
-</div>
+    public String getSubjectName() {
+        return subjectName;
+    }
 
-<h3>
-  8.3 DAO —
-  <code class="inline">StudentDAO.java</code>
-  (com.DAO)
-</h3>
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
 
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+    @Override
+    public String toString() {
+        return "Subject [subjectId=" + subjectId +
+                ", subjectName=" + subjectName + "]";
+    }
 
-<pre><span class="kw">package</span> com.DAO;
+}</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-MANY | Page 5 — StudentDAO.java</div><div class="section"><div class="section-header">💻 Code (continued)</div><div class="section-body"><div class="note-box"><span class="tag">EXTRA — Explanation</span><ul><li>Only <code>Student</code> carries the <code>@ManyToMany</code> annotation — <code>Subject</code> has no reference back to <code>Student</code>. This makes the mapping <strong>unidirectional</strong>: you can navigate Student → Subjects, but not Subject → Students, exactly as the diagram filename (<code>Hibernate_ManyToMany_Unidirectional</code>) suggests.</li><li>Both entities use <code>GenerationType.TABLE</code> instead of <code>IDENTITY</code> or <code>SEQUENCE</code> seen in earlier chapters — this strategy uses a separate database table to simulate a sequence, generating unique keys across all entities that share it. It's more portable across databases that lack native sequence support, but slower than <code>SEQUENCE</code>/<code>IDENTITY</code> since it requires an extra row lock/update per ID generated.</li><li>With no <code>@JoinTable</code> annotation specified, Hibernate falls back to default naming for the join table — typically <code>Student_Subject</code> with columns <code>Student_studentId</code> and <code>subjects_subjectId</code> (exact naming can vary by Hibernate version). You can override this explicitly with <code>@JoinTable(name="Student_Subject", joinColumns=..., inverseJoinColumns=...)</code> for full control.</li></ul></div><div class="subsection-title">🔹 8.3 DAO — <code>StudentDAO.java</code> (com.DAO)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.DAO;
 
-<span class="kw">import</span> java.util.List;
+import java.util.List;
 
-<span class="kw">import</span> javax.persistence.EntityManager;
-<span class="kw">import</span> javax.persistence.EntityManagerFactory;
-<span class="kw">import</span> javax.persistence.EntityTransaction;
-<span class="kw">import</span> javax.persistence.Persistence;
-<span class="kw">import</span> javax.persistence.Query;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 
-<span class="kw">import</span> com.DTO.Student;
-<span class="kw">import</span> com.DTO.Subject;
+import com.DTO.Student;
+import com.DTO.Subject;
 
-<span class="kw">public class</span> <span class="type">StudentDAO</span> {
+public class StudentDAO {
 
-	EntityManagerFactory factory =
-			Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"orm"</span>);
+    EntityManagerFactory factory =
+            Persistence.createEntityManagerFactory("orm");
 
-	EntityManager manager =
-			factory.<span class="method">createEntityManager</span>();
+    EntityManager manager =
+            factory.createEntityManager();
 
-	EntityTransaction transaction =
-			manager.<span class="method">getTransaction</span>();
+    EntityTransaction transaction =
+            manager.getTransaction();
 
-	<span class="cmt">// ==========================
-	// INSERT
-	// ==========================</span>
+    // ==========================
+    // INSERT
+    // ==========================
 
-	<span class="kw">public void</span> <span class="method">insertData</span>(List&lt;Student&gt; students) {
+    public void insertData(List&lt;Student&gt; students) {
 
-		transaction.<span class="method">begin</span>();
+        transaction.begin();
 
-		<span class="kw">for</span> (Student student : students) {
+        for (Student student : students) {
 
-			manager.<span class="method">persist</span>(student);
+            manager.persist(student);
 
-			<span class="kw">for</span> (Subject subject : student.<span class="method">getSubjects</span>()) {
+            for (Subject subject : student.getSubjects()) {
 
-				manager.<span class="method">persist</span>(subject);
+                manager.persist(subject);
 
-			}
+            }
 
-		}
+        }
 
-		transaction.<span class="method">commit</span>();
+        transaction.commit();
 
-		System.out.<span class="method">println</span>(<span class="str">"Student Data Inserted Successfully."</span>);
+        System.out.println("Student Data Inserted Successfully.");
 
-	}
+    }
 
-	<span class="cmt">// ==========================
-	// FETCH BY ID
-	// ==========================</span>
+    // ==========================
+    // FETCH BY ID
+    // ==========================
 
-	<span class="kw">public</span> Student <span class="method">fetchByID</span>(<span class="type">int</span> id) {
+    public Student fetchByID(int id) {
 
-		Student student =
-				manager.<span class="method">find</span>(Student.<span class="kw">class</span>, id);
+        Student student =
+                manager.find(Student.class, id);
 
-		<span class="kw">if</span> (student != <span class="kw">null</span>) {
+        if (student != null) {
 
-			System.out.<span class="method">println</span>();
+            System.out.println();
 
-			System.out.<span class="method">println</span>(<span class="str">"Student ID : "</span>
-					+ student.<span class="method">getStudentId</span>());
+            System.out.println("Student ID : "
+                    + student.getStudentId());
 
-			System.out.<span class="method">println</span>(<span class="str">"Student Name : "</span>
-					+ student.<span class="method">getStudentName</span>());
+            System.out.println("Student Name : "
+                    + student.getStudentName());
 
-			System.out.<span class="method">println</span>(<span class="str">"Subjects"</span>);
+            System.out.println("Subjects");
 
-			<span class="kw">for</span> (Subject subject : student.<span class="method">getSubjects</span>()) {
+            for (Subject subject : student.getSubjects()) {
 
-				System.out.<span class="method">println</span>(subject);
+                System.out.println(subject);
 
-			}
+            }
 
-		}
+        }
 
-		<span class="kw">return</span> student;
+        return student;
 
-	}
+    }
 
-	<span class="cmt">// ==========================
-	// FETCH ALL
-	// ==========================</span>
+    // ==========================
+    // FETCH ALL
+    // ==========================
 
-	<span class="kw">public void</span> <span class="method">fetchAll</span>() {
+    public void fetchAll() {
 
-		Query query =
-				manager.<span class="method">createQuery</span>(<span class="str">"SELECT s FROM Student s"</span>);
+        Query query =
+                manager.createQuery("SELECT s FROM Student s");
 
-		List&lt;Student&gt; students =
-				query.<span class="method">getResultList</span>();
+        List&lt;Student&gt; students =
+                query.getResultList();
 
-		<span class="kw">for</span> (Student student : students) {
+        for (Student student : students) {
 
-			System.out.<span class="method">println</span>();
+            System.out.println();
 
-			System.out.<span class="method">println</span>(student);
+            System.out.println(student);
 
-			<span class="kw">for</span> (Subject subject : student.<span class="method">getSubjects</span>()) {
+            for (Subject subject : student.getSubjects()) {
 
-				System.out.<span class="method">println</span>(subject);
+                System.out.println(subject);
 
-			}
+            }
 
-		}
+        }
 
-	}
+    }
 
-	<span class="cmt">// ==========================
-	// UPDATE
-	// ==========================</span>
+    // ==========================
+    // UPDATE
+    // ==========================
 
-	<span class="kw">public void</span> <span class="method">update</span>(<span class="type">int</span> studentId,
-					   <span class="type">String</span> studentName,
-					   <span class="type">int</span> subjectId,
-					   <span class="type">String</span> subjectName) {
+    public void update(int studentId,
+                       String studentName,
+                       int subjectId,
+                       String subjectName) {
 
-		Student student =
-				manager.<span class="method">find</span>(Student.<span class="kw">class</span>, studentId);
+        Student student =
+                manager.find(Student.class, studentId);
 
-		<span class="kw">if</span> (student != <span class="kw">null</span>) {
+        if (student != null) {
 
-			student.<span class="method">setStudentName</span>(studentName);
+            student.setStudentName(studentName);
 
-			transaction.<span class="method">begin</span>();
+            transaction.begin();
 
-			manager.<span class="method">merge</span>(student);
+            manager.merge(student);
 
-			<span class="kw">for</span> (Subject subject : student.<span class="method">getSubjects</span>()) {
+            for (Subject subject : student.getSubjects()) {
 
-				<span class="kw">if</span> (subject.<span class="method">getSubjectId</span>() == subjectId) {
+                if (subject.getSubjectId() == subjectId) {
 
-					subject.<span class="method">setSubjectName</span>(subjectName);
+                    subject.setSubjectName(subjectName);
 
-					manager.<span class="method">merge</span>(subject);
+                    manager.merge(subject);
 
-				}
+                }
 
-			}
+            }
 
-			transaction.<span class="method">commit</span>();
+            transaction.commit();
 
-			System.out.<span class="method">println</span>(<span class="str">"Updated Successfully."</span>);
+            System.out.println("Updated Successfully.");
 
-		}
+        }
 
-	}
+    }
 
-	<span class="cmt">// ==========================
-	// REPLACE OBJECT
-	// ==========================</span>
+    // ==========================
+    // REPLACE OBJECT
+    // ==========================
 
-	<span class="kw">public void</span> <span class="method">replace</span>(<span class="type">int</span> studentId,
-						Student newStudent) {
+    public void replace(int studentId,
+                        Student newStudent) {
 
-		Student oldStudent =
-				manager.<span class="method">find</span>(Student.<span class="kw">class</span>, studentId);
+        Student oldStudent =
+                manager.find(Student.class, studentId);
 
-		<span class="kw">if</span> (oldStudent != <span class="kw">null</span>) {
+        if (oldStudent != null) {
 
-			newStudent.<span class="method">setStudentId</span>(oldStudent.<span class="method">getStudentId</span>());
+            newStudent.setStudentId(oldStudent.getStudentId());
 
-			transaction.<span class="method">begin</span>();
+            transaction.begin();
 
-			manager.<span class="method">merge</span>(newStudent);
+            manager.merge(newStudent);
 
-			transaction.<span class="method">commit</span>();
+            transaction.commit();
 
-			System.out.<span class="method">println</span>(<span class="str">"Object Replaced."</span>);
+            System.out.println("Object Replaced.");
 
-		}
+        }
 
-	}
+    }
 
-	<span class="cmt">// ==========================
-	// REMOVE SUBJECT
-	// ==========================</span>
+    // ==========================
+    // REMOVE SUBJECT
+    // ==========================
 
-	<span class="kw">public void</span> <span class="method">removeSubject</span>(<span class="type">int</span> studentId,
-							  <span class="type">int</span> subjectId) {
+    public void removeSubject(int studentId,
+                              int subjectId) {
 
-		Student student =
-				manager.<span class="method">find</span>(Student.<span class="kw">class</span>, studentId);
+        Student student =
+                manager.find(Student.class, studentId);
 
-		<span class="kw">if</span> (student != <span class="kw">null</span>) {
+        if (student != null) {
 
-			transaction.<span class="method">begin</span>();
+            transaction.begin();
 
-			List&lt;Subject&gt; subjects =
-					student.<span class="method">getSubjects</span>();
+            List&lt;Subject&gt; subjects =
+                    student.getSubjects();
 
-			<span class="kw">for</span> (<span class="type">int</span> i = 0; i &lt; subjects.<span class="method">size</span>(); i++) {
+            for (int i = 0; i &lt; subjects.size(); i++) {
 
-				<span class="kw">if</span> (subjects.<span class="method">get</span>(i).<span class="method">getSubjectId</span>() == subjectId) {
+                if (subjects.get(i).getSubjectId() == subjectId) {
 
-					subjects.<span class="method">remove</span>(i);
+                    subjects.remove(i);
 
-					<span class="kw">break</span>;
+                    break;
 
-				}
+                }
 
-			}
+            }
 
-			manager.<span class="method">merge</span>(student);
+            manager.merge(student);
 
-			transaction.<span class="method">commit</span>();
+            transaction.commit();
 
-			System.out.<span class="method">println</span>(<span class="str">"Subject Removed."</span>);
+            System.out.println("Subject Removed.");
 
-		}
+        }
 
-	}
+    }
 
-}</pre>
-</div>
+}</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-MANY | Page 6 — DAO Notes &amp; Driver.java</div><div class="section"><div class="section-header">💻 Code (continued)</div><div class="section-body"><div class="note-box"><span class="tag">EXTRA — Explanation</span><ul><li><strong><code>insertData()</code>:</strong> Loops over each Student and calls <code>manager.persist(student)</code>, then separately loops and persists each of that student's Subjects. Since <code>@ManyToMany</code> uses <code>CascadeType.ALL</code>, persisting the student alone would already cascade to its subjects — the inner loop's explicit <code>persist(subject)</code> calls are redundant but not harmful (Hibernate treats persisting an already-persistent/about-to-be-persisted entity gracefully in this case).</li><li><strong><code>removeSubject()</code></strong> demonstrates the standard way to break a many-to-many link: modify the in-memory <code>List&lt;Subject&gt;</code> by removing the target subject, then <code>merge()</code> the parent. This only deletes the row from the <strong>join table</strong> (<code>Student_Subject</code>) — it does <strong>not</strong> delete the <code>Subject</code> row itself, since other students may still reference that same Subject. This is a key distinction from <code>@OneToMany</code>/<code>@ManyToOne</code> deletes, which affect the actual related row.</li><li><strong>Iterating with an index-based loop and calling <code>.remove(i)</code> immediately followed by <code>break</code></strong> in <code>removeSubject()</code> is a safe pattern here (it exits right after removing, avoiding the classic <code>ConcurrentModificationException</code> that a for-each loop combined with in-loop <code>.remove()</code> would trigger).</li><li><strong><code>update()</code></strong> mixes dirty-checking-style field mutation with explicit <code>merge()</code> calls for both the student and any matching subject — same redundant-but-harmless pattern seen in the earlier Many-to-One chapter's <code>AccountDAO.update()</code>.</li></ul></div><div class="subsection-title">🔹 8.4 Driver — <code>Driver.java</code> (com.Controller)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.Controller;
 
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
+import java.util.ArrayList;
+import java.util.List;
 
-  <ul>
-    <li>
-      <b><code class="inline">insertData()</code>:</b>
-      Loops over each Student and calls
-      <code class="inline">manager.persist(student)</code>, then separately
-      loops and persists each of that student's Subjects. Since
-      <code class="inline">@ManyToMany</code> uses
-      <code class="inline">CascadeType.ALL</code>, persisting the student
-      alone would already cascade to its subjects — the inner loop's
-      explicit <code class="inline">persist(subject)</code> calls are
-      redundant but not harmful (Hibernate treats persisting an already-persistent/about-to-be-persisted entity gracefully in this case).
-    </li>
+import com.DAO.StudentDAO;
+import com.DTO.Student;
+import com.DTO.Subject;
 
-    <li>
-      <b><code class="inline">removeSubject()</code></b>
-      demonstrates the standard way to break a many-to-many link: modify
-      the in-memory <code class="inline">List&lt;Subject&gt;</code> by
-      removing the target subject, then <code class="inline">merge()</code>
-      the parent. This only deletes the row from the
-      <b>join table</b> (<code class="inline">Student_Subject</code>) —
-      it does <b>not</b> delete the <code class="inline">Subject</code>
-      row itself, since other students may still reference that same
-      Subject. This is a key distinction from
-      <code class="inline">@OneToMany</code>/<code class="inline">@ManyToOne</code>
-      deletes, which affect the actual related row.
-    </li>
+public class Driver {
 
-    <li>
-      <b>
-        Iterating with an index-based loop and calling
-        <code class="inline">.remove(i)</code> immediately followed by
-        <code class="inline">break</code>
-      </b>
-      in <code class="inline">removeSubject()</code> is a safe pattern
-      here (it exits right after removing, avoiding the classic
-      <code class="inline">ConcurrentModificationException</code> that a
-      for-each loop combined with in-loop <code class="inline">.remove()</code>
-      would trigger).
-    </li>
+    public static void main(String[] args) {
 
-    <li>
-      <b><code class="inline">update()</code></b>
-      mixes dirty-checking-style field mutation with explicit
-      <code class="inline">merge()</code> calls for both the student and any
-      matching subject — same redundant-but-harmless pattern seen in the
-      earlier Many-to-One chapter's <code class="inline">AccountDAO.update()</code>.
-    </li>
-  </ul>
-</div>
+        StudentDAO dao = new StudentDAO();
 
-<h3>
-  8.4 Driver —
-  <code class="inline">Driver.java</code>
-  (com.Controller)
-</h3>
+        // Create Subject Objects
 
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+        Subject s1 = new Subject();
+        s1.setSubjectName("Java");
 
-<pre><span class="kw">package</span> com.Controller;
+        Subject s2 = new Subject();
+        s2.setSubjectName("Hibernate");
 
-<span class="kw">import</span> java.util.ArrayList;
-<span class="kw">import</span> java.util.List;
+        // Store Subjects inside List
 
-<span class="kw">import</span> com.DAO.StudentDAO;
-<span class="kw">import</span> com.DTO.Student;
-<span class="kw">import</span> com.DTO.Subject;
+        List&lt;Subject&gt; subjects =
+                new ArrayList&lt;&gt;();
 
-<span class="kw">public class</span> <span class="type">Driver</span> {
+        subjects.add(s1);
+        subjects.add(s2);
 
-	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+        // Create Student 1
 
-		StudentDAO dao = <span class="kw">new</span> <span class="method">StudentDAO</span>();
+        Student student1 = new Student();
 
-		<span class="cmt">// Create Subject Objects</span>
+        student1.setStudentName("Pravin");
 
-		Subject s1 = <span class="kw">new</span> <span class="method">Subject</span>();
-		s1.<span class="method">setSubjectName</span>(<span class="str">"Java"</span>);
+        student1.setSubjects(subjects);
 
-		Subject s2 = <span class="kw">new</span> <span class="method">Subject</span>();
-		s2.<span class="method">setSubjectName</span>(<span class="str">"Hibernate"</span>);
+        // Create Student 2
 
-		<span class="cmt">// Store Subjects inside List</span>
+        Student student2 = new Student();
 
-		List&lt;Subject&gt; subjects =
-				<span class="kw">new</span> <span class="method">ArrayList</span>&lt;&gt;();
+        student2.setStudentName("Mayuresh");
 
-		subjects.<span class="method">add</span>(s1);
-		subjects.<span class="method">add</span>(s2);
+        student2.setSubjects(subjects);
 
-		<span class="cmt">// Create Student 1</span>
+        // Store Students
 
-		Student student1 = <span class="kw">new</span> <span class="method">Student</span>();
+        List&lt;Student&gt; students =
+                new ArrayList&lt;&gt;();
 
-		student1.<span class="method">setStudentName</span>(<span class="str">"Pravin"</span>);
+        students.add(student1);
 
-		student1.<span class="method">setSubjects</span>(subjects);
+        students.add(student2);
 
-		<span class="cmt">// Create Student 2</span>
+        // ======================
+        // INSERT
+        // ======================
 
-		Student student2 = <span class="kw">new</span> <span class="method">Student</span>();
+//      dao.insertData(students);
 
-		student2.<span class="method">setStudentName</span>(<span class="str">"Mayuresh"</span>);
+        // ======================
+        // FETCH BY ID
+        // ======================
 
-		student2.<span class="method">setSubjects</span>(subjects);
+//      dao.fetchByID(1);
 
-		<span class="cmt">// Store Students</span>
+        // ======================
+        // FETCH ALL
+        // ======================
 
-		List&lt;Student&gt; students =
-				<span class="kw">new</span> <span class="method">ArrayList</span>&lt;&gt;();
+//      dao.fetchAll();
 
-		students.<span class="method">add</span>(student1);
+        // ======================
+        // UPDATE
+        // ======================
 
-		students.<span class="method">add</span>(student2);
+//      dao.update(
+//              1,
+//              "Rahul",
+//              2,
+//              "Spring Boot");
 
-		<span class="cmt">// ======================
-		// INSERT
-		// ======================</span>
+        // ======================
+        // REPLACE OBJECT
+        // ======================
 
-<span class="cmt">//		dao.insertData(students);</span>
+//      dao.replace(1, student2);
 
-		<span class="cmt">// ======================
-		// FETCH BY ID
-		// ======================</span>
+        // ======================
+        // REMOVE SUBJECT
+        // ======================
 
-<span class="cmt">//		dao.fetchByID(1);</span>
+//      dao.removeSubject(1,2);
 
-		<span class="cmt">// ======================
-		// FETCH ALL
-		// ======================</span>
+    }
 
-<span class="cmt">//		dao.fetchAll();</span>
-
-		<span class="cmt">// ======================
-		// UPDATE
-		// ======================</span>
-
-<span class="cmt">//		dao.update(
-//				1,
-//				"Rahul",
-//				2,
-//				"Spring Boot");</span>
-
-		<span class="cmt">// ======================
-		// REPLACE OBJECT
-		// ======================</span>
-
-<span class="cmt">//		dao.replace(1, student2);</span>
-
-		<span class="cmt">// ======================
-		// REMOVE SUBJECT
-		// ======================</span>
-
-<span class="cmt">//		dao.removeSubject(1,2);</span>
-
-	}
-
-}</pre>
-</div>
-
-<h2 id="bugs" class="page-break">
-  9. Bugs &amp; Gotchas in This Code
-</h2>
-
-<div class="card bug">
-  <span class="tag tag-bug">
-    ⚠ BUGS — Worth Knowing for Debugging &amp; Interviews
-  </span>
-
-  <ul>
-    <li>
-      <b>
-        <code class="inline">student1</code> and
-        <code class="inline">student2</code> share the exact same
-        <code class="inline">subjects</code> List instance
-      </b>
-      — both calls are
-      <code class="inline">student1.setSubjects(subjects)</code> and
-      <code class="inline">student2.setSubjects(subjects)</code>, passing
-      the <i>same</i> <code class="inline">ArrayList</code> reference rather
-      than two separate lists (even if they contain the same two Subject
-      objects, in a real scenario each Student typically gets its own list
-      instance). This works because Java lists just hold references, but
-      it's a subtle gotcha: mutating one student's subject list (e.g. via
-      <code class="inline">removeSubject()</code>, which calls
-      <code class="inline">subjects.remove(i)</code> on the list returned by
-      <code class="inline">getSubjects()</code>) would also silently affect
-      the other student's list, since they point to the identical
-      <code class="inline">ArrayList</code> object in memory.
-    </li>
-
-    <li>
-      <b>
-        Both students reference the same two
-        <code class="inline">Subject</code> objects
-        (<code class="inline">s1</code>, <code class="inline">s2</code>)
-      </b>
-      before persistence — this is actually correct and intended for
-      Many-to-Many (both Pravin and Mayuresh studying "Java" should map to
-      the <i>same</i> Java row, not two duplicate rows), but combined with
-      the shared-list issue above, it's worth distinguishing: sharing the
-      same <b>Subject objects</b> across students is correct Many-to-Many
-      modeling; sharing the same <b>List object</b> across students is an
-      accidental side effect that could cause bugs during updates/removals.
-    </li>
-
-    <li>
-      <b>
-        No null-check on <code class="inline">student.getSubjects()</code>
-      </b>
-      in <code class="inline">fetchByID()</code>,
-      <code class="inline">fetchAll()</code>, or
-      <code class="inline">update()</code> — if a Student were ever inserted
-      with a <code class="inline">null</code> subjects list, the for-each
-      loops would throw <code class="inline">NullPointerException</code>.
-    </li>
-
-    <li>
-      <b>
-        <code class="inline">replace()</code> doesn't handle Subjects at all
-      </b>
-      — it only copies the old student's ID onto the new student and merges.
-      If <code class="inline">newStudent.getSubjects()</code> is
-      <code class="inline">null</code> or empty, this could unintentionally
-      wipe out the student's existing subject associations in the join table,
-      depending on cascade behavior on merge.
-    </li>
-  </ul>
-</div>
-
-<h2 id="crud">10. CRUD Flow Summary</h2>
-
-<div class="flow">INSERT                    FETCH                    UPDATE                   DELETE (removeSubject)
-Create Subjects            find(Student.class,id)    Find Student              Find Student
-     ↓                          ↓                       ↓                        ↓
-Create Student             Student Object            Modify Student            Remove from List
-     ↓                          ↓                       ↓                        ↓
-Assign Subjects             Subjects Loaded            Modify Subject            merge(student)
-     ↓                          ↓                       ↓                        ↓
-persist()                    Display                  merge()                  Commit
-     ↓                                                   ↓
-Student Table                                     Database Updated
-Subject Table
-Join Table</div>
-
-<h3>Execution Flow (Full Stack)</h3>
-
-<div class="flow">Driver
-  ↓
-Student Object
-  ↓
-Subject Objects
-  ↓
-StudentDAO
-  ↓
-EntityManager
-  ↓
-Hibernate ORM
-  ↓
-Student Table
-  ↓
-Subject Table
-  ↓
-Student_Subject Table
-  ↓
-PostgreSQL</div>
-
-<h2 id="comparison">11. All Mapping Types — Final Comparison</h2>
-
-<table>
-  <tr>
-    <th>Mapping</th>
-    <th>Example</th>
-    <th>Foreign Key</th>
-  </tr>
-  <tr>
-    <td>One-To-One</td>
-    <td>Person → Passport</td>
-    <td>One Foreign Key</td>
-  </tr>
-  <tr>
-    <td>One-To-Many</td>
-    <td>Company → Employees</td>
-    <td>Foreign Key in Employee Table</td>
-  </tr>
-  <tr>
-    <td>Many-To-One</td>
-    <td>Employees → Department</td>
-    <td>Foreign Key in Employee Table</td>
-  </tr>
-  <tr>
-    <td>Many-To-Many</td>
-    <td>Student ↔ Subject</td>
-    <td>Join Table</td>
-  </tr>
-</table>
-
-<div class="card theory">
-  <span class="tag tag-theory">
-    THEORY — More Real-Life Examples
-  </span>
-
-  <ul>
-    <li>Many Students ↔ Many Subjects</li>
-    <li>Many Doctors ↔ Many Patients</li>
-    <li>Many Employees ↔ Many Projects</li>
-    <li>Many Authors ↔ Many Books</li>
-    <li>Many Actors ↔ Many Movies</li>
-    <li>Many Customers ↔ Many Products</li>
-    <li>Many Teachers ↔ Many Courses</li>
-  </ul>
-</div>
-
-<h3>Advantages</h3>
-
-<table>
-  <tr>
-    <th>#</th>
-    <th>Advantage</th>
-    <th>Explanation</th>
-  </tr>
-  <tr>
-    <td>1</td>
-    <td>Automatic Join Table Creation</td>
-    <td>Hibernate automatically creates the relationship table.</td>
-  </tr>
-  <tr>
-    <td>2</td>
-    <td>Less Coding</td>
-    <td>Developer doesn't write SQL manually.</td>
-  </tr>
-  <tr>
-    <td>3</td>
-    <td>Database Independent</td>
-    <td>Same Java code works with PostgreSQL, MySQL, Oracle, SQL Server.</td>
-  </tr>
-  <tr>
-    <td>4</td>
-    <td>Object Oriented</td>
-    <td>Works with Objects instead of Foreign Keys.</td>
-  </tr>
-  <tr>
-    <td>5</td>
-    <td>Easy Maintenance</td>
-    <td>Relationships are maintained automatically.</td>
-  </tr>
-</table>
-
-<h2 id="qa">12. Interview Q&amp;A</h2>
-
-<div class="card">
-  <span class="tag tag-qa">INTERVIEW PREP</span>
-
-  <div class="qa-item">
-    <div class="q">
-      Q1. What is Many-to-Many mapping? Give the example from this code.
-    </div>
-
-    <div class="a">
-      A relationship where multiple records of one table associate with
-      multiple records of another table — one object can have many related
-      objects, and those related objects can belong to many other objects.
-      Here, many Students study many Subjects, via
-      <code class="inline">@ManyToMany private List&lt;Subject&gt; subjects;</code>
-      in <code class="inline">Student</code>.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q2. Why can't Many-to-Many be modeled with a simple foreign key
-      column like One-to-Many?
-    </div>
-
-    <div class="a">
-      A single foreign key column can only store one value. Since a Student
-      can study multiple Subjects and a Subject can have multiple Students,
-      neither table can store the relationship in a single FK column — so
-      Hibernate introduces a third Join Table that stores pairs of
-      (Student_ID, Subject_ID).
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q3. What tables does Hibernate generate for this
-      <code class="inline">Student</code>/<code class="inline">Subject</code>
-      mapping?
-    </div>
-
-    <div class="a">
-      Three tables:
-      <code class="inline">Student</code>,
-      <code class="inline">Subject</code>, and the join table
-      <code class="inline">Student_Subject</code>
-      (storing only the ID pairs, no duplicated data).
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q4. Is this mapping unidirectional or bidirectional? How can you tell?
-    </div>
-
-    <div class="a">
-      Unidirectional — only <code class="inline">Student</code> has the
-      <code class="inline">@ManyToMany List&lt;Subject&gt;</code> field.
-      <code class="inline">Subject</code> has no back-reference to
-      <code class="inline">Student</code>, so you can navigate Student →
-      Subjects but not Subject → Students.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q5. What does <code class="inline">removeSubject()</code> actually
-      delete — the Subject row, or something else?
-    </div>
-
-    <div class="a">
-      It only removes the corresponding row from the join table
-      (<code class="inline">Student_Subject</code>) by removing the Subject
-      from the Student's in-memory list and merging. The
-      <code class="inline">Subject</code> row itself is untouched, since
-      other Students may still be linked to that same Subject.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q6. Why does <code class="inline">GenerationType.TABLE</code> differ
-      from <code class="inline">SEQUENCE</code> and
-      <code class="inline">IDENTITY</code>?
-    </div>
-
-    <div class="a">
-      <code class="inline">TABLE</code> uses a dedicated database table to
-      simulate sequence behavior, generating unique IDs by reading and
-      updating a row in that table. It's more portable across databases
-      without native sequence support, but slower than
-      <code class="inline">SEQUENCE</code> or
-      <code class="inline">IDENTITY</code> due to the extra read/update per
-      generated ID.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q7. What real bug exists in the Driver's object setup for
-      <code class="inline">student1</code> and
-      <code class="inline">student2</code>?
-    </div>
-
-    <div class="a">
-      Both students are given the exact same
-      <code class="inline">List&lt;Subject&gt;</code> instance via
-      <code class="inline">setSubjects(subjects)</code>, not two separate
-      list instances. Mutating one student's list (e.g. during
-      <code class="inline">removeSubject()</code>) would silently affect
-      the other, since both point at the same underlying
-      <code class="inline">ArrayList</code> object.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q8. What's the default fetch type for
-      <code class="inline">@ManyToMany</code>, and what does this code use?
-    </div>
-
-    <div class="a">
-      The JPA default for <code class="inline">@ManyToMany</code> is
-      <code class="inline">FetchType.LAZY</code>. This code explicitly
-      overrides it to <code class="inline">FetchType.EAGER</code>, so
-      Subjects load automatically every time a Student is fetched.
-    </div>
-  </div>
-</div>
-
-<h2 id="tricks">13. Memory Tricks</h2>
-
-<div class="memory-trick">
-  <b>Many-to-Many needs a middleman:</b>
-  Two tables can't point at "many" values in each other directly — a Join
-  Table is the go-between that stores just the ID pairs, like a guest list
-  pairing Students to Subjects.
-</div>
-
-<div class="memory-trick">
-  <b>Default fetch types across all mappings:</b>
-  "<b>Many</b>ToOne → Eager.
-  <b>One</b>ToMany → Lazy.
-  <b>Many</b>ToMany → Lazy."
-  Only <code class="inline">@ManyToOne</code> defaults to EAGER; the other
-  two collection-based mappings default to LAZY.
-</div>
-
-<div class="memory-trick">
-  <b>Removing from a Many-to-Many list only breaks the link, not the row</b>
-  — removing a Subject from a Student's list deletes one row from the Join
-  Table, never the Subject itself.
-</div>
-
-<div class="memory-trick">
-  <b>Shared list bug:</b>
-  Always give each parent object its own
-  <code class="inline">new ArrayList&lt;&gt;(...)</code> — reusing the same
-  list instance across two Student objects (as this Driver does) can cause
-  one student's edits to silently leak into another's.
-</div>
-
-<div class="footer-note">
-  Hibernate Many-to-Many Mapping Notes — Student/Subject (com.DTO),
-  StudentDAO (com.DAO), Driver (com.Controller) — Original code preserved
-  exactly; theory, explanations, bug notes, and Q&amp;A added as
-  supplementary study material.
-</div>
-
-</body>
-</html>
-
+}</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-MANY | Page 7 — Bugs &amp; CRUD Flow</div><div class="section" id="bugs"><div class="section-header">⚠️ 9. Bugs &amp; Gotchas in This Code</div><div class="section-body"><span class="tag">⚠ BUGS — Worth Knowing for Debugging &amp; Interviews</span><ul><li><strong><code>student1</code> and <code>student2</code> share the exact same <code>subjects</code> List instance</strong> — both calls are <code>student1.setSubjects(subjects)</code> and <code>student2.setSubjects(subjects)</code>, passing the <em>same</em> <code>ArrayList</code> reference rather than two separate lists (even if they contain the same two Subject objects, in a real scenario each Student typically gets its own list instance). This works because Java lists just hold references, but it's a subtle gotcha: mutating one student's subject list (e.g. via <code>removeSubject()</code>, which calls <code>subjects.remove(i)</code> on the list returned by <code>getSubjects()</code>) would also silently affect the other student's list, since they point to the identical <code>ArrayList</code> object in memory.</li><li><strong>Both students reference the same two <code>Subject</code> objects (<code>s1</code>, <code>s2</code>)</strong> before persistence — this is actually correct and intended for Many-to-Many (both Pravin and Mayuresh studying "Java" should map to the <em>same</em> Java row, not two duplicate rows), but combined with the shared-list issue above, it's worth distinguishing: sharing the same <strong>Subject objects</strong> across students is correct Many-to-Many modeling; sharing the same <strong>List object</strong> across students is an accidental side effect that could cause bugs during updates/removals.</li><li><strong>No null-check on <code>student.getSubjects()</code></strong> in <code>fetchByID()</code>, <code>fetchAll()</code>, or <code>update()</code> — if a Student were ever inserted with a <code>null</code> subjects list, the for-each loops would throw <code>NullPointerException</code>.</li><li><strong><code>replace()</code> doesn't handle Subjects at all</strong> — it only copies the old student's ID onto the new student and merges. If <code>newStudent.getSubjects()</code> is <code>null</code> or empty, this could unintentionally wipe out the student's existing subject associations in the join table, depending on cascade behavior on merge.</li></ul></div></div><div class="section" id="crud"><div class="section-header">🚀 10. CRUD Flow Summary</div><div class="section-body"><div class="four-col"><div><div class="cap">INSERT</div><div class="flow-box">Create Subjects</div><div class="flow-arrow">↓</div><div class="flow-box">Create Student</div><div class="flow-arrow">↓</div><div class="flow-box">Assign Subjects</div><div class="flow-arrow">↓</div><div class="flow-box">persist()</div><div class="flow-arrow">↓</div><div class="flow-box">Student Table / Subject Table / Join Table</div></div><div><div class="cap">FETCH</div><div class="flow-box">find(Student.class,id)</div><div class="flow-arrow">↓</div><div class="flow-box">Student Object</div><div class="flow-arrow">↓</div><div class="flow-box">Subjects Loaded</div><div class="flow-arrow">↓</div><div class="flow-box">Display</div></div><div><div class="cap">UPDATE</div><div class="flow-box">Find Student</div><div class="flow-arrow">↓</div><div class="flow-box">Modify Student</div><div class="flow-arrow">↓</div><div class="flow-box">Modify Subject</div><div class="flow-arrow">↓</div><div class="flow-box">merge()</div><div class="flow-arrow">↓</div><div class="flow-box">Database Updated</div></div><div><div class="cap">DELETE (removeSubject)</div><div class="flow-box">Find Student</div><div class="flow-arrow">↓</div><div class="flow-box">Remove from List</div><div class="flow-arrow">↓</div><div class="flow-box">merge(student)</div><div class="flow-arrow">↓</div><div class="flow-box">Commit</div></div></div><div class="subsection-title">🔹 Execution Flow (Full Stack)</div><div class="flow-box">Driver</div><div class="flow-arrow">↓</div><div class="flow-box">Student Object</div><div class="flow-arrow">↓</div><div class="flow-box">Subject Objects</div><div class="flow-arrow">↓</div><div class="flow-box">StudentDAO</div><div class="flow-arrow">↓</div><div class="flow-box">EntityManager</div><div class="flow-arrow">↓</div><div class="flow-box">Hibernate ORM</div><div class="flow-arrow">↓</div><div class="flow-box">Student Table</div><div class="flow-arrow">↓</div><div class="flow-box">Subject Table</div><div class="flow-arrow">↓</div><div class="flow-box">Student_Subject Table</div><div class="flow-arrow">↓</div><div class="flow-box">PostgreSQL</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-MANY | Page 8 — Comparison &amp; Advantages</div><div class="section" id="comparison"><div class="section-header">📋 11. All Mapping Types — Final Comparison</div><div class="section-body"><table><tr><th>Mapping</th><th>Example</th><th>Foreign Key</th></tr><tr><td>One-To-One</td><td>Person → Passport</td><td>One Foreign Key</td></tr><tr><td>One-To-Many</td><td>Company → Employees</td><td>Foreign Key in Employee Table</td></tr><tr><td>Many-To-One</td><td>Employees → Department</td><td>Foreign Key in Employee Table</td></tr><tr><td>Many-To-Many</td><td>Student ↔ Subject</td><td>Join Table</td></tr></table><div class="note-box"><span class="tag">THEORY — More Real-Life Examples</span><ul><li>Many Students ↔ Many Subjects</li><li>Many Doctors ↔ Many Patients</li><li>Many Employees ↔ Many Projects</li><li>Many Authors ↔ Many Books</li><li>Many Actors ↔ Many Movies</li><li>Many Customers ↔ Many Products</li><li>Many Teachers ↔ Many Courses</li></ul></div><div class="subsection-title">🔹 Advantages</div><table><tr><th>#</th><th>Advantage</th><th>Explanation</th></tr><tr><td>1</td><td>Automatic Join Table Creation</td><td>Hibernate automatically creates the relationship table.</td></tr><tr><td>2</td><td>Less Coding</td><td>Developer doesn't write SQL manually.</td></tr><tr><td>3</td><td>Database Independent</td><td>Same Java code works with PostgreSQL, MySQL, Oracle, SQL Server.</td></tr><tr><td>4</td><td>Object Oriented</td><td>Works with Objects instead of Foreign Keys.</td></tr><tr><td>5</td><td>Easy Maintenance</td><td>Relationships are maintained automatically.</td></tr></table></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-MANY | Page 9 — Interview Q&amp;A</div><div class="section" id="qa"><div class="section-header">🎯 12. Interview Q&amp;A</div><div class="section-body"><span class="tag">INTERVIEW PREP</span><div class="qa"><div class="q">Q1. What is Many-to-Many mapping? Give the example from this code.</div><div>A relationship where multiple records of one table associate with multiple records of another table — one object can have many related objects, and those related objects can belong to many other objects. Here, many Students study many Subjects, via <code>@ManyToMany private List&lt;Subject&gt; subjects;</code> in <code>Student</code>.</div></div><div class="qa"><div class="q">Q2. Why can't Many-to-Many be modeled with a simple foreign key column like One-to-Many?</div><div>A single foreign key column can only store one value. Since a Student can study multiple Subjects and a Subject can have multiple Students, neither table can store the relationship in a single FK column — so Hibernate introduces a third Join Table that stores pairs of (Student_ID, Subject_ID).</div></div><div class="qa"><div class="q">Q3. What tables does Hibernate generate for this <code>Student</code>/<code>Subject</code> mapping?</div><div>Three tables: <code>Student</code>, <code>Subject</code>, and the join table <code>Student_Subject</code> (storing only the ID pairs, no duplicated data).</div></div><div class="qa"><div class="q">Q4. Is this mapping unidirectional or bidirectional? How can you tell?</div><div>Unidirectional — only <code>Student</code> has the <code>@ManyToMany List&lt;Subject&gt;</code> field. <code>Subject</code> has no back-reference to <code>Student</code>, so you can navigate Student → Subjects but not Subject → Students.</div></div><div class="qa"><div class="q">Q5. What does <code>removeSubject()</code> actually delete — the Subject row, or something else?</div><div>It only removes the corresponding row from the join table (<code>Student_Subject</code>) by removing the Subject from the Student's in-memory list and merging. The <code>Subject</code> row itself is untouched, since other Students may still be linked to that same Subject.</div></div><div class="qa"><div class="q">Q6. Why does <code>GenerationType.TABLE</code> differ from <code>SEQUENCE</code> and <code>IDENTITY</code>?</div><div><code>TABLE</code> uses a dedicated database table to simulate sequence behavior, generating unique IDs by reading and updating a row in that table. It's more portable across databases without native sequence support, but slower than <code>SEQUENCE</code> or <code>IDENTITY</code> due to the extra read/update per generated ID.</div></div><div class="qa"><div class="q">Q7. What real bug exists in the Driver's object setup for <code>student1</code> and <code>student2</code>?</div><div>Both students are given the exact same <code>List&lt;Subject&gt;</code> instance via <code>setSubjects(subjects)</code>, not two separate list instances. Mutating one student's list (e.g. during <code>removeSubject()</code>) would silently affect the other, since both point at the same underlying <code>ArrayList</code> object.</div></div><div class="qa"><div class="q">Q8. What's the default fetch type for <code>@ManyToMany</code>, and what does this code use?</div><div>The JPA default for <code>@ManyToMany</code> is <code>FetchType.LAZY</code>. This code explicitly overrides it to <code>FetchType.EAGER</code>, so Subjects load automatically every time a Student is fetched.</div></div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE MANY-TO-MANY | Page 10 — Memory Tricks</div><div class="section" id="tricks"><div class="section-header">🧠 13. Memory Tricks</div><div class="section-body"><div class="note-box">🧠 <strong>Many-to-Many needs a middleman:</strong> Two tables can't point at "many" values in each other directly — a Join Table is the go-between that stores just the ID pairs, like a guest list pairing Students to Subjects.</div><div class="note-box">🧠 <strong>Default fetch types across all mappings:</strong> "<strong>Many</strong>ToOne → Eager. <strong>One</strong>ToMany → Lazy. <strong>Many</strong>ToMany → Lazy." Only <code>@ManyToOne</code> defaults to EAGER; the other two collection-based mappings default to LAZY.</div><div class="note-box">🧠 <strong>Removing from a Many-to-Many list only breaks the link, not the row</strong> — removing a Subject from a Student's list deletes one row from the Join Table, never the Subject itself.</div><div class="note-box">🧠 <strong>Shared list bug:</strong> Always give each parent object its own <code>new ArrayList&lt;&gt;(...)</code> — reusing the same list instance across two Student objects (as this Driver does) can cause one student's edits to silently leak into another's.</div></div></div><div class="footer">Hibernate Many-to-Many Mapping Notes — Student/Subject (com.DTO), StudentDAO (com.DAO), Driver (com.Controller) — Original code preserved exactly; theory, explanations, bug notes, and Q&amp;A added as supplementary study material.</div></div></body></html>

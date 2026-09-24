@@ -1,1405 +1,230 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Hibernate Mapping (One-to-One)</title>
-
-<style>
-  /* =========================================================
-     MASTER NOTES DESIGN
-     A4 • Academic • Professional • Print Friendly
-     ========================================================= */
-
-  @page {
-    size: A4;
-    margin: 0;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    font-family: Georgia, "Times New Roman", serif;
-    color: #1a1a1a;
-    background: #e9e9e9;
-    line-height: 1.55;
-    margin: 0;
-    padding: 24px 0;
-  }
-
-  /* Main A4 document */
-  body::before {
-    content: "";
-    display: block;
-  }
-
-  /* =========================================================
-     TYPOGRAPHY
-     ========================================================= */
-
-  h1 {
-    max-width: 794px;
-    margin: 0 auto 6px;
-    padding: 14px 18px 10px;
-    font-size: 25px;
-    line-height: 1.25;
-    text-align: center;
-    color: #111;
-    background: #fff;
-    border: 1.5px solid #222;
-    border-bottom: 3px solid #222;
-  }
-
-  .subtitle {
-    max-width: 794px;
-    margin: 0 auto 22px;
-    padding: 8px 14px;
-    text-align: center;
-    color: #555;
-    background: #f7f7f7;
-    border: 1px solid #cfcfcf;
-    font-size: 13px;
-    font-style: italic;
-  }
-
-  h2 {
-    max-width: 794px;
-    margin: 28px auto 12px;
-    padding: 7px 10px 6px;
-    font-size: 19px;
-    line-height: 1.3;
-    color: #111;
-    background: #f4f4f4;
-    border-top: 1.5px solid #222;
-    border-bottom: 1.5px solid #777;
-    page-break-after: avoid;
-  }
-
-  h3 {
-    max-width: 794px;
-    margin: 18px auto 8px;
-    padding-left: 9px;
-    font-size: 15px;
-    color: #222;
-    border-left: 4px solid #555;
-    page-break-after: avoid;
-  }
-
-  p {
-    margin: 7px 0;
-  }
-
-  ul,
-  ol {
-    margin: 7px 0;
-    padding-left: 23px;
-  }
-
-  li {
-    margin: 3px 0;
-  }
-
-  /* =========================================================
-     CONTENT CONTAINERS
-     ========================================================= */
-
-  .card {
-    max-width: 794px;
-    margin: 12px auto;
-    padding: 14px 16px;
-    background: #fff;
-    border: 1.5px solid #222;
-    page-break-inside: avoid;
-  }
-
-  .card.extra {
-    background: #f7f7f7;
-    border: 1.5px dashed #777;
-  }
-
-  .card.theory {
-    background: #fff;
-    border-left: 5px solid #333;
-  }
-
-  .card.bug {
-    background: #f8f8f8;
-    border-left: 5px solid #222;
-  }
-
-  /* =========================================================
-     TAGS
-     ========================================================= */
-
-  .tag {
-    display: inline-block;
-    margin-bottom: 8px;
-    padding: 3px 8px;
-    font-size: 10px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    border: 1px solid #555;
-    background: #eeeeee;
-    color: #222;
-  }
-
-  .tag-orig {
-    background: #e7e7e7;
-    color: #111;
-  }
-
-  .tag-extra {
-    background: #f1f1f1;
-    color: #333;
-    border-style: dashed;
-  }
-
-  .tag-qa {
-    background: #e8e8e8;
-    color: #111;
-  }
-
-  .tag-theory {
-    background: #eeeeee;
-    color: #222;
-  }
-
-  .tag-bug {
-    background: #dedede;
-    color: #111;
-  }
-
-  /* =========================================================
-     INLINE CODE
-     ========================================================= */
-
-  code.inline {
-    background: #eeeeee;
-    color: #222;
-    border: 1px solid #d0d0d0;
-    padding: 1px 5px;
-    font-family: "Consolas", "Courier New", monospace;
-    font-size: 12px;
-  }
-
-  /* =========================================================
-     CODE BLOCKS
-     ========================================================= */
-
-  pre {
-    background: #1e1e1e;
-    color: #d4d4d4;
-    padding: 14px 16px;
-    margin: 10px 0;
-    border: 1px solid #111;
-    overflow-x: auto;
-    white-space: pre-wrap;
-    word-break: break-word;
-
-    font-family: "Consolas", "Courier New", monospace;
-    font-size: 12px;
-    line-height: 1.5;
-
-    page-break-inside: avoid;
-  }
-
-  .kw {
-    color: #569cd6;
-  }
-
-  .type {
-    color: #4ec9b0;
-  }
-
-  .str {
-    color: #ce9178;
-  }
-
-  .cmt {
-    color: #6a9955;
-    font-style: italic;
-  }
-
-  .method {
-    color: #dcdcaa;
-  }
-
-  /* =========================================================
-     TABLES
-     ========================================================= */
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 12px auto;
-    font-size: 12.5px;
-    background: #fff;
-  }
-
-  th,
-  td {
-    border: 1px solid #555;
-    padding: 7px 9px;
-    text-align: left;
-    vertical-align: top;
-  }
-
-  th {
-    background: #222;
-    color: #fff;
-    font-weight: bold;
-  }
-
-  tr:nth-child(even) {
-    background: #f2f2f2;
-  }
-
-  /* =========================================================
-     FLOW DIAGRAMS
-     ========================================================= */
-
-  .flow {
-    max-width: 794px;
-    margin: 12px auto;
-    padding: 13px 18px;
-    background: #fafafa;
-    border: 1px dashed #555;
-
-    font-family: "Consolas", "Courier New", monospace;
-    font-size: 12px;
-    line-height: 1.55;
-    color: #222;
-
-    white-space: pre-wrap;
-    text-align: center;
-
-    page-break-inside: avoid;
-  }
-
-  .box {
-    display: block;
-    max-width: 280px;
-    margin: 5px auto;
-    padding: 7px 10px;
-
-    background: #222;
-    color: #fff;
-
-    border: 1px solid #111;
-
-    text-align: center;
-    font-weight: bold;
-    font-size: 12px;
-  }
-
-  .arrow-down {
-    margin: 0;
-    text-align: center;
-    color: #333;
-    font-size: 17px;
-    font-weight: bold;
-  }
-
-  .rel-diagram {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    margin: 14px 0;
-  }
-
-  .rel-box {
-    padding: 9px 18px;
-    background: #222;
-    color: #fff;
-    border: 1px solid #111;
-    font-weight: bold;
-  }
-
-  .rel-arrow {
-    color: #333;
-    font-size: 20px;
-  }
-
-  /* =========================================================
-     Q&A
-     ========================================================= */
-
-  .qa-item {
-    padding: 9px 0;
-    border-bottom: 1px solid #cfcfcf;
-  }
-
-  .qa-item:last-child {
-    border-bottom: none;
-  }
-
-  .q {
-    font-weight: bold;
-    color: #111;
-  }
-
-  .a {
-    margin-top: 4px;
-    color: #333;
-  }
-
-  /* =========================================================
-     MEMORY TRICKS
-     ========================================================= */
-
-  .memory-trick {
-    max-width: 794px;
-    margin: 10px auto;
-    padding: 10px 14px;
-
-    background: #f4f4f4;
-    border: 1px dashed #666;
-
-    font-size: 13px;
-    color: #333;
-
-    page-break-inside: avoid;
-  }
-
-  .memory-trick b {
-    color: #111;
-  }
-
-  /* =========================================================
-     DEFINITION BOX
-     ========================================================= */
-
-  .definition-box {
-    max-width: 794px;
-    margin: 12px auto;
-    padding: 13px 16px;
-
-    background: #f3f3f3;
-    border: 1px solid #777;
-
-    font-size: 13.5px;
-    color: #222;
-    font-style: italic;
-
-    page-break-inside: avoid;
-  }
-
-  /* =========================================================
-     TABLE OF CONTENTS
-     ========================================================= */
-
-  .toc {
-    max-width: 794px;
-    margin: 0 auto 22px;
-    padding: 13px 18px;
-
-    background: #fff;
-    border: 1.5px solid #222;
-
-    page-break-inside: avoid;
-  }
-
-  .toc b {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 15px;
-  }
-
-  .toc ol {
-    margin: 5px 0;
-  }
-
-  .toc a {
-    color: #222;
-    text-decoration: none;
-    font-size: 13px;
-  }
-
-  .toc a:hover {
-    text-decoration: underline;
-  }
-
-  /* =========================================================
-     PAGE BREAK
-     ========================================================= */
-
-  .page-break {
-    page-break-before: always;
-  }
-
-  /* =========================================================
-     FOOTER
-     ========================================================= */
-
-  .footer-note {
-    max-width: 794px;
-    margin: 35px auto 0;
-    padding: 12px 10px 0;
-
-    border-top: 1px solid #777;
-
-    color: #555;
-    font-size: 11px;
-    text-align: center;
-  }
-
-  /* =========================================================
-     PRINT
-     ========================================================= */
-
-  @media print {
-    body {
-      background: #fff;
-      padding: 0;
-    }
-
-    h1,
-    h2,
-    h3,
-    .subtitle,
-    .card,
-    .flow,
-    .memory-trick,
-    .toc,
-    .footer-note {
-      max-width: none;
-    }
-
-    h1 {
-      margin-top: 0;
-    }
-
-    a {
-      color: #111;
-      text-decoration: none;
-    }
-
-    .card,
-    .flow,
-    .memory-trick,
-    .toc,
-    table,
-    pre {
-      page-break-inside: avoid;
-    }
-  }
-
-  /* =========================================================
-     MOBILE
-     ========================================================= */
-
-  @media screen and (max-width: 700px) {
-    body {
-      padding: 10px;
-    }
-
-    h1 {
-      font-size: 21px;
-      padding: 12px;
-    }
-
-    h2 {
-      font-size: 17px;
-    }
-
-    h3 {
-      font-size: 14px;
-    }
-
-    .card {
-      padding: 12px;
-    }
-
-    pre {
-      font-size: 11px;
-      padding: 11px;
-    }
-
-    table {
-      font-size: 11px;
-      display: block;
-      overflow-x: auto;
-      white-space: normal;
-    }
-
-    th,
-    td {
-      min-width: 120px;
-    }
-
-    .flow {
-      font-size: 11px;
-      padding: 10px;
-    }
-
-    .box {
-      max-width: 230px;
-    }
-
-    .rel-diagram {
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-  }
-</style>
-</head>
-
-<body>
-
-<h1>Chapter 11: Hibernate Mapping — One-to-One</h1>
-
-<div class="subtitle">
-  Car ↔ Engine Example — Packages:
-  <code class="inline">com.dto</code>,
-  <code class="inline">com.dao</code>,
-  <code class="inline">com.Controler</code>
-</div>
-
-<div class="toc">
-  <b>Contents</b>
-  <ol>
-    <li><a href="#what">What is Mapping?</a></li>
-    <li><a href="#why">Why Mapping is Needed?</a></li>
-    <li><a href="#realworld">Real-Life Example</a></li>
-    <li><a href="#architecture">Mapping Architecture &amp; Flow</a></li>
-    <li><a href="#types">Types of Mapping in Hibernate</a></li>
-    <li><a href="#advantages">Why Hibernate Supports Mapping / Advantages</a></li>
-    <li><a href="#code">Code — Car, Engine, carDao, DriverClass</a></li>
-    <li><a href="#bugs">Bugs &amp; Gotchas in This Code</a></li>
-    <li><a href="#qa">Interview Q&amp;A</a></li>
-    <li><a href="#tricks">Memory Tricks</a></li>
-  </ol>
-</div>
-
-<h2 id="what">1. What is Mapping?</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY — DEFINITION</span>
-
-  <p>
-    <b>Mapping</b> is the process of establishing a relationship between Java
-    Entity classes and database tables so that Hibernate can automatically
-    manage the relationship between objects and the corresponding database records.
-  </p>
-
-  <p>In simple words, mapping tells Hibernate:</p>
-
-  <ul>
-    <li>Which Java class represents which database table.</li>
-    <li>How one object is related to another object.</li>
-    <li>How tables are connected in the database.</li>
-  </ul>
-</div>
-
-<h3>Simple Meaning</h3>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>
-    Suppose we have two entity classes:
-    <code class="inline">Car</code> and
-    <code class="inline">Engine</code>.
-    A <code class="inline">Car</code> contains one
-    <code class="inline">Engine</code>.
-    Instead of storing only primitive values inside the
-    <code class="inline">Car</code> class, we also store an
-    <code class="inline">Engine</code> object.
-  </p>
-
-<pre>Car car = <span class="kw">new</span> <span class="method">Car</span>();
-Engine engine = <span class="kw">new</span> <span class="method">Engine</span>();
-car.<span class="method">setEngine</span>(engine);</pre>
-
-  <p>
-    Hibernate understands this relationship and creates the required
-    relationship in the database.
-  </p>
-</div>
-
-<h2 id="why">2. Why Mapping is Needed?</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>
-    In real-world applications, data is never stored in a single table.
-    For example:
-  </p>
-
-  <h3>College Management System</h3>
-
-  <ul>
-    <li>College</li>
-    <li>Student</li>
-    <li>Teacher</li>
-    <li>Department</li>
-    <li>Subject</li>
-  </ul>
-
-  <p>Every table is related to another table.</p>
-
-  <h3>Banking System</h3>
-
-  <ul>
-    <li>Customer</li>
-    <li>Account</li>
-    <li>ATM Card</li>
-    <li>Transaction</li>
-  </ul>
-
-  <p>A customer has one account. An account has many transactions.</p>
-
-  <h3>Hospital Management System</h3>
-
-  <ul>
-    <li>Doctor</li>
-    <li>Patient</li>
-    <li>Appointment</li>
-    <li>Prescription</li>
-  </ul>
-
-  <p>A doctor treats many patients.</p>
-
-  <h3>Car Showroom</h3>
-
-  <ul>
-    <li>Car</li>
-    <li>Engine</li>
-    <li>Company</li>
-    <li>Owner</li>
-  </ul>
-
-  <p>A Car cannot function without an Engine.</p>
-
-  <p>
-    If Hibernate did not support mapping, we would have to manually manage
-    all these relationships using foreign keys and SQL queries.
-    Mapping makes this process automatic.
-  </p>
-</div>
-
-<h2 id="realworld">3. Real-Life Example</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>
-    Imagine buying a new car. Every car has exactly one engine.
-    Similarly, every engine belongs to exactly one car.
-  </p>
-
-  <table>
-    <tr>
-      <th>Car</th>
-      <th>Engine</th>
-    </tr>
-
-    <tr>
-      <td>BMW</td>
-      <td>2000 CC</td>
-    </tr>
-
-    <tr>
-      <td>Audi</td>
-      <td>3000 CC</td>
-    </tr>
-
-    <tr>
-      <td>Tesla</td>
-      <td>Electric Motor</td>
-    </tr>
-  </table>
-
-  <p>
-    This is called a <b>One-to-One Relationship</b>.
-  </p>
-</div>
-
-<h2 id="architecture">4. Mapping Architecture &amp; Flow</h2>
-
-<h3>Java Objects → Database Tables</h3>
-
-<div class="flow">
-<span class="box">Car Object</span>
-<div class="arrow-down">↓ has one</div>
-
-<span class="box">Engine Object</span>
-<div class="arrow-down">↓</div>
-
-<span class="box">Hibernate ORM</span>
-<div class="arrow-down">↓</div>
-
-<span class="box">PostgreSQL Database</span>
-<div class="arrow-down">↓</div>
-
-<span class="box">Car Table</span>
-<div class="arrow-down">↓ Foreign Key</div>
-
-<span class="box">Engine Table</span>
-</div>
-
-<h3>Hibernate Mapping Flow</h3>
-
-<div class="flow">Create Car Object
-      ↓
-Create Engine Object
-      ↓
-Set Engine inside Car
-car.setEngine(engine);
-      ↓
-persist(car)
-      ↓
-Hibernate
-      ↓
-Creates Relationship
-      ↓
-PostgreSQL Database</div>
-
-<h2 id="types">5. Types of Mapping in Hibernate</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>
-    Hibernate supports four major relationship mappings:
-  </p>
-</div>
-
-<div class="flow">                    Mapping
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Hibernate Mapping (One-to-One)</title><style>*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#e0e0e0;font-family:'Georgia',serif}
+.a4-page{width:210mm;min-height:297mm;background:#fff;color:#111;margin:12px auto;padding:14mm 16mm;font-size:12.5px;line-height:1.6;page-break-after:always;border:1px solid #aaa;box-shadow:0 2px 8px rgba(0,0,0,.13)}
+.main-title{text-align:center;font-size:21px;font-weight:700;border:2.5px solid #111;padding:9px 18px;margin-bottom:6px;letter-spacing:1px}
+.sub-title{text-align:center;font-size:12.5px;color:#555;margin-bottom:12px}
+.page-title{text-align:center;font-size:13px;font-weight:700;letter-spacing:.5px;color:#555;margin-bottom:10px;border-bottom:1px solid #ccc;padding-bottom:5px}
+.section{border:1.5px solid #222;margin-bottom:11px}
+.section-header{background:#111;color:#fff;font-size:12.5px;font-weight:700;padding:5px 11px;letter-spacing:.4px}
+.section-body{padding:9px 13px 11px;background:#fff}
+.subsection-title{font-weight:700;font-size:12.5px;margin:8px 0 3px}
+.subsection-title:first-child{margin-top:0}
+.code-block{background:#f5f5f5;border:1px solid #ccc;border-left:3px solid #333;font-family:'Courier New',monospace;font-size:10.5px;padding:6px 10px;margin:6px 0;white-space:pre-wrap;word-break:break-word;line-height:1.5}
+.note-box{border:1.5px dashed #555;padding:6px 10px;margin:7px 0;font-size:12px;background:#fafafa}
+.flow-box{border:1px solid #444;padding:3px 10px;text-align:center;font-size:12px;font-weight:600;margin:2px auto;background:#fff;width:55%}
+.flow-arrow{text-align:center;font-size:12px;color:#555;margin:1px 0}
+.tag{display:inline-block;background:#111;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;margin:0 4px 4px 0;letter-spacing:.3px;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}
+th{background:#111;color:#fff;padding:5px 9px;text-align:left;font-size:11.5px}
+td{border:1px solid #bbb;padding:5px 9px;vertical-align:top}
+p{margin:4px 0;font-size:12.5px}
+ul,ol{padding-left:20px;margin:4px 0}
+li{margin-bottom:3px;font-size:12.5px}
+code{font-family:'Courier New',monospace;font-size:11px;background:#eee;padding:1px 4px;border-radius:2px}
+.code-block code{background:none;padding:0}
+.qa{padding:6px 0;border-bottom:1px solid #ccc}
+.qa:last-child{border-bottom:none}
+.q{font-weight:700}
+.toc{border:1.5px solid #222;padding:8px 14px;margin-bottom:11px}
+.toc a{color:#111;text-decoration:none;font-size:12.5px}
+.footer{border-top:1px solid #777;margin-top:16px;padding-top:8px;text-align:center;font-size:11px;color:#555}
+@media print{body{background:#fff}.a4-page{margin:0;box-shadow:none;border:none}}</style></head><body><div class="a4-page"><div class="main-title">CHAPTER 11: HIBERNATE MAPPING — ONE-TO-ONE</div>
+<div class="sub-title">Car ↔ Engine Example — Packages: <code>com.dto</code>, <code>com.dao</code>, <code>com.Controler</code></div>
+<div class="toc"><strong>Contents</strong><ol>
+<li><a href="#what">What is Mapping?</a></li><li><a href="#why">Why Mapping is Needed?</a></li><li><a href="#realworld">Real-Life Example</a></li><li><a href="#architecture">Mapping Architecture &amp; Flow</a></li><li><a href="#types">Types of Mapping in Hibernate</a></li><li><a href="#advantages">Why Hibernate Supports Mapping / Advantages</a></li><li><a href="#code">Code — Car, Engine, carDao, DriverClass</a></li><li><a href="#bugs">Bugs &amp; Gotchas in This Code</a></li><li><a href="#qa">Interview Q&amp;A</a></li><li><a href="#tricks">Memory Tricks</a></li></ol></div>
+<div class="section" id="what"><div class="section-header">📘 1. What is Mapping?</div><div class="section-body"><span class="tag">THEORY — DEFINITION</span><p><strong>Mapping</strong> is the process of establishing a relationship between Java Entity classes and database tables so that Hibernate can automatically manage the relationship between objects and the corresponding database records.</p><p>In simple words, mapping tells Hibernate:</p><ul><li>Which Java class represents which database table.</li><li>How one object is related to another object.</li><li>How tables are connected in the database.</li></ul><div class="subsection-title">🔹 Simple Meaning</div><span class="tag">THEORY</span><p>Suppose we have two entity classes: <code>Car</code> and <code>Engine</code>. A <code>Car</code> contains one <code>Engine</code>. Instead of storing only primitive values inside the <code>Car</code> class, we also store an <code>Engine</code> object.</p><div class="code-block">Car car = new Car();
+Engine engine = new Engine();
+car.setEngine(engine);</div><p>Hibernate understands this relationship and creates the required relationship in the database.</p></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE ONE-TO-ONE | Page 2 — Why Mapping &amp; Real-Life Example</div><div class="section" id="why"><div class="section-header">📘 2. Why Mapping is Needed?</div><div class="section-body"><span class="tag">THEORY</span><p>In real-world applications, data is never stored in a single table. For example:</p><div class="subsection-title">🔹 College Management System</div><ul><li>College</li><li>Student</li><li>Teacher</li><li>Department</li><li>Subject</li></ul><p>Every table is related to another table.</p><div class="subsection-title">🔹 Banking System</div><ul><li>Customer</li><li>Account</li><li>ATM Card</li><li>Transaction</li></ul><p>A customer has one account. An account has many transactions.</p><div class="subsection-title">🔹 Hospital Management System</div><ul><li>Doctor</li><li>Patient</li><li>Appointment</li><li>Prescription</li></ul><p>A doctor treats many patients.</p><div class="subsection-title">🔹 Car Showroom</div><ul><li>Car</li><li>Engine</li><li>Company</li><li>Owner</li></ul><p>A Car cannot function without an Engine.</p><p>If Hibernate did not support mapping, we would have to manually manage all these relationships using foreign keys and SQL queries. Mapping makes this process automatic.</p></div></div><div class="section" id="realworld"><div class="section-header">📘 3. Real-Life Example</div><div class="section-body"><span class="tag">THEORY</span><p>Imagine buying a new car. Every car has exactly one engine. Similarly, every engine belongs to exactly one car.</p><table><tr><th>Car</th><th>Engine</th></tr><tr><td>BMW</td><td>2000 CC</td></tr><tr><td>Audi</td><td>3000 CC</td></tr><tr><td>Tesla</td><td>Electric Motor</td></tr></table><p>This is called a <strong>One-to-One Relationship</strong>.</p></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE ONE-TO-ONE | Page 3 — Architecture, Flow &amp; Types</div><div class="section" id="architecture"><div class="section-header">🚀 4. Mapping Architecture &amp; Flow</div><div class="section-body"><div class="subsection-title">🔹 Java Objects → Database Tables</div><div class="flow-box">Car Object</div><div class="flow-arrow">↓ has one</div><div class="flow-box">Engine Object</div><div class="flow-arrow">↓</div><div class="flow-box">Hibernate ORM</div><div class="flow-arrow">↓</div><div class="flow-box">PostgreSQL Database</div><div class="flow-arrow">↓</div><div class="flow-box">Car Table</div><div class="flow-arrow">↓ Foreign Key</div><div class="flow-box">Engine Table</div><hr style="border:none;border-top:1px solid #ccc;margin:9px 0"><div class="subsection-title">🔹 Hibernate Mapping Flow</div><div class="flow-box">Create Car Object</div><div class="flow-arrow">↓</div><div class="flow-box">Create Engine Object</div><div class="flow-arrow">↓</div><div class="flow-box">Set Engine inside Car — car.setEngine(engine);</div><div class="flow-arrow">↓</div><div class="flow-box">persist(car)</div><div class="flow-arrow">↓</div><div class="flow-box">Hibernate</div><div class="flow-arrow">↓</div><div class="flow-box">Creates Relationship</div><div class="flow-arrow">↓</div><div class="flow-box">PostgreSQL Database</div></div></div><div class="section" id="types"><div class="section-header">📘 5. Types of Mapping in Hibernate</div><div class="section-body"><span class="tag">THEORY</span><p>Hibernate supports four major relationship mappings:</p><div class="code-block">                    Mapping
        ┌────────────────┼────────────────┬───────────────┐
        ▼                ▼                ▼               ▼
-  One-To-One      One-To-Many      Many-To-One     Many-To-Many</div>
+  One-To-One      One-To-Many      Many-To-One     Many-To-Many</div><table><tr><th>Mapping Type</th><th>Meaning</th><th>Example</th></tr><tr><td>One-To-One</td><td>One record of one table is associated with only one record of another table.</td><td>Person — Passport · Car — Engine · Employee — Laptop</td></tr><tr><td>One-To-Many</td><td>One record is associated with multiple records.</td><td>Department → Employee 1, Employee 2, Employee 3</td></tr><tr><td>Many-To-One</td><td>Many records are associated with one record.</td><td>Employee 1, Employee 2, Employee 3 → Department</td></tr><tr><td>Many-To-Many</td><td>Many records are associated with many records.</td><td>Student ↔ Course — one student enrolls in many courses, one course has many students</td></tr></table></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE ONE-TO-ONE | Page 4 — Advantages &amp; Entities</div><div class="section" id="advantages"><div class="section-header">📘 6. Why Hibernate Supports Mapping / Advantages</div><div class="section-body"><span class="tag">THEORY</span><p>Hibernate supports mapping because:</p><ul><li>It automatically manages relationships between entities.</li><li>It creates foreign key relationships automatically.</li><li>It reduces manual SQL coding.</li><li>It maintains object-oriented programming principles.</li><li>It simplifies database operations.</li></ul><table><tr><th>Advantage</th><th>Explanation</th></tr><tr><td>Object-Oriented</td><td>Relationships are maintained using Java objects instead of foreign key values.</td></tr><tr><td>Automatic Relationship Management</td><td>Hibernate creates and manages relationships automatically.</td></tr><tr><td>Less SQL Coding</td><td>No need to manually write JOIN queries for basic relationships.</td></tr><tr><td>Better Readability</td><td>Code becomes simple and easier to understand.</td></tr><tr><td>Easy Maintenance</td><td>Relationship changes are easier to manage.</td></tr><tr><td>Reusability</td><td>Entity classes can be reused throughout the application.</td></tr></table></div></div><div class="section" id="code"><div class="section-header">💻 7. Code — Car, Engine, carDao, DriverClass</div><div class="section-body"><div class="subsection-title">🔹 7.1 Entity — <code>Car.java</code> (com.dto)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.dto;
 
-<table>
-  <tr>
-    <th>Mapping Type</th>
-    <th>Meaning</th>
-    <th>Example</th>
-  </tr>
-
-  <tr>
-    <td>One-To-One</td>
-    <td>One record of one table is associated with only one record of another table.</td>
-    <td>Person — Passport · Car — Engine · Employee — Laptop</td>
-  </tr>
-
-  <tr>
-    <td>One-To-Many</td>
-    <td>One record is associated with multiple records.</td>
-    <td>Department → Employee 1, Employee 2, Employee 3</td>
-  </tr>
-
-  <tr>
-    <td>Many-To-One</td>
-    <td>Many records are associated with one record.</td>
-    <td>Employee 1, Employee 2, Employee 3 → Department</td>
-  </tr>
-
-  <tr>
-    <td>Many-To-Many</td>
-    <td>Many records are associated with many records.</td>
-    <td>Student ↔ Course — one student enrolls in many courses, one course has many students</td>
-  </tr>
-</table>
-
-<h2 id="advantages">6. Why Hibernate Supports Mapping / Advantages</h2>
-
-<div class="card theory">
-  <span class="tag tag-theory">THEORY</span>
-
-  <p>Hibernate supports mapping because:</p>
-
-  <ul>
-    <li>It automatically manages relationships between entities.</li>
-    <li>It creates foreign key relationships automatically.</li>
-    <li>It reduces manual SQL coding.</li>
-    <li>It maintains object-oriented programming principles.</li>
-    <li>It simplifies database operations.</li>
-  </ul>
-</div>
-
-<table>
-  <tr>
-    <th>Advantage</th>
-    <th>Explanation</th>
-  </tr>
-
-  <tr>
-    <td>Object-Oriented</td>
-    <td>Relationships are maintained using Java objects instead of foreign key values.</td>
-  </tr>
-
-  <tr>
-    <td>Automatic Relationship Management</td>
-    <td>Hibernate creates and manages relationships automatically.</td>
-  </tr>
-
-  <tr>
-    <td>Less SQL Coding</td>
-    <td>No need to manually write JOIN queries for basic relationships.</td>
-  </tr>
-
-  <tr>
-    <td>Better Readability</td>
-    <td>Code becomes simple and easier to understand.</td>
-  </tr>
-
-  <tr>
-    <td>Easy Maintenance</td>
-    <td>Relationship changes are easier to manage.</td>
-  </tr>
-
-  <tr>
-    <td>Reusability</td>
-    <td>Entity classes can be reused throughout the application.</td>
-  </tr>
-</table>
-
-<h2 id="code" class="page-break">
-  7. Code — Car, Engine, carDao, DriverClass
-</h2>
-
-<h3>
-  7.1 Entity —
-  <code class="inline">Car.java</code>
-  (com.dto)
-</h3>
-
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
-
-<pre><span class="kw">package</span> com.dto;
-
-<span class="kw">import</span> javax.persistence.Entity;
-<span class="kw">import</span> javax.persistence.GeneratedValue;
-<span class="kw">import</span> javax.persistence.GenerationType;
-<span class="kw">import</span> javax.persistence.Id;
-<span class="kw">import</span> javax.persistence.OneToOne;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
-<span class="kw">public class</span> <span class="type">Car</span> {
-	
-	@Id
-	@GeneratedValue(strategy  = GenerationType.IDENTITY)
-	<span class="kw">private</span> <span class="type">int</span> c_id;
-	<span class="kw">private</span> <span class="type">String</span> Brand;
-	@OneToOne
-	<span class="kw">private</span> Engine engine;
-	<span class="kw">public</span> <span class="type">int</span> <span class="method">getC_id</span>() {
-		<span class="kw">return</span> c_id;
-	}
-	<span class="kw">public void</span> <span class="method">setC_id</span>(<span class="type">int</span> c_id) {
-		<span class="kw">this</span>.c_id = c_id;
-	}
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">getBrand</span>() {
-		<span class="kw">return</span> Brand;
-	}
-	<span class="kw">public void</span> <span class="method">setBrand</span>(<span class="type">String</span> brand) {
-		Brand = brand;
-	}
-	<span class="kw">public</span> Engine <span class="method">getEngine</span>() {
-		<span class="kw">return</span> engine;
-	}
-	<span class="kw">public void</span> <span class="method">setEngine</span>(Engine engine) {
-		<span class="kw">this</span>.engine = engine;
-	}
-	
-	
-	
-   
-}   </pre>
-</div>
+public class Car {
 
-<h3>
-  7.2 Entity —
-  <code class="inline">Engine.java</code>
-  (com.dto)
-</h3>
+    @Id
+    @GeneratedValue(strategy  = GenerationType.IDENTITY)
+    private int c_id;
+    private String Brand;
+    @OneToOne
+    private Engine engine;
+    public int getC_id() {
+        return c_id;
+    }
+    public void setC_id(int c_id) {
+        this.c_id = c_id;
+    }
+    public String getBrand() {
+        return Brand;
+    }
+    public void setBrand(String brand) {
+        Brand = brand;
+    }
+    public Engine getEngine() {
+        return engine;
+    }
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
 
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+}</div><div class="subsection-title">🔹 7.2 Entity — <code>Engine.java</code> (com.dto)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.dto;
 
-<pre><span class="kw">package</span> com.dto;
-
-<span class="kw">import</span> javax.annotation.processing.Generated;
-<span class="kw">import</span> javax.persistence.Entity;
-<span class="kw">import</span> javax.persistence.GeneratedValue;
-<span class="kw">import</span> javax.persistence.GenerationType;
-<span class="kw">import</span> javax.persistence.Id;
+import javax.annotation.processing.Generated;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-<span class="kw">public class</span> <span class="type">Engine</span> {
-	
-	@Id
-	@GeneratedValue(strategy  = GenerationType.IDENTITY)
-	<span class="kw">private</span> <span class="type">int</span> e_id;
-	<span class="kw">public</span> <span class="type">int</span> <span class="method">getE_id</span>() {
-		<span class="kw">return</span> e_id;
-	}
-	<span class="kw">public void</span> <span class="method">setE_id</span>(<span class="type">int</span> e_id) {
-		<span class="kw">this</span>.e_id = e_id;
-	}
-	<span class="kw">public</span> <span class="type">String</span> <span class="method">getE_brand</span>() {
-		<span class="kw">return</span> e_brand;
-	}
-	<span class="kw">public void</span> <span class="method">setE_brand</span>(<span class="type">String</span> e_brand) {
-		e_brand = e_brand;
-	}
-	<span class="kw">private</span> <span class="type">String</span>  e_brand;
+public class Engine {
 
-}   </pre>
-</div>
+    @Id
+    @GeneratedValue(strategy  = GenerationType.IDENTITY)
+    private int e_id;
+    public int getE_id() {
+        return e_id;
+    }
+    public void setE_id(int e_id) {
+        this.e_id = e_id;
+    }
+    public String getE_brand() {
+        return e_brand;
+    }
+    public void setE_brand(String e_brand) {
+        e_brand = e_brand;
+    }
+    private String  e_brand;
 
-<div class="card extra">
-  <span class="tag tag-extra">EXTRA — Explanation</span>
+}</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE ONE-TO-ONE | Page 5 — Explanation &amp; DAO</div><div class="section"><div class="section-header">💻 Code (continued)</div><div class="section-body"><div class="note-box"><span class="tag">EXTRA — Explanation</span><ul><li><code>@OneToOne</code> on the <code>engine</code> field in <code>Car</code> tells Hibernate that each <code>Car</code> row links to exactly one <code>Engine</code> row. By default Hibernate adds a foreign key column (<code>engine_e_id</code> or similar) to the <strong>Car table</strong> pointing at the Engine table — Car is the "owning side" here since the annotation lives there.</li><li>Both entities use <code>GenerationType.IDENTITY</code>, so both <code>c_id</code> and <code>e_id</code> are auto-generated by the database on insert — neither is set manually in application code.</li><li>There's no <code>cascade</code> attribute on <code>@OneToOne</code> (e.g. <code>cascade = CascadeType.ALL</code>) — this is why <code>insertData()</code> in the DAO has to call <code>em.persist(car)</code> <strong>and</strong> <code>em.persist(car.getEngine())</code> separately. With cascading configured, persisting <code>car</code> alone would automatically persist its <code>engine</code> too.</li><li>Field name <code>Brand</code> (capital B) works but breaks Java naming convention (fields should start lowercase) — it still compiles and maps fine, just unconventional style.</li></ul></div><div class="subsection-title">🔹 7.3 DAO — <code>carDao.java</code> (com.dao)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.dao;
 
-  <ul>
-    <li>
-      <code class="inline">@OneToOne</code> on the
-      <code class="inline">engine</code> field in
-      <code class="inline">Car</code> tells Hibernate that each
-      <code class="inline">Car</code> row links to exactly one
-      <code class="inline">Engine</code> row. By default Hibernate adds a
-      foreign key column (<code class="inline">engine_e_id</code> or similar)
-      to the <b>Car table</b> pointing at the Engine table — Car is the
-      "owning side" here since the annotation lives there.
-    </li>
+import java.util.List;
 
-    <li>
-      Both entities use
-      <code class="inline">GenerationType.IDENTITY</code>, so both
-      <code class="inline">c_id</code> and
-      <code class="inline">e_id</code> are auto-generated by the database
-      on insert — neither is set manually in application code.
-    </li>
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 
-    <li>
-      There's no <code class="inline">cascade</code> attribute on
-      <code class="inline">@OneToOne</code>
-      (e.g. <code class="inline">cascade = CascadeType.ALL</code>) —
-      this is why <code class="inline">insertData()</code> in the DAO has
-      to call <code class="inline">em.persist(car)</code> <b>and</b>
-      <code class="inline">em.persist(car.getEngine())</code> separately.
-      With cascading configured, persisting
-      <code class="inline">car</code> alone would automatically persist its
-      <code class="inline">engine</code> too.
-    </li>
+import com.dto.Car;
+import com.dto.Engine;
 
-    <li>
-      Field name <code class="inline">Brand</code> (capital B) works but
-      breaks Java naming convention (fields should start lowercase) —
-      it still compiles and maps fine, just unconventional style.
-    </li>
-  </ul>
-</div>
+public class carDao {
 
-<h3>
-  7.3 DAO —
-  <code class="inline">carDao.java</code>
-  (com.dao)
-</h3>
+    EntityManagerFactory emf= Persistence.createEntityManagerFactory("pravin");
+    EntityManager em = emf.createEntityManager();
+    EntityTransaction et = em.getTransaction();
 
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+    public void insertData(com.dto.Car car) {
+        et.begin();
 
-<pre><span class="kw">package</span> com.dao;
+        em.persist(car);
+        em.persist(car.getEngine());
+        et.commit();
 
-<span class="kw">import</span> java.util.List;
+        System.out.println("Inserting data 🥳 ");
+    }
 
-<span class="kw">import</span> javax.persistence.EntityManager;
-<span class="kw">import</span> javax.persistence.EntityManagerFactory;
-<span class="kw">import</span> javax.persistence.EntityTransaction;
-<span class="kw">import</span> javax.persistence.Persistence;
-<span class="kw">import</span> javax.persistence.Query;
+    public Car fetchByid(int id) {
+        Car car=em.find(Car.class, id);
+        System.out.println(car.getC_id()+ " " + car.getBrand() + " " + car.getEngine().getE_id() + " "
+                + car.getEngine().getE_brand()+ " " + car.getEngine());
+        return car;
 
-<span class="kw">import</span> com.dto.Car;
-<span class="kw">import</span> com.dto.Engine;
+    }
 
+    public void fetchAll() {
+        Query query = em.createQuery("SELECT c FROM Car c");
+        List&lt;Car&gt; cars = query.getResultList();
+        for (Car car : cars) {
+            System.out.println(car.getC_id()+" " +car.getBrand());
+            System.out.println(car.getEngine().getE_id()+" "+car.getEngine().getE_brand());
 
+        }
+    }
 
-<span class="kw">public class</span> <span class="type">carDao</span> {
-	
-	EntityManagerFactory emf= Persistence.<span class="method">createEntityManagerFactory</span>(<span class="str">"pravin"</span>);
-	EntityManager em = emf.<span class="method">createEntityManager</span>();
-	EntityTransaction et = em.<span class="method">getTransaction</span>();
-	
-	
-	<span class="kw">public void</span> <span class="method">insertData</span>(com.dto.Car car) {
-		et.<span class="method">begin</span>();
-		
-		em.<span class="method">persist</span>(car);
-	    em.<span class="method">persist</span>(car.<span class="method">getEngine</span>());
-		et.<span class="method">commit</span>();
-		
-		System.out.<span class="method">println</span>(<span class="str">"Inserting data 🥳 "</span>);
-	}
-	
-	<span class="kw">public</span> Car <span class="method">fetchByid</span>(<span class="type">int</span> id) {
-		Car car=em.<span class="method">find</span>(Car.<span class="kw">class</span>, id);
-		System.out.<span class="method">println</span>(car.<span class="method">getC_id</span>()+ <span class="str">" "</span> + car.<span class="method">getBrand</span>() + <span class="str">" "</span> + car.<span class="method">getEngine</span>().<span class="method">getE_id</span>() + <span class="str">" "</span>
-				+ car.<span class="method">getEngine</span>().<span class="method">getE_brand</span>()+ <span class="str">" "</span> + car.<span class="method">getEngine</span>());
-		<span class="kw">return</span> car;
-		
-	}
-	
-	<span class="kw">public void</span> <span class="method">fetchAll</span>() {
-		Query query = em.<span class="method">createQuery</span>(<span class="str">"SELECT c FROM Car c"</span>);
-		List&lt;Car&gt; cars = query.<span class="method">getResultList</span>();
-		<span class="kw">for</span> (Car car : cars) {
-			System.out.<span class="method">println</span>(car.<span class="method">getC_id</span>()+<span class="str">" "</span> +car.<span class="method">getBrand</span>());
-			System.out.<span class="method">println</span>(car.<span class="method">getEngine</span>().<span class="method">getE_id</span>()+<span class="str">" "</span>+car.<span class="method">getEngine</span>().<span class="method">getE_brand</span>());
-			
-		}
-	}
-	
-	<span class="kw">public void</span> <span class="method">update</span>(<span class="type">int</span> id, <span class="type">String</span> carBrand,<span class="type">String</span> eBrand) {
-		Car car = em.<span class="method">find</span>(Car.<span class="kw">class</span>,id);
-		car.<span class="method">setBrand</span>(carBrand);
-		car.<span class="method">getEngine</span>().<span class="method">setE_brand</span>(eBrand);
-		et.<span class="method">begin</span>();
-		em.<span class="method">merge</span>(car.<span class="method">getEngine</span>());
-		et.<span class="method">commit</span>();
-		System.out.<span class="method">println</span>(<span class="str">"Updated one row"</span>);
-	}
-	
-	
-<span class="cmt">//	public void replace(int id, Car newCar) {
-//		Car oldCar = fetchById(id);
-//		newCar.setCar_Id(oldCar.getCar_Id());
-//		newCar.getEngine().setEngine_Id(oldCar.getEngine().getEngine_Id());
-//		transaction.begin();
-//		manager.merge(newCar);
-//		manager.merge(newCar.getEngine());
-//		transaction.commit();
-//	}</span>
-	
-	<span class="kw">public void</span> <span class="method">deleteBoth</span>(<span class="type">int</span> c_id) {
-		Car c =em.<span class="method">find</span>(Car.<span class="kw">class</span>,c_id);
-		et.<span class="method">begin</span>();
-		em.<span class="method">remove</span>(c);
-		et.<span class="method">commit</span>();
-		
-		
-	System.out.<span class="method">println</span>(<span class="str">"Data delete succefully from both side"</span>);	
-		
-	}
-	
-	
-	<span class="kw">public void</span> <span class="method">deleteEngine</span>(<span class="type">int</span> c_id,<span class="type">int</span> e_id) 
-	{
-		Car car =em.<span class="method">find</span>(Car.<span class="kw">class</span>, c_id);
-		et.<span class="method">begin</span>();
-		<span class="kw">if</span>(car.<span class="method">getEngine</span>().<span class="method">getE_id</span>() == e_id)
-		{
-			car.<span class="method">setEngine</span>(<span class="kw">null</span>);
-			em.<span class="method">merge</span>(car);
-		em.<span class="method">remove</span>(em.<span class="method">find</span>(Engine.<span class="kw">class</span>, e_id));
-	
-		}
-		et.<span class="method">commit</span>();
-	}
-	
-	
-	<span class="kw">public void</span> <span class="method">delteCar</span>(<span class="type">int</span> c_id) {
-		et.<span class="method">begin</span>();
-		em.<span class="method">remove</span>(c_id);
-		et.<span class="method">commit</span>();
-	}
-	
-	
+    public void update(int id, String carBrand,String eBrand) {
+        Car car = em.find(Car.class,id);
+        car.setBrand(carBrand);
+        car.getEngine().setE_brand(eBrand);
+        et.begin();
+        em.merge(car.getEngine());
+        et.commit();
+        System.out.println("Updated one row");
+    }
 
-}   </pre>
-</div>
+//  public void replace(int id, Car newCar) {
+//      Car oldCar = fetchById(id);
+//      newCar.setCar_Id(oldCar.getCar_Id());
+//      newCar.getEngine().setEngine_Id(oldCar.getEngine().getEngine_Id());
+//      transaction.begin();
+//      manager.merge(newCar);
+//      manager.merge(newCar.getEngine());
+//      transaction.commit();
+//  }
 
-<h3>
-  7.4 Driver —
-  <code class="inline">DriverClass.java</code>
-  (com.Controler)
-</h3>
+    public void deleteBoth(int c_id) {
+        Car c =em.find(Car.class,c_id);
+        et.begin();
+        em.remove(c);
+        et.commit();
 
-<div class="card">
-  <span class="tag tag-orig">ORIGINAL CODE</span>
+    System.out.println("Data delete succefully from both side");
 
-<pre><span class="kw">package</span> com.Controler;
+    }
 
-<span class="kw">import</span> com.dao.carDao;
-<span class="kw">import</span> com.dto.Car;
-<span class="kw">import</span> com.dto.Engine;
+    public void deleteEngine(int c_id,int e_id)
+    {
+        Car car =em.find(Car.class, c_id);
+        et.begin();
+        if(car.getEngine().getE_id() == e_id)
+        {
+            car.setEngine(null);
+            em.merge(car);
+        em.remove(em.find(Engine.class, e_id));
 
-<span class="kw">public class</span> <span class="type">DriverClass</span> {
-	
-	<span class="kw">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
-		
-		Engine engine=<span class="kw">new</span> <span class="method">Engine</span>();
-		engine.<span class="method">setE_brand</span>(<span class="str">"400 cc"</span>);
-		
-		Car car = <span class="kw">new</span> <span class="method">Car</span>();
-<span class="cmt">//		car.setBrand("Bmw");
-//		car.setEngine(engine)</span>
-		
-		carDao dao = <span class="kw">new</span> <span class="method">carDao</span>();
-<span class="cmt">//		dao.insertData(car);
-//		
-//		dao.fetchByid(1);
-		
-//		dao.fetchAll();
-		
-//		dao.</span>
-		
-	}
+        }
+        et.commit();
+    }
 
-}</pre>
-</div>
+    public void delteCar(int c_id) {
+        et.begin();
+        em.remove(c_id);
+        et.commit();
+    }
 
-<h2 id="bugs">8. Bugs &amp; Gotchas in This Code</h2>
+}</div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE ONE-TO-ONE | Page 6 — Driver &amp; Bugs</div><div class="section"><div class="section-header">💻 Code (continued)</div><div class="section-body"><div class="subsection-title">🔹 7.4 Driver — <code>DriverClass.java</code> (com.Controler)</div><span class="tag">ORIGINAL CODE</span><div class="code-block">package com.Controler;
 
-<div class="card bug">
-  <span class="tag tag-bug">
-    ⚠ BUGS — Worth Knowing for Debugging &amp; Interviews
-  </span>
+import com.dao.carDao;
+import com.dto.Car;
+import com.dto.Engine;
 
-  <ul>
-    <li>
-      <b><code class="inline">delteCar(int c_id)</code> is broken:</b>
-      it calls <code class="inline">em.remove(c_id)</code>, passing the raw
-      <code class="inline">int</code> primary key directly.
-      <code class="inline">EntityManager.remove()</code> requires a
-      <b>managed entity object</b>, not an ID — this will throw
-      <code class="inline">IllegalArgumentException</code> at runtime.
-      It should first call
-      <code class="inline">em.find(Car.class, c_id)</code>
-      and remove that result, the same pattern used correctly in
-      <code class="inline">deleteBoth()</code>.
-    </li>
+public class DriverClass {
 
-    <li>
-      <b>No null-checks anywhere</b> in
-      <code class="inline">fetchByid()</code>,
-      <code class="inline">update()</code>,
-      <code class="inline">deleteBoth()</code>, or
-      <code class="inline">deleteEngine()</code> — if
-      <code class="inline">find()</code> returns
-      <code class="inline">null</code> for a missing ID, the very next line
-      (<code class="inline">car.getC_id()</code>,
-      <code class="inline">car.getEngine()</code>, etc.) throws a
-      <code class="inline">NullPointerException</code>.
-    </li>
+    public static void main(String[] args) {
 
-    <li>
-      <b><code class="inline">update()</code> only merges the engine, not the car:</b>
-      <code class="inline">em.merge(car.getEngine())</code> is called, but
-      <code class="inline">car</code> itself is never merged or re-attached
-      explicitly. Since <code class="inline">car</code> was loaded via
-      <code class="inline">find()</code> in the same persistence context and
-      is still managed, dirty checking should still pick up
-      <code class="inline">car.setBrand(carBrand)</code> at commit — but relying
-      on dirty checking for one field while explicitly merging another in
-      the same method is inconsistent style, and would break if
-      <code class="inline">car</code> ever became detached.
-    </li>
+        Engine engine=new Engine();
+        engine.setE_brand("400 cc");
 
-    <li>
-      <b>Commented-out <code class="inline">replace()</code> method references
-      methods that don't exist</b> on this version of the entities
-      (<code class="inline">getCar_Id()</code>,
-      <code class="inline">getEngine_Id()</code> instead of
-      <code class="inline">getC_id()</code>/<code class="inline">getE_id()</code>),
-      and variables <code class="inline">transaction</code>/
-      <code class="inline">manager</code> instead of
-      <code class="inline">et</code>/<code class="inline">em</code> —
-      leftover from an earlier draft with different naming; would not compile
-      if uncommented as-is.
-    </li>
+        Car car = new Car();
+//      car.setBrand("Bmw");
+//      car.setEngine(engine)
 
-    <li>
-      <b><code class="inline">deleteEngine()</code> re-finds the Engine</b>
-      instead of reusing <code class="inline">car.getEngine()</code>:
-      <code class="inline">em.remove(em.find(Engine.class, e_id))</code> —
-      functionally fine since <code class="inline">e_id</code> is validated
-      against <code class="inline">car.getEngine().getE_id()</code> just above,
-      but slightly redundant —
-      <code class="inline">car.getEngine()</code> already holds the same
-      managed Engine instance.
-    </li>
+        carDao dao = new carDao();
+//      dao.insertData(car);
+//
+//      dao.fetchByid(1);
 
-    <li>
-      <b>No <code class="inline">cascade</code> on
-      <code class="inline">@OneToOne</code></b> means every insert/delete
-      touching both sides must be done manually in two steps
-      (as seen in <code class="inline">insertData()</code> and
-      <code class="inline">deleteEngine()</code>) — a common source of
-      forgotten steps and orphaned rows in real projects.
-    </li>
-  </ul>
-</div>
+//      dao.fetchAll();
 
-<h2 id="qa">9. Interview Q&amp;A</h2>
+//      dao.
 
-<div class="card">
-  <span class="tag tag-qa">INTERVIEW PREP</span>
+    }
 
-  <div class="qa-item">
-    <div class="q">
-      Q1. What is mapping in Hibernate?
-    </div>
-
-    <div class="a">
-      The process of establishing a relationship between Java entity classes
-      and database tables, so Hibernate can automatically manage how objects
-      relate to each other and to the underlying rows — including which class
-      maps to which table and how tables connect via foreign keys.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q2. What is a One-to-One relationship? Give an example from this code.
-    </div>
-
-    <div class="a">
-      One record of one table is associated with exactly one record of another
-      table. Here, one <code class="inline">Car</code> has exactly one
-      <code class="inline">Engine</code>, modeled with
-      <code class="inline">@OneToOne private Engine engine;</code>
-      inside the <code class="inline">Car</code> entity.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q3. Which side is the "owning side" of this
-      <code class="inline">@OneToOne</code> relationship, and why does it matter?
-    </div>
-
-    <div class="a">
-      <code class="inline">Car</code> is the owning side because the
-      <code class="inline">@OneToOne</code> annotation and foreign key
-      reference live in the <code class="inline">Car</code> entity.
-      The owning side controls where the foreign key column is created
-      in the database.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q4. Why does <code class="inline">insertData()</code> need two separate
-      <code class="inline">persist()</code> calls?
-    </div>
-
-    <div class="a">
-      Because the <code class="inline">@OneToOne</code> mapping has no
-      <code class="inline">cascade</code> attribute. Without cascading,
-      persisting the <code class="inline">Car</code> does not automatically
-      persist its associated <code class="inline">Engine</code> — each must
-      be persisted explicitly.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q5. What would <code class="inline">cascade = CascadeType.ALL</code>
-      change in this example?
-    </div>
-
-    <div class="a">
-      It would let a single <code class="inline">em.persist(car)</code>
-      automatically persist the linked <code class="inline">Engine</code> too,
-      and similarly propagate merge/remove operations from
-      <code class="inline">Car</code> to its <code class="inline">Engine</code>
-      — removing the need for the manual two-step calls seen in
-      <code class="inline">insertData()</code> and
-      <code class="inline">deleteEngine()</code>.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q6. What's wrong with
-      <code class="inline">delteCar(int c_id)</code>
-      in this DAO?
-    </div>
-
-    <div class="a">
-      It calls <code class="inline">em.remove(c_id)</code> with a raw
-      <code class="inline">int</code> instead of a managed entity.
-      <code class="inline">remove()</code> requires an actual entity object
-      (typically obtained via <code class="inline">find()</code> first),
-      so this throws an <code class="inline">IllegalArgumentException</code>
-      at runtime.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q7. Name the four Hibernate relationship mapping types.
-    </div>
-
-    <div class="a">
-      One-to-One, One-to-Many, Many-to-One, and Many-to-Many.
-    </div>
-  </div>
-
-  <div class="qa-item">
-    <div class="q">
-      Q8. Give one real-world example each of One-to-Many and Many-to-Many.
-    </div>
-
-    <div class="a">
-      One-to-Many: a Department has many Employees.
-      Many-to-Many: a Student can enroll in many Courses, and a Course
-      can have many Students.
-    </div>
-  </div>
-</div>
-
-<h2 id="tricks">10. Memory Tricks</h2>
-
-<div class="memory-trick">
-  <b>One-to-One:</b>
-  Think "Person ↔ Passport" — you can't have two passports for one person,
-  and one passport belongs to only one person. Same logic as Car ↔ Engine.
-</div>
-
-<div class="memory-trick">
-  <b>Cascade matters:</b>
-  No cascade = "you persist it, you own it" — every related object needs
-  its own explicit <code class="inline">persist()</code>/
-  <code class="inline">remove()</code> call, exactly like
-  <code class="inline">insertData()</code> in this DAO.
-</div>
-
-<div class="memory-trick">
-  <b>remove() always wants an object, never an ID</b> —
-  <code class="inline">em.remove(id)</code> is a classic beginner bug
-  (see <code class="inline">delteCar()</code> above).
-  Always <code class="inline">find()</code> first, then
-  <code class="inline">remove()</code> what you found.
-</div>
-
-<div class="memory-trick">
-  <b>Mapping types by relationship shape:</b>
-  1–1 (Car–Engine), 1–Many (Department→Employees),
-  Many–1 (Employees→Department), Many–Many (Student↔Course) —
-  same relationship, just viewed from the other side, for
-  One-to-Many vs Many-to-One.
-</div>
-
-<div class="footer-note">
-  Hibernate One-to-One Mapping Notes — Car/Engine (com.dto),
-  carDao (com.dao), DriverClass (com.Controler) —
-  Original code preserved exactly; theory, explanations,
-  bug notes, and Q&amp;A added as supplementary study material.
-</div>
-
-</body>
-</html>
-
+}</div></div></div><div class="section" id="bugs"><div class="section-header">⚠️ 8. Bugs &amp; Gotchas in This Code</div><div class="section-body"><span class="tag">⚠ BUGS — Worth Knowing for Debugging &amp; Interviews</span><ul><li><strong><code>delteCar(int c_id)</code> is broken:</strong> it calls <code>em.remove(c_id)</code>, passing the raw <code>int</code> primary key directly. <code>EntityManager.remove()</code> requires a <strong>managed entity object</strong>, not an ID — this will throw <code>IllegalArgumentException</code> at runtime. It should first call <code>em.find(Car.class, c_id)</code> and remove that result, the same pattern used correctly in <code>deleteBoth()</code>.</li><li><strong>No null-checks anywhere</strong> in <code>fetchByid()</code>, <code>update()</code>, <code>deleteBoth()</code>, or <code>deleteEngine()</code> — if <code>find()</code> returns <code>null</code> for a missing ID, the very next line (<code>car.getC_id()</code>, <code>car.getEngine()</code>, etc.) throws a <code>NullPointerException</code>.</li><li><strong><code>update()</code> only merges the engine, not the car:</strong> <code>em.merge(car.getEngine())</code> is called, but <code>car</code> itself is never merged or re-attached explicitly. Since <code>car</code> was loaded via <code>find()</code> in the same persistence context and is still managed, dirty checking should still pick up <code>car.setBrand(carBrand)</code> at commit — but relying on dirty checking for one field while explicitly merging another in the same method is inconsistent style, and would break if <code>car</code> ever became detached.</li><li><strong>Commented-out <code>replace()</code> method references methods that don't exist</strong> on this version of the entities (<code>getCar_Id()</code>, <code>getEngine_Id()</code> instead of <code>getC_id()</code>/<code>getE_id()</code>), and variables <code>transaction</code>/<code>manager</code> instead of <code>et</code>/<code>em</code> — leftover from an earlier draft with different naming; would not compile if uncommented as-is.</li><li><strong><code>deleteEngine()</code> re-finds the Engine</strong> instead of reusing <code>car.getEngine()</code>: <code>em.remove(em.find(Engine.class, e_id))</code> — functionally fine since <code>e_id</code> is validated against <code>car.getEngine().getE_id()</code> just above, but slightly redundant — <code>car.getEngine()</code> already holds the same managed Engine instance.</li><li><strong>No <code>cascade</code> on <code>@OneToOne</code></strong> means every insert/delete touching both sides must be done manually in two steps (as seen in <code>insertData()</code> and <code>deleteEngine()</code>) — a common source of forgotten steps and orphaned rows in real projects.</li></ul></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE ONE-TO-ONE | Page 7 — Interview Q&amp;A</div><div class="section" id="qa"><div class="section-header">🎯 9. Interview Q&amp;A</div><div class="section-body"><span class="tag">INTERVIEW PREP</span><div class="qa"><div class="q">Q1. What is mapping in Hibernate?</div><div>The process of establishing a relationship between Java entity classes and database tables, so Hibernate can automatically manage how objects relate to each other and to the underlying rows — including which class maps to which table and how tables connect via foreign keys.</div></div><div class="qa"><div class="q">Q2. What is a One-to-One relationship? Give an example from this code.</div><div>One record of one table is associated with exactly one record of another table. Here, one <code>Car</code> has exactly one <code>Engine</code>, modeled with <code>@OneToOne private Engine engine;</code> inside the <code>Car</code> entity.</div></div><div class="qa"><div class="q">Q3. Which side is the "owning side" of this <code>@OneToOne</code> relationship, and why does it matter?</div><div><code>Car</code> is the owning side because the <code>@OneToOne</code> annotation and foreign key reference live in the <code>Car</code> entity. The owning side controls where the foreign key column is created in the database.</div></div><div class="qa"><div class="q">Q4. Why does <code>insertData()</code> need two separate <code>persist()</code> calls?</div><div>Because the <code>@OneToOne</code> mapping has no <code>cascade</code> attribute. Without cascading, persisting the <code>Car</code> does not automatically persist its associated <code>Engine</code> — each must be persisted explicitly.</div></div><div class="qa"><div class="q">Q5. What would <code>cascade = CascadeType.ALL</code> change in this example?</div><div>It would let a single <code>em.persist(car)</code> automatically persist the linked <code>Engine</code> too, and similarly propagate merge/remove operations from <code>Car</code> to its <code>Engine</code> — removing the need for the manual two-step calls seen in <code>insertData()</code> and <code>deleteEngine()</code>.</div></div><div class="qa"><div class="q">Q6. What's wrong with <code>delteCar(int c_id)</code> in this DAO?</div><div>It calls <code>em.remove(c_id)</code> with a raw <code>int</code> instead of a managed entity. <code>remove()</code> requires an actual entity object (typically obtained via <code>find()</code> first), so this throws an <code>IllegalArgumentException</code> at runtime.</div></div><div class="qa"><div class="q">Q7. Name the four Hibernate relationship mapping types.</div><div>One-to-One, One-to-Many, Many-to-One, and Many-to-Many.</div></div><div class="qa"><div class="q">Q8. Give one real-world example each of One-to-Many and Many-to-Many.</div><div>One-to-Many: a Department has many Employees. Many-to-Many: a Student can enroll in many Courses, and a Course can have many Students.</div></div></div></div></div><div class="a4-page"><div class="page-title">HIBERNATE ONE-TO-ONE | Page 8 — Memory Tricks</div><div class="section" id="tricks"><div class="section-header">🧠 10. Memory Tricks</div><div class="section-body"><div class="note-box">🧠 <strong>One-to-One:</strong> Think "Person ↔ Passport" — you can't have two passports for one person, and one passport belongs to only one person. Same logic as Car ↔ Engine.</div><div class="note-box">🧠 <strong>Cascade matters:</strong> No cascade = "you persist it, you own it" — every related object needs its own explicit <code>persist()</code>/<code>remove()</code> call, exactly like <code>insertData()</code> in this DAO.</div><div class="note-box">🧠 <strong>remove() always wants an object, never an ID</strong> — <code>em.remove(id)</code> is a classic beginner bug (see <code>delteCar()</code> above). Always <code>find()</code> first, then <code>remove()</code> what you found.</div><div class="note-box">🧠 <strong>Mapping types by relationship shape:</strong> 1–1 (Car–Engine), 1–Many (Department→Employees), Many–1 (Employees→Department), Many–Many (Student↔Course) — same relationship, just viewed from the other side, for One-to-Many vs Many-to-One.</div></div></div><div class="footer">Hibernate One-to-One Mapping Notes — Car/Engine (com.dto), carDao (com.dao), DriverClass (com.Controler) — Original code preserved exactly; theory, explanations, bug notes, and Q&amp;A added as supplementary study material.</div></div></body></html>

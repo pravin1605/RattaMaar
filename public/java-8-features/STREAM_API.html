@@ -1,810 +1,217 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stream API — Java 8</title>
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:#111; color:#e0e0e0; font-family:'Segoe UI',Arial,sans-serif; font-size:13px; line-height:1.65; }
-
-.header { background:#111; padding:24px 28px 8px; }
-.header h1 { font-size:26px; font-weight:800; color:#fff; margin-bottom:3px; }
-.header p  { font-size:12px; color:#aaa; }
-
-.sec-label {
-  font-size:10px; font-weight:700; letter-spacing:1.5px;
-  text-transform:uppercase; color:#888;
-  border-bottom:1px solid #2a2a2a;
-  padding:14px 28px 5px;
-}
-
-.wrap { padding:8px 28px; }
-
-.g2 { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin:7px 0; }
-.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:7px; margin:7px 0; }
-.g5 { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin:7px 0; }
-
-/* DEF CARDS */
-.def-card {
-  background:#1a1a2e; border-radius:8px;
-  border-left:4px solid #7c3aed;
-  padding:13px 16px; margin:7px 0;
-}
-.def-card.teal   { border-left-color:#14b8a6; }
-.def-card.orange { border-left-color:#f97316; }
-.def-card.green  { border-left-color:#22c55e; }
-.def-card h3 { font-size:13px; font-weight:700; color:#fff; margin-bottom:5px; }
-.def-card h4 { font-size:12.5px; font-weight:700; color:#fff; margin-bottom:5px; }
-.def-card p  { font-size:12.5px; color:#ccc; margin-bottom:3px; }
-
-/* DARK CARD */
-.dark-card {
-  background:#1e1e1e; border-radius:8px;
-  padding:14px 16px; margin:7px 0;
-}
-.dark-card h3 { font-size:13px; font-weight:700; color:#fff; margin-bottom:7px; }
-.dark-card h4 { font-size:12.5px; font-weight:700; color:#fff; margin-bottom:6px; }
-.dark-card p  { font-size:12.5px; color:#ccc; margin-bottom:4px; }
-
-/* CODE */
-pre {
-  background:#2a2a2a; color:#d4d4d4;
-  border-radius:5px; padding:10px 12px;
-  font-family:'Courier New',Consolas,monospace;
-  font-size:11px; line-height:1.6;
-  margin:7px 0; white-space:pre-wrap;
-}
-.kw  { color:#569cd6; }
-.str { color:#ce9178; }
-.cm  { color:#6a9955; }
-.cls { color:#4ec9b0; }
-.num { color:#b5cea8; }
-
-/* OUTPUT */
-.output-row { display:flex; align-items:center; gap:8px; margin:6px 0 4px; }
-.out-badge {
-  background:#1a3a1a; color:#4ade80; border:1px solid #22c55e;
-  font-size:10.5px; font-weight:700; padding:2px 10px; border-radius:4px;
-  flex-shrink:0;
-}
-.out-val { font-family:'Courier New',monospace; font-size:11.5px; color:#d4d4d4; }
-
-/* EXPLANATION */
-.expl {
-  background:#1a1a2e; border-left:4px solid #7c3aed;
-  border-radius:6px; padding:8px 12px; margin:6px 0;
-  font-size:12px; color:#ccc;
-}
-.expl.teal   { border-left-color:#14b8a6; }
-.expl.orange { border-left-color:#f97316; }
-.expl.green  { border-left-color:#22c55e; }
-
-ic { background:#333; padding:1px 5px; border-radius:3px;
-     font-family:'Courier New',monospace; font-size:10.5px; color:#d4d4d4; }
-
-/* STEP */
-.step-row { display:flex; align-items:flex-start; gap:8px; margin-bottom:5px; font-size:12.5px; color:#ccc; }
-.step-circle {
-  width:20px; height:20px; border-radius:50%;
-  background:#333; border:1.5px solid #666;
-  color:#ccc; font-size:9.5px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
-}
-
-/* NOTE CARDS */
-.note-card {
-  background:#1e1e1e; border-radius:7px; padding:12px 14px;
-  border-top:3px solid #444;
-}
-.note-card.purple { border-top-color:#7c3aed; }
-.note-card.teal   { border-top-color:#14b8a6; }
-.note-card.orange { border-top-color:#f97316; }
-.note-card.green  { border-top-color:#22c55e; }
-.note-card h4 { font-size:12px; font-weight:700; color:#fff; margin-bottom:5px; }
-.note-card p  { font-size:11.5px; color:#aaa; }
-
-/* PIPELINE FLOW */
-.flow-row { display:flex; align-items:center; justify-content:center; gap:8px; margin:12px 0; }
-.flow-box { border-radius:6px; padding:8px 20px; font-size:12px; font-weight:700; text-align:center; }
-.flow-box.white { background:#f5f5f5; color:#222; border:1.5px solid #ccc; }
-.flow-box.yellow{ background:#fff3e0; color:#bf360c; border:2px solid #ffcc80; }
-.flow-box.green { background:#e8f5e9; color:#1b5e20; border:2px solid #a5d6a7; }
-.flow-arrow { color:#aaa; font-size:16px; font-weight:700; }
-
-/* BADGE PILLS */
-.badge-row { display:flex; flex-wrap:wrap; gap:5px; margin:6px 0; }
-.badge {
-  background:#2a2a2a; border:1px solid #555; border-radius:4px;
-  padding:2px 9px; font-size:10.5px; font-weight:600; color:#d4d4d4;
-  font-family:'Courier New',monospace;
-}
-.badge.purple { border-color:#7c3aed; color:#c4b5fd; background:#1e1b4b; }
-.badge.teal   { border-color:#14b8a6; color:#5eead4; background:#0f2e2a; }
-
-/* USES LABEL */
-.uses-row { display:flex; align-items:center; gap:6px; margin:5px 0 8px; font-size:12px; color:#aaa; }
-.uses-label { font-size:11px; color:#888; }
-
-/* PROG TITLE */
-.prog-title {
-  font-size:12.5px; font-weight:700; color:#fff;
-  display:flex; align-items:center; gap:8px; margin:10px 0 6px;
-  flex-wrap:wrap;
-}
-
-/* TABLE */
-.ref-table { width:100%; border-collapse:collapse; margin:7px 0; font-size:11.5px; }
-.ref-table th { background:#2a2a2a; color:#aaa; font-size:10.5px; font-weight:700; padding:7px 10px; text-align:left; }
-.ref-table td { padding:7px 10px; border-bottom:1px solid #2a2a2a; color:#ccc; vertical-align:top; }
-.ref-table td:first-child { font-family:'Courier New',monospace; font-size:10.5px; color:#d4d4d4; }
-.ref-table td:nth-child(2) { font-family:'Courier New',monospace; font-size:10px; color:#aaa; }
-.ref-table tr:last-child td { border-bottom:none; }
-
-/* HOW INTERNALLY TABLE */
-.int-table { width:100%; border-collapse:collapse; margin:7px 0; font-size:11.5px; }
-.int-table th { background:#2a2a2a; color:#aaa; font-size:10.5px; font-weight:700; padding:7px 10px; text-align:left; }
-.int-table td { padding:7px 10px; border-bottom:1px solid #2a2a2a; color:#ccc; vertical-align:top; }
-.int-table tr:last-child td { border-bottom:none; }
-.int-table td:first-child { color:#a78bfa; font-weight:700; width:30px; }
-
-/* ADV CARDS */
-.adv-card {
-  background:#1e1e1e; border-radius:7px; padding:12px;
-}
-.adv-num {
-  width:20px; height:20px; border-radius:50%;
-  background:#333; border:1.5px solid #666;
-  color:#ccc; font-size:9.5px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; margin-bottom:6px;
-}
-.adv-card p { font-size:11.5px; color:#ccc; font-weight:500; }
-
-/* KEY RULE */
-.key-card {
-  background:#1a1a2e; border-left:4px solid #7c3aed;
-  border-radius:8px; padding:14px 16px; margin:12px 0;
-}
-.key-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:5px; }
-.key-card p  { font-size:12.5px; color:#ccc; }
-
-/* OPTIONAL BOX */
-.opt-card {
-  background:#1e1e1e; border-radius:8px; padding:14px 16px; margin:7px 0;
-  border-left:3px solid #f97316;
-}
-.opt-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:5px; }
-.opt-card p  { font-size:12.5px; color:#ccc; }
-
-/* INT NOTE */
-.int-note {
-  background:#1e1e1e; border-radius:7px; padding:12px 14px; margin:8px 0;
-}
-.int-note h4 { font-size:12.5px; font-weight:700; color:#fff; margin-bottom:6px; }
-.int-note-row { display:flex; align-items:flex-start; gap:8px; margin-bottom:5px; font-size:12px; color:#ccc; }
-.int-note-num {
-  width:18px; height:18px; border-radius:50%;
-  background:#2a2a2a; border:1px solid #555; color:#aaa;
-  font-size:9px; font-weight:700; display:flex; align-items:center;
-  justify-content:center; flex-shrink:0; margin-top:1px;
-}
-</style>
-</head>
-<body>
-
-<!-- ═══ HEADER ═══ -->
-<div class="header">
-  <h1>Stream API — Java 8</h1>
-  <p>Complete notes — concepts, all methods, all programs with explanations</p>
-</div>
-
-<!-- ═══ WHAT IS AN API ═══ -->
-<div class="sec-label">What is an API?</div>
-<div class="wrap">
-  <div class="def-card">
-    <h3>API — Application Programming Interface</h3>
-    <p>API stands for Application Programming Interface. It is a set of rules, methods, or tools that allows one software (or code) to communicate with another software.</p>
-  </div>
-</div>
-
-<!-- ═══ WHAT IS STREAM API ═══ -->
-<div class="sec-label">What is Stream API?</div>
-<div class="wrap">
-  <div class="def-card teal">
-    <h3>Stream API — definition</h3>
-    <div class="step-row"><div class="step-circle">1</div> It is a set of classes and interfaces.</div>
-    <div class="step-row"><div class="step-circle">2</div> These built-in interfaces and classes are present in the <ic>java.util.stream</ic> package.</div>
-    <div class="step-row"><div class="step-circle">3</div> Introduced in Java 8.</div>
-    <div class="step-row"><div class="step-circle">4</div> Allows a developer to process collections (like List or Set) in a functional approach — using filters, mappings, sorting, and more — without using loops.</div>
-  </div>
-</div>
-
-<!-- ═══ WHAT IS A STREAM ═══ -->
-<div class="sec-label">What is a Stream in Java?</div>
-<div class="wrap">
-  <div class="g3">
-    <div class="note-card purple">
-      <h4>Stream is a built-in interface</h4>
-      <p>Present in <ic>java.util.stream</ic> package.</p>
-    </div>
-    <div class="note-card teal">
-      <h4>Not a data structure</h4>
-      <p>Stream is not a data structure but it takes a data structure as input to perform operations.</p>
-    </div>
-    <div class="note-card orange">
-      <h4>Provides methods</h4>
-      <p>A Stream is an object that provides several methods to perform operations on a collection object — like filtering, mapping, sorting, etc.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ STREAM PIPELINE ═══ -->
-<div class="sec-label">What is a Stream Pipeline?</div>
-<div class="wrap">
-  <div class="def-card">
-    <h3>Definition</h3>
-    <p>A stream pipeline is a sequence of operations (steps) performed on a stream of data. It has 3 stages:</p>
-    <div class="flow-row" style="margin-top:12px;">
-      <div class="flow-box white">Source</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box yellow">Intermediate Operations</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box green">Terminal Operation</div>
-    </div>
-  </div>
-
-  <div class="dark-card">
-    <h4>Stream initialization example</h4>
-    <pre>ArrayList&lt;Integer&gt; al = new ArrayList&lt;&gt;();
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Stream API — Java 8</title><style>*{box-sizing:border-box;margin:0;padding:0}
+body{background:#e0e0e0;font-family:'Georgia',serif}
+.a4-page{width:210mm;min-height:297mm;background:#fff;color:#111;margin:12px auto;padding:14mm 16mm;font-size:12.5px;line-height:1.6;page-break-after:always;border:1px solid #aaa;box-shadow:0 2px 8px rgba(0,0,0,.13)}
+.main-title{text-align:center;font-size:21px;font-weight:700;border:2.5px solid #111;padding:9px 18px;margin-bottom:6px;letter-spacing:1px}
+.sub-title{text-align:center;font-size:12.5px;color:#555;margin-bottom:14px}
+.page-title{text-align:center;font-size:13px;font-weight:700;letter-spacing:.5px;color:#555;margin-bottom:10px;border-bottom:1px solid #ccc;padding-bottom:5px}
+.section{border:1.5px solid #222;margin-bottom:11px}
+.section-header{background:#111;color:#fff;font-size:12.5px;font-weight:700;padding:5px 11px;letter-spacing:.4px}
+.section-body{padding:9px 13px 11px;background:#fff}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.five-col{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.inline-box{border:1px solid #bbb;padding:7px 9px;background:#fafafa}
+.inline-box-title{font-weight:700;font-size:11.5px;margin-bottom:3px;border-bottom:1px solid #ddd;padding-bottom:3px}
+.subsection-title{font-weight:700;font-size:12.5px;margin:7px 0 3px}
+.subsection-title:first-child{margin-top:0}
+.code-block{background:#f5f5f5;border:1px solid #ccc;border-left:3px solid #333;font-family:'Courier New',monospace;font-size:11px;padding:6px 10px;margin:5px 0;white-space:pre-wrap;word-break:break-word;line-height:1.55}
+.note-box{border:1.5px dashed #555;padding:5px 10px;margin:5px 0;font-size:11.5px;background:#fafafa}
+.step-row{display:flex;align-items:flex-start;gap:9px;margin:5px 0}
+.step-num{min-width:22px;height:22px;background:#111;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.flow{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px 0}
+.flow-box{border:1px solid #444;padding:5px 16px;text-align:center;font-size:12px;font-weight:600;background:#fff}
+.flow-arrow{font-size:14px;color:#555}
+.tag{display:inline-block;background:#111;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.badge{display:inline-block;border:1px solid #444;font-family:'Courier New',monospace;font-size:10px;padding:0 6px;margin:1px 3px 1px 0;font-weight:600;vertical-align:middle}
+.prog{border:1px solid #bbb;padding:6px 9px;margin:8px 0;background:#fff;break-inside:avoid}
+.prog-title{font-weight:700;font-size:12px;border-bottom:1px solid #ddd;padding-bottom:3px}
+.out{margin:3px 0;font-size:11.5px}
+.uses{font-size:11.5px;margin:2px 0 4px}
+table{width:100%;border-collapse:collapse;font-size:11.5px;margin:4px 0}
+th{background:#111;color:#fff;padding:5px 8px;text-align:left;font-size:11px}
+td{border:1px solid #bbb;padding:5px 8px;vertical-align:top}
+td:first-child{font-weight:700}
+p{margin:3px 0;font-size:12.5px}
+code{font-family:'Courier New',monospace;font-size:11px;background:#eee;padding:1px 4px;border-radius:2px}
+.code-block code{background:none;padding:0}
+@media print{body{background:#fff}.a4-page{margin:0;box-shadow:none;border:none}}</style></head><body><div class="a4-page"><div class="main-title">STREAM API — JAVA 8 — COMPLETE NOTES</div>
+<div class="sub-title">Complete notes — concepts, all methods, all programs with explanations</div>
+<div class="section"><div class="section-header">📘 What is an API?</div><div class="section-body"><div class="subsection-title">🔹 API — Application Programming Interface</div><p>API stands for Application Programming Interface. It is a set of rules, methods, or tools that allows one software (or code) to communicate with another software.</p></div></div>
+<div class="section"><div class="section-header">📘 What is Stream API?</div><div class="section-body"><div class="subsection-title">🔹 Stream API — definition</div><div class="step-row"><div class="step-num">1</div><div>It is a set of classes and interfaces.</div></div><div class="step-row"><div class="step-num">2</div><div>These built-in interfaces and classes are present in the <code>java.util.stream</code> package.</div></div><div class="step-row"><div class="step-num">3</div><div>Introduced in Java 8.</div></div><div class="step-row"><div class="step-num">4</div><div>Allows a developer to process collections (like List or Set) in a functional approach — using filters, mappings, sorting, and more — without using loops.</div></div></div></div>
+<div class="section"><div class="section-header">📘 What is a Stream in Java?</div><div class="section-body"><div class="three-col"><div class="inline-box"><div class="inline-box-title">🔹 Stream is a built-in interface</div><p>Present in <code>java.util.stream</code> package.</p></div><div class="inline-box"><div class="inline-box-title">🔹 Not a data structure</div><p>Stream is not a data structure but it takes a data structure as input to perform operations.</p></div><div class="inline-box"><div class="inline-box-title">🔹 Provides methods</div><p>A Stream is an object that provides several methods to perform operations on a collection object — like filtering, mapping, sorting, etc.</p></div></div></div></div>
+<div class="section"><div class="section-header">🚀 What is a Stream Pipeline?</div><div class="section-body"><div class="subsection-title">🔹 Definition</div><p>A stream pipeline is a sequence of operations (steps) performed on a stream of data. It has 3 stages:</p><div class="flow"><div class="flow-box">Source</div><div class="flow-arrow">→</div><div class="flow-box">Intermediate Operations</div><div class="flow-arrow">→</div><div class="flow-box">Terminal Operation</div></div><div class="subsection-title">🔹 Stream initialization example</div><div class="code-block">ArrayList&lt;Integer&gt; al = new ArrayList&lt;&gt;();
 al.add(10);
 al.add(21);
 
-<span class="cm">// creates the stream object and returns the address</span>
+// creates the stream object and returns the address
 Stream&lt;Integer&gt; s = al.stream();
-System.out.println(s);</pre>
-  </div>
-</div>
-
-<!-- ═══ TYPES OF STREAM OPERATIONS ═══ -->
-<div class="sec-label">Types of Stream Operations</div>
-<div class="wrap">
-  <div class="g2">
-    <div class="dark-card">
-      <h4>Intermediate Operations</h4>
-      <p>These methods return a Stream and are used to build the pipeline. They are <strong>lazy</strong> — they execute only when a terminal operation is called.</p>
-      <div class="badge-row" style="margin-top:8px;">
-        <span class="badge purple">filter()</span>
-        <span class="badge purple">map()</span>
-        <span class="badge purple">sorted()</span>
-        <span class="badge purple">distinct()</span>
-        <span class="badge purple">limit()</span>
-      </div>
-    </div>
-    <div class="dark-card">
-      <h4>Terminal Operations</h4>
-      <p>Terminal operations terminate the pipeline and trigger the actual processing of the stream. Once called, the stream is consumed.</p>
-      <div class="badge-row" style="margin-top:8px;">
-        <span class="badge teal">forEach()</span>
-        <span class="badge teal">reduce()</span>
-        <span class="badge teal">max()</span>
-        <span class="badge teal">min()</span>
-        <span class="badge teal">count()</span>
-        <span class="badge teal">toList()</span>
-        <span class="badge teal">toArray()</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ INTERMEDIATE REFERENCE TABLE ═══ -->
-<div class="sec-label">Intermediate Operations — Reference Table</div>
-<div class="wrap">
-  <div class="dark-card">
-    <table class="ref-table">
-      <thead><tr><th>Method</th><th>Declaration</th><th>Purpose</th></tr></thead>
-      <tbody>
-        <tr><td>filter()</td><td>Stream&lt;T&gt; filter(Predicate&lt;T&gt; predicate)</td><td>Filters elements based on the given condition</td></tr>
-        <tr><td>map()</td><td>&lt;R&gt; Stream&lt;R&gt; map(Function&lt;T,R&gt; mapper)</td><td>Transforms each element using the given function</td></tr>
-        <tr><td>sorted()</td><td>Stream&lt;T&gt; sorted()</td><td>Sorts elements in natural order</td></tr>
-        <tr><td>sorted(comparator)</td><td>Stream&lt;T&gt; sorted(Comparator&lt;T&gt; comparator)</td><td>Sorts elements using a custom comparator</td></tr>
-        <tr><td>distinct()</td><td>Stream&lt;T&gt; distinct()</td><td>Removes duplicate elements from the stream</td></tr>
-        <tr><td>limit()</td><td>Stream&lt;T&gt; limit(long maxSize)</td><td>Limits the stream to the given number of elements</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ═══ TERMINAL REFERENCE TABLE ═══ -->
-<div class="sec-label">Terminal Operations — Reference Table</div>
-<div class="wrap">
-  <div class="dark-card">
-    <table class="ref-table">
-      <thead><tr><th>Method</th><th>Declaration</th><th>Purpose</th></tr></thead>
-      <tbody>
-        <tr><td>forEach()</td><td>void forEach(Consumer&lt;T&gt; action)</td><td>Performs an action for each element</td></tr>
-        <tr><td>reduce()</td><td>T reduce(T identity, BinaryOperator&lt;T&gt; accumulator)</td><td>Combines elements with an initial value</td></tr>
-        <tr><td>max()</td><td>Optional&lt;T&gt; max(Comparator&lt;T&gt; comparator)</td><td>Finds the maximum element</td></tr>
-        <tr><td>min()</td><td>Optional&lt;T&gt; min(Comparator&lt;T&gt; comparator)</td><td>Finds the minimum element</td></tr>
-        <tr><td>count()</td><td>long count()</td><td>Returns the number of elements in the stream</td></tr>
-        <tr><td>toList()</td><td>default List&lt;T&gt; toList() (Java 16+)</td><td>Collects stream elements into a list</td></tr>
-        <tr><td>toArray()</td><td>Object[] toArray()</td><td>Collects stream elements into an array</td></tr>
-        <tr><td>get()</td><td>T get() (from Optional&lt;T&gt;)</td><td>Retrieves the value from Optional (used after max, min, etc.)</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ═══ OPTIONAL CLASS ═══ -->
-<div class="sec-label">Optional Class</div>
-<div class="wrap">
-  <div class="opt-card">
-    <h4>What is Optional?</h4>
-    <p>Optional is a wrapper class used to represent the presence or absence of a value, mainly to avoid <ic>NullPointerException</ic> , especially in Stream API terminal operations. When we work with streams, some operations like finding max / min or searching for an element may not produce a result. Returning null may lead to <ic>NullPointerException</ic> . Optional handles this safely.</p>
-  </div>
-</div>
-
-<!-- ═══ PROGRAMS — FILTER() METHOD ═══ -->
-<div class="sec-label">Programs — filter() Method</div>
-<div class="wrap">
-
-  <div class="uses-row">
-    <span class="uses-label">Uses:</span>
-    <span class="badge purple">filter()</span>
-    <span class="badge teal">forEach()</span>
-    <span style="font-size:11.5px;color:#888;margin-left:4px;">— filter is Intermediate, forEach is terminal</span>
-  </div>
-
-  <!-- P1 -->
-  <div class="prog-title">
-    Print only even numbers from a list
-    <span class="badge purple">filter()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(10, 15, 20, 25, 30);
+System.out.println(s);</div></div></div>
+<div class="section"><div class="section-header">📘 Types of Stream Operations</div><div class="section-body"><div class="two-col"><div class="inline-box"><div class="inline-box-title">🔹 Intermediate Operations</div><p>These methods return a Stream and are used to build the pipeline. They are <strong>lazy</strong> — they execute only when a terminal operation is called.</p><span class="badge">filter()</span><span class="badge">map()</span><span class="badge">sorted()</span><span class="badge">distinct()</span><span class="badge">limit()</span></div><div class="inline-box"><div class="inline-box-title">🔹 Terminal Operations</div><p>Terminal operations terminate the pipeline and trigger the actual processing of the stream. Once called, the stream is consumed.</p><span class="badge">forEach()</span><span class="badge">reduce()</span><span class="badge">max()</span><span class="badge">min()</span><span class="badge">count()</span><span class="badge">toList()</span><span class="badge">toArray()</span></div></div></div></div></div><div class="a4-page"><div class="page-title">STREAM API | Page 2 — Reference Tables &amp; Optional</div><div class="section"><div class="section-header">📋 Intermediate Operations — Reference Table</div><div class="section-body"><table><tr><th>Method</th><th>Declaration</th><th>Purpose</th></tr><tr><td><code>filter()</code></td><td><code>Stream&lt;T&gt; filter(Predicate&lt;T&gt; predicate)</code></td><td>Filters elements based on the given condition</td></tr><tr><td><code>map()</code></td><td><code>&lt;R&gt; Stream&lt;R&gt; map(Function&lt;T,R&gt; mapper)</code></td><td>Transforms each element using the given function</td></tr><tr><td><code>sorted()</code></td><td><code>Stream&lt;T&gt; sorted()</code></td><td>Sorts elements in natural order</td></tr><tr><td><code>sorted(comparator)</code></td><td><code>Stream&lt;T&gt; sorted(Comparator&lt;T&gt; comparator)</code></td><td>Sorts elements using a custom comparator</td></tr><tr><td><code>distinct()</code></td><td><code>Stream&lt;T&gt; distinct()</code></td><td>Removes duplicate elements from the stream</td></tr><tr><td><code>limit()</code></td><td><code>Stream&lt;T&gt; limit(long maxSize)</code></td><td>Limits the stream to the given number of elements</td></tr></table></div></div><div class="section"><div class="section-header">📋 Terminal Operations — Reference Table</div><div class="section-body"><table><tr><th>Method</th><th>Declaration</th><th>Purpose</th></tr><tr><td><code>forEach()</code></td><td><code>void forEach(Consumer&lt;T&gt; action)</code></td><td>Performs an action for each element</td></tr><tr><td><code>reduce()</code></td><td><code>T reduce(T identity, BinaryOperator&lt;T&gt; accumulator)</code></td><td>Combines elements with an initial value</td></tr><tr><td><code>max()</code></td><td><code>Optional&lt;T&gt; max(Comparator&lt;T&gt; comparator)</code></td><td>Finds the maximum element</td></tr><tr><td><code>min()</code></td><td><code>Optional&lt;T&gt; min(Comparator&lt;T&gt; comparator)</code></td><td>Finds the minimum element</td></tr><tr><td><code>count()</code></td><td><code>long count()</code></td><td>Returns the number of elements in the stream</td></tr><tr><td><code>toList()</code></td><td><code>default List&lt;T&gt; toList() (Java 16+)</code></td><td>Collects stream elements into a list</td></tr><tr><td><code>toArray()</code></td><td><code>Object[] toArray()</code></td><td>Collects stream elements into an array</td></tr><tr><td><code>get()</code></td><td><code>T get() (from Optional&lt;T&gt;)</code></td><td>Retrieves the value from Optional (used after max, min, etc.)</td></tr></table></div></div><div class="section"><div class="section-header">📘 Optional Class</div><div class="section-body"><div class="subsection-title">🔹 What is Optional?</div><p>Optional is a wrapper class used to represent the presence or absence of a value, mainly to avoid <code>NullPointerException</code>, especially in Stream API terminal operations. When we work with streams, some operations like finding max / min or searching for an element may not produce a result. Returning null may lead to <code>NullPointerException</code>. Optional handles this safely.</p></div></div></div><div class="a4-page"><div class="page-title">STREAM API | Page 3 — filter() &amp; map() Programs</div><div class="section"><div class="section-header">✅ Programs — filter() Method</div><div class="section-body"><p class="uses"><strong>Uses:</strong> <span class="badge">filter()</span><span class="badge">forEach()</span> — filter is Intermediate, forEach is terminal</p><div class="prog"><div class="prog-title">Print only even numbers from a list <span class="badge">filter()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(10, 15, 20, 25, 30);
 list.stream()
-    .filter(n -> n % 2 == 0)
-    .forEach(n -> System.out.println(n));</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">10  20  30</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>filter(n -&gt; n%2==0)</ic> keeps only elements where remainder is 0 (even). 15 and 25 are odd so they are removed. <ic>forEach()</ic> prints each remaining element.</div>
-  </div>
-
-  <!-- P2 -->
-  <div class="prog-title">
-    Print numbers greater than 20
-    <span class="badge purple">filter()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(10, 25, 18, 40, 5);
+    .filter(n -&gt; n % 2 == 0)
+    .forEach(n -&gt; System.out.println(n));</div>
+<div class="out"><span class="tag">Output</span> <code>10  20  30</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>filter(n -&gt; n%2==0)</code> keeps only elements where remainder is 0 (even). 15 and 25 are odd so they are removed. <code>forEach()</code> prints each remaining element.</div></div><div class="prog"><div class="prog-title">Print numbers greater than 20 <span class="badge">filter()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(10, 25, 18, 40, 5);
 list.stream()
-    .filter(n -> n > 20)
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">25  40</span></div>
-    <div class="expl"><ic>filter(n -&gt; n&gt;20)</ic> keeps only 25 and 40. 10, 18, 5 are removed. <ic>System.out::println</ic> is a Method Reference used in place of a Lambda.</div>
-  </div>
-
-  <!-- P3 -->
-  <div class="prog-title">
-    Print only strings starting with 'A'
-    <span class="badge purple">filter()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;String&gt; list = Arrays.asList("Apple", "Banana", "Avocado", "Mango");
+    .filter(n -&gt; n &gt; 20)
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>25  40</code></div>
+<div class="note-box"><code>filter(n -&gt; n&gt;20)</code> keeps only 25 and 40. 10, 18, 5 are removed. <code>System.out::println</code> is a Method Reference used in place of a Lambda.</div></div><div class="prog"><div class="prog-title">Print only strings starting with 'A' <span class="badge">filter()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;String&gt; list = Arrays.asList("Apple", "Banana", "Avocado", "Mango");
 list.stream()
-    .filter(s -> s.startsWith("A"))
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">Apple  Avocado</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>startsWith("A")</ic> checks each string. Only "Apple" and "Avocado" pass the filter. "Banana" and "Mango" are removed.</div>
-  </div>
-
-  <!-- P4 -->
-  <div class="prog-title">
-    Print numbers divisible by both 3 and 5
-    <span class="badge purple">filter()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(10, 15, 30, 22, 45, 7);
+    .filter(s -&gt; s.startsWith("A"))
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>Apple  Avocado</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>startsWith("A")</code> checks each string. Only "Apple" and "Avocado" pass the filter. "Banana" and "Mango" are removed.</div></div><div class="prog"><div class="prog-title">Print numbers divisible by both 3 and 5 <span class="badge">filter()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(10, 15, 30, 22, 45, 7);
 list.stream()
-    .filter(n -> n % 3 == 0 && n % 5 == 0)
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">15  30  45</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>&amp;&amp;</ic> applies both conditions together. 15 (3×5), 30 (3×10=✓, 5×6=✓), 45 (3×15=✓, 5×9=✓) pass. 10 (not div by 3), 22, 7 fail.</div>
-  </div>
-
-</div>
-
-<!-- ═══ PROGRAMS — MAP() METHOD ═══ -->
-<div class="sec-label">Programs — map() Method</div>
-<div class="wrap">
-
-  <div class="uses-row">
-    <span class="uses-label">Uses:</span>
-    <span class="badge purple">map()</span>
-    <span class="badge teal">forEach()</span>
-    <span style="font-size:11.5px;color:#888;margin-left:4px;">— map transforms each element, forEach prints</span>
-  </div>
-
-  <!-- P1 -->
-  <div class="prog-title">
-    Print the square of each number
-    <span class="badge purple">map()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(2, 3, 4, 5);
+    .filter(n -&gt; n % 3 == 0 &amp;&amp; n % 5 == 0)
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>15  30  45</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>&amp;&amp;</code> applies both conditions together. 15 (3×5), 30 (3×10=✓, 5×6=✓), 45 (3×15=✓, 5×9=✓) pass. 10 (not div by 3), 22, 7 fail.</div></div></div></div><div class="section"><div class="section-header">✅ Programs — map() Method</div><div class="section-body"><p class="uses"><strong>Uses:</strong> <span class="badge">map()</span><span class="badge">forEach()</span> — map transforms each element, forEach prints</p><div class="prog"><div class="prog-title">Print the square of each number <span class="badge">map()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(2, 3, 4, 5);
 list.stream()
-    .map(n -> n * n)
-    .forEach(n -> System.out.println(n));</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">4  9  16  25</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>map(n -&gt; n*n)</ic> transforms each element — 2→4, 3→9, 4→16, 5→25. map does not filter, it converts every element.</div>
-  </div>
-
-  <!-- P2 -->
-  <div class="prog-title">
-    Convert all strings to uppercase
-    <span class="badge purple">map()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;String&gt; list = Arrays.asList("java", "python", "c++");
+    .map(n -&gt; n * n)
+    .forEach(n -&gt; System.out.println(n));</div>
+<div class="out"><span class="tag">Output</span> <code>4  9  16  25</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>map(n -&gt; n*n)</code> transforms each element — 2→4, 3→9, 4→16, 5→25. map does not filter, it converts every element.</div></div><div class="prog"><div class="prog-title">Convert all strings to uppercase <span class="badge">map()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;String&gt; list = Arrays.asList("java", "python", "c++");
 list.stream()
-    .map(s -> s.toUpperCase())
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">JAVA  PYTHON  C++</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>map(s -&gt; s.toUpperCase())</ic> transforms each String to its uppercase form. Every element is converted.</div>
-  </div>
-
-  <!-- P3 -->
-  <div class="prog-title">
-    Add 10 to each number
-    <span class="badge purple">map()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(5, 10, 15);
+    .map(s -&gt; s.toUpperCase())
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>JAVA  PYTHON  C++</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>map(s -&gt; s.toUpperCase())</code> transforms each String to its uppercase form. Every element is converted.</div></div><div class="prog"><div class="prog-title">Add 10 to each number <span class="badge">map()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(5, 10, 15);
 list.stream()
-    .map(n -> n + 10)
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">15  20  25</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>map(n -&gt; n+10)</ic> adds 10 to each element. 5→15, 10→20, 15→25.</div>
-  </div>
-
-  <!-- P4 -->
-  <div class="prog-title">
-    Get length of each string
-    <span class="badge purple">map()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;String&gt; list = Arrays.asList("Java", "Stream", "API");
+    .map(n -&gt; n + 10)
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>15  20  25</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>map(n -&gt; n+10)</code> adds 10 to each element. 5→15, 10→20, 15→25.</div></div><div class="prog"><div class="prog-title">Get length of each string <span class="badge">map()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;String&gt; list = Arrays.asList("Java", "Stream", "API");
 list.stream()
-    .map(s -> s.length())
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">4  6  3</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>map(s -&gt; s.length())</ic> converts each String to its Integer length. "Java"→4, "Stream"→6, "API"→3.</div>
-  </div>
-
-</div>
-
-<!-- ═══ FILTER + MAP COMBINED ═══ -->
-<div class="sec-label">Programs — filter() + map() Combined</div>
-<div class="wrap">
-
-  <div class="uses-row">
-    <span class="uses-label">Uses:</span>
-    <span class="badge purple">filter()</span>
-    <span class="badge purple">map()</span>
-    <span class="badge teal">forEach()</span>
-    <span style="font-size:11.5px;color:#888;margin-left:4px;">— filter first, then transform</span>
-  </div>
-
-  <!-- P1 -->
-  <div class="prog-title">
-    Double only numbers greater than 10
-    <span class="badge purple">filter()</span><span class="badge purple">map()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(5, 12, 8, 20);
+    .map(s -&gt; s.length())
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>4  6  3</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>map(s -&gt; s.length())</code> converts each String to its Integer length. "Java"→4, "Stream"→6, "API"→3.</div></div></div></div></div><div class="a4-page"><div class="page-title">STREAM API | Page 4 — Combined &amp; sorted() Programs</div><div class="section"><div class="section-header">✅ Programs — filter() + map() Combined</div><div class="section-body"><p class="uses"><strong>Uses:</strong> <span class="badge">filter()</span><span class="badge">map()</span><span class="badge">forEach()</span> — filter first, then transform</p><div class="prog"><div class="prog-title">Double only numbers greater than 10 <span class="badge">filter()</span><span class="badge">map()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(5, 12, 8, 20);
 list.stream()
-    .filter(n -> n > 10)
-    .map(n -> n * 2)
-    .forEach(n -> System.out.println(n));</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">24  40</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>filter(n&gt;10)</ic> keeps 12 and 20 (5 and 8 are removed). <ic>map(n*2)</ic> then doubles them — 12→24, 20→40. Two intermediate operations chained.</div>
-  </div>
-
-  <!-- P2 -->
-  <div class="prog-title">
-    Convert to uppercase only strings with length &gt; 4
-    <span class="badge purple">filter()</span><span class="badge purple">map()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;String&gt; list = Arrays.asList("java", "python", "c", "spring");
+    .filter(n -&gt; n &gt; 10)
+    .map(n -&gt; n * 2)
+    .forEach(n -&gt; System.out.println(n));</div>
+<div class="out"><span class="tag">Output</span> <code>24  40</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>filter(n&gt;10)</code> keeps 12 and 20 (5 and 8 are removed). <code>map(n*2)</code> then doubles them — 12→24, 20→40. Two intermediate operations chained.</div></div><div class="prog"><div class="prog-title">Convert to uppercase only strings with length &gt; 4 <span class="badge">filter()</span><span class="badge">map()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;String&gt; list = Arrays.asList("java", "python", "c", "spring");
 list.stream()
-    .filter(s -> s.length() > 4)
-    .map(s -> s.toUpperCase())
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">PYTHON  SPRING</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>filter(length&gt;4)</ic> keeps "python"(6) and "spring"(6). "java"(4) fails the condition (not &gt; 4). "c"(1) fails. Then <ic>map(toUpperCase)</ic> converts both to uppercase.</div>
-  </div>
-
-  <!-- P3 -->
-  <div class="prog-title">
-    Square only even numbers
-    <span class="badge purple">filter()</span><span class="badge purple">map()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(2, 3, 4, 5, 6);
+    .filter(s -&gt; s.length() &gt; 4)
+    .map(s -&gt; s.toUpperCase())
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>PYTHON  SPRING</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>filter(length&gt;4)</code> keeps "python"(6) and "spring"(6). "java"(4) fails the condition (not &gt; 4). "c"(1) fails. Then <code>map(toUpperCase)</code> converts both to uppercase.</div></div><div class="prog"><div class="prog-title">Square only even numbers <span class="badge">filter()</span><span class="badge">map()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(2, 3, 4, 5, 6);
 list.stream()
-    .filter(n -> n % 2 == 0)
-    .map(n -> n * n)
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">4  16  36</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>filter(even)</ic> keeps 2, 4, 6. 3 and 5 are odd and removed. <ic>map(n*n)</ic> squares them — 2→4, 4→16, 6→36.</div>
-  </div>
-
-  <!-- P4 -->
-  <div class="prog-title">
-    Add 5 to numbers divisible by 3
-    <span class="badge purple">filter()</span><span class="badge purple">map()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(3, 7, 9, 10, 12);
+    .filter(n -&gt; n % 2 == 0)
+    .map(n -&gt; n * n)
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>4  16  36</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>filter(even)</code> keeps 2, 4, 6. 3 and 5 are odd and removed. <code>map(n*n)</code> squares them — 2→4, 4→16, 6→36.</div></div><div class="prog"><div class="prog-title">Add 5 to numbers divisible by 3 <span class="badge">filter()</span><span class="badge">map()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(3, 7, 9, 10, 12);
 list.stream()
-    .filter(n -> n % 3 == 0)
-    .map(n -> n + 5)
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">8  14  17</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>filter(n%3==0)</ic> keeps 3, 9, 12. Then <ic>map(n+5)</ic> adds 5 — 3→8, 9→14, 12→17.</div>
-  </div>
-
-</div>
-
-<!-- ═══ PROGRAMS — SORTED() METHOD ═══ -->
-<div class="sec-label">Programs — sorted() Method</div>
-<div class="wrap">
-
-  <div class="uses-row">
-    <span class="uses-label">Uses:</span>
-    <span class="badge purple">sorted()</span>
-    <span class="badge teal">forEach()</span>
-    <span style="font-size:11.5px;color:#888;margin-left:4px;">— sort is intermediate, forEach is terminal</span>
-  </div>
-
-  <!-- P1 -->
-  <div class="prog-title">
-    Sort numbers in ascending order
-    <span class="badge purple">sorted()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(40, 10, 30, 20);
+    .filter(n -&gt; n % 3 == 0)
+    .map(n -&gt; n + 5)
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>8  14  17</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>filter(n%3==0)</code> keeps 3, 9, 12. Then <code>map(n+5)</code> adds 5 — 3→8, 9→14, 12→17.</div></div></div></div><div class="section"><div class="section-header">✅ Programs — sorted() Method</div><div class="section-body"><p class="uses"><strong>Uses:</strong> <span class="badge">sorted()</span><span class="badge">forEach()</span> — sort is intermediate, forEach is terminal</p><div class="prog"><div class="prog-title">Sort numbers in ascending order <span class="badge">sorted()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(40, 10, 30, 20);
 list.stream()
     .sorted()
-    .forEach(n -> System.out.println(n));</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">10  20  30  40</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>sorted()</ic> with no argument sorts in natural (ascending) order. Original list is NOT modified.</div>
-  </div>
-
-  <!-- P2 -->
-  <div class="prog-title">
-    Sort numbers in descending order
-    <span class="badge purple">sorted(comparator)</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(40, 10, 30, 20);
+    .forEach(n -&gt; System.out.println(n));</div>
+<div class="out"><span class="tag">Output</span> <code>10  20  30  40</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>sorted()</code> with no argument sorts in natural (ascending) order. Original list is NOT modified.</div></div><div class="prog"><div class="prog-title">Sort numbers in descending order <span class="badge">sorted(comparator)</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(40, 10, 30, 20);
 list.stream()
-    .sorted((a, b) -> b - a)
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">40  30  20  10</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>(a, b) -&gt; b - a</ic> is a custom comparator. When b-a is positive, b comes first — this reverses the natural order giving descending sort.</div>
-  </div>
-
-  <!-- P3 -->
-  <div class="prog-title">
-    Sort strings in alphabetical order
-    <span class="badge purple">sorted()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;String&gt; list = Arrays.asList("Banana", "Apple", "Mango", "Cherry");
+    .sorted((a, b) -&gt; b - a)
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>40  30  20  10</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>(a, b) -&gt; b - a</code> is a custom comparator. When b-a is positive, b comes first — this reverses the natural order giving descending sort.</div></div><div class="prog"><div class="prog-title">Sort strings in alphabetical order <span class="badge">sorted()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;String&gt; list = Arrays.asList("Banana", "Apple", "Mango", "Cherry");
 list.stream()
     .sorted()
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">Apple  Banana  Cherry  Mango</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>sorted()</ic> on Strings uses alphabetical (lexicographic) order by default.</div>
-  </div>
-
-  <!-- P4 -->
-  <div class="prog-title">
-    Sort strings based on length
-    <span class="badge purple">sorted(comparator)</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;String&gt; list = Arrays.asList("Java", "Spring", "API", "Microservices");
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>Apple  Banana  Cherry  Mango</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>sorted()</code> on Strings uses alphabetical (lexicographic) order by default.</div></div><div class="prog"><div class="prog-title">Sort strings based on length <span class="badge">sorted(comparator)</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;String&gt; list = Arrays.asList("Java", "Spring", "API", "Microservices");
 list.stream()
-    .sorted((s1, s2) -> s1.length() - s2.length())
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">API  Java  Spring  Microservices</span></div>
-    <div class="expl"><strong>Explanation:</strong> Custom comparator <ic>s1.length() - s2.length()</ic> sorts by string length in ascending order — shortest first.</div>
-  </div>
-
-</div>
-
-<!-- ═══ PROGRAMS — DISTINCT() METHOD ═══ -->
-<div class="sec-label">Programs — distinct() Method</div>
-<div class="wrap">
-
-  <div class="uses-row">
-    <span class="uses-label">Uses:</span>
-    <span class="badge purple">distinct()</span>
-    <span class="badge teal">forEach()</span>
-    <span style="font-size:11.5px;color:#888;margin-left:4px;">— removes duplicates</span>
-  </div>
-
-  <!-- P1 -->
-  <div class="prog-title">
-    Remove duplicate elements from a list
-    <span class="badge purple">distinct()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(10, 20, 10, 30, 20);
+    .sorted((s1, s2) -&gt; s1.length() - s2.length())
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>API  Java  Spring  Microservices</code></div>
+<div class="note-box"><strong>Explanation:</strong> Custom comparator <code>s1.length() - s2.length()</code> sorts by string length in ascending order — shortest first.</div></div></div></div></div><div class="a4-page"><div class="page-title">STREAM API | Page 5 — distinct() &amp; limit() Programs</div><div class="section"><div class="section-header">✅ Programs — distinct() Method</div><div class="section-body"><p class="uses"><strong>Uses:</strong> <span class="badge">distinct()</span><span class="badge">forEach()</span> — removes duplicates</p><div class="prog"><div class="prog-title">Remove duplicate elements from a list <span class="badge">distinct()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(10, 20, 10, 30, 20);
 list.stream()
     .distinct()
-    .forEach(n -> System.out.println(n));</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">10  20  30</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>distinct()</ic> removes duplicate values. 10 appeared twice, 20 appeared twice — only first occurrence is kept.</div>
-  </div>
-
-  <!-- P2 -->
-  <div class="prog-title">
-    Remove duplicate strings
-    <span class="badge purple">distinct()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;String&gt; list = Arrays.asList("Java", "Python", "Java", "C++", "Python");
+    .forEach(n -&gt; System.out.println(n));</div>
+<div class="out"><span class="tag">Output</span> <code>10  20  30</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>distinct()</code> removes duplicate values. 10 appeared twice, 20 appeared twice — only first occurrence is kept.</div></div><div class="prog"><div class="prog-title">Remove duplicate strings <span class="badge">distinct()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;String&gt; list = Arrays.asList("Java", "Python", "Java", "C++", "Python");
 list.stream()
     .distinct()
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">Java  Python  C++</span></div>
-    <div class="expl"><strong>Explanation:</strong> "Java" and "Python" are duplicated — only the first occurrence of each is kept.</div>
-  </div>
-
-  <!-- P3 -->
-  <div class="prog-title">
-    Remove duplicates and sort the result
-    <span class="badge purple">distinct()</span><span class="badge purple">sorted()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(30, 10, 20, 10, 30, 40);
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>Java  Python  C++</code></div>
+<div class="note-box"><strong>Explanation:</strong> "Java" and "Python" are duplicated — only the first occurrence of each is kept.</div></div><div class="prog"><div class="prog-title">Remove duplicates and sort the result <span class="badge">distinct()</span><span class="badge">sorted()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(30, 10, 20, 10, 30, 40);
 list.stream()
     .distinct()
     .sorted()
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">10  20  30  40</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>distinct()</ic> removes duplicate 10 and 30. Then <ic>sorted()</ic> arranges the unique values in ascending order.</div>
-  </div>
-
-</div>
-
-<!-- ═══ PROGRAMS — LIMIT() METHOD ═══ -->
-<div class="sec-label">Programs — limit() Method</div>
-<div class="wrap">
-
-  <div class="uses-row">
-    <span class="uses-label">Uses:</span>
-    <span class="badge purple">limit()</span>
-    <span class="badge teal">forEach()</span>
-    <span style="font-size:11.5px;color:#888;margin-left:4px;">— restricts number of elements</span>
-  </div>
-
-  <!-- P1 -->
-  <div class="prog-title">
-    Print only the first 3 elements from a list
-    <span class="badge purple">limit()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(5, 10, 15, 20, 25);
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>10  20  30  40</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>distinct()</code> removes duplicate 10 and 30. Then <code>sorted()</code> arranges the unique values in ascending order.</div></div></div></div><div class="section"><div class="section-header">✅ Programs — limit() Method</div><div class="section-body"><p class="uses"><strong>Uses:</strong> <span class="badge">limit()</span><span class="badge">forEach()</span> — restricts number of elements</p><div class="prog"><div class="prog-title">Print only the first 3 elements from a list <span class="badge">limit()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(5, 10, 15, 20, 25);
 list.stream()
     .limit(3)
-    .forEach(n -> System.out.println(n));</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">5  10  15</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>limit(3)</ic> stops the stream after 3 elements. 20 and 25 are never processed.</div>
-  </div>
-
-  <!-- P2 -->
-  <div class="prog-title">
-    Print first 2 even numbers
-    <span class="badge purple">filter()</span><span class="badge purple">limit()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(3, 6, 9, 12, 15, 18);
+    .forEach(n -&gt; System.out.println(n));</div>
+<div class="out"><span class="tag">Output</span> <code>5  10  15</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>limit(3)</code> stops the stream after 3 elements. 20 and 25 are never processed.</div></div><div class="prog"><div class="prog-title">Print first 2 even numbers <span class="badge">filter()</span><span class="badge">limit()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(3, 6, 9, 12, 15, 18);
 list.stream()
-    .filter(n -> n % 2 == 0)
+    .filter(n -&gt; n % 2 == 0)
     .limit(2)
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">6  12</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>filter(even)</ic> keeps 6, 12, 18. Then <ic>limit(2)</ic> takes only the first 2 — 6 and 12.</div>
-  </div>
-
-  <!-- P3 -->
-  <div class="prog-title">
-    Convert first 3 strings to uppercase
-    <span class="badge purple">limit()</span><span class="badge purple">map()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;String&gt; list = Arrays.asList("java", "python", "spring", "api");
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>6  12</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>filter(even)</code> keeps 6, 12, 18. Then <code>limit(2)</code> takes only the first 2 — 6 and 12.</div></div><div class="prog"><div class="prog-title">Convert first 3 strings to uppercase <span class="badge">limit()</span><span class="badge">map()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;String&gt; list = Arrays.asList("java", "python", "spring", "api");
 list.stream()
     .limit(3)
-    .map(s -> s.toUpperCase())
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">JAVA  PYTHON  SPRING</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>limit(3)</ic> picks first 3 — "java", "python", "spring". "api" is skipped. Then <ic>map(toUpperCase)</ic> converts them.</div>
-  </div>
-
-  <!-- P4 -->
-  <div class="prog-title">
-    Sort and print first 4 smallest numbers
-    <span class="badge purple">sorted()</span><span class="badge purple">limit()</span><span class="badge teal">forEach()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(50, 10, 40, 20, 30);
+    .map(s -&gt; s.toUpperCase())
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>JAVA  PYTHON  SPRING</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>limit(3)</code> picks first 3 — "java", "python", "spring". "api" is skipped. Then <code>map(toUpperCase)</code> converts them.</div></div><div class="prog"><div class="prog-title">Sort and print first 4 smallest numbers <span class="badge">sorted()</span><span class="badge">limit()</span><span class="badge">forEach()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(50, 10, 40, 20, 30);
 list.stream()
     .sorted()
     .limit(4)
-    .forEach(System.out::println);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">10  20  30  40</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>sorted()</ic> arranges: 10, 20, 30, 40, 50. Then <ic>limit(4)</ic> takes first 4 — 50 is excluded.</div>
-  </div>
-
-</div>
-
-<!-- ═══ PROGRAMS — TERMINAL OPERATIONS ═══ -->
-<div class="sec-label">Programs — Terminal Operations</div>
-<div class="wrap">
-
-  <!-- reduce sum -->
-  <div class="prog-title">
-    Find the sum of all elements — reduce()
-    <span class="badge teal">reduce()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(10, 20, 30);
+    .forEach(System.out::println);</div>
+<div class="out"><span class="tag">Output</span> <code>10  20  30  40</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>sorted()</code> arranges: 10, 20, 30, 40, 50. Then <code>limit(4)</code> takes first 4 — 50 is excluded.</div></div></div></div></div><div class="a4-page"><div class="page-title">STREAM API | Page 6 — Terminal Operation Programs</div><div class="section"><div class="section-header">✅ Programs — Terminal Operations</div><div class="section-body"><div class="prog"><div class="prog-title">Find the sum of all elements — reduce() <span class="badge">reduce()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(10, 20, 30);
 int sum = list.stream()
-              .reduce(0, (a, b) -> a + b);
-System.out.println("Sum = " + sum);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">Sum = 60</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>reduce(0, (a,b)-&gt;a+b)</ic> — identity value is 0 (starting point). Then adds each element: 0+10=10, 10+20=30, 30+30=60.</div>
-  </div>
-
-  <!-- reduce product -->
-  <div class="prog-title">
-    Find product of all elements — reduce()
-    <span class="badge teal">reduce()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(2, 3, 4);
+              .reduce(0, (a, b) -&gt; a + b);
+System.out.println("Sum = " + sum);</div>
+<div class="out"><span class="tag">Output</span> <code>Sum = 60</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>reduce(0, (a,b)-&gt;a+b)</code> — identity value is 0 (starting point). Then adds each element: 0+10=10, 10+20=30, 30+30=60.</div></div><div class="prog"><div class="prog-title">Find product of all elements — reduce() <span class="badge">reduce()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(2, 3, 4);
 int product = list.stream()
-                  .reduce(1, (a, b) -> a * b);
-System.out.println("Product = " + product);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">Product = 24</span></div>
-    <div class="expl"><strong>Explanation:</strong> Identity is 1 (for multiplication). 1×2=2, 2×3=6, 6×4=24.</div>
-  </div>
-
-  <!-- reduce max no identity -->
-  <div class="prog-title">
-    Find maximum element without identity — Optional
-    <span class="badge teal">reduce()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(10, 50, 30, 70);
+                  .reduce(1, (a, b) -&gt; a * b);
+System.out.println("Product = " + product);</div>
+<div class="out"><span class="tag">Output</span> <code>Product = 24</code></div>
+<div class="note-box"><strong>Explanation:</strong> Identity is 1 (for multiplication). 1×2=2, 2×3=6, 6×4=24.</div></div><div class="prog"><div class="prog-title">Find maximum element without identity — Optional <span class="badge">reduce()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(10, 50, 30, 70);
 Optional&lt;Integer&gt; max = list.stream()
-                            .reduce((a, b) -> a &gt; b ? a : b);
-System.out.println(max.orElse(0));</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">50</span></div>
-    <div class="expl"><strong>Explanation:</strong> Without identity, reduce returns Optional. <ic>(a,b)-&gt;a&gt;b?a:b</ic> keeps the larger of two. <ic>orElse(0)</ic> returns 0 if stream is empty.</div>
-  </div>
-
-  <!-- max min -->
-  <div class="prog-title">
-    Find maximum and minimum element — max() / min()
-    <span class="badge teal">max()</span><span class="badge teal">min()</span><span class="badge teal">get()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(10, 40, 25, 5);
+                            .reduce((a, b) -&gt; a &gt; b ? a : b);
+System.out.println(max.orElse(0));</div>
+<div class="out"><span class="tag">Output</span> <code>50</code></div>
+<div class="note-box"><strong>Explanation:</strong> Without identity, reduce returns Optional. <code>(a,b)-&gt;a&gt;b?a:b</code> keeps the larger of two. <code>orElse(0)</code> returns 0 if stream is empty.</div></div><div class="prog"><div class="prog-title">Find maximum and minimum element — max() / min() <span class="badge">max()</span><span class="badge">min()</span><span class="badge">get()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(10, 40, 25, 5);
 
 int max = list.stream()
               .max(Integer::compareTo)
@@ -815,91 +222,27 @@ int min = list.stream()
               .get();
 
 System.out.println("Max = " + max);
-System.out.println("Min = " + min);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">Max = 40  Min = 5</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>max(Integer::compareTo)</ic> returns an Optional — <ic>get()</ic> extracts the value. Similarly for min. <ic>Integer::compareTo</ic> is a Method Reference used as a comparator.</div>
-  </div>
-
-  <!-- count -->
-  <div class="prog-title">
-    Count how many elements are greater than 10 — count()
-    <span class="badge purple">filter()</span><span class="badge teal">count()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(5, 15, 20, 8, 25);
+System.out.println("Min = " + min);</div>
+<div class="out"><span class="tag">Output</span> <code>Max = 40  Min = 5</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>max(Integer::compareTo)</code> returns an Optional — <code>get()</code> extracts the value. Similarly for min. <code>Integer::compareTo</code> is a Method Reference used as a comparator.</div></div><div class="prog"><div class="prog-title">Count how many elements are greater than 10 — count() <span class="badge">filter()</span><span class="badge">count()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(5, 15, 20, 8, 25);
 long count = list.stream()
-                 .filter(n -> n &gt; 10)
+                 .filter(n -&gt; n &gt; 10)
                  .count();
-System.out.println("Count = " + count);</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">Count = 3</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>filter(n&gt;10)</ic> keeps 15, 20, 25. <ic>count()</ic> returns the number of remaining elements — 3. Return type is <ic>long</ic> .</div>
-  </div>
-
-  <!-- toList toArray -->
-  <div class="prog-title">
-    Store even numbers in a new list and array — toList() / toArray()
-    <span class="badge purple">filter()</span><span class="badge teal">toList()</span><span class="badge teal">toArray()</span>
-  </div>
-  <div class="dark-card">
-    <pre>List&lt;Integer&gt; list = Arrays.asList(10, 15, 20, 25, 30);
+System.out.println("Count = " + count);</div>
+<div class="out"><span class="tag">Output</span> <code>Count = 3</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>filter(n&gt;10)</code> keeps 15, 20, 25. <code>count()</code> returns the number of remaining elements — 3. Return type is <code>long</code>.</div></div><div class="prog"><div class="prog-title">Store even numbers in a new list and array — toList() / toArray() <span class="badge">filter()</span><span class="badge">toList()</span><span class="badge">toArray()</span></div>
+<div class="code-block">List&lt;Integer&gt; list = Arrays.asList(10, 15, 20, 25, 30);
 
 List&lt;Integer&gt; evenList = list.stream()
-    .filter(n -> n % 2 == 0)
+    .filter(n -&gt; n % 2 == 0)
     .toList();
 
 Object[] evenArray = list.stream()
-    .filter(n -> n % 2 == 0)
+    .filter(n -&gt; n % 2 == 0)
     .toArray();
 
 System.out.println(evenList);
-System.out.println(Arrays.toString(evenArray));</pre>
-    <div class="output-row"><span class="out-badge">Output</span><span class="out-val">[10, 20, 30]  [10, 20, 30]</span></div>
-    <div class="expl"><strong>Explanation:</strong> <ic>toList()</ic> (Java 16+) collects filtered stream into a List. <ic>toArray()</ic> collects into an Object array. Both store only even numbers — 10, 20, 30.</div>
-  </div>
-
-</div>
-
-<!-- ═══ HOW STREAM PROCESSING WORKS INTERNALLY ═══ -->
-<div class="sec-label">How Stream Processing Works Internally</div>
-<div class="wrap">
-  <div class="dark-card">
-    <table class="int-table">
-      <thead><tr><th>#</th><th>Rule</th><th>Explanation</th></tr></thead>
-      <tbody>
-        <tr><td>1</td><td>Terminal operation starts the work.</td><td>Until a terminal method is called, no data is processed. The terminal operation begins traversing the source collection.</td></tr>
-        <tr><td>2</td><td>Elements are taken one by one</td><td>The stream does not take all elements at once. Each element is picked individually during traversal.</td></tr>
-        <tr><td>3</td><td>Intermediate operations are lazy</td><td>For each element, intermediate operations like filter() and map() are applied only when an element is needed.</td></tr>
-        <tr><td>4</td><td>Original collection is not changed</td><td>Stream operations never modify the source collection. The original list remains exactly the same.</td></tr>
-        <tr><td>5</td><td>No intermediate storage by default</td><td>Filtered or mapped elements are not stored anywhere — they are processed and then discarded.</td></tr>
-        <tr><td>6</td><td>Data is stored only when required</td><td>If the terminal operation is collect() / toList(), a new collection is created. Only then are the transformed elements stored.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="int-note">
-    <h4>Important note on intermediate operations</h4>
-    <div class="int-note-row"><div class="int-note-num">1</div> In each and every intermediate operation, a new Stream object is created.</div>
-    <div class="int-note-row"><div class="int-note-num">2</div> These new streams are not separate pipelines — they are chained together.</div>
-    <div class="int-note-row"><div class="int-note-num">3</div> All intermediate operations are lazy and will be executed only when a terminal operation is called.</div>
-  </div>
-</div>
-
-<!-- ═══ WHY USE STREAM API ═══ -->
-<div class="sec-label">Why Use Stream API?</div>
-<div class="wrap">
-  <div class="g5">
-    <div class="adv-card"><div class="adv-num">1</div><p>Makes code shorter and readable</p></div>
-    <div class="adv-card"><div class="adv-num">2</div><p>No need for explicit for loops</p></div>
-    <div class="adv-card"><div class="adv-num">3</div><p>Supports functional programming</p></div>
-    <div class="adv-card"><div class="adv-num">4</div><p>Can process data in parallel (faster)</p></div>
-    <div class="adv-card"><div class="adv-num">5</div><p>Keeps original data unchanged</p></div>
-  </div>
-
-  <div class="key-card">
-    <h4>Key rule to always remember</h4>
-    <p>Stream operations are <strong>lazy</strong> — nothing executes until a terminal operation is called. Intermediate operations ( <ic>filter</ic> , <ic>map</ic> , <ic>sorted</ic> , <ic>distinct</ic> , <ic>limit</ic> ) return a Stream. Terminal operations ( <ic>forEach</ic> , <ic>reduce</ic> , <ic>count</ic> , <ic>max</ic> , <ic>min</ic> , <ic>toList</ic> , <ic>toArray</ic> ) end the pipeline and trigger execution. The original collection is never modified.</p>
-  </div>
-</div>
-
-</body>
-</html>
+System.out.println(Arrays.toString(evenArray));</div>
+<div class="out"><span class="tag">Output</span> <code>[10, 20, 30]  [10, 20, 30]</code></div>
+<div class="note-box"><strong>Explanation:</strong> <code>toList()</code> (Java 16+) collects filtered stream into a List. <code>toArray()</code> collects into an Object array. Both store only even numbers — 10, 20, 30.</div></div></div></div></div><div class="a4-page"><div class="page-title">STREAM API | Page 7 — Internals, Why Stream API &amp; Key Rule</div><div class="section"><div class="section-header">🚀 How Stream Processing Works Internally</div><div class="section-body"><table><tr><th>#</th><th>Rule</th><th>Explanation</th></tr><tr><td>1</td><td>Terminal operation starts the work.</td><td>Until a terminal method is called, no data is processed. The terminal operation begins traversing the source collection.</td></tr><tr><td>2</td><td>Elements are taken one by one</td><td>The stream does not take all elements at once. Each element is picked individually during traversal.</td></tr><tr><td>3</td><td>Intermediate operations are lazy</td><td>For each element, intermediate operations like filter() and map() are applied only when an element is needed.</td></tr><tr><td>4</td><td>Original collection is not changed</td><td>Stream operations never modify the source collection. The original list remains exactly the same.</td></tr><tr><td>5</td><td>No intermediate storage by default</td><td>Filtered or mapped elements are not stored anywhere — they are processed and then discarded.</td></tr><tr><td>6</td><td>Data is stored only when required</td><td>If the terminal operation is collect() / toList(), a new collection is created. Only then are the transformed elements stored.</td></tr></table><div class="subsection-title" style="margin-top:9px;">🔹 Important note on intermediate operations</div><div class="step-row"><div class="step-num">1</div><div>In each and every intermediate operation, a new Stream object is created.</div></div><div class="step-row"><div class="step-num">2</div><div>These new streams are not separate pipelines — they are chained together.</div></div><div class="step-row"><div class="step-num">3</div><div>All intermediate operations are lazy and will be executed only when a terminal operation is called.</div></div></div></div><div class="section"><div class="section-header">📘 Why Use Stream API?</div><div class="section-body"><div class="five-col"><div class="inline-box"><div class="step-num" style="margin-bottom:5px">1</div><p>Makes code shorter and readable</p></div><div class="inline-box"><div class="step-num" style="margin-bottom:5px">2</div><p>No need for explicit for loops</p></div><div class="inline-box"><div class="step-num" style="margin-bottom:5px">3</div><p>Supports functional programming</p></div><div class="inline-box"><div class="step-num" style="margin-bottom:5px">4</div><p>Can process data in parallel (faster)</p></div><div class="inline-box"><div class="step-num" style="margin-bottom:5px">5</div><p>Keeps original data unchanged</p></div></div></div></div><div class="note-box" style="border:2px solid #111;"><span class="tag">★ Most Important</span><strong>Key rule to always remember</strong><br>Stream operations are <strong>lazy</strong> — nothing executes until a terminal operation is called. Intermediate operations ( <code>filter</code>, <code>map</code>, <code>sorted</code>, <code>distinct</code>, <code>limit</code> ) return a Stream. Terminal operations ( <code>forEach</code>, <code>reduce</code>, <code>count</code>, <code>max</code>, <code>min</code>, <code>toList</code>, <code>toArray</code> ) end the pipeline and trigger execution. The original collection is never modified.</div></div></body></html>
