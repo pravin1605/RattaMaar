@@ -94,9 +94,7 @@
 </head>
 <body>
 
-<!-- ═══════════════════════════════════
-     PAGE 1 — What is Bean + Lifecycle + XML Method
-════════════════════════════════════ -->
+<!-- PAGE 1 -->
 <div class="page">
   <div class="page-header">
     <div>
@@ -190,10 +188,7 @@ Student s = ac.getBean(<span class="str">"student"</span>);
   </table>
 </div>
 
-
-<!-- ═══════════════════════════════════
-     PAGE 2 — XML Lifecycle Example + Annotation Method
-════════════════════════════════════ -->
+<!-- PAGE 2 -->
 <div class="page">
   <div class="page-header">
     <div>
@@ -205,7 +200,6 @@ Student s = ac.getBean(<span class="str">"student"</span>);
 
   <div class="section-label">Method 1 — XML Configuration Lifecycle</div>
 
-  <!-- Person.java -->
   <div class="card">
     <div class="card-title">📄 Person.java — POJO with Init &amp; Destroy Methods</div>
   </div>
@@ -229,7 +223,6 @@ Student s = ac.getBean(<span class="str">"student"</span>);
 }</pre>
   </div>
 
-  <!-- XML Config -->
   <div class="card">
     <div class="card-title">📄 config2.xml — Bean with init-method &amp; destroy-method</div>
   </div>
@@ -250,7 +243,6 @@ Student s = ac.getBean(<span class="str">"student"</span>);
     ✅ Correct: <code>destroy-method="destroy_method"</code></p>
   </div>
 
-  <!-- Driver Class -->
   <div class="card">
     <div class="card-title">📄 Driver.java — Use ConfigurableApplicationContext to call close()</div>
   </div>
@@ -288,7 +280,6 @@ Destroy method executed</pre>
     <p><code>ApplicationContext</code> does NOT have a <code>close()</code> method. <code>ConfigurableApplicationContext</code> extends it and provides <code>close()</code> and <code>registerShutdownHook()</code> — needed to trigger the destroy method.</p>
   </div>
 
-  <!-- Annotation Method -->
   <div class="section-label">Method 2 — Annotation-Based Lifecycle</div>
 
   <div class="code-block">
@@ -307,7 +298,6 @@ Destroy method executed</pre>
 }</pre>
   </div>
 
-  <!-- Method 3 — Interfaces -->
   <div class="section-label">Method 3 — Interface-Based Lifecycle</div>
 
   <table class="cmp-table">
@@ -333,10 +323,7 @@ Destroy method executed</pre>
   </div>
 </div>
 
-
-<!-- ═══════════════════════════════════
-     PAGE 3 — XML vs Annotation Project Steps + Interview
-════════════════════════════════════ -->
+<!-- PAGE 3 -->
 <div class="page">
   <div class="page-header">
     <div>
@@ -386,7 +373,6 @@ Student s = ac.getBean(Student.<span class="kw">class</span>);</pre>
     </div>
   </div>
 
-  <!-- XML vs Annotation Comparison -->
   <div class="section-label">XML vs Annotation Approach — Comparison</div>
 
   <table class="cmp-table">
@@ -402,7 +388,6 @@ Student s = ac.getBean(Student.<span class="kw">class</span>);</pre>
     </tbody>
   </table>
 
-  <!-- Interview Questions -->
   <div class="section-label">Interview Questions</div>
 
   <div class="interview-box">
@@ -434,5 +419,130 @@ Student s = ac.getBean(Student.<span class="kw">class</span>);</pre>
   </div>
 </div>
 
+<div class="page"><div class="page-header"><div><div class="subject">Spring Framework</div><div class="topic">Bean Life Cycle — Easy Understanding &amp; Full Flow</div></div><div class="badge">PART 4 · EXTRA</div></div>
+<div class="section-label">Understand in 30 seconds — Employee Analogy</div>
+<div class="example-card"><div class="ex-label">🏢 Real-Life Analogy — Employee in a Company <span class="pill-outline">EXTRA</span></div>
+<table class="cmp-table"><thead><tr><th>Company</th><th>Spring Bean</th><th>Meaning</th></tr></thead><tbody><tr><td>HR recruits the employee</td><td>Bean Created</td><td>Spring calls the constructor</td></tr><tr><td>Gives laptop, ID card, manager</td><td>Dependency Injection</td><td>Setter / constructor injection</td></tr><tr><td>Induction training before work</td><td><b>Init method</b></td><td>@PostConstruct / init-method</td></tr><tr><td>Employee does daily work</td><td>Bean Used</td><td>Your business methods run</td></tr><tr><td>Employee resigns (company closes)</td><td>Container Closed</td><td>c.close()</td></tr><tr><td>Returns laptop, clears desk, exit formalities</td><td><b>Destroy method</b></td><td>@PreDestroy / destroy-method</td></tr></tbody></table></div>
+<div class="def-box"><div class="def-label">📖 Constructor vs Init vs Destroy <span class="pill-outline">EXTRA</span></div><p>The <b>constructor</b> only <i>builds</i> the object. <b>Init</b> is where the object gets <i>ready</i> (after all its dependencies are injected). <b>Destroy</b> is the cleanup right before the bean dies.</p></div>
+<div class="section-label">Why not just use the constructor?</div>
+<div class="two-col"><div><div class="code-block"><pre><span class="kw">public</span> <span class="kw">class</span> Person {
+    <span class="an">@Autowired</span> Laptop laptop;
+
+    <span class="kw">public</span> Person() {
+        <span class="cm">// laptop is still NULL here!</span>
+        laptop.start();   <span class="cm">// NullPointerException</span>
+    }
+}</pre></div></div><div><div class="code-block"><pre><span class="kw">public</span> <span class="kw">class</span> Person {
+    <span class="an">@Autowired</span> Laptop laptop;
+
+    <span class="an">@PostConstruct</span>
+    <span class="kw">public</span> <span class="kw">void</span> init() {
+        <span class="cm">// laptop is injected by now</span>
+        laptop.start();   <span class="cm">// works</span>
+    }
+}</pre></div></div></div>
+<div class="tip-box"><div class="tip-label">💡 Key Point</div><p>Spring must create the object first (constructor), only then can it inject fields/setters. So anything that <b>needs injected dependencies</b> belongs in the init method, not the constructor.</p></div>
+<div class="section-label">Detailed Internal Flow (what Spring really does)</div>
+<div class="two-col"><div><div class="lc-flow"><div class="lc-step filled">1. Container starts</div><div class="lc-arrow">▼</div><div class="lc-step">2. Instantiate bean (constructor)</div><div class="lc-arrow">▼</div><div class="lc-step">3. Populate properties (DI)</div><div class="lc-arrow">▼</div><div class="lc-step">4. Aware callbacks &nbsp;<small>(BeanNameAware, ApplicationContextAware)</small></div><div class="lc-arrow">▼</div><div class="lc-step">5. BeanPostProcessor — <i>before init</i></div><div class="lc-arrow">▼</div><div class="lc-step filled">6. @PostConstruct</div></div></div><div><div class="lc-flow"><div class="lc-step filled">7. InitializingBean.afterPropertiesSet()</div><div class="lc-arrow">▼</div><div class="lc-step">8. Custom init-method (XML / @Bean)</div><div class="lc-arrow">▼</div><div class="lc-step">9. BeanPostProcessor — <i>after init</i></div><div class="lc-arrow">▼</div><div class="lc-step filled">10. Bean READY — used by application</div><div class="lc-arrow">▼</div><div class="lc-step">11. Container closed</div><div class="lc-arrow">▼</div><div class="lc-step filled">12. @PreDestroy → destroy() → destroy-method</div></div></div></div>
+<div class="tip-box"><div class="tip-label">📌 Important — Order when all 3 ways are used together <span class="pill-outline">EXTRA</span></div><p><b>Init:</b> <code>@PostConstruct</code> → <code>afterPropertiesSet()</code> → <code>init-method</code><br><b>Destroy:</b> <code>@PreDestroy</code> → <code>DisposableBean.destroy()</code> → <code>destroy-method</code></p></div>
+<div class="trick-box"><div class="trick-label">🧠 Memory Trick — Order of Callbacks</div><p><b>Init = "PIC"</b> → <b>P</b>ostConstruct → <b>I</b>nitializingBean → <b>C</b>ustom init-method 📸</p><p style="margin-top:4px;"><b>Destroy = "PDC"</b> → <b>P</b>reDestroy → <b>D</b>isposableBean → <b>C</b>ustom destroy-method</p><p style="margin-top:4px;">Birth to death: <b>C-D-I-U-D</b> (from your notes) · Callback order: <b>PIC / PDC</b></p></div>
+</div>
+<div class="page"><div class="page-header"><div><div class="subject">Spring Framework</div><div class="topic">Interface Method, All 3 Ways Together &amp; Scope</div></div><div class="badge">PART 5 · EXTRA</div></div>
+<div class="section-label">Method 3 — Interface-Based Lifecycle (Full Example)</div>
+<div class="code-block"><pre><span class="an">@Component</span>
+<span class="kw">public</span> <span class="kw">class</span> Person <span class="kw">implements</span> InitializingBean, DisposableBean {
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="kw">void</span> afterPropertiesSet() {          <span class="cm">// INIT</span>
+        System.out.println(<span class="str">&quot;Init — afterPropertiesSet()&quot;</span>);
+    }
+
+    <span class="kw">public</span> <span class="kw">void</span> sing() {
+        System.out.println(<span class="str">&quot;Person is singing&quot;</span>);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="kw">void</span> destroy() {                     <span class="cm">// DESTROY</span>
+        System.out.println(<span class="str">&quot;Destroy — DisposableBean.destroy()&quot;</span>);
+    }
+}</pre></div><div class="out-bar"><div class="out-label">📤 Output</div><pre>Init — afterPropertiesSet()
+Person is singing
+Destroy — DisposableBean.destroy()</pre></div>
+<div class="warn-box"><div class="warn-label">⚠️ Drawback <span class="pill-outline">EXTRA</span></div><p>Interfaces <b>tie your class to the Spring API</b> (it will not run without Spring on the classpath). That is why annotations / XML are preferred. Interface method is mainly asked in interviews and used inside Spring’s own classes.</p></div>
+<div class="section-label">All 3 Ways in ONE Bean — See the Order</div>
+<div class="code-block"><pre><span class="kw">public</span> <span class="kw">class</span> Person <span class="kw">implements</span> InitializingBean, DisposableBean {
+
+    <span class="an">@PostConstruct</span>  <span class="kw">public</span> <span class="kw">void</span> a() { System.out.println(<span class="str">&quot;1 @PostConstruct&quot;</span>); }
+    <span class="an">@Override</span> <span class="kw">public</span> <span class="kw">void</span> afterPropertiesSet() { System.out.println(<span class="str">&quot;2 afterPropertiesSet&quot;</span>); }
+    <span class="kw">public</span> <span class="kw">void</span> myInit()  { System.out.println(<span class="str">&quot;3 init-method&quot;</span>); }   <span class="cm">// XML: init-method=&quot;myInit&quot;</span>
+
+    <span class="an">@PreDestroy</span>     <span class="kw">public</span> <span class="kw">void</span> x() { System.out.println(<span class="str">&quot;4 @PreDestroy&quot;</span>); }
+    <span class="an">@Override</span> <span class="kw">public</span> <span class="kw">void</span> destroy() { System.out.println(<span class="str">&quot;5 DisposableBean.destroy&quot;</span>); }
+    <span class="kw">public</span> <span class="kw">void</span> myDestroy(){ System.out.println(<span class="str">&quot;6 destroy-method&quot;</span>); } <span class="cm">// XML: destroy-method=&quot;myDestroy&quot;</span>
+}</pre></div><div class="out-bar"><div class="out-label">📤 Output</div><pre>1 @PostConstruct
+2 afterPropertiesSet
+3 init-method
+(... bean used ...)
+4 @PreDestroy
+5 DisposableBean.destroy
+6 destroy-method</pre></div>
+<div class="example-card"><div class="ex-label">⚖️ Comparison of the 3 Ways <span class="pill-outline">EXTRA</span></div>
+<table class="cmp-table"><thead><tr><th>Point</th><th>XML</th><th>Annotation</th><th>Interface</th></tr></thead><tbody><tr><td>Init / Destroy</td><td>init-method / destroy-method</td><td>@PostConstruct / @PreDestroy</td><td>afterPropertiesSet() / destroy()</td></tr><tr><td>Tied to Spring code?</td><td>No (POJO stays clean)</td><td>No (standard JSR-250)</td><td><b>Yes</b></td></tr><tr><td>Method name</td><td>Any name you choose</td><td>Any name you choose</td><td>Fixed names</td></tr><tr><td>Best for</td><td>Third-party classes, legacy</td><td><b>Modern projects</b></td><td>Spring internals / interviews</td></tr><tr><td>Needs setup</td><td>Bean tag attributes</td><td><code>&lt;context:annotation-config/&gt;</code> or scanning</td><td>Nothing extra</td></tr></tbody></table></div>
+<div class="section-label">Bean Scope and Life Cycle</div>
+<table class="cmp-table"><thead><tr><th>Scope</th><th>Created</th><th>Init called</th><th>Destroy called</th></tr></thead><tbody><tr><td>singleton (default)</td><td>At container start (or first use if @Lazy)</td><td>Once</td><td>✅ On container close</td></tr><tr><td>prototype</td><td>Every getBean() call</td><td>Every time a new object is made</td><td><b>❌ Never</b> — Spring does not manage its death</td></tr></tbody></table>
+<div class="warn-box"><div class="warn-label">⚠️ Very Common Interview Trap</div><p>In a <b>prototype</b> bean, <code>@PreDestroy</code> / destroy-method will NOT run. Spring hands the object over and forgets it; <i>you</i> must clean up.</p></div>
+<div class="section-label">Rules for Init and Destroy Methods <span class="pill-outline">EXTRA</span></div>
+<div class="two-col"><div class="card"><div class="card-title">✅ Rules</div><p>Return type <code>void</code></p><p><b>No parameters</b></p><p>Can have any name (XML / annotation)</p><p>Can be <code>public</code>, <code>protected</code> or <code>private</code></p><p>Can throw an exception</p></div><div class="card"><div class="card-title">❌ If something goes wrong</div><p>Exception in init → <code>BeanCreationException</code>, context fails to start</p><p>Wrong method name in XML → same exception</p><p>Annotation not working in XML project → forgot <code>&lt;context:annotation-config/&gt;</code></p><p>Destroy not printing → forgot <code>c.close()</code></p></div></div>
+</div>
+<div class="page"><div class="page-header"><div><div class="subject">Spring Framework</div><div class="topic">Closing the Container, BeanPostProcessor &amp; More</div></div><div class="badge">PART 6 · EXTRA</div></div>
+<div class="section-label">How to trigger the Destroy Method</div>
+<table class="cmp-table"><thead><tr><th>Way</th><th>Code</th><th>When to use</th></tr></thead><tbody><tr><td>Manual close</td><td><code>c.close();</code></td><td>Simple demo / standalone programs</td></tr><tr><td>Shutdown hook</td><td><code>c.registerShutdownHook();</code></td><td>Runs destroy automatically when JVM exits</td></tr><tr><td>Web / Spring Boot</td><td>Automatic</td><td>Container closes when the server stops</td></tr></tbody></table>
+<div class="code-block"><pre>ConfigurableApplicationContext c =
+    <span class="kw">new</span> ClassPathXmlApplicationContext(<span class="str">&quot;config2.xml&quot;</span>);
+c.registerShutdownHook();        <span class="cm">// no need to call close() manually</span>
+Person p = c.getBean(<span class="str">&quot;person&quot;</span>, Person.<span class="kw">class</span>);
+p.sing();
+<span class="cm">// JVM exits -&gt; destroy_method() runs automatically</span></pre></div>
+<div class="tip-box"><div class="tip-label">💡 Remember</div><p><code>ApplicationContext</code> is the interface; <code>ConfigurableApplicationContext</code> adds <code>close()</code> and <code>registerShutdownHook()</code>. If the program ends without either, <b>destroy never runs</b>.</p></div>
+<div class="section-label">Same init / destroy for many beans — default-init-method <span class="pill-outline">EXTRA</span></div>
+<div class="code-block"><pre>&lt;beans default-init-method=<span class="str">&quot;init&quot;</span>
+       default-destroy-method=<span class="str">&quot;cleanup&quot;</span>&gt;
+
+    &lt;bean id=<span class="str">&quot;person&quot;</span>  <span class="kw">class</span>=<span class="str">&quot;com.init_destroy.Person&quot;</span>/&gt;
+    &lt;bean id=<span class="str">&quot;student&quot;</span> <span class="kw">class</span>=<span class="str">&quot;com.init_destroy.Student&quot;</span>/&gt;
+&lt;/beans&gt;
+<span class="cm">&lt;!-- Every bean with methods named init() / cleanup() uses them automatically --&gt;</span></pre></div>
+<div class="section-label">BeanPostProcessor — Hooks around Init <span class="pill-outline">EXTRA</span></div>
+<div class="def-box"><div class="def-label">📖 Definition</div><p><b>BeanPostProcessor</b> is a Spring interface that lets you run your own code <b>before</b> and <b>after</b> the init method of <b>every bean</b> in the container.</p></div>
+<div class="code-block"><pre><span class="an">@Component</span>
+<span class="kw">public</span> <span class="kw">class</span> MyProcessor <span class="kw">implements</span> BeanPostProcessor {
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> Object postProcessBeforeInitialization(Object bean, String name) {
+        System.out.println(<span class="str">&quot;Before init : &quot;</span> + name);
+        <span class="kw">return</span> bean;
+    }
+    <span class="an">@Override</span>
+    <span class="kw">public</span> Object postProcessAfterInitialization(Object bean, String name) {
+        System.out.println(<span class="str">&quot;After init  : &quot;</span> + name);
+        <span class="kw">return</span> bean;
+    }
+}</pre></div><div class="out-bar"><div class="out-label">📤 Output</div><pre>Before init : person
+(@PostConstruct / init-method runs)
+After init  : person</pre></div>
+<div class="two-col"><div class="card"><div class="card-title">🔔 Aware Interfaces</div><p><code>BeanNameAware</code> → gives the bean its own id</p><p><code>ApplicationContextAware</code> → gives access to the container</p><p><code>BeanFactoryAware</code> → gives access to the BeanFactory</p><p>Called <b>after DI, before init</b></p></div><div class="card"><div class="card-title">🏭 BeanFactory vs ApplicationContext</div><p><b>BeanFactory</b> – basic container, creates beans <b>lazily</b> (when requested)</p><p><b>ApplicationContext</b> – advanced, creates singleton beans <b>eagerly at startup</b></p><p>ApplicationContext supports annotations, events, i18n</p><p>In real projects use <b>ApplicationContext</b></p></div></div>
+<div class="section-label">Everyday Real Use of Init &amp; Destroy <span class="pill-outline">EXTRA</span></div>
+<table class="cmp-table"><thead><tr><th>Bean</th><th>@PostConstruct (init)</th><th>@PreDestroy (destroy)</th></tr></thead><tbody><tr><td>DatabaseService</td><td>Open DB connection / create pool</td><td>Close connection</td></tr><tr><td>FileLogger</td><td>Open log file</td><td>Flush and close file</td></tr><tr><td>CacheManager</td><td>Load data into cache</td><td>Clear cache</td></tr><tr><td>EmailService</td><td>Connect to mail server</td><td>Disconnect</td></tr></tbody></table>
+</div>
+<div class="page"><div class="page-header"><div><div class="subject">Spring Framework</div><div class="topic">More Interview Q&amp;A, Mistakes &amp; Revision</div></div><div class="badge">PART 7 · EXTRA</div></div>
+<div class="section-label">More Interview Questions</div>
+<div class="interview-box"><div class="int-label">🎤 Q5. Difference between constructor and @PostConstruct?</div><p>The constructor only creates the object, so injected dependencies are still null. @PostConstruct runs after dependency injection, so the bean can safely use its dependencies.</p></div><div class="interview-box"><div class="int-label">🎤 Q6. What is the order if @PostConstruct, afterPropertiesSet() and init-method are all present?</div><p>@PostConstruct first, then InitializingBean.afterPropertiesSet(), then the custom init-method. Destroy order: @PreDestroy, DisposableBean.destroy(), custom destroy-method.</p></div><div class="interview-box"><div class="int-label">🎤 Q7. Is destroy method called for prototype beans?</div><p>No. Spring creates and hands over prototype beans but does not manage their destruction, so the developer must release resources.</p></div><div class="interview-box"><div class="int-label">🎤 Q8. Which is better: XML, annotation or interface?</div><p>Annotations (@PostConstruct/@PreDestroy) in modern projects — they keep the class independent of Spring. XML suits third-party classes; interfaces tie the class to Spring.</p></div><div class="interview-box"><div class="int-label">🎤 Q9. What is BeanPostProcessor?</div><p>An interface that allows custom logic before and after the initialization of every bean in the container.</p></div><div class="interview-box"><div class="int-label">🎤 Q10. Why does destroy not run in my program?</div><p>The container was never closed. Call close() on ConfigurableApplicationContext or use registerShutdownHook().</p></div><div class="interview-box"><div class="int-label">🎤 Q11. Default scope of a bean and when is it created?</div><p>Singleton. Created at container startup (eagerly) unless marked @Lazy.</p></div><div class="interview-box"><div class="int-label">🎤 Q12. What happens if the init method throws an exception?</div><p>Spring throws BeanCreationException and the bean (and usually the whole context) fails to start.</p></div><div class="interview-box"><div class="int-label">🎤 Q13. ApplicationContext vs BeanFactory in terms of bean creation?</div><p>BeanFactory creates beans lazily on request; ApplicationContext pre-creates singleton beans at startup.</p></div><div class="interview-box"><div class="int-label">🎤 Q14. Can init-method be private or take parameters?</div><p>It can be any access level, but it must be void and take no parameters.</p></div>
+<div class="section-label">Common Mistakes — Quick Check</div>
+<table class="cmp-table"><thead><tr><th>Mistake</th><th>Result</th><th>Fix</th></tr></thead><tbody><tr><td>destroy-method pointing to the init method</td><td>Wrong method runs at close</td><td>Match each attribute to its own method</td></tr><tr><td>Not calling <code>close()</code></td><td>Destroy never runs</td><td>Use ConfigurableApplicationContext + close()</td></tr><tr><td>Using ApplicationContext type for <code>c.close()</code></td><td>Compile error</td><td>Use ConfigurableApplicationContext</td></tr><tr><td>@PostConstruct in XML project without annotation support</td><td>Init never runs</td><td>Add <code>&lt;context:annotation-config/&gt;</code></td></tr><tr><td>Expecting destroy on prototype</td><td>Never called</td><td>Clean up manually</td></tr><tr><td>Init method with parameters</td><td>BeanCreationException</td><td>Keep it <code>void</code> with no params</td></tr></tbody></table>
+<div class="section-label">⭐ One-Page Revision</div>
+<div class="two-col"><div class="card"><div class="card-title">🔁 Lifecycle in one line</div><p>Container Starts → Create → DI → Aware → Init → Ready → Use → Close → Destroy → Removed</p><p><b>CD I UD</b></p></div><div class="card"><div class="card-title">🧠 Callback order</div><p><b>Init = PIC:</b> @PostConstruct → afterPropertiesSet → init-method</p><p><b>Destroy = PDC:</b> @PreDestroy → destroy() → destroy-method</p></div></div>
+<div class="two-col"><div class="card"><div class="card-title">📋 3 Ways</div><p>XML → <code>init-method</code>, <code>destroy-method</code></p><p>Annotation → <code>@PostConstruct</code>, <code>@PreDestroy</code></p><p>Interface → <code>InitializingBean</code>, <code>DisposableBean</code></p></div><div class="card"><div class="card-title">🎯 Must remember</div><p>Constructor runs <b>before</b> DI; init runs <b>after</b> DI</p><p>Destroy needs <code>close()</code> / shutdown hook</p><p>Prototype → <b>no destroy</b></p><p>Annotations are preferred today</p></div></div>
+<div class="trick-box"><div class="trick-label">🧠 Final Story to Remember Everything</div><p><b>Story:</b> HR recruits (create) → gives laptop (DI) → induction (init) → works (use) → resigns (close) → exit formalities (destroy).</p><p style="margin-top:4px;"><b>Phone:</b> Power on → load OS (init) → use → shut down → save data (destroy).</p></div>
+</div>
 </body>
 </html>
