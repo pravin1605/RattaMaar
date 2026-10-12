@@ -6,6 +6,7 @@ import BottomNavigation from "../../components/layout/BottomNavigation";
 import subjects from "../../data/subjects";
 
 import "./Home.css";
+import "./ProgrammingUniverseEntry.css";
 
 const DAILY_GOAL = 3;
 const XP_PER_LEVEL = 5;
@@ -562,6 +563,25 @@ function Home() {
             </span>
           </div>
 
+        </section>
+
+        {/* =================================================
+            PROGRAMMING UNIVERSE ENTRY
+            Separate learning experience; existing NotesWeb stays intact.
+        ================================================= */}
+        <section className="programming-universe-entry" aria-labelledby="programming-universe-title">
+          <div className="programming-entry-mark" aria-hidden="true">⌘</div>
+          <div className="programming-entry-copy">
+            <span className="programming-entry-eyebrow">NEW LEARNING EXPERIENCE</span>
+            <h2 id="programming-universe-title">Programming Universe</h2>
+            <p>Learn by solving missions, fixing bugs, and progressing through coding levels.</p>
+            <div className="programming-entry-tags">
+              <span>Multiple subjects</span><span>Game-based practice</span><span>200+ level-ready</span>
+            </div>
+          </div>
+          <button type="button" className="programming-entry-button" onClick={() => navigate("/programming")}>
+            Enter Universe <span aria-hidden="true">↗</span>
+          </button>
         </section>
 
         {/* =================================================

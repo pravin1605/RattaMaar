@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-boss-002",
+  subjectId: "java-fundamentals",
+  modeId: "boss-mission",
+  levelNumber: 2,
+  title: "The Palindrome That Lies",
+  difficulty: "advanced",
+  estimatedMinutes: 6,
+  challengeType: "find-and-fix",
+  instructions: "This two-pointer palindrome checker reports wrong results. Select the single correction that makes it behave correctly.",
+  content: {
+    language: "java",
+    code: "boolean isPalindrome(String s) {\n    int left = 0;\n    int right = s.length() - 1;\n    while (left < right) {\n        if (s.charAt(left) != s.charAt(right)) {\n            return false;\n        }\n        left++;\n        right++;\n    }\n    return true;\n}",
+    prompt: "Which fix restores correct behaviour?",
+    choices: [
+      { id: "a", label: "Change the loop test to left <= right." },
+      { id: "b", label: "Change right++ to right--." },
+      { id: "c", label: "Change != to == in the comparison." },
+      { id: "d", label: "Change left++ to left--." },
+    ],
+  },
+  evaluation: { strategy: "validated-correction", expectedFixId: "b" },
+  hints: [
+    "The pointer that starts at the end of the string must travel toward the front, not away from it.",
+    "A correct two-pointer scan closes the gap from both ends until the pointers meet.",
+    "Consider what right++ does to the index and whether it ever reaches the value held by left.",
+  ],
+  explanation: {
+    concept: "Two-pointer palindrome scan",
+    summary: "The right index must decrease each pass so the pointers converge; instead it was increasing, walking off the end of the string.",
+    details: "With right++ both indices move right, so they never meet meaningfully and the check compares wrong characters (or throws). Changing to right-- makes left and right close in on the centre, correctly verifying mirrored pairs.",
+  },
+  rewards: { xp: 55 },
+  version: 1,
+};

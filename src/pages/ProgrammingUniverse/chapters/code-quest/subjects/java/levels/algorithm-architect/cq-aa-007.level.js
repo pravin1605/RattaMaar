@@ -1,0 +1,37 @@
+export default {
+  id: "cq-aa-007",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "algorithm-architect",
+  levelNumber: 7,
+  title: "Build the Digit Harvester",
+  difficulty: "intermediate",
+  estimatedMinutes: 4,
+  challengeType: "code-ordering",
+  instructions: "Order the scrambled blocks into a method body that adds up the decimal digits of a positive int n.",
+  content: {
+    language: "java",
+    prompt: "Each pass should peel off the last digit, shrink the number, and stop when nothing is left.",
+    blocks: [
+      { id: "b3", code: "        sum += n % 10;" },
+      { id: "b1", code: "    int sum = 0;" },
+      { id: "b5", code: "    }" },
+      { id: "b4", code: "        n = n / 10;" },
+      { id: "b2", code: "    while (n > 0) {" },
+      { id: "b6", code: "    return sum;" },
+    ],
+  },
+  evaluation: { strategy: "ordered-blocks", expectedOrder: ["b1", "b2", "b3", "b4", "b5", "b6"] },
+  hints: [
+    "Remainder by ten reveals the last digit; integer division by ten removes it.",
+    "The accumulator is seeded before the loop and reported after the loop drains the number.",
+  ],
+  explanation: {
+    concept: "Digit extraction loop",
+    summary: "Repeatedly add n % 10 to the sum, then shrink n with integer division, until n reaches zero.",
+    details: "For n = 234 the passes harvest 4, then 3, then 2, leaving 0 and terminating the while guard — sum ends at 9. Swapping the harvest and shrink lines would misalign which digit gets read against when the number shrinks, and putting the return inside the loop would report before all digits are harvested.",
+    modelAnswer: "int sum = 0;\nwhile (n > 0) {\n    sum += n % 10;\n    n = n / 10;\n}\nreturn sum;",
+  },
+  rewards: { xp: 28 },
+  version: 1,
+};

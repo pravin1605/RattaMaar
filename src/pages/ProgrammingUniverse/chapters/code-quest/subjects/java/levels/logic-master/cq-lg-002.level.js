@@ -1,0 +1,35 @@
+export default {
+  id: "cq-lg-002",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "logic-master",
+  levelNumber: 2,
+  title: "The Side Effect That Was Skipped",
+  difficulty: "beginner",
+  estimatedMinutes: 2,
+  challengeType: "predict-output",
+  instructions: "Predict the printed value of x. Choose one answer.",
+  content: {
+    language: "java",
+    prompt: "The right operand contains an increment. Does it run?",
+    code: "int x = 5;\nboolean b = (x > 3) || (++x > 100);\nSystem.out.println(x);",
+    choices: [
+      { id: "a", label: "5" },
+      { id: "b", label: "6" },
+      { id: "c", label: "100" },
+      { id: "d", label: "The value cannot be predicted at compile time" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "a" },
+  hints: [
+    "|| only needs one true side to settle the whole expression.",
+    "If the left comparison already succeeds, the right operand — including any side effects inside it — is skipped.",
+  ],
+  explanation: {
+    concept: "Short-circuit evaluation of ||",
+    summary: "x > 3 is true, so the || short-circuits and the ++x never executes; x keeps its declared value.",
+    details: "Short-circuiting suppresses side effects, not just computation. Because the left operand alone makes the || true, the increment on the right is never applied. Relying on side effects inside short-circuited expressions is a classic source of logic bugs.",
+  },
+  rewards: { xp: 17 },
+  version: 1,
+};

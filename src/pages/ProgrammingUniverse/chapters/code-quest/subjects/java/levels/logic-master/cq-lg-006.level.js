@@ -1,0 +1,35 @@
+export default {
+  id: "cq-lg-006",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "logic-master",
+  levelNumber: 6,
+  title: "The Switch That Keeps Going",
+  difficulty: "intermediate",
+  estimatedMinutes: 3,
+  challengeType: "predict-output",
+  instructions: "This classic switch is missing some break statements. Predict the final value of out.",
+  content: {
+    language: "java",
+    prompt: "code is 2. Which letters end up concatenated into out?",
+    code: "int code = 2;\nString out = \"\";\nswitch (code) {\n    case 1: out += \"A\";\n    case 2: out += \"B\";\n    case 3: out += \"C\";\n        break;\n    default: out += \"D\";\n}",
+    choices: [
+      { id: "a", label: "B" },
+      { id: "b", label: "BC" },
+      { id: "c", label: "BCD" },
+      { id: "d", label: "ABCD" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "b" },
+  hints: [
+    "Execution enters at the matching case label, never at case 1 by default.",
+    "Without a break, control keeps flowing into the statements of the following labels until it hits one.",
+  ],
+  explanation: {
+    concept: "switch fallthrough",
+    summary: "Matching case 2 appends B, then fallthrough appends C before the break stops the switch.",
+    details: "Java's classic switch jumps to the matching label and then executes every statement below it until a break (or the switch end). Case 1 is skipped on entry, and default is not reached because the break exits first. This is why modern Java uses arrow-form cases (case 2 -> ...) that do not fall through.",
+  },
+  rewards: { xp: 26 },
+  version: 1,
+};

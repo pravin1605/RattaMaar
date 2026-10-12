@@ -1,0 +1,30 @@
+export default {
+  id: "cq-aa-004",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "algorithm-architect",
+  levelNumber: 4,
+  title: "The Base Case That Must Not Break",
+  difficulty: "intermediate",
+  estimatedMinutes: 3,
+  challengeType: "code-completion",
+  instructions: "The recursive factorial needs its base-case return value. Type the number that belongs in the blank.",
+  content: {
+    language: "java",
+    prompt: "factorial(0) and factorial(1) must stop the recursion with the mathematically correct product.",
+    code: "static int factorial(int n) {\n    if (n <= 1) {\n        return ____;\n    }\n    return n * factorial(n - 1);\n}",
+  },
+  evaluation: { strategy: "structured-answer", acceptedAnswers: ["1"] },
+  hints: [
+    "The blank is the multiplicative identity — the value that ends the chain without changing any product.",
+    "If the base case returned nothing useful, every call above it would collapse; trace factorial(2) down to the stopping point.",
+  ],
+  explanation: {
+    concept: "Recursion base case",
+    summary: "factorial returns 1 when n <= 1, because 0! = 1! = 1 and multiplying by 1 leaves every unwinding product intact.",
+    details: "factorial(3) unfolds as 3 * 2 * base. Returning 0 instead would make every factorial zero (the identity mistake); omitting the guard recurses until a StackOverflowError. A base case must be reachable for every legal input and must return the neutral element of the combining operation.",
+    modelAnswer: "static int factorial(int n) {\n    if (n <= 1) {\n        return 1;\n    }\n    return n * factorial(n - 1);\n}",
+  },
+  rewards: { xp: 22 },
+  version: 1,
+};

@@ -1,0 +1,35 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-boss-007",
+  subjectId: "java-fundamentals",
+  modeId: "boss-mission",
+  levelNumber: 7,
+  title: "Rebuild the Word-Frequency Report",
+  difficulty: "advanced",
+  estimatedMinutes: 6,
+  challengeType: "code-ordering",
+  instructions: "The four blocks below print each distinct word with how often it appears. Put them in the order that makes the program compile and run correctly.",
+  content: {
+    language: "java",
+    prompt: "Order the blocks from first executed to last executed.",
+    blocks: [
+      { id: "b4", code: "for (String word : words.keySet()) {\n    System.out.println(word + \" -> \" + words.get(word));\n}" },
+      { id: "b1", code: "Map<String, Integer> words = new HashMap<>();" },
+      { id: "b3", code: "for (String s : new String[] { \"pen\", \"ink\", \"pen\" }) {\n    words.merge(s, 1, Integer::sum);\n}" },
+      { id: "b2", code: "System.out.println(\"word -> count\");" },
+    ],
+  },
+  evaluation: { strategy: "ordered-blocks", expectedOrder: ["b2", "b1", "b3", "b4"] },
+  hints: [
+    "A header line is printed before any map work, otherwise the report is out of order.",
+    "The map must be created before the loop that writes into it, and the loop must run before anything reads it.",
+    "Sequence is: header, create map, fill map, print map.",
+  ],
+  explanation: {
+    concept: "Map building order and merge",
+    summary: "The header prints first, then the map is created, then each word is counted with merge, and finally the entries are printed.",
+    details: "words.merge(s, 1, Integer::sum) inserts 1 for a new key and adds 1 to the existing value otherwise, so pen ends at 2 and ink at 1. Referencing the map before its declaration would not compile, and printing before the fill loop would show an empty report.",
+  },
+  rewards: { xp: 50 },
+  version: 1,
+};

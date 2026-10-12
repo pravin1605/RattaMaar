@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-tc-002",
+  subjectId: "java-fundamentals",
+  modeId: "timed-challenge",
+  levelNumber: 2,
+  title: "Stop the Loop Now",
+  difficulty: "beginner",
+  estimatedMinutes: 1,
+  timeLimitSeconds: 15,
+  challengeType: "multiple-choice",
+  instructions: "Name the keyword that terminates a loop immediately, leaving the remaining iterations unrun.",
+  content: {
+    language: "java",
+    code: "for (int i = 0; i < 10; i++) {\n    if (i == 4) {\n        // stop everything here\n    }\n}",
+    prompt: "Which keyword belongs in the comment?",
+    choices: [
+      { id: "a", label: "continue" },
+      { id: "b", label: "break" },
+      { id: "c", label: "return" },
+      { id: "d", label: "exit" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "b" },
+  hints: [
+    "One control keyword skips only the current iteration; a different one abandons the whole cycle.",
+    "Java has no built-in exit statement, and this keyword only affects the innermost loop.",
+  ],
+  explanation: {
+    concept: "Loop control keywords",
+    summary: "break ends the enclosing loop at once, while continue only skips to the next iteration. return leaves the method, and exit is not a Java keyword.",
+    details: "When break runs, control jumps to the first statement after the loop, so iterations 5 through 9 never execute.",
+  },
+  rewards: { xp: 15 },
+  version: 1,
+};

@@ -1,0 +1,35 @@
+export default {
+  id: "cq-aa-008",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "algorithm-architect",
+  levelNumber: 8,
+  title: "What Binary Search Demands First",
+  difficulty: "advanced",
+  estimatedMinutes: 3,
+  challengeType: "multiple-choice",
+  instructions: "Before running binary search on an array of ints, one property must already hold. Choose it.",
+  content: {
+    language: "java",
+    prompt: "The algorithm repeatedly discards one half after probing the middle. Which precondition makes that discard safe?",
+    code: "int lo = 0, hi = arr.length - 1;\nwhile (lo <= hi) {\n    int mid = (lo + hi) / 2;\n    if (arr[mid] == target) return mid;\n    else if (arr[mid] < target) lo = mid + 1;\n    else hi = mid - 1;\n}\nreturn -1;",
+    choices: [
+      { id: "a", label: "The array is already sorted in ascending order" },
+      { id: "b", label: "The array length is a power of two" },
+      { id: "c", label: "The array contains no duplicate values" },
+      { id: "d", label: "The array has been shuffled recently" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "a" },
+  hints: [
+    "Every discard compares the probe with the target; that inference only travels to positions if element order follows index order.",
+    "Size, duplicates, and history do not affect correctness here — arrangement does.",
+  ],
+  explanation: {
+    concept: "Binary search preconditions",
+    summary: "Binary search is correct only on data sorted in the same order the comparisons assume — ascending here.",
+    details: "If arr[mid] < target, the algorithm throws away everything to the left; in unsorted data the target could still hide there, so answers are silently wrong. Duplicates only affect which matching index is found, not whether the search succeeds, and length need not be special. The invariant maintained is: if the target exists, it lies within [lo, hi].",
+  },
+  rewards: { xp: 31 },
+  version: 1,
+};

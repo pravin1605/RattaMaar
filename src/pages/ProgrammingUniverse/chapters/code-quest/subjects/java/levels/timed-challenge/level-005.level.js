@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-tc-005",
+  subjectId: "java-fundamentals",
+  modeId: "timed-challenge",
+  levelNumber: 5,
+  title: "Spot the Real main Signature",
+  difficulty: "intermediate",
+  estimatedMinutes: 1,
+  timeLimitSeconds: 30,
+  challengeType: "multiple-choice",
+  instructions: "Select the only method header the JVM accepts as the program entry point.",
+  content: {
+    language: "java",
+    prompt: "Which signature is a valid Java entry point?",
+    choices: [
+      { id: "a", label: "public void main(String[] args)" },
+      { id: "b", label: "public static void main(String[] args)" },
+      { id: "c", label: "static int main(String args)" },
+      { id: "d", label: "public static void Main(String[] args)" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "b" },
+  hints: [
+    "The JVM runs this method before any object is constructed, so it cannot be an instance method.",
+    "The launcher ignores the return value, and the method name is matched exactly, including case.",
+    "The argument must be an array so the runtime can pass multiple command-line tokens.",
+  ],
+  explanation: {
+    concept: "Java entry point requirements",
+    summary: "Only public static void main(String[] args) satisfies every rule the JVM checks before launching a program.",
+    details: "static lets it run without an instance, void matches the ignored return, the lowercase name main is required by the spec, and String[] carries command-line arguments.",
+  },
+  rewards: { xp: 15 },
+  version: 1,
+};

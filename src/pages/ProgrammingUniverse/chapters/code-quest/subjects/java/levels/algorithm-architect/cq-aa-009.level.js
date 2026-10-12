@@ -1,0 +1,36 @@
+export default {
+  id: "cq-aa-009",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "algorithm-architect",
+  levelNumber: 9,
+  title: "Unscramble the Prime Gate",
+  difficulty: "advanced",
+  estimatedMinutes: 4,
+  challengeType: "code-ordering",
+  instructions: "Order the blocks into a correct isPrime check for any int n.",
+  content: {
+    language: "java",
+    prompt: "Reject the non-primes below the gate first, then test candidate divisors, and only announce primality if every test survives.",
+    blocks: [
+      { id: "b3", code: "        if (n % i == 0) return false;" },
+      { id: "b1", code: "    if (n < 2) return false;" },
+      { id: "b4", code: "    }" },
+      { id: "b5", code: "    return true;" },
+      { id: "b2", code: "    for (int i = 2; i * i <= n; i++) {" },
+    ],
+  },
+  evaluation: { strategy: "ordered-blocks", expectedOrder: ["b1", "b2", "b3", "b4", "b5"] },
+  hints: [
+    "The tiny-input filter runs before any loop exists, because the divisor scan has nothing sensible to say about them.",
+    "A single witness of divisibility condemns immediately; the innocent verdict can only be announced after the full scan.",
+  ],
+  explanation: {
+    concept: "Trial division primality test",
+    summary: "Guard n < 2, try divisors only up to the square root, return false on the first witness, and true only after the loop completes.",
+    details: "If n = a * b, one factor is at most sqrt(n), so i * i <= n suffices — cutting work from O(n) to O(sqrt n). The true return must sit outside the loop: placing it inside would declare prime after merely testing divisor 2. Candidates below 2 slip through any divisor scan unchallenged, so the early gate is required for correctness.",
+    modelAnswer: "static boolean isPrime(int n) {\n    if (n < 2) return false;\n    for (int i = 2; i * i <= n; i++) {\n        if (n % i == 0) return false;\n    }\n    return true;\n}",
+  },
+  rewards: { xp: 33 },
+  version: 1,
+};

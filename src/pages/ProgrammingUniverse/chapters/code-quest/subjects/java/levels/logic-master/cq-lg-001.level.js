@@ -1,0 +1,35 @@
+export default {
+  id: "cq-lg-001",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "logic-master",
+  levelNumber: 1,
+  title: "The Division That Never Happens",
+  difficulty: "beginner",
+  estimatedMinutes: 2,
+  challengeType: "predict-output",
+  instructions: "Predict what this program prints or whether it throws. Choose one answer.",
+  content: {
+    language: "java",
+    prompt: "a holds zero. The right operand would divide by it. What is printed?",
+    code: "int a = 0;\nboolean ok = (a != 0) && (10 / a == 2);\nSystem.out.println(ok);",
+    choices: [
+      { id: "a", label: "true" },
+      { id: "b", label: "false" },
+      { id: "c", label: "The program crashes with ArithmeticException" },
+      { id: "d", label: "Nothing is printed because compilation fails" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "b" },
+  hints: [
+    "&& is lazy: if the left side already decides the outcome, the right side is never evaluated.",
+    "Ask whether a != 0 can save the second test from ever running.",
+  ],
+  explanation: {
+    concept: "Short-circuit evaluation of &&",
+    summary: "a != 0 is false, so && skips the division entirely and ok becomes false.",
+    details: "With &&, a false left operand guarantees a false result, so Java never evaluates the right operand — no division by zero, no exception. This guard pattern (test the safe condition first) is idiomatic defensive Java.",
+  },
+  rewards: { xp: 15 },
+  version: 1,
+};

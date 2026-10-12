@@ -1,0 +1,35 @@
+export default {
+  id: "cq-lg-004",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "logic-master",
+  levelNumber: 4,
+  title: "Which Branch of the Chain Wins?",
+  difficulty: "intermediate",
+  estimatedMinutes: 3,
+  challengeType: "predict-output",
+  instructions: "Several conditions in this chain are true for n = 15. Predict exactly what is printed.",
+  content: {
+    language: "java",
+    prompt: "Only one label ever reaches the console. Which one?",
+    code: "int n = 15;\nif (n > 10) {\n    System.out.println(\"A\");\n} else if (n > 5) {\n    System.out.println(\"B\");\n} else if (n % 3 == 0) {\n    System.out.println(\"C\");\n} else {\n    System.out.println(\"D\");\n}",
+    choices: [
+      { id: "a", label: "A" },
+      { id: "b", label: "B" },
+      { id: "c", label: "A then C" },
+      { id: "d", label: "C" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "a" },
+  hints: [
+    "An else-if chain is a race: the first true test takes the whole prize.",
+    "Once a branch runs, every later branch — even a matching one — is skipped.",
+  ],
+  explanation: {
+    concept: "else-if chain fallthrough",
+    summary: "n > 10 is true, so branch A runs and the rest of the chain is never tested.",
+    details: "Although 15 is also greater than 5 and divisible by 3, the chain stops at the first match. Order matters: overlapping conditions must be arranged from most specific to most general, otherwise an earlier broad test shadows the later narrow ones.",
+  },
+  rewards: { xp: 22 },
+  version: 1,
+};

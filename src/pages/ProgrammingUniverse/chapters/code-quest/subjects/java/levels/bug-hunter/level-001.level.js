@@ -1,0 +1,28 @@
+export default {
+  chapterId: "code-quest",
+  id: "java-bug-hunter-syntax-basics-001",
+  subjectId: "java-fundamentals",
+  modeId: "bug-hunter",
+  levelNumber: 1,
+  title: "Repair the Missing Brace",
+  difficulty: "beginner",
+  estimatedMinutes: 2,
+  challengeType: "find-and-fix",
+  instructions: "The code block is incomplete. Choose the correction that makes the Java block syntactically complete.",
+  content: {
+    language: "java",
+    code: 'if (age >= 18) {\n    System.out.println("Eligible");',
+    prompt: "Which correction is required?",
+    choices: [
+      { id: "add-closing-brace", label: "Add a closing } after the print statement." },
+      { id: "change-operator", label: "Change >= to ==." },
+      { id: "remove-if", label: "Remove the if statement." },
+    ],
+  },
+  evaluation: { strategy: "validated-correction", expectedFixId: "add-closing-brace" },
+  hints: ["Look at the opening curly brace after the if condition.", "A Java block must have a matching closing brace."],
+  explanation: { concept: "Java block syntax", summary: "An opening curly brace { starts a block. A matching closing brace } ends it. The comparison operator does not fix this syntax error." },
+  rewards: { xp: 10 },
+  unlocks: { nextLevelId: null },
+  version: 1,
+};

@@ -1,0 +1,30 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-tc-004",
+  subjectId: "java-fundamentals",
+  modeId: "timed-challenge",
+  levelNumber: 4,
+  title: "How Big Is the Array?",
+  difficulty: "intermediate",
+  estimatedMinutes: 1,
+  timeLimitSeconds: 25,
+  challengeType: "numeric-answer",
+  instructions: "Enter the number of elements arr reports through arr.length after this code runs.",
+  content: {
+    language: "java",
+    code: "int[] arr = new int[10];\narr[0] = 5;\narr[1] = 7;\narr[2] = 9;",
+    prompt: "How many elements does arr.length report?",
+  },
+  evaluation: { strategy: "blank-count", expectedCount: 10 },
+  hints: [
+    "An array's size is fixed when it is created, not when its slots are filled.",
+    "Only three positions were assigned, but the length reflects the allocation expression.",
+  ],
+  explanation: {
+    concept: "Array length is fixed at creation",
+    summary: "arr.length reports the allocated capacity of 10, independent of how many elements were actually assigned.",
+    details: "new int[10] reserves ten slots and zero-fills them. Writing to indices 0-2 changes stored values but never changes the length property.",
+  },
+  rewards: { xp: 15 },
+  version: 1,
+};

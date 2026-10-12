@@ -1,0 +1,35 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-sql-002",
+  subjectId: "sql",
+  modeId: "query-master",
+  levelNumber: 2,
+  title: "Which Employees Survive the INNER JOIN?",
+  difficulty: "beginner",
+  estimatedMinutes: 3,
+  challengeType: "predict-output",
+  instructions: "Predict the number of result rows of the join.",
+  content: {
+    language: "sql",
+    code: "employees\nid | name | dept  | salary\n1  | Ann  | Eng   | 5000\n2  | Bo   | Eng   | 6000\n3  | Cy   | Sales | 6000\n4  | Di   | Sales | 7000\n5  | Ed   | IT    | 4000\n6  | Fay  | IT    | NULL\n\ndepts\ndept  | floor\nEng   | 2\nSales | 3\nHR    | 4\n\n-- query\nSELECT e.name, d.floor\nFROM employees e\nJOIN depts d ON e.dept = d.dept;",
+    prompt: "How many rows does the result contain?",
+    choices: [
+      { id: "a", label: "3 rows" },
+      { id: "b", label: "4 rows" },
+      { id: "c", label: "5 rows" },
+      { id: "d", label: "6 rows" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "b" },
+  hints: [
+    "INNER JOIN keeps only employee rows that find a matching department tuple; unmatched rows disappear.",
+    "IT has no department tuple, and HR has no employee tuple — neither appears in the output.",
+  ],
+  explanation: {
+    concept: "INNER JOIN matching",
+    summary: "4 rows: Ann and Bo match Eng, Cy and Di match Sales. Ed and Fay (dept IT) have no match in depts, and the HR department matches no employee, so all of them drop out.",
+    details: "An INNER JOIN emits one row per matching pair. Here each employee has at most one dept tuple, so matches are 1:1. Switching to LEFT JOIN would keep all 6 employees with NULL floors for IT, and a RIGHT JOIN would keep HR with NULL names — the classic way to surface 'missing' side rows.",
+  },
+  rewards: { xp: 15 },
+  version: 1,
+};

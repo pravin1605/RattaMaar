@@ -1,0 +1,35 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-sql-008",
+  subjectId: "sql",
+  modeId: "query-master",
+  levelNumber: 8,
+  title: "What an Index Really Costs",
+  difficulty: "advanced",
+  estimatedMinutes: 4,
+  challengeType: "multiple-choice",
+  instructions: "Choose the statement that correctly describes a database index.",
+  content: {
+    language: "sql",
+    code: "-- a supporting index for the recurring filter\nCREATE INDEX idx_emp_salary ON employees (salary);",
+    prompt: "Which statement about this index is correct?",
+    choices: [
+      { id: "a", label: "It speeds up reads while writes to the table and storage usage become more expensive." },
+      { id: "b", label: "It stores a full duplicate of every row, doubling table size exactly." },
+      { id: "c", label: "It removes the need for the primary key of the table." },
+      { id: "d", label: "It speeds up INSERT statements because the engine no longer scans rows." },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "a" },
+  hints: [
+    "An index is an extra, engine-maintained structure that points at rows rather than replacing them.",
+    "Every change to the table must also update every index built on it — that is where the cost lands.",
+  ],
+  explanation: {
+    concept: "Indexes: read/write trade-off",
+    summary: "Indexes turn full scans into fast seeks for SELECT/WHERE (and ORDER BY), but the structure must be maintained on every INSERT/UPDATE/DELETE and consumes extra storage.",
+    details: "A B-tree index stores key values plus row locators, not full copies (B is wrong). It complements, never replaces, the primary key (C). Writes get slower, not faster (D). Low-cardinality columns like dept benefit little; highly-filtered range columns like salary benefit a lot — which is why idx_emp_salary exists in the snippet.",
+  },
+  rewards: { xp: 30 },
+  version: 1,
+};

@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-boss-003",
+  subjectId: "java-fundamentals",
+  modeId: "boss-mission",
+  levelNumber: 3,
+  title: "Rebuild the Counting Pipeline",
+  difficulty: "advanced",
+  estimatedMinutes: 8,
+  challengeType: "code-ordering",
+  instructions: "Arrange the five blocks into the order that turns data into an ascending output using a counting approach.",
+  content: {
+    language: "java",
+    prompt: "data holds small non-negative ints and max is their largest value. Order the steps.",
+    blocks: [
+      { id: "b1", code: "int[] count = new int[max + 1];" },
+      { id: "b2", code: "for (int v : data) {\n    count[v]++;\n}" },
+      { id: "b3", code: "StringBuilder out = new StringBuilder();" },
+      { id: "b4", code: "for (int i = 0; i < count.length; i++) {\n    for (int k = 0; k < count[i]; k++) {\n        out.append(i).append(\" \");\n    }\n}" },
+      { id: "b5", code: "System.out.println(out);" },
+    ],
+  },
+  evaluation: { strategy: "ordered-blocks", expectedOrder: ["b1", "b2", "b3", "b4", "b5"] },
+  hints: [
+    "The histogram array must be allocated before any value can be recorded into it.",
+    "Tallying the input happens before anything is turned into text.",
+    "Displaying the result is the final step, after the whole output string is assembled.",
+  ],
+  explanation: {
+    concept: "Counting-sort style pipeline",
+    summary: "The flow allocates the count array, tallies each input value, prepares a builder, walks the counts in ascending index order to append repeats, then prints.",
+    details: "count[v]++ builds a frequency table keyed by value. The nested loop replays each index i exactly count[i] times in increasing order, which is what produces the sorted sequence; printing last avoids an empty output.",
+  },
+  rewards: { xp: 55 },
+  version: 1,
+};

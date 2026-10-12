@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-tc-001",
+  subjectId: "java-fundamentals",
+  modeId: "timed-challenge",
+  levelNumber: 1,
+  title: "Integer Division Flash",
+  difficulty: "beginner",
+  estimatedMinutes: 1,
+  timeLimitSeconds: 20,
+  challengeType: "multiple-choice",
+  instructions: "Quickly pick the value Java computes for the expression 7 / 2 when both operands are int.",
+  content: {
+    language: "java",
+    code: "int a = 7;\nint b = 2;\nSystem.out.println(a / b);",
+    prompt: "What is printed?",
+    choices: [
+      { id: "a", label: "3" },
+      { id: "b", label: "3.5" },
+      { id: "c", label: "4" },
+      { id: "d", label: "2" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "a" },
+  hints: [
+    "Both operands are whole numbers, so no floating-point type is involved.",
+    "Java integer division keeps only the whole-number quotient and drops any remainder.",
+  ],
+  explanation: {
+    concept: "Integer division truncation",
+    summary: "Dividing two ints yields an int, so the fractional remainder is discarded rather than rounded.",
+    details: "7 / 2 is mathematically 3.5, but because neither operand has a decimal point the result type stays int. Java truncates toward zero, keeping 3. To obtain 3.5 you would cast one operand to double first.",
+  },
+  rewards: { xp: 15 },
+  version: 1,
+};

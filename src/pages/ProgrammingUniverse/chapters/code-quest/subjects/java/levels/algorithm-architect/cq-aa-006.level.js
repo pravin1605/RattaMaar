@@ -1,0 +1,35 @@
+export default {
+  id: "cq-aa-006",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "algorithm-architect",
+  levelNumber: 6,
+  title: "Ranking the Growth Curves",
+  difficulty: "intermediate",
+  estimatedMinutes: 3,
+  challengeType: "multiple-choice",
+  instructions: "For large n, choose the list that orders the growth rates from slowest to fastest.",
+  content: {
+    language: "java",
+    prompt: "Which ordering is correct as n grows without bound?",
+    code: "O(log n)   O(n^2)   O(n log n)   O(2^n)",
+    choices: [
+      { id: "a", label: "O(log n) < O(n log n) < O(n^2) < O(2^n)" },
+      { id: "b", label: "O(n^2) < O(n log n) < O(log n) < O(2^n)" },
+      { id: "c", label: "O(2^n) < O(n^2) < O(n log n) < O(log n)" },
+      { id: "d", label: "O(log n) < O(n^2) < O(n log n) < O(2^n)" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "a" },
+  hints: [
+    "Doubling n should hurt most for the exponential family and barely at all for the logarithmic one.",
+    "The curve with an extra n factor attached to the log sits strictly between the linear-log world and the squared world.",
+  ],
+  explanation: {
+    concept: "Complexity class ordering",
+    summary: "Growth from slowest to fastest is logarithmic, linearithmic, quadratic, exponential.",
+    details: "At n = 1024: log2 n = 10, n log n is about 10^4, n^2 is about 10^6, and 2^n is astronomically larger. n log n (merge sort, heap sort) always beats n^2 (bubble/selection style nested scans) at scale, and no polynomial can outrun 2^n eventually — this ordering is what makes binary search viable and brute-force subsets dangerous.",
+  },
+  rewards: { xp: 26 },
+  version: 1,
+};

@@ -1,0 +1,35 @@
+export default {
+  id: "cq-lg-010",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "logic-master",
+  levelNumber: 10,
+  title: "The Branch No Input Can Reach",
+  difficulty: "advanced",
+  estimatedMinutes: 4,
+  challengeType: "multiple-choice",
+  instructions: "For every integer input, one branch of this chain can never run. Choose the correct explanation.",
+  content: {
+    language: "java",
+    prompt: "Why does Q never print, for any value of x?",
+    code: "if (x > 2 || x > 0) {\n    System.out.println(\"P\");\n} else if (x > 3) {\n    System.out.println(\"Q\");\n} else {\n    System.out.println(\"R\");\n}",
+    choices: [
+      { id: "dominated", label: "Any x that satisfies x > 3 also satisfies the first condition, and the chain stops at its first true test." },
+      { id: "or-skipped", label: "Java does not evaluate conditions that contain the || operator inside an if." },
+      { id: "no-fall", label: "else-if branches only run when the first branch printed something." },
+      { id: "default-x", label: "x must be explicitly initialized before any comparison can be true." },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "dominated" },
+  hints: [
+    "Build the truth picture: for which x would the Q test be the first one to succeed?",
+    "The compound condition x > 2 || x > 0 is true for every x that any later, stricter test could claim.",
+  ],
+  explanation: {
+    concept: "Unreachable branches and compound-condition dominance",
+    summary: "x > 3 implies x > 2, which implies the disjunction in the first test, so Q is shadowed permanently.",
+    details: "A chained else-if only reaches later tests when all earlier tests are false. Since x > 2 || x > 0 already covers every x above 3, the else-if is dead code for all inputs — a logic error the compiler cannot catch because each condition individually looks plausible. Simplify overlapping chains to mutually exclusive ranges.",
+  },
+  rewards: { xp: 35 },
+  version: 1,
+};

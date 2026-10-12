@@ -1,0 +1,35 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-sql-007",
+  subjectId: "sql",
+  modeId: "query-master",
+  levelNumber: 7,
+  title: "COUNT Star Versus COUNT Column",
+  difficulty: "intermediate",
+  estimatedMinutes: 3,
+  challengeType: "predict-output",
+  instructions: "Predict the two values printed by the query, written in column order separated by one space.",
+  content: {
+    language: "sql",
+    code: "employees\nid | name | dept  | salary\n1  | Ann  | Eng   | 5000\n2  | Bo   | Eng   | 6000\n3  | Cy   | Sales | 6000\n4  | Di   | Sales | 7000\n5  | Ed   | IT    | 4000\n6  | Fay  | IT    | NULL\n\ndepts\ndept  | floor\nEng   | 2\nSales | 3\nHR    | 4\n\n-- query\nSELECT COUNT(*) AS rows_all, COUNT(salary) AS with_salary\nFROM employees;",
+    prompt: "What does the single result row contain (rows_all with_salary)?",
+    choices: [
+      { id: "a", label: "6 6" },
+      { id: "b", label: "6 5" },
+      { id: "c", label: "5 5" },
+      { id: "d", label: "5 6" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "b" },
+  hints: [
+    "The star variant counts tuples no matter what the values are.",
+    "The column variant skips a row whenever that specific column holds the missing marker.",
+  ],
+  explanation: {
+    concept: "Aggregates ignore NULL",
+    summary: "COUNT(*) = 6 (all rows), COUNT(salary) = 5 (Fay's NULL salary is skipped). SUM and AVG behave like the column variant: they operate only on non-NULL values.",
+    details: "This is exactly why AVG(salary) divided by 5 rather than 6 in the previous mission. To count NULLs explicitly use SUM(CASE WHEN salary IS NULL THEN 1 ELSE 0 END) or COUNT(*) - COUNT(salary). COUNT(dept) would be 6 here because dept has no NULLs.",
+  },
+  rewards: { xp: 25 },
+  version: 1,
+};

@@ -1,0 +1,41 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-boss-005",
+  subjectId: "java-fundamentals",
+  modeId: "boss-mission",
+  levelNumber: 5,
+  title: "The Twin-Loop Accumulator",
+  difficulty: "advanced",
+  estimatedMinutes: 7,
+  challengeType: "trace-variable",
+  instructions: "Complete the trace table for the nested loop, then type the final value of sum that the program prints.",
+  content: {
+    language: "java",
+    code: "int sum = 0;\nfor (int i = 0; i < 3; i++) {\n    for (int j = 0; j <= i; j++) {\n        sum += i + j;\n    }\n}\nSystem.out.println(sum);",
+    prompt: "What integer is printed for sum?",
+    trace: {
+      columns: ["i", "j", "sum"],
+      rows: [
+        { cells: ["0", "0", "0"], note: "sum += 0 + 0" },
+        { cells: ["1", "0", "1"], note: "sum += 1 + 0" },
+        { cells: ["1", "1", "3"], note: "sum += 1 + 1" },
+        { cells: ["2", "0", "5"], note: "sum += 2 + 0" },
+        { cells: ["2", "1", "8"], note: "sum += 2 + 1" },
+        { cells: ["2", "2", "12"], note: "sum += 2 + 2" },
+      ],
+    },
+  },
+  evaluation: { strategy: "structured-answer", acceptedAnswers: ["12"] },
+  hints: [
+    "The inner loop's bound depends on the outer index, so it runs a different number of times each round.",
+    "Add the sum of both indices, not just one of them, on every inner iteration.",
+    "Update the running total after each pass; the last recorded value is what gets printed.",
+  ],
+  explanation: {
+    concept: "Nested-loop accumulation",
+    summary: "The nested loop adds i + j once per valid inner step, growing sum to 12 by the end.",
+    details: "i=0 contributes 0; i=1 contributes 1 and 2; i=2 contributes 2, 3 and 4. The running totals 0, 1, 3, 5, 8, 12 match the trace, so the final printed value is 12.",
+  },
+  rewards: { xp: 60 },
+  version: 1,
+};

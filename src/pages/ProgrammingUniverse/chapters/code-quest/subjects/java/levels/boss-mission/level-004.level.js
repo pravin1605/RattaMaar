@@ -1,0 +1,35 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-boss-004",
+  subjectId: "java-fundamentals",
+  modeId: "boss-mission",
+  levelNumber: 4,
+  title: "The Overdraft Guard",
+  difficulty: "advanced",
+  estimatedMinutes: 5,
+  challengeType: "fill-blanks",
+  instructions: "Fill the three gaps so the loop applies every transaction, flags a negative balance, and prints the final amount.",
+  content: {
+    language: "java",
+    code: "double balance = 100.0;\ndouble[] transactions = { 25.5, -40.0, 60.0 };\nfor (double t : transactions) {\n    balance ____ t;\n}\nif (balance ____ 0) {\n    System.out.println(\"Overdrawn\");\n}\nSystem.out.println(____);",
+    prompt: "Supply the missing operator, comparison, and printed expression.",
+    blanks: [
+      { placeholder: "____", context: "balance ____ t;  inside the transaction loop" },
+      { placeholder: "____", context: "if (balance ____ 0)  guarding the warning message" },
+      { placeholder: "____", context: "System.out.println(____);  showing the outcome" },
+    ],
+  },
+  evaluation: { strategy: "fill-blanks", expectedBlanks: [["+="], ["<"], ["balance"]] },
+  hints: [
+    "Each transaction must be folded into the running total, updating it in place with an add-and-assign step.",
+    "The warning fires only when the money left falls below zero, so the comparison tests for that direction.",
+    "The closing print should show the accumulator variable itself, not a hard-coded literal.",
+  ],
+  explanation: {
+    concept: "Accumulating loop with a guard",
+    summary: "balance += t folds each signed transaction into the total, the guard balance < 0 detects an overdraft, and the final statement prints the resulting balance.",
+    details: "Transactions 25.5, -40.0 and 60.0 net to +45.5, so balance ends at 145.5. The += operator keeps the running total current, < flags a negative remainder, and printing balance reports the outcome.",
+  },
+  rewards: { xp: 50 },
+  version: 1,
+};

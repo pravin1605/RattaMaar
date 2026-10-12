@@ -1,0 +1,35 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-boss-008",
+  subjectId: "java-fundamentals",
+  modeId: "boss-mission",
+  levelNumber: 8,
+  title: "The GCD That Never Terminated",
+  difficulty: "advanced",
+  estimatedMinutes: 6,
+  challengeType: "fill-blanks",
+  instructions: "Three words are missing from this Euclid-style GCD. Fill them so the loop shrinks the larger value until it stops.",
+  content: {
+    language: "java",
+    code: "int a = 48;\nint b = 18;\nwhile (a ___ 0) {\n    int t = a;\n    a = b ___ a;\n    b = ___;\n}",
+    prompt: "Type the three missing tokens separated by ||, in order.",
+    blanks: [
+      { placeholder: "operator against 0", accepted: [">"] },
+      { placeholder: "remainder assignment", accepted: ["%"] },
+      { placeholder: "what b becomes", accepted: ["t"] },
+    ],
+  },
+  evaluation: { strategy: "fill-blanks", expectedBlanks: [[">"], ["%"], ["t"]] },
+  hints: [
+    "The loop must keep running while the remainder-carrying variable still has a value, and stop when it reaches 0.",
+    "Each round replaces a with the leftover of b divided by a, so the value strictly shrinks.",
+    "The old value of a has to survive the reassignment; that is exactly what the saved variable t is for.",
+  ],
+  explanation: {
+    concept: "Euclid's algorithm termination",
+    summary: "while (a > 0) with a = b % a and b = t reduces the pair every round and stops when a hits 0, leaving the GCD in b.",
+    details: "Tracing 48 and 18: round 1 gives a = 12, b = 48; round 2 gives a = 0, b = 12. The loop test now fails and b holds gcd(48, 18) = 12. Writing while (a >= 0) instead of > would never terminate because a remainder is never negative here, and swapping the operands of % would compute a different sequence.",
+  },
+  rewards: { xp: 45 },
+  version: 1,
+};

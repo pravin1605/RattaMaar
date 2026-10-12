@@ -1,0 +1,35 @@
+export default {
+  id: "cq-lg-007",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "logic-master",
+  levelNumber: 7,
+  title: "The Pass Mark at Exactly Fifty",
+  difficulty: "beginner",
+  estimatedMinutes: 2,
+  challengeType: "find-and-fix",
+  instructions: "The rule says a score of 50 or more passes, but this code fails a student who scored exactly the pass mark. Choose the minimal correction.",
+  content: {
+    language: "java",
+    prompt: "The boundary score itself is mishandled. Which fix makes the rule correct for every score?",
+    code: "int score = 50;\nif (score > 50) {\n    System.out.println(\"pass\");\n} else {\n    System.out.println(\"fail\");\n}",
+    choices: [
+      { id: "inclusive", label: "Change > to >= in the condition." },
+      { id: "swap-prints", label: "Move the pass println into the else block." },
+      { id: "strict-lt", label: "Change > to < and swap nothing else." },
+      { id: "bump-threshold", label: "Change the printed text to always say pass." },
+    ],
+  },
+  evaluation: { strategy: "validated-correction", expectedFixId: "inclusive" },
+  hints: [
+    "The bug only appears at exactly one score: the threshold itself.",
+    "A relational operator decides on its own whether the boundary value belongs to the true side.",
+  ],
+  explanation: {
+    concept: "Boundary conditions (< vs <=, > vs >=)",
+    summary: "Strict > excludes the threshold, so the passing score of exactly 50 falls into else; >= includes it.",
+    details: "Off-by-one boundary errors show up only at the exact threshold value. score > 50 sends 50 to the fail branch; score >= 50 keeps the rule '50 or more passes'. When a requirement says 'at least' or 'or more', the comparison must be inclusive.",
+  },
+  rewards: { xp: 28 },
+  version: 1,
+};

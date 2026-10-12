@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-concept-005",
+  subjectId: "java-fundamentals",
+  modeId: "concept-quest",
+  levelNumber: 5,
+  title: "The Blank Constant That Never Gets a Value",
+  difficulty: "intermediate",
+  estimatedMinutes: 3,
+  challengeType: "find-and-fix",
+  instructions: "The class fails to compile. Choose the correction that makes it valid while keeping the field immutable per instance.",
+  content: {
+    language: "java",
+    code: "class Config {\n    final int PORT;\n    Config() {\n        // PORT is never assigned\n    }\n}",
+    prompt: "What is the right fix?",
+    choices: [
+      { id: "a", label: "Remove the keyword from the field declaration." },
+      { id: "b", label: "Assign PORT exactly once inside every constructor of the class." },
+      { id: "c", label: "Assign PORT later, in any method called after construction." },
+      { id: "d", label: "Mark PORT static so it can stay unset." },
+    ],
+  },
+  evaluation: { strategy: "validated-correction", expectedFixId: "b" },
+  hints: [
+    "A blank constant is allowed only if every path that creates an instance gives it exactly one value.",
+    "The compiler tracks this field right up to the end of each instance-initialisation sequence.",
+  ],
+  explanation: {
+    concept: "The final keyword",
+    summary: "A blank final instance field is legal, but every constructor must assign it exactly once; otherwise the class does not compile.",
+    details: "final means 'assigned exactly once then immutable': for instance fields the last chance is the end of each constructor; for static finals it is the static initializer. Dropping the keyword (option A) changes the design contract, assigning in a later method (option C) is an error because the field is still uninitialized at construction time, and making it static (option D) merely moves the requirement to a static block while changing the semantics from per-instance to per-class.",
+    modelAnswer: "class Config { final int PORT; Config() { PORT = 8080; } }",
+  },
+  rewards: { xp: 22 },
+  version: 1,
+};

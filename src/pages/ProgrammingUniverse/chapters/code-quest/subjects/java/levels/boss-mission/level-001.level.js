@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-boss-001",
+  subjectId: "java-fundamentals",
+  modeId: "boss-mission",
+  levelNumber: 1,
+  title: "The Parity Gate: Nested Loop Finale",
+  difficulty: "advanced",
+  estimatedMinutes: 6,
+  challengeType: "predict-output",
+  instructions: "Trace the nested loop and its parity condition, then select the single line the program prints.",
+  content: {
+    language: "java",
+    code: "for (int i = 1; i <= 3; i++) {\n    for (int j = 1; j <= 3; j++) {\n        if ((i + j) % 2 == 0) {\n            System.out.print(i + \"\" + j + \" \");\n        }\n    }\n}",
+    prompt: "What is the full printed line?",
+    choices: [
+      { id: "a", label: "11 13 22 31 33" },
+      { id: "b", label: "12 21 23 32" },
+      { id: "c", label: "11 22 33" },
+      { id: "d", label: "11 12 13 21 22 23 31 32 33" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "a" },
+  hints: [
+    "A cell prints only when the two loop indices sum to an even number, so they must share parity.",
+    "The two digits are concatenated with no separator, and a space follows each printed pair.",
+    "Walk the outer index 1..3 and, for each, decide which inner indices keep the sum even.",
+  ],
+  explanation: {
+    concept: "Nested loops with a conditional gate",
+    summary: "Only index pairs where i + j is even are printed, yielding the pairs 11, 13, 22, 31 and 33 on one line.",
+    details: "i=1 keeps even sums at j=1 and j=3 (11,13); i=2 keeps only j=2 (22); i=3 keeps j=1 and j=3 (31,33). Odd-sum pairs are skipped by the if guard.",
+  },
+  rewards: { xp: 50 },
+  version: 1,
+};

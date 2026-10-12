@@ -1,0 +1,35 @@
+export default {
+  id: "cq-lg-003",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "logic-master",
+  levelNumber: 3,
+  title: "Push the Negation Inside",
+  difficulty: "beginner",
+  estimatedMinutes: 3,
+  challengeType: "find-and-fix",
+  instructions: "The rule is: deny entry when the visitor is under 18 OR has no ticket. Rewrite the negated condition equivalently without the outer !.",
+  content: {
+    language: "java",
+    prompt: "Which replacement condition is logically identical to the original?",
+    code: "if (!(age >= 18 && hasTicket)) {\n    System.out.println(\"Denied\");\n}",
+    choices: [
+      { id: "or-form", label: "age < 18 || !hasTicket" },
+      { id: "and-form", label: "age < 18 && !hasTicket" },
+      { id: "keep-form", label: "age >= 18 || !hasTicket" },
+      { id: "flip-both", label: "age <= 18 && hasTicket" },
+    ],
+  },
+  evaluation: { strategy: "validated-correction", expectedFixId: "or-form" },
+  hints: [
+    "De Morgan's law: negating a conjunction turns the connector into its opposite.",
+    "The opposite of AND is OR here, and each part must individually lose its original polarity.",
+  ],
+  explanation: {
+    concept: "De Morgan's laws",
+    summary: "!(P && Q) equals !P || !Q, so the negated guard becomes a disjunction of the two negated tests.",
+    details: "Negating age >= 18 gives age < 18, negating hasTicket gives !hasTicket, and && flips to ||. The && variant is the classic mistake: it would deny only visitors who fail both tests, while the original denies anyone failing at least one.",
+  },
+  rewards: { xp: 19 },
+  version: 1,
+};

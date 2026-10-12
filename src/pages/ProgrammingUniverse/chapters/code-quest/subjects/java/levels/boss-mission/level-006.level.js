@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-boss-006",
+  subjectId: "java-fundamentals",
+  modeId: "boss-mission",
+  levelNumber: 6,
+  title: "The Report That Skips a Row",
+  difficulty: "advanced",
+  estimatedMinutes: 5,
+  challengeType: "debug-output",
+  instructions: "A loop-initialisation off-by-one hides part of the report. Predict exactly what this program prints.",
+  content: {
+    language: "java",
+    code: "String[] rows = { \"Jan\", \"Feb\", \"Mar\" };\nfor (int i = 1; i < rows.length; i++) {\n    System.out.print(rows[i] + \" \");\n}",
+    prompt: "What is printed?",
+    choices: [
+      { id: "a", label: "Jan Feb Mar" },
+      { id: "b", label: "Feb Mar" },
+      { id: "c", label: "Jan Feb" },
+      { id: "d", label: "Mar" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "b" },
+  hints: [
+    "Check where the counter starts against the first legal index of a Java array.",
+    "The loop condition is fine; the bug is in the initialisation, so one entry is never visited.",
+    "Every visited element prints followed by a space, but the trailing space is not part of the answer text.",
+  ],
+  explanation: {
+    concept: "Off-by-one loop initialisation",
+    summary: "Starting the counter at 1 instead of 0 skips the first element, so only Feb and Mar are printed.",
+    details: "Valid indices are 0, 1, 2, but i begins at 1, visiting rows[1]=\"Feb\" and rows[2]=\"Mar\" while rows[0]=\"Jan\" is never read. The fix would be int i = 0.",
+  },
+  rewards: { xp: 45 },
+  version: 1,
+};

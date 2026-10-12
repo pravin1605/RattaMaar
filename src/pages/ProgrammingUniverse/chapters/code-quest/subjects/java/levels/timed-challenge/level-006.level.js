@@ -1,0 +1,31 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-tc-006",
+  subjectId: "java-fundamentals",
+  modeId: "timed-challenge",
+  levelNumber: 6,
+  title: "Precedence in a Heartbeat",
+  difficulty: "advanced",
+  estimatedMinutes: 1,
+  timeLimitSeconds: 45,
+  challengeType: "numeric-answer",
+  instructions: "Type the integer value Java produces for the expression below, applying operator precedence.",
+  content: {
+    language: "java",
+    code: "int result = 2 + 3 * 4;\nSystem.out.println(result);",
+    prompt: "What value does result hold?",
+  },
+  evaluation: { strategy: "structured-answer", acceptedAnswers: ["14"] },
+  hints: [
+    "Multiplication binds more tightly than addition, so it is grouped first.",
+    "Do the product before you fold in the leading constant.",
+    "All operands are ints, so no rounding or truncation surprises appear here.",
+  ],
+  explanation: {
+    concept: "Operator precedence",
+    summary: "Because * has higher precedence than +, Java evaluates 3 * 4 first and then adds 2, giving 14 rather than 20.",
+    details: "Left-to-right grouping would suggest (2 + 3) * 4 = 20, but precedence overrides position: 2 + (3 * 4) = 2 + 12 = 14.",
+  },
+  rewards: { xp: 15 },
+  version: 1,
+};

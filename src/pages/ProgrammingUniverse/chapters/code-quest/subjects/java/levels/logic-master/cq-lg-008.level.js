@@ -1,0 +1,35 @@
+export default {
+  id: "cq-lg-008",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "logic-master",
+  levelNumber: 8,
+  title: "The Flag That Forgets",
+  difficulty: "intermediate",
+  estimatedMinutes: 4,
+  challengeType: "find-and-fix",
+  instructions: "This loop should report whether every element is positive, but the negative value is ignored. Choose the correction.",
+  content: {
+    language: "java",
+    prompt: "The flag variable behaves like it has amnesia. Which fix repairs the scan?",
+    code: "int[] values = {1, -2, 3};\nboolean allPositive = true;\nfor (int v : values) {\n    allPositive = true;\n    if (v < 0) {\n        allPositive = false;\n    }\n}\nSystem.out.println(allPositive);",
+    choices: [
+      { id: "remove-reset", label: "Delete the allPositive = true assignment inside the loop." },
+      { id: "invert-init", label: "Initialize allPositive to false before the loop." },
+      { id: "leak-threshold", label: "Change the test v < 0 to v <= 0." },
+      { id: "move-print", label: "Move the println inside the loop." },
+    ],
+  },
+  evaluation: { strategy: "validated-correction", expectedFixId: "remove-reset" },
+  hints: [
+    "A flag that is re-armed on every pass forgets everything earlier elements proved.",
+    "A universal check should start optimistic and only ever be downgraded, never restored.",
+  ],
+  explanation: {
+    concept: "Flag-variable logic (all/any scans)",
+    summary: "The reset inside the loop erases the evidence of earlier elements, so only the last element matters.",
+    details: "Correct all-checks initialize the flag once before the loop and let the body only clear it. As written, the final element 3 re-arms the flag to true, masking the -2 and printing true. Option leaker (v <= 0) would also wrongly treat zero as non-positive.",
+  },
+  rewards: { xp: 30 },
+  version: 1,
+};

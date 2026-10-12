@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-boss-010",
+  subjectId: "java-fundamentals",
+  modeId: "boss-mission",
+  levelNumber: 10,
+  title: "The Sum That Broke at 100000",
+  difficulty: "advanced",
+  estimatedMinutes: 6,
+  challengeType: "find-and-fix",
+  instructions: "This accumulator should total one hundred thousand integers, but it returns a wrong value. Pick the single change that fixes the root cause.",
+  content: {
+    language: "java",
+    code: "int sum = 0;\nfor (int i = 0; i < n; i++) {\n    sum += values[i];   // each value is about 40000\n}\nreturn sum;",
+    prompt: "Each element is roughly 40000 and n is 100000. Why is the returned total wrong, and what is the correct fix?",
+    choices: [
+      { id: "a", label: "The loop runs one extra time; change i < n to i < n - 1." },
+      { id: "b", label: "int overflows far before 4 billion; widen sum (and the accumulator) to long." },
+      { id: "c", label: "sum must be reset to 0 inside the loop." },
+      { id: "d", label: "Use sum = sum + values[i] instead of += to avoid truncation." },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "b" },
+  hints: [
+    "Multiply the count by the typical value to see how large the true total really is.",
+    "100000 times 40000 is 4 billion, and the ceiling of a 32-bit int is only about 2.1 billion.",
+    "The += operator is not the problem; the size of the type holding the running total is.",
+  ],
+  explanation: {
+    concept: "Integer overflow in accumulators",
+    summary: "The real total is about 4 billion, which exceeds the maximum int of 2147483647, so the accumulator silently wraps. Widen it to long.",
+    details: "int ranges up to 2,147,483,647. Adding 40000 values a hundred thousand times crosses that ceiling and overflows into negative territory, then keeps wrapping. Declaring long sum = 0 and casting values[i] to long before adding fixes the root cause. Options a, c and d change control flow or syntax but leave the overflow untouched.",
+  },
+  rewards: { xp: 50 },
+  version: 1,
+};

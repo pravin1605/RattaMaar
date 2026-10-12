@@ -1,0 +1,35 @@
+export default {
+  id: "cq-aa-005",
+  chapterId: "code-quest",
+  subjectId: "java-fundamentals",
+  modeId: "algorithm-architect",
+  levelNumber: 5,
+  title: "Picking the Duplicate-Proof Container",
+  difficulty: "intermediate",
+  estimatedMinutes: 3,
+  challengeType: "multiple-choice",
+  instructions: "Choose the collection that best satisfies all three requirements.",
+  content: {
+    language: "java",
+    prompt: "Requirements: reject duplicate names automatically, answer contains(name) quickly for tens of thousands of entries, and insertion order is irrelevant.",
+    code: "// needs: no duplicates + fast membership test + order does not matter\nCollection<String> names = new ____<>();",
+    choices: [
+      { id: "a", label: "ArrayList" },
+      { id: "b", label: "HashSet" },
+      { id: "c", label: "PriorityQueue" },
+      { id: "d", label: "LinkedList" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "b" },
+  hints: [
+    "Two of the four options are lists: they happily store duplicates and scan linearly.",
+    "The right answer hashes each element, so both uniqueness and membership tests come nearly free.",
+  ],
+  explanation: {
+    concept: "Collection choice by requirements",
+    summary: "HashSet guarantees unique elements and average-case O(1) contains, exactly matching the stated needs.",
+    details: "List implementations allow duplicates and answer contains in O(n). PriorityQueue orders by comparator but neither deduplicates nor optimizes membership checks. HashSet trades ordering guarantees for constant-time lookups via hashing — the correct fit when only uniqueness and fast checks matter.",
+  },
+  rewards: { xp: 24 },
+  version: 1,
+};

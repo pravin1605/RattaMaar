@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-sql-003",
+  subjectId: "sql",
+  modeId: "query-master",
+  levelNumber: 3,
+  title: "The HAVING Clause That Names a Bare Column",
+  difficulty: "beginner",
+  estimatedMinutes: 3,
+  challengeType: "find-and-fix",
+  instructions: "The grouped query is rejected. Choose the fix that keeps per-department grouping with a salary condition applied AFTER grouping.",
+  content: {
+    language: "sql",
+    code: "employees\nid | name | dept  | salary\n1  | Ann  | Eng   | 5000\n2  | Bo   | Eng   | 6000\n3  | Cy   | Sales | 6000\n4  | Di   | Sales | 7000\n5  | Ed   | IT    | 4000\n6  | Fay  | IT    | NULL\n\ndepts\ndept  | floor\nEng   | 2\nSales | 3\nHR    | 4\n\n-- query (fails)\nSELECT dept, COUNT(*)\nFROM employees\nGROUP BY dept\nHAVING salary > 5500;",
+    prompt: "What is the correct fix?",
+    choices: [
+      { id: "a", label: "Move the salary condition into a WHERE clause before GROUP BY." },
+      { id: "b", label: "Wrap the bare column in an aggregate: HAVING AVG(salary) > 5500." },
+      { id: "c", label: "Add salary to the GROUP BY list." },
+      { id: "d", label: "Replace salary with d.floor from the depts table." },
+    ],
+  },
+  evaluation: { strategy: "validated-correction", expectedFixId: "b" },
+  hints: [
+    "After grouping, a bare non-grouped column refers to many rows at once — the engine cannot pick one.",
+    "The filter runs on groups, so the condition must talk about the group as a whole.",
+  ],
+  explanation: {
+    concept: "GROUP BY + HAVING",
+    summary: "HAVING may only reference grouped columns or aggregates of each group. salary is neither, so the query errors; aggregating it (HAVING AVG(salary) > 5500) is the fix that keeps the post-grouping intent.",
+    details: "With the fix applied: Eng AVG = (5000+6000)/2 = 5500 (not > 5500, dropped), Sales AVG = (6000+7000)/2 = 6500 (kept), IT AVG = 4000 (NULL ignored, dropped) — only Sales is returned. Option A moves the filter BEFORE grouping, which changes semantics (it would drop individual employees first); option C groups by salary value, exploding the groups; neither preserves 'filter the groups by their average'.",
+    modelAnswer: "SELECT dept, COUNT(*) FROM employees GROUP BY dept HAVING AVG(salary) > 5500;",
+  },
+  rewards: { xp: 18 },
+  version: 1,
+};

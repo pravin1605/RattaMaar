@@ -1,0 +1,37 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-tc-003",
+  subjectId: "java-fundamentals",
+  modeId: "timed-challenge",
+  levelNumber: 3,
+  title: "Post-Increment Print Sprint",
+  difficulty: "advanced",
+  estimatedMinutes: 1,
+  timeLimitSeconds: 30,
+  challengeType: "predict-output",
+  instructions: "In the time limit, predict the three lines printed by this snippet.",
+  content: {
+    language: "java",
+    code: "int x = 5;\nSystem.out.println(x++);\nSystem.out.println(x);\nSystem.out.println(++x);",
+    prompt: "Which sequence of lines is printed?",
+    choices: [
+      { id: "a", label: "5\n6\n7" },
+      { id: "b", label: "6\n6\n7" },
+      { id: "c", label: "5\n5\n6" },
+      { id: "d", label: "6\n7\n7" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "a" },
+  hints: [
+    "A postfix increment prints the old value first, then raises the variable.",
+    "A prefix increment raises the variable before the value is read.",
+    "Track x line by line; the second print shows the variable after it already changed.",
+  ],
+  explanation: {
+    concept: "Prefix versus postfix increment",
+    summary: "The three lines print 5, then 6, then 7 because of how x++ and ++x schedule the increment relative to reading x.",
+    details: "Line 1 prints x++ which yields 5 and leaves x at 6. Line 2 prints x, now 6. Line 3 prints ++x which bumps x to 7 before yielding it.",
+  },
+  rewards: { xp: 15 },
+  version: 1,
+};

@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-sql-004",
+  subjectId: "sql",
+  modeId: "query-master",
+  levelNumber: 4,
+  title: "First Three Names in Alphabetical Order",
+  difficulty: "intermediate",
+  estimatedMinutes: 3,
+  challengeType: "multiple-choice",
+  instructions: "Choose the exact result set of the query.",
+  content: {
+    language: "sql",
+    code: "employees\nid | name | dept  | salary\n1  | Ann  | Eng   | 5000\n2  | Bo   | Eng   | 6000\n3  | Cy   | Sales | 6000\n4  | Di   | Sales | 7000\n5  | Ed   | IT    | 4000\n6  | Fay  | IT    | NULL\n\ndepts\ndept  | floor\nEng   | 2\nSales | 3\nHR    | 4\n\n-- query (MySQL / PostgreSQL)\nSELECT name, salary\nFROM employees\nORDER BY name ASC\nLIMIT 3;",
+    prompt: "Which rows does the query return, in order?",
+    choices: [
+      { id: "a", label: "Ann 5000, Bo 6000, Cy 6000" },
+      { id: "b", label: "Fay NULL, Di 7000, Cy 6000" },
+      { id: "c", label: "Ed 4000, Ann 5000, Bo 6000" },
+      { id: "d", label: "Ann 5000, Bo 6000, Di 7000" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "a" },
+  hints: [
+    "Sorting happens before the row limit is cut, so the limit takes the first rows of the sorted stream.",
+    "Order by name alphabetically and take the first three of the five distinct names — option D sneaks a salary assumption in.",
+  ],
+  explanation: {
+    concept: "ORDER BY + LIMIT",
+    summary: "ORDER BY name ASC sorts alphabetically (Ann, Bo, Cy, Di, Ed, Fay); LIMIT 3 cuts the first three: Ann, Bo, Cy — salaries are simply carried along.",
+    details: "LIMIT does not care about salary here because nothing sorts by it. Note option B is the DESC head; option C mixes insertion order with the limit. If two names tied, the tie-break would be arbitrary unless a second sort key were added, e.g. ORDER BY name ASC, id ASC.",
+    modelAnswer: "SELECT name, salary FROM employees ORDER BY name ASC LIMIT 3;",
+  },
+  rewards: { xp: 20 },
+  version: 1,
+};

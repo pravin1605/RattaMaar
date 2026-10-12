@@ -22,6 +22,15 @@ import QuizReview from "./pages/QuizReview/QuizReview";
 import QuizHistory from "./pages/QuizHistory/QuizHistory";
 
 import About from "./pages/About/About";
+import ProgrammingLayout from "./pages/ProgrammingUniverse/ProgrammingLayout";
+import ProgrammingHome from "./pages/ProgrammingUniverse/ProgrammingHome";
+import ProgrammingSubjects from "./pages/ProgrammingUniverse/ProgrammingSubjects";
+import ProgrammingSubject from "./pages/ProgrammingUniverse/ProgrammingSubject";
+import ProgrammingPractice from "./pages/ProgrammingUniverse/ProgrammingPractice";
+import ProgrammingProgress from "./pages/ProgrammingUniverse/ProgrammingProgress";
+import ProgrammingPlay from "./pages/ProgrammingUniverse/ProgrammingPlay";
+import ProgrammingChapter from "./pages/ProgrammingUniverse/ProgrammingChapter";
+import ProgrammingInterviewLab from "./pages/ProgrammingUniverse/ProgrammingInterviewLab";
 
 function App() {
     return (
@@ -122,6 +131,21 @@ function App() {
 
                 <Route path="/quiz/history" element={<QuizHistory />} />
 
+
+                {/* =========================
+            PROGRAMMING UNIVERSE
+            Independent learning area and navigation.
+        ========================= */}
+                <Route path="/programming" element={<ProgrammingLayout />}>
+                    <Route index element={<ProgrammingHome />} />
+                    <Route path="subjects" element={<ProgrammingSubjects />} />
+                    <Route path="chapters/:chapterId" element={<ProgrammingChapter />} />
+                    <Route path="subjects/:subjectId" element={<ProgrammingSubject />} />
+                    <Route path="practice" element={<ProgrammingPractice />} />
+                    <Route path="interviews" element={<ProgrammingInterviewLab />} />
+                    <Route path="play/:levelId" element={<ProgrammingPlay />} />
+                    <Route path="progress" element={<ProgrammingProgress />} />
+                </Route>
 
                 {/* =========================
             PAGE NOT FOUND

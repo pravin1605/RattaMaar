@@ -1,0 +1,35 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-sql-010",
+  subjectId: "sql",
+  modeId: "query-master",
+  levelNumber: 10,
+  title: "Rebuild the Query in Logical Order",
+  difficulty: "advanced",
+  estimatedMinutes: 5,
+  challengeType: "code-ordering",
+  instructions: "Arrange the clauses in the order the SQL engine logically evaluates them (not the order you type them).",
+  content: {
+    language: "sql",
+    code: "-- Logical processing order of a single-table grouped query.\n-- Arrange: FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY -> LIMIT",
+    blocks: [
+      { id: "b1", code: "SELECT dept, COUNT(*) AS n" },
+      { id: "b2", code: "FROM employees" },
+      { id: "b3", code: "WHERE salary > 4500" },
+      { id: "b4", code: "GROUP BY dept" },
+      { id: "b5", code: "HAVING COUNT(*) >= 2" },
+    ],
+  },
+  evaluation: { strategy: "ordered-blocks", expectedOrder: ["b2", "b3", "b4", "b5", "b1"] },
+  hints: [
+    "Rows must exist and be filtered before they can be grouped — the source clause is evaluated first.",
+    "Projection of the output columns comes near the end, because it may only use aggregates once the groups are settled.",
+  ],
+  explanation: {
+    concept: "Logical query-processing order",
+    summary: "FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY (-> LIMIT): the engine sources rows, filters them, forms groups, filters groups, and only then computes the output expressions.",
+    details: "You type SELECT first, but it is evaluated almost last — which explains why WHERE cannot see aliases defined in SELECT while ORDER BY can. HAVING runs after grouping so aggregates are allowed; WHERE runs before grouping so they are not. ORDER BY + LIMIT finally sort and trim the produced rows.",
+  },
+  rewards: { xp: 35 },
+  version: 1,
+};

@@ -1,0 +1,35 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-sql-006",
+  subjectId: "sql",
+  modeId: "query-master",
+  levelNumber: 6,
+  title: "Above the Average — Who Qualifies?",
+  difficulty: "intermediate",
+  estimatedMinutes: 4,
+  challengeType: "multiple-choice",
+  instructions: "Evaluate the subquery first, then choose the exact result rows.",
+  content: {
+    language: "sql",
+    code: "employees\nid | name | dept  | salary\n1  | Ann  | Eng   | 5000\n2  | Bo   | Eng   | 6000\n3  | Cy   | Sales | 6000\n4  | Di   | Sales | 7000\n5  | Ed   | IT    | 4000\n6  | Fay  | IT    | NULL\n\ndepts\ndept  | floor\nEng   | 2\nSales | 3\nHR    | 4\n\n-- query\nSELECT name FROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees);",
+    prompt: "Which rows does the query return?",
+    choices: [
+      { id: "a", label: "Cy and Di only" },
+      { id: "b", label: "Bo, Cy and Di" },
+      { id: "c", label: "Bo, Cy, Di and Fay" },
+      { id: "d", label: "Ann, Bo, Cy and Di" },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "b" },
+  hints: [
+    "The aggregate in the subquery skips the missing salary instead of counting it as zero.",
+    "The threshold is the mean of the five known salaries (28000 / 5); test each candidate against it — remember UNKNOWN fails the WHERE.",
+  ],
+  explanation: {
+    concept: "Scalar subqueries",
+    summary: "AVG(salary) = (5000+6000+6000+7000+4000)/5 = 5600. Rows strictly above 5600: Bo (6000), Cy (6000), Di (7000). Fay's NULL comparison is UNKNOWN and drops her.",
+    details: "The inner query runs first and yields one scalar (5600); averages count only the 5 non-NULL salaries. Ann (5000) and Ed (4000) are below it. A common mistake is treating the NULL row as a 0 in the denominator — it affects neither SUM nor AVG; COUNT(*) would see 6, COUNT(salary) sees 5.",
+  },
+  rewards: { xp: 25 },
+  version: 1,
+};

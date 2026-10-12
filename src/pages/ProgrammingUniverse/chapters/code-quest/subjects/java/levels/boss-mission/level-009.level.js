@@ -1,0 +1,30 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-boss-009",
+  subjectId: "java-fundamentals",
+  modeId: "boss-mission",
+  levelNumber: 9,
+  title: "Squares, Skipped Rows",
+  difficulty: "advanced",
+  estimatedMinutes: 5,
+  challengeType: "predict-output",
+  instructions: "One loop guards with continue and the printed value is shifted afterwards. Work out the exact number this program prints.",
+  content: {
+    language: "java",
+    code: "int total = 0;\nfor (int i = 0; i < 5; i++) {\n    if (i % 2 == 0) continue;\n    total += i * i;\n}\nSystem.out.println(total - 2);",
+    prompt: "What number is printed? (answer with the number only)",
+  },
+  evaluation: { strategy: "numeric-tolerance", expectedNumber: 8, tolerance: 0 },
+  hints: [
+    "continue skips the rest of that iteration only; the loop counter still advances.",
+    "List the values of i that survive the guard, then square each one.",
+    "Survivors are i = 1 and i = 3, so the running total is 1 + 9 before the final shift.",
+  ],
+  explanation: {
+    concept: "continue inside a counted loop",
+    summary: "Only the odd indices are squared, giving 1 + 9 = 10, and the printed value is 10 - 2 = 8.",
+    details: "i = 0, 2 and 4 hit the continue and add nothing. i = 1 adds 1 and i = 3 adds 9, so total is 10 when the loop ends. The subtraction happens once, outside the loop, so the printed answer is 8 rather than 10.",
+  },
+  rewards: { xp: 45 },
+  version: 1,
+};

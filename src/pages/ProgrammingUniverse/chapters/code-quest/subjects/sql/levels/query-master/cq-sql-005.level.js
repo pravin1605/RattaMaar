@@ -1,0 +1,36 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-sql-005",
+  subjectId: "sql",
+  modeId: "query-master",
+  levelNumber: 5,
+  title: "Comparing Against the Unknown",
+  difficulty: "intermediate",
+  estimatedMinutes: 3,
+  challengeType: "predict-output",
+  instructions: "Predict the outcome of the query.",
+  content: {
+    language: "sql",
+    code: "employees\nid | name | dept  | salary\n1  | Ann  | Eng   | 5000\n2  | Bo   | Eng   | 6000\n3  | Cy   | Sales | 6000\n4  | Di   | Sales | 7000\n5  | Ed   | IT    | 4000\n6  | Fay  | IT    | NULL\n\ndepts\ndept  | floor\nEng   | 2\nSales | 3\nHR    | 4\n\n-- query\nSELECT name FROM employees WHERE salary = NULL;",
+    prompt: "What does the query return?",
+    choices: [
+      { id: "a", label: "All six rows, since every value equals the missing marker." },
+      { id: "b", label: "Only Fay, because her salary is the missing one." },
+      { id: "c", label: "No rows at all." },
+      { id: "d", label: "An error: comparing with NULL is not allowed." },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "c" },
+  hints: [
+    "Three-valued logic has a third outcome besides TRUE and FALSE, and WHERE only keeps TRUE.",
+    "The dedicated operator for testing missingness is written with two words, not an equals sign.",
+  ],
+  explanation: {
+    concept: "NULL and three-valued logic",
+    summary: "No rows. Any comparison with NULL evaluates to UNKNOWN — including NULL = NULL — and WHERE keeps only rows whose predicate is TRUE.",
+    details: "To find Fay you must write WHERE salary IS NULL. The same trap makes WHERE salary <> 6000 drop NULL rows too, and WHERE salary > (subquery) return nothing when the subquery yields NULL. Even COUNT(*) - style checks mislead unless you use IS [NOT] NULL or COALESCE.",
+    modelAnswer: "SELECT name FROM employees WHERE salary IS NULL; -- returns Fay",
+  },
+  rewards: { xp: 22 },
+  version: 1,
+};

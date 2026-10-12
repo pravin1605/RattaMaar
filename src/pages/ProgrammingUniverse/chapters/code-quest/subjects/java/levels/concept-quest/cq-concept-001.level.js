@@ -1,0 +1,35 @@
+export default {
+  chapterId: "code-quest",
+  id: "cq-concept-001",
+  subjectId: "java-fundamentals",
+  modeId: "concept-quest",
+  levelNumber: 1,
+  title: "Who Compiles the Code — JDK or JVM?",
+  difficulty: "beginner",
+  estimatedMinutes: 2,
+  challengeType: "multiple-choice",
+  instructions: "You try to compile Hello.java on a server that only ships the Java runtime. Pick the correct statement about which toolchain is needed.",
+  content: {
+    language: "java",
+    code: "// Hello.java\npublic class Hello {\n    public static void main(String[] args) {\n        System.out.println(\"hi\");\n    }\n}\n// you run: javac Hello.java",
+    prompt: "Which tool runs javac to turn .java source into bytecode?",
+    choices: [
+      { id: "a", label: "The JVM alone: it compiles source files when the program starts." },
+      { id: "b", label: "The JDK: it bundles the compiler (javac) and tools on top of a JRE." },
+      { id: "c", label: "The JRE alone: it contains the compiler plus the runtime." },
+      { id: "d", label: "The bytecode verifier: it performs the compilation." },
+    ],
+  },
+  evaluation: { strategy: "single-choice", correctChoiceId: "b" },
+  hints: [
+    "Compilation happens once, before the program ever runs; execution happens every time it runs.",
+    "The runtime that executes bytecode is not the same package as the full developer toolkit that ships javac.",
+  ],
+  explanation: {
+    concept: "JDK vs JRE vs JVM",
+    summary: "The JDK (Java Development Kit) contains the compiler javac and development tools plus a JRE; the JRE provides the JVM and core libraries to run programs; the JVM only executes already-compiled bytecode.",
+    details: "javac is part of the JDK, so a machine with only a JVM cannot compile sources. The JVM loads .class files, verifies the bytecode, and runs it via interpreter/JIT. Source-to-bytecode translation is a build-time step: the bytecode verifier checks class files but never compiles source, and the JRE deliberately omits developer tools to keep the runtime small.",
+  },
+  rewards: { xp: 15 },
+  version: 1,
+};
