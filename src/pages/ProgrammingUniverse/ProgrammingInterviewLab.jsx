@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getSubjects } from "./registry/subjectRegistry";
 import { getInterviewProgress, recordInterviewAnswer, getBookmarkedIds, toggleBookmark, saveMockReport, getMockReports } from "./services/interviewProgressService";
 import { getInterviewQuestions } from "./registry/interviewQuestionRegistry";
+import { goBackOr } from "./navigationHelpers";
 
 const questionBank = getInterviewQuestions();
 const difficulties = ["all", "beginner", "intermediate", "advanced"];
@@ -30,7 +31,7 @@ export default function ProgrammingInterviewLab() {
   const subjects = getSubjects();
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
-  const [subjectFilter, setSubjectFilter] = useState(params.get("subject") || "all");
+  const [subjectFilter, setSubjectFilter] = useState(() => { const requested = params.get("subject"); return requested && questionBank.some((item) => item.subjectId === requested) ? requested : "all"; });
   const [difficulty, setDifficulty] = useState("all");
   const [arena, setArena] = useState("browse");
   const [practiceMode, setPracticeMode] = useState("practice");
@@ -74,7 +75,7 @@ export default function ProgrammingInterviewLab() {
 
   function resetCard() { setSelected(""); setChecked(false); setWrittenAnswer(""); setRevealed(false); setResultCorrect(null); }
 
-  function updateSubject(value) { setSubjectFilter(value); setParams(value === "all" ? {} : { subject: value }); }
+  function updateSubject(value) { setSubjectFilter(value); setParams(value === "all" ? {} : { subject: value }, { replace: true }); }
 
   function startSession() {
     if (!basePool.length) return;
@@ -141,7 +142,7 @@ export default function ProgrammingInterviewLab() {
   const bookmarkActive = question && bookmarkIds.includes(question.id);
 
   return <div className="pu-page pu-interview-page">
-    <button className="pu-back-link" onClick={() => navigate("/programming")}>← Back to Universe</button>
+    <button type="button" className="pu-back-link" onClick={() => goBackOr(navigate, "/programming")}>← Back</button>
     <section className="pu-interview-hero">
       <div className="pu-interview-hero-mark">Q/A</div>
       <span className="pu-eyebrow">TECHNICAL INTERVIEW ARENA</span>

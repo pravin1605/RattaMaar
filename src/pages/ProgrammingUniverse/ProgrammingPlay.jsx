@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getLevelById, getLevelsForMode, getLevels } from "./registry/levelRegistry";
 import { getSubjectById } from "./registry/subjectRegistry";
 import { getGameModeById, getPatternCategoryById } from "./registry/gameModeRegistry";
 import { evaluateChallenge, getChallengeOptions } from "./engine";
 import { getLevelStatus, recordLevelAttempt, getLevelAvailability } from "./services/practiceProgressService";
 import PatternVisualizer, { TraceTable } from "./components/PatternVisualizer.jsx";
+import { getLevelMapPath, hasHistory } from "./navigationHelpers";
 
 export default function ProgrammingPlay() {
   const { levelId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const level = useMemo(() => getLevelById(levelId), [levelId]);
   const isTimed = Boolean(level?.timeLimitSeconds);
   const options = useMemo(() => level ? getChallengeOptions(level) : [], [level]);
@@ -67,8 +69,16 @@ export default function ProgrammingPlay() {
 
   useEffect(() => { if (timedOut && level && !timeoutRecorded.current) { timeoutRecorded.current = true; const updated = recordLevelAttempt(level, { correct: false, selectedAnswer: answer, hintsUsed }); setFeedback({ correct: false, expectedAnswer: null, timedOut: true, awardedXp: updated.results[0]?.awardedXp || 0 }); setShowExplanation(true); } }, [timedOut, level, answer, hintsUsed]);
 
-  if (!level) return <div className="pu-page"><section className="pu-empty-state"><h1>Level not found</h1><p>This level may have been moved or failed content validation.</p><button className="pu-primary-btn" onClick={() => navigate("/programming/practice")}>Back to practice</button></section></div>;
-  if (!availability.unlocked) return <div className="pu-page"><section className="pu-empty-state"><span className="pu-progress-emblem">🔒</span><h1>Mission locked</h1><p>{availability.reason}. Complete the previous level in this path to continue.</p><button className="pu-primary-btn" onClick={() => navigate(`/programming/chapters/${level.chapterId || "code-quest"}`)}>Open level map ↗</button></section></div>;
+  // Return to the level map this level was opened from. In-app arrivals step back in history (no duplicate
+  // entries or loops); direct page loads replace the entry with the level's own path map.
+  const goBackToLevelMap = () => {
+    if (!level) { navigate("/programming/subjects", { replace: true }); return; }
+    if (location.state?.from && hasHistory()) { navigate(-1); return; }
+    navigate(location.state?.from || getLevelMapPath(level), { replace: true });
+  };
+
+  if (!level) return <div className="pu-page"><section className="pu-empty-state"><h1>Level not found</h1><p>This level may have been moved or failed content validation.</p><button type="button" className="pu-primary-btn" onClick={goBackToLevelMap}>Back to subjects</button></section></div>;
+  if (!availability.unlocked) return <div className="pu-page"><section className="pu-empty-state"><span className="pu-progress-emblem" aria-hidden="true">🔒</span><h1>Mission locked</h1><p>{availability.reason}. Complete the previous level in this path to continue.</p><button type="button" className="pu-primary-btn" onClick={goBackToLevelMap}>Open level map ↗</button></section></div>;
 
   const resetAttempt = () => { setAnswer(""); setFeedback(null); setShowExplanation(false); timeoutRecorded.current = false; if (isTimed) setSecondsLeft(level.timeLimitSeconds); };
   const revealHint = () => setHintsUsed((count) => Math.min(count + 1, level.hints.length));
@@ -81,7 +91,7 @@ export default function ProgrammingPlay() {
   const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
   return <div className={`pu-page pu-play-page${level.modeId === "boss-mission" ? " pu-boss" : ""}${isTimed ? " pu-timed" : ""}`}>
-    <button className="pu-back-link" onClick={() => navigate(category ? `/programming/chapters/${level.chapterId}` : `/programming/practice?subject=${level.subjectId}&mode=${level.modeId}`)}>← Back to {category?.title || mode?.title || "practice"}</button>
+    <button type="button" className="pu-back-link" onClick={goBackToLevelMap}>← Back to level map</button>
     <section className="pu-play-topline">
       <div><span className="pu-eyebrow">{subject?.name || level.subjectId}{category ? ` / ${category.title}` : ` / ${mode?.title || level.modeId}`}</span><h1>{level.title}</h1><p>{level.instructions}</p></div>
       <div className="pu-level-meta">
@@ -107,8 +117,8 @@ export default function ProgrammingPlay() {
       <div className="pu-challenge-actions"><button className="pu-secondary-btn" onClick={revealHint} disabled={hintsUsed >= level.hints.length || locked}>Get a hint · −1 XP</button>{!feedback ? <button className="pu-primary-btn" onClick={submit} disabled={!canSubmit || timedOut}>{isTimed ? "Submit before time runs out ↗" : "Check answer ↗"}</button> : <button className="pu-secondary-btn" onClick={resetAttempt}>{isTimed ? "Retry with a fresh timer" : "Try again"}</button>}</div>
       {feedback && <div className={`pu-feedback ${feedback.correct ? "success" : "error"}`} role="status"><div className="pu-feedback-title"><span>{feedback.correct ? "✓" : "↻"}</span><div><strong>{feedback.correct ? "Mission complete!" : feedback.timedOut ? "Time is up — mission failed." : "Not quite — investigate again."}</strong><p>{feedback.correct ? `You earned ${feedback.awardedXp} XP this attempt.` : feedback.timedOut ? "The timer expired before a correct answer was recorded. Try again." : "Use the hint and explanation, then try again."}</p></div></div>
         {(feedback.correct || showExplanation) && <div className="pu-explanation"><span className="pu-eyebrow">WHY THIS WORKS</span><strong>{level.explanation?.concept || "Concept explanation"}</strong><p>{level.explanation?.summary}</p>{level.explanation?.details && <p>{level.explanation.details}</p>}{level.explanation?.modelAnswer && <pre className="pu-code-block"><code>{level.explanation.modelAnswer}</code></pre>}</div>}
-        {feedback.correct && nextLevel && <button className="pu-primary-btn" onClick={() => navigate(`/programming/play/${nextLevel.id}`)}>Next level: {nextLevel.title} ↗</button>}
-        {feedback.correct && !nextLevel && <button className="pu-secondary-btn" onClick={() => navigate(category ? `/programming/chapters/${level.chapterId}` : `/programming/practice?subject=${level.subjectId}&mode=${level.modeId}`)}>Back to level list ↗</button>}
+        {feedback.correct && nextLevel && <button className="pu-primary-btn" onClick={() => navigate(`/programming/play/${nextLevel.id}`, { replace: true, state: location.state })}>Next level: {nextLevel.title} ↗</button>}
+        {feedback.correct && !nextLevel && <button type="button" className="pu-secondary-btn" onClick={goBackToLevelMap}>Back to level map ↗</button>}
         {!feedback.correct && <button className="pu-secondary-btn" onClick={() => setShowExplanation((value) => !value)}>{showExplanation ? "Hide explanation" : "Show explanation"}</button>}
       </div>}
     </section>

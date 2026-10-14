@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { getSubjects } from "./registry/subjectRegistry";
 import { getGameModes, getPatternCategories } from "./registry/gameModeRegistry";
-import { getLevels, getLevelById } from "./registry/levelRegistry";
+import { getLevels, getLevelById, getLevelsForMode, getLevelsForSubject } from "./registry/levelRegistry";
 import { getInterviewQuestionCount } from "./registry/interviewQuestionRegistry";
 import { getPracticeProgress, getLevelAvailability } from "./services/practiceProgressService";
 import { getInterviewProgress } from "./services/interviewProgressService";
@@ -13,6 +13,24 @@ function dailyMission(levels, completedIds) {
   const pool = playable.length ? playable : levels;
   const pick = pool[day % pool.length];
   return { level: pick, done: completedIds.includes(pick.id) };
+}
+
+/** Most recent valid unfinished activity; falls back to the first open level. Stale saved ids are skipped. */
+function getResumeLevel(levels, progress) {
+  const done = new Set(progress.completedLevelIds);
+  const open = (level) => Boolean(level) && !done.has(level.id) && getLevelAvailability(level, levels).unlocked;
+  for (const result of progress.results) {
+    const last = levels.find((level) => level.id === result.levelId);
+    if (!last) continue;
+    if (open(last)) return last;
+    const next = levels
+      .filter((level) => (level.chapterId || "code-quest") === (last.chapterId || "code-quest") && level.subjectId === last.subjectId && level.modeId === last.modeId && (level.categoryId || null) === (last.categoryId || null))
+      .sort((a, b) => a.levelNumber - b.levelNumber || a.id.localeCompare(b.id))
+      .find((level) => level.levelNumber > last.levelNumber && open(level));
+    if (next) return next;
+    break;
+  }
+  return levels.find(open) || null;
 }
 
 export default function ProgrammingHome() {
@@ -29,6 +47,18 @@ export default function ProgrammingHome() {
   const rank = getRank(progress.xp);
   const completedSet = progress.completedLevelIds;
   const nextPlayable = levels.find((level) => !completedSet.includes(level.id) && getLevelAvailability(level, levels).unlocked);
+  const resumeLevel = getResumeLevel(levels, progress);
+  const hasStarted = progress.results.length > 0 || completedSet.length > 0;
+  const featuredSubjects = subjects
+    .map((subject) => ({ subject, levelCount: getLevelsForSubject(subject.id).length, questionCount: getInterviewQuestionCount(subject.id) }))
+    .filter((item) => item.levelCount || item.questionCount)
+    .sort((a, b) => Number(b.levelCount > 0) - Number(a.levelCount > 0))
+    .slice(0, 4)
+    .map((item) => item.subject);
+  const quickModes = modes
+    .map((mode) => ({ mode, subject: subjects.find((subject) => getLevelsForMode(subject.id, mode.id).some((level) => (level.chapterId || "code-quest") === "code-quest")) }))
+    .filter((item) => item.subject)
+    .slice(0, 6);
   const mission = levels.length ? dailyMission(levels, completedSet) : null;
   const recommended = levels.filter((level) => !completedSet.includes(level.id) && getLevelAvailability(level, levels).unlocked && level.chapterId === "pattern-lab")[0]
     || nextPlayable || levels[0];
@@ -43,8 +73,8 @@ export default function ProgrammingHome() {
       <h1>Learn the logic.<br /><span>Build real confidence.</span></h1>
       <p>A game-based platform for programming: play missions, trace patterns, debug real code and prepare for technical interviews — all inside NotesWeb.</p>
       <div className="pu-hero-actions">
-        {nextPlayable ? <button className="pu-primary-btn" onClick={() => navigate(`/programming/play/${nextPlayable.id}`)}>Continue Learning <span>↗</span></button>
-          : <button className="pu-primary-btn" onClick={() => navigate("/programming/chapters/code-quest")}>Start Code Quest <span>↗</span></button>}
+        {resumeLevel ? <button className="pu-primary-btn" onClick={() => navigate(`/programming/play/${resumeLevel.id}`)}>{hasStarted ? "Continue Learning" : "Start Learning"} <span aria-hidden="true">↗</span></button>
+          : <button className="pu-primary-btn" onClick={() => navigate("/programming/chapters/code-quest")}>Open Code Quest <span aria-hidden="true">↗</span></button>}
         <button className="pu-secondary-btn" onClick={() => navigate("/programming/interviews")}>Interview Arena</button>
       </div>
       <div className="pu-hero-stats"><div><strong>{levels.length}</strong><span>playable levels</span></div><div><strong>{subjects.length}</strong><span>programming subjects</span></div><div><strong>{interviewCount}</strong><span>interview questions</span></div></div>
@@ -78,11 +108,11 @@ export default function ProgrammingHome() {
     </section>
 
     <section className="pu-section"><div className="pu-section-heading"><div><span className="pu-eyebrow">SUBJECTS, NOT NOTE TITLES</span><h2>Pick what you want to learn</h2><p>Programming subjects are curated separately from the NotesWeb notes catalogue.</p></div><button className="pu-text-link" onClick={() => navigate('/programming/subjects')}>All subjects ↗</button></div>
-      <div className="pu-subject-grid">{subjects.filter((subject) => ["java-fundamentals", "sql", "dsa", "javascript"].includes(subject.id)).map((subject) => <button className="pu-subject-card" key={subject.id} onClick={() => navigate(`/programming/subjects/${subject.id}`)}><span className="pu-subject-icon">{subject.icon}</span><span className="pu-card-arrow">↗</span><strong>{subject.name}</strong><small>{subject.description}</small><span className="pu-card-meta">Open subject workspace</span></button>)}</div>
+      <div className="pu-subject-grid">{featuredSubjects.map((subject) => <button className="pu-subject-card" key={subject.id} onClick={() => navigate(`/programming/subjects/${subject.id}`)}><span className="pu-subject-icon">{subject.icon}</span><span className="pu-card-arrow">↗</span><strong>{subject.name}</strong><small>{subject.description}</small><span className="pu-card-meta">Open subject workspace</span></button>)}</div>
     </section>
 
-    <section className="pu-section"><div className="pu-section-heading"><div><span className="pu-eyebrow">PRACTICE YOUR WAY</span><h2>{modes.length} game modes · {categories.length} pattern categories</h2><p>Reusable challenge formats power the level packs.</p></div><button className="pu-text-link" onClick={() => navigate('/programming/practice')}>All modes ↗</button></div>
-      <div className="pu-mode-grid">{modes.slice(0, 6).map((mode) => <button className="pu-mode-card" key={mode.id} onClick={() => navigate(`/programming/practice?subject=java-fundamentals&mode=${mode.id}`)}><span className="pu-mode-icon">{mode.icon}</span><span className="pu-mode-tag">{mode.tag}</span><strong>{mode.title}</strong><small>{mode.description}</small><span className="pu-mode-open">Browse mode ↗</span></button>)}</div>
+    <section className="pu-section"><div className="pu-section-heading"><div><span className="pu-eyebrow">PRACTICE YOUR WAY</span><h2>{modes.length} game modes · {categories.length} pattern categories</h2><p>Reusable challenge formats power the level packs.</p></div><button className="pu-text-link" onClick={() => navigate('/programming/chapters/code-quest')}>All Code Quest paths ↗</button></div>
+      <div className="pu-mode-grid">{quickModes.map(({ mode, subject }) => <button className="pu-mode-card" key={mode.id} onClick={() => navigate(`/programming/practice?subject=${encodeURIComponent(subject.id)}&mode=${encodeURIComponent(mode.id)}`)}><span className="pu-mode-icon">{mode.icon}</span><span className="pu-mode-tag">{mode.tag}</span><strong>{mode.title}</strong><small>{mode.description}</small><span className="pu-mode-open">Browse mode ↗</span></button>)}</div>
     </section>
 
     <section className="pu-section"><div className="pu-section-heading"><div><span className="pu-eyebrow">TROPHY CASE</span><h2>Achievements</h2><p>{unlockedAchievements.length} unlocked by real play — no fake badges.</p></div><button className="pu-text-link" onClick={() => navigate('/programming/progress')}>All achievements ↗</button></div>
