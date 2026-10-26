@@ -2,7 +2,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import subjects from "../../data/subjects";
-import { getNoteDocumentUrl, getNoteIframeTitle } from "../../utils/htmlNote";
+import {
+  applyNoteLayoutCss,
+  getNoteDocumentUrl,
+  getNoteIframeTitle,
+  isNoteDocumentEmpty,
+  markAdaptiveElements,
+  measureNaturalWidth,
+  measureNoteHeight,
+} from "../../utils/htmlNote";
 
 import "./NoteReader.css";
 
@@ -15,19 +23,20 @@ const DEFAULT_SETTINGS = {
   fontSize: "medium",
   width: "comfortable",
   spacing: "comfortable",
+  layout: "auto",
 };
+const LAYOUT_OPTIONS = [
+  { value: "auto", label: "Automatic layout", short: "Auto" },
+  { value: "portrait", label: "Portrait-friendly layout", short: "Portrait" },
+  { value: "landscape", label: "Landscape-friendly layout", short: "Landscape" },
+  { value: "fit", label: "Fit note to width", short: "Fit width" },
+];
+const SHORT_NOTE_DWELL_MS = 2000;
+const MIN_FIT_ZOOM = 0.3;
 const FONT_ZOOM = { small: 0.92, medium: 1, large: 1.15 };
 const LINE_HEIGHT = { compact: 1.4, comfortable: null, relaxed: 1.9 };
 const WORDS_PER_MINUTE = 200;
 const HIGHLIGHT_SECONDS = 5;
-
-/* Max number of height changes accepted per layout pass. Stops a
-   badly-written note (100vh sections etc.) from growing forever. */
-const MAX_HEIGHT_UPDATES = 30;
-
-/* Highlighter colour (R,G,B). Yellow by default. */
-const HIGHLIGHT_RGB = "250,204,21";
-const HIGHLIGHT_EDGE_RGB = "202,138,4";
 
 const clamp = (n, min = 0, max = 100) => Math.min(max, Math.max(min, n));
 
@@ -60,7 +69,11 @@ const store = {
 function readSettings() {
   try {
     const saved = JSON.parse(store.get(SETTINGS_KEY));
-    return { ...DEFAULT_SETTINGS, ...(saved || {}) };
+    const merged = { ...DEFAULT_SETTINGS, ...(saved || {}) };
+    if (!LAYOUT_OPTIONS.some((o) => o.value === merged.layout)) {
+      merged.layout = DEFAULT_SETTINGS.layout;
+    }
+    return merged;
   } catch {
     return { ...DEFAULT_SETTINGS };
   }
@@ -74,74 +87,23 @@ function getHeadings(doc) {
     .slice(0, 80);
 }
 
-/* Reader settings are applied through ONE removable style tag.
-   They touch zoom (text size + fit-to-width), paragraph/list
-   line-height, and keep images/videos inside the screen.
-
-   The first rule is the "reach the bottom" fix:
-   - no inner scrollbars (the page scrolls, not the iframe)
-   - height:auto / min-height:0 so 100vh layouts cannot feed the
-     iframe height back into itself and grow forever. */
-function applyReaderSettings(doc, settings, fit = 1) {
+/* Reader settings are applied through ONE removable style tag, and
+   only touch zoom and paragraph/list line-height. Nothing else in
+   the note's own formatting is overridden. */
+function applyReaderSettings(doc, settings, fitZoom = 1) {
   let el = doc.getElementById("notes-web-reader-settings");
   if (!el) {
     el = doc.createElement("style");
     el.id = "notes-web-reader-settings";
     (doc.head || doc.documentElement).appendChild(el);
   }
-  const zoom = Math.round((FONT_ZOOM[settings.fontSize] ?? 1) * fit * 1000) / 1000;
+  const zoom = Math.round((FONT_ZOOM[settings.fontSize] ?? 1) * fitZoom * 1000) / 1000;
   const lineHeight = LINE_HEIGHT[settings.spacing];
   el.textContent =
-    "html,body{overflow-y:hidden !important;min-height:0 !important;height:auto !important;}" +
-    "img,video{max-width:100%;height:auto;}" +
     (zoom !== 1 ? `body{zoom:${zoom};}` : "") +
     (lineHeight
       ? `p,li,dd,blockquote{line-height:${lineHeight} !important;}`
       : "");
-}
-
-/* Lays the note out for the CURRENT iframe width and returns its
-   true content height. The iframe is collapsed first so the height
-   can shrink again (rotation to landscape, smaller text, etc.).
-   Collapsing can make the browser clamp the page scroll, so the
-   scroll position is saved and restored around the measurement. */
-function layoutAndMeasure(iframe, doc, win, settings, onScrollFix) {
-  const savedY = window.scrollY;
-  const previousHeight = iframe.style.height;
-  iframe.style.height = "0px";
-
-  applyReaderSettings(doc, settings, 1);
-
-  const root = doc.documentElement;
-  const clientWidth = root.clientWidth;
-  const scrollWidth = root.scrollWidth;
-  let fit = 1;
-  if (clientWidth > 0 && scrollWidth > clientWidth + 1) {
-    fit = clamp(clientWidth / scrollWidth, 0.4, 1);
-  }
-  if (fit < 1) applyReaderSettings(doc, settings, fit);
-
-  /* Real bottom of the content (covers zoom rounding / last margins). */
-  const bodyBottom = doc.body
-    ? Math.ceil(doc.body.getBoundingClientRect().bottom + (win.scrollY || 0))
-    : 0;
-
-  const height =
-    Math.max(
-      Math.ceil(root.scrollHeight),
-      Math.ceil(doc.body ? doc.body.scrollHeight : 0),
-      bodyBottom,
-      300
-    ) + 2; /* small buffer so the last line is never clipped */
-
-  iframe.style.height = previousHeight;
-
-  /* Put the page scroll back if collapsing the iframe moved it. */
-  if (Math.abs(window.scrollY - savedY) > 1) {
-    onScrollFix?.();
-    window.scrollTo({ top: savedY, behavior: "auto" });
-  }
-  return height;
 }
 
 /* =========================================================
@@ -165,17 +127,17 @@ const PEN_STYLE = `
   }
   .nr-pen-box {
     position: absolute; box-sizing: border-box; min-width: 8px; min-height: 8px;
-    background: linear-gradient(90deg, rgba(${HIGHLIGHT_RGB},.55), rgba(${HIGHLIGHT_RGB},.8), rgba(${HIGHLIGHT_RGB},.55));
-    border: 1px solid rgba(${HIGHLIGHT_EDGE_RGB},.45);
+    background: linear-gradient(90deg, rgba(204,74,0,.62), rgba(255,106,0,.82), rgba(204,74,0,.62));
+    border: 1px solid rgba(153,55,0,.55);
     border-radius: 3px 8px 3px 8px / 8px 3px 8px 3px;
     mix-blend-mode: multiply;
-    box-shadow: 0 1px 3px rgba(${HIGHLIGHT_EDGE_RGB},.25);
+    box-shadow: 0 1px 3px rgba(120,45,0,.28), inset 0 -3px 5px rgba(140,50,0,.22);
     transform: translateZ(0) rotate(-0.4deg);
     pointer-events: none;
     transition: opacity .45s ease, transform .45s ease;
   }
   .nr-pen-box.nr-pen-drawing {
-    background: linear-gradient(90deg, rgba(${HIGHLIGHT_RGB},.7), rgba(${HIGHLIGHT_RGB},.9), rgba(${HIGHLIGHT_RGB},.7));
+    background: linear-gradient(90deg, rgba(179,64,0,.72), rgba(255,106,0,.92), rgba(179,64,0,.72));
   }
   .nr-pen-box.nr-pen-fade { opacity: 0; transform: translateY(-1px) scale(.99) rotate(-0.4deg); }
 `;
@@ -206,13 +168,12 @@ function attachHighlighter(doc, win) {
     timers.add(id);
   };
 
-  /* The overlay is absolutely positioned and must NEVER add to the
-     scrollable height of the note, so it is sized from the body only. */
   const refreshHeight = () => {
     overlay.style.height = `${Math.max(
+      doc.documentElement.scrollHeight,
       body.scrollHeight,
-      body.getBoundingClientRect().height,
-      300
+      win.innerHeight || 0,
+      600
     )}px`;
   };
   refreshHeight();
@@ -436,21 +397,34 @@ function ReaderMenu({ open, onToggle, onClose, items }) {
         <div className="reader-menu" role="menu">
           {items
             .filter((item) => !item.hidden)
-            .map((item) => (
-              <button
-                key={item.label}
-                type="button"
-                role="menuitem"
-                className={`reader-menu-item ${item.compactOnly ? "menu-compact-only" : ""}`}
-                onClick={() => {
-                  onClose();
-                  item.onSelect();
-                }}
-              >
-                <span aria-hidden="true">{item.icon}</span>
-                {item.label}
-              </button>
-            ))}
+            .map((item) =>
+              item.heading ? (
+                <div
+                  key={item.heading}
+                  className="reader-menu-heading"
+                  role="presentation"
+                >
+                  {item.heading}
+                </div>
+              ) : (
+                <button
+                  key={item.label}
+                  type="button"
+                  role={item.checked === undefined ? "menuitem" : "menuitemradio"}
+                  aria-checked={item.checked === undefined ? undefined : item.checked}
+                  className={`reader-menu-item ${
+                    item.compactOnly ? "menu-compact-only" : ""
+                  } ${item.checked ? "is-checked" : ""}`}
+                  onClick={() => {
+                    onClose();
+                    item.onSelect();
+                  }}
+                >
+                  <span aria-hidden="true">{item.checked ? "✓" : item.icon}</span>
+                  {item.label}
+                </button>
+              )
+            )}
         </div>
       )}
     </div>
@@ -482,13 +456,15 @@ function NoteReader() {
   const [toc, setToc] = useState([]);
   const [readMinutes, setReadMinutes] = useState(null);
   const [storageOk, setStorageOk] = useState(true);
-  const [isLandscapeLocked, setIsLandscapeLocked] = useState(false);
+  const [noteEmpty, setNoteEmpty] = useState(false);
+  const [isLandscape, setIsLandscape] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth > window.innerHeight : false
+  );
+  const [orientationLocked, setOrientationLocked] = useState(false);
 
   const iframeRef = useRef(null);
   const frameRef = useRef(null);
-  const headerRef = useRef(null);
   const docCleanupRef = useRef(null);
-  const relayoutRef = useRef(null);
   const progressRef = useRef(0);
   const canSaveRef = useRef(false);
   const userScrolledRef = useRef(false);
@@ -496,9 +472,22 @@ function NoteReader() {
   const restoreTimersRef = useRef([]);
   const toastTimerRef = useRef(null);
   const settingsRef = useRef(settings);
+  const loadingRef = useRef(true);
   const keyHandlerRef = useRef(() => {});
+  const headerRef = useRef(null);
+  const recalcRef = useRef(() => {});
+  const relayoutRef = useRef(() => {});
+  const reflowRef = useRef(false);
+  const reflowTimerRef = useRef(0);
+  const lastWidthRef = useRef(typeof window !== "undefined" ? window.innerWidth : 0);
+  const dwellTimerRef = useRef(0);
+  const dwellDoneRef = useRef(false);
+  const enteredFullscreenRef = useRef(false);
+  const lastLayoutRef = useRef("");
+  const anchorRef = useRef({ until: 0, percent: 0 });
 
   settingsRef.current = settings;
+  loadingRef.current = loading;
 
   /* ---------- data lookup ---------- */
 
@@ -580,8 +569,21 @@ function NoteReader() {
     setMenuOpen(false);
     setToc([]);
     setReadMinutes(null);
+    setNoteEmpty(false);
     setIsFavorite(store.get(favoriteStorageKey) === "true");
-    setCompleted(store.get(completedStorageKey) === "true");
+    const wasCompleted = store.get(completedStorageKey) === "true";
+    setCompleted(wasCompleted);
+    /* Home counts a note as finished when its progress is 100. If the
+       progress record was cleared (Settings) but the explicit
+       completion record survived, bring them back in line. */
+    if (wasCompleted && Number(store.get(progressStorageKey)) !== 100) {
+      store.set(progressStorageKey, "100");
+    }
+
+    clearTimeout(dwellTimerRef.current);
+    dwellDoneRef.current = false;
+    reflowRef.current = false;
+    clearTimeout(reflowTimerRef.current);
 
     const saved = Number(store.get(progressStorageKey));
     const initial = Number.isFinite(saved) ? clamp(saved) : 0;
@@ -594,7 +596,7 @@ function NoteReader() {
     restoreTimersRef.current = [];
 
     programmaticScrollRef.current = performance.now();
-    window.scrollTo({ top: 0, behavior: "auto" });
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, [noteId, subjectId, favoriteStorageKey, completedStorageKey, progressStorageKey]);
 
   /* ---------- give up on a note that never finishes loading ---------- */
@@ -608,81 +610,114 @@ function NoteReader() {
     return () => clearTimeout(id);
   }, [loading, reloadKey, noteId]);
 
-  /* ---------- reading progress ----------
-     0%   = top of the note sits just under the sticky header
-     100% = bottom of the note reaches the bottom of the screen */
+  /* ---------- reading progress (based on the note frame itself) ---------- */
 
-  const getHeaderHeight = () => headerRef.current?.offsetHeight || 70;
-
-  const computeProgress = useCallback(() => {
+  /* Geometry of the note frame relative to the visible reading area.
+     The reading area starts under the sticky header and ends at the
+     bottom of the viewport. 0% = the top of the note is just under the
+     header; 100% = the last line of the note is at the viewport bottom.
+     Headers, meta row, completion box and previous/next cards sit
+     outside the frame, so they never count. */
+  const getReadGeometry = useCallback(() => {
     const el = frameRef.current;
-    if (!el) return 0;
+    if (!el) return null;
     const rect = el.getBoundingClientRect();
-    const headerH = headerRef.current?.offsetHeight || 70;
-    const viewH = window.innerHeight;
-    const max = rect.height - (viewH - headerH);
-    if (max <= 0) return rect.bottom <= viewH + 2 ? 100 : 0;
-    return clamp(((headerH - rect.top) / max) * 100);
+    const headerBottom = Math.max(
+      0,
+      headerRef.current ? headerRef.current.getBoundingClientRect().bottom : 0
+    );
+    const viewHeight = window.visualViewport?.height || window.innerHeight;
+    const range = rect.height - (viewHeight - headerBottom);
+    return { rect, headerBottom, range };
   }, []);
 
-  /* Scroll so that the note is at `percent` read. */
-  function scrollToProgress(percent) {
-    const el = frameRef.current;
-    if (!el) return false;
-    const rect = el.getBoundingClientRect();
-    const headerH = getHeaderHeight();
-    const max = rect.height - (window.innerHeight - headerH);
-    if (max <= 0) return false;
+  /* Returns a 0-100 number, or null when the note fits on one screen. */
+  const computeProgress = useCallback(() => {
+    const g = getReadGeometry();
+    if (!g) return 0;
+    if (g.range <= 2) return null;
+    const p = clamp(((g.headerBottom - g.rect.top) / g.range) * 100);
+    return p >= 99 ? 100 : p;
+  }, [getReadGeometry]);
 
-    programmaticScrollRef.current = performance.now();
-    window.scrollTo({
-      top: Math.max(
-        0,
-        window.scrollY + rect.top - headerH + (percent / 100) * max
-      ),
-      behavior: "auto",
-    });
-    return true;
-  }
+  /* Scroll position (window) that corresponds to a progress value. */
+  const scrollTopForProgress = useCallback(
+    (percent) => {
+      const g = getReadGeometry();
+      if (!g || g.range <= 2) return null;
+      return window.scrollY + g.rect.top - g.headerBottom + (percent / 100) * g.range;
+    },
+    [getReadGeometry]
+  );
 
   useEffect(() => {
     let frameId = 0;
     let saveTimer = 0;
+    let lastSaved = Number(store.get(progressStorageKey));
 
     const writeProgress = () => {
       saveTimer = 0;
-      if (!canSaveRef.current) return;
+      if (!canSaveRef.current || reflowRef.current) return;
+      const next = Math.round(progressRef.current);
       /* A note that reached 100% stays counted as complete elsewhere
          (Home stats). "Reset reading progress" clears it. */
-      if (Number(store.get(progressStorageKey)) >= 100 && progressRef.current < 100) {
-        return;
-      }
-      store.set(progressStorageKey, String(Math.round(progressRef.current)));
+      if (Number(store.get(progressStorageKey)) >= 100 && next < 100) return;
+      if (Number.isFinite(lastSaved) && lastSaved === next) return;
+      if (store.set(progressStorageKey, String(next))) lastSaved = next;
     };
 
+    const queueSave = () => {
+      if (!canSaveRef.current || reflowRef.current) return;
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(writeProgress, 500);
+    };
+
+    /* Recalculate from the current geometry. This never counts as a
+       user scroll, so layout changes cannot corrupt saved progress. */
     const update = () => {
       frameId = 0;
+      setShowTopButton(window.scrollY > 500);
+      if (reflowRef.current) return; /* geometry is mid-change */
+
       const p = computeProgress();
+      if (p === null) {
+        /* Whole note is visible without scrolling: starts at 0, and
+           counts as read after it has stayed on screen briefly. */
+        if (!dwellTimerRef.current && !dwellDoneRef.current && !loadingRef.current) {
+          dwellTimerRef.current = setTimeout(() => {
+            dwellTimerRef.current = 0;
+            dwellDoneRef.current = true;
+            update();
+          }, SHORT_NOTE_DWELL_MS);
+        }
+        const shown = dwellDoneRef.current ? 100 : 0;
+        progressRef.current = shown;
+        setReadingProgress(shown);
+        if (dwellDoneRef.current) queueSave();
+        return;
+      }
+
+      clearTimeout(dwellTimerRef.current);
+      dwellTimerRef.current = 0;
+      /* Until the saved position has been restored the frame sits at
+         the top, so keep showing the saved value instead of 0. */
+      if (!canSaveRef.current && !userScrolledRef.current) return;
       progressRef.current = p;
       setReadingProgress(p);
-      setShowTopButton(window.scrollY > 500);
-      if (canSaveRef.current) {
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(writeProgress, 500);
-      }
+      queueSave();
+    };
+
+    const schedule = () => {
+      if (!frameId) frameId = requestAnimationFrame(update);
     };
 
     const onScroll = () => {
+      if (reflowRef.current) return;
       if (performance.now() - programmaticScrollRef.current > 250) {
         userScrolledRef.current = true;
         canSaveRef.current = true;
       }
-      if (!frameId) frameId = requestAnimationFrame(update);
-    };
-
-    /* Resize only re-measures. It must NOT count as the user scrolling. */
-    const onResizeOnly = () => {
-      if (!frameId) frameId = requestAnimationFrame(update);
+      schedule();
     };
 
     const flush = () => {
@@ -692,58 +727,40 @@ function NoteReader() {
       }
     };
 
+    recalcRef.current = schedule;
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResizeOnly, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
     window.addEventListener("pagehide", flush);
-    onResizeOnly();
+    document.addEventListener("visibilitychange", flush);
+    schedule();
 
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResizeOnly);
+      window.removeEventListener("resize", schedule);
       window.removeEventListener("pagehide", flush);
+      document.removeEventListener("visibilitychange", flush);
       if (frameId) cancelAnimationFrame(frameId);
       flush();
+      clearTimeout(saveTimer);
+      clearTimeout(dwellTimerRef.current);
+      dwellTimerRef.current = 0;
     };
-  }, [progressStorageKey, computeProgress, iframeHeight]);
+  }, [progressStorageKey, computeProgress]);
 
-  /* ---------- keep position when the phone is rotated ---------- */
-
+  /* Height changes (images, fonts, reflow) re-run the calculation
+     without being treated as the reader scrolling. */
   useEffect(() => {
-    let timer = 0;
-    let anchor = null;
-    let lastWidth = window.innerWidth;
-
-    const onResize = () => {
-      if (window.innerWidth === lastWidth) return; /* address bar only */
-      lastWidth = window.innerWidth;
-
-      if (anchor === null) {
-        anchor = progressRef.current;
-        canSaveRef.current = false;
+    const anchor = anchorRef.current;
+    if (performance.now() < anchor.until && anchor.percent > 0 && anchor.percent < 100) {
+      const top = scrollTopForProgress(anchor.percent);
+      if (top !== null) {
+        programmaticScrollRef.current = performance.now();
+        window.scrollTo({ top: Math.max(0, top), behavior: "instant" });
       }
-
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        relayoutRef.current?.();
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => {
-            if (anchor !== null && anchor >= 1) scrollToProgress(anchor);
-            anchor = null;
-            canSaveRef.current = true;
-          })
-        );
-      }, 250);
-    };
-
-    window.addEventListener("resize", onResize);
-    window.addEventListener("orientationchange", onResize);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("orientationchange", onResize);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    }
+    recalcRef.current();
+  }, [iframeHeight, scrollTopForProgress]);
 
   /* ---------- restore saved position ---------- */
 
@@ -759,7 +776,12 @@ function NoteReader() {
     let announced = false;
     const apply = () => {
       if (userScrolledRef.current) return;
-      if (!scrollToProgress(saved)) return;
+      const top = scrollTopForProgress(saved);
+      if (top === null) return;
+
+      programmaticScrollRef.current = performance.now();
+      window.scrollTo({ top: Math.max(0, top), behavior: "instant" });
+
       if (!announced) {
         announced = true;
         showToast("Last position restored");
@@ -773,6 +795,7 @@ function NoteReader() {
       setTimeout(apply, 1200),
       setTimeout(() => {
         canSaveRef.current = true;
+        recalcRef.current();
       }, 1300),
     ];
   }
@@ -831,70 +854,92 @@ function NoteReader() {
     doc.addEventListener("keydown", onKey);
     cleanups.push(() => doc.removeEventListener("keydown", onKey));
 
-    /* Layout (settings + fit to width) and height.
-       - at most ONE measure per animation frame
-       - the scroll position is preserved around every measure
-       - the number of accepted height changes is capped so a
-         misbehaving note can never grow the iframe forever. */
-    let updates = 0;
-    let raf = 0;
+    /* A zero-byte / contentless file: show a clear message instead of
+       a blank page that looks like a layout bug. */
+    if (isNoteDocumentEmpty(doc)) {
+      docCleanupRef.current = () => cleanups.forEach((fn) => fn());
+      setNoteEmpty(true);
+      setLoading(false);
+      setNoteError(false);
+      canSaveRef.current = false;
+      return;
+    }
+    setNoteEmpty(false);
 
-    const measure = () => {
-      const next = layoutAndMeasure(
-        iframe,
-        doc,
-        win,
-        settingsRef.current,
-        () => {
-          programmaticScrollRef.current = performance.now();
+    /* Responsive layer + reading settings + height. ONE scheduler
+       coalesces every trigger (load, resize, fonts, images,
+       observer) into at most one pass per animation frame. */
+    let rafId = 0;
+    let trailingTimer = 0;
+    let lastWidth = -1;
+    const changeLog = [];
+
+    const layoutPass = () => {
+      rafId = 0;
+      const { layout, ...rest } = settingsRef.current;
+      const width = doc.documentElement.clientWidth;
+      const widthChanged = width !== lastWidth;
+      lastWidth = width;
+
+      applyNoteLayoutCss(doc, layout);
+      applyReaderSettings(doc, { ...rest, layout }, 1);
+      if (layout === "fit") {
+        const natural = measureNaturalWidth(doc);
+        const fit = natural > width + 1 ? Math.max(MIN_FIT_ZOOM, width / natural) : 1;
+        applyReaderSettings(doc, { ...rest, layout }, fit);
+      }
+      if (widthChanged || layout !== lastLayoutRef.current) {
+        markAdaptiveElements(doc, layout);
+        lastLayoutRef.current = layout;
+      }
+
+      const next = measureNoteHeight(doc, win);
+      const now = performance.now();
+      while (changeLog.length && now - changeLog[0] > 1000) changeLog.shift();
+
+      setIframeHeight((current) => {
+        if (Math.abs(current - next) <= 2) return current;
+        /* Loop guard: if the height keeps changing many times a
+           second, stop for a moment and take one trailing measurement. */
+        if (changeLog.length >= 15) {
+          clearTimeout(trailingTimer);
+          trailingTimer = win.setTimeout(request, 1000);
+          return current;
         }
-      );
-      setIframeHeight((current) =>
-        Math.abs(current - next) > 3 && updates++ < MAX_HEIGHT_UPDATES
-          ? next
-          : current
-      );
-    };
-
-    const measureSoon = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        measure();
+        changeLog.push(now);
+        return next;
       });
     };
 
-    relayoutRef.current = () => {
-      updates = 0;
-      measure();
-    };
-    cleanups.push(() => {
-      relayoutRef.current = null;
-      if (raf) cancelAnimationFrame(raf);
-    });
-    measure();
+    function request() {
+      if (!rafId) rafId = win.requestAnimationFrame(layoutPass);
+    }
+    relayoutRef.current = request;
+
+    layoutPass();
 
     const RO = win.ResizeObserver || window.ResizeObserver;
     if (RO) {
-      const observer = new RO(measureSoon);
+      const observer = new RO(request);
       observer.observe(doc.body);
+      observer.observe(doc.documentElement);
       cleanups.push(() => observer.disconnect());
     }
-
-    /* Images finishing late change the height. */
-    const onImgLoad = () => {
-      updates = 0;
-      measureSoon();
-    };
-    doc.addEventListener("load", onImgLoad, true);
-    cleanups.push(() => doc.removeEventListener("load", onImgLoad, true));
-
-    /* One more measure after fonts finish loading. */
-    if (doc.fonts?.ready) {
-      doc.fonts.ready.then(() => {
-        updates = 0;
-        measureSoon();
-      });
+    win.addEventListener("resize", request);
+    doc.addEventListener("load", request, true); /* images, fonts, frames */
+    win.addEventListener("load", request);
+    cleanups.push(() => {
+      win.removeEventListener("resize", request);
+      doc.removeEventListener("load", request, true);
+      win.removeEventListener("load", request);
+      if (rafId) win.cancelAnimationFrame(rafId);
+      clearTimeout(trailingTimer);
+      relayoutRef.current = () => {};
+    });
+    if (doc.fonts) {
+      doc.fonts.ready.then(request).catch(() => {});
+      doc.fonts.addEventListener?.("loadingdone", request);
+      cleanups.push(() => doc.fonts.removeEventListener?.("loadingdone", request));
     }
 
     /* Table of contents + reading time (only from real content). */
@@ -935,56 +980,66 @@ function NoteReader() {
     );
   }, [isHighlighterActive, iframeReloadTick]);
 
-  /* Apply + persist reading settings. */
+  /* Apply + persist reading settings. The iframe is never shrunk
+     artificially; the scheduler measures the real content height. */
   useEffect(() => {
     store.set(SETTINGS_KEY, JSON.stringify(settings));
-    relayoutRef.current?.();
+    relayoutRef.current();
   }, [settings, iframeReloadTick]);
 
-  /* ---------- landscape / rotate ---------- */
-
+  /* ---------- rotation / viewport changes ----------
+     When the width changes (rotation, split-screen) the note reflows
+     and its height changes. Progress is kept as a fraction of the
+     note, so the same passage stays in view afterwards. */
   useEffect(() => {
-    const onFsChange = () => {
-      if (!document.fullscreenElement) {
-        setIsLandscapeLocked(false);
-        try {
-          window.screen?.orientation?.unlock?.();
-        } catch {
-          /* ignore */
-        }
-      }
-    };
-    document.addEventListener("fullscreenchange", onFsChange);
-    return () => document.removeEventListener("fullscreenchange", onFsChange);
-  }, []);
+    let settleTimer = 0;
 
-  async function toggleLandscape() {
-    const orientation = window.screen?.orientation;
-    try {
-      if (!isLandscapeLocked) {
-        if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-          await document.documentElement.requestFullscreen();
+    const finishReflow = () => {
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(() => {
+        /* Late height changes (fonts, images) re-apply the anchor for a
+           short while so the same passage stays in view. */
+        anchorRef.current = {
+          until: performance.now() + 1800,
+          percent: progressRef.current,
+        };
+        const top = scrollTopForProgress(progressRef.current);
+        if (top !== null && progressRef.current > 0 && progressRef.current < 100) {
+          programmaticScrollRef.current = performance.now();
+          window.scrollTo({ top: Math.max(0, top), behavior: "instant" });
         }
-        if (!orientation?.lock) throw new Error("no-orientation-lock");
-        await orientation.lock("landscape");
-        setIsLandscapeLocked(true);
-        showToast("Landscape mode on");
-      } else {
-        orientation?.unlock?.();
-        if (document.fullscreenElement) await document.exitFullscreen();
-        setIsLandscapeLocked(false);
-        showToast("Landscape mode off");
-      }
-    } catch {
-      try {
-        if (document.fullscreenElement) await document.exitFullscreen();
-      } catch {
-        /* ignore */
-      }
-      setIsLandscapeLocked(false);
-      showToast("Can't force rotation here. Turn on auto-rotate and turn your phone sideways.", 4000);
-    }
-  }
+        reflowRef.current = false;
+        recalcRef.current();
+      }, 350);
+      reflowTimerRef.current = settleTimer;
+    };
+
+    const onViewportChange = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight);
+      if (window.innerWidth === lastWidthRef.current) return; /* e.g. URL bar */
+      lastWidthRef.current = window.innerWidth;
+      reflowRef.current = true;
+      relayoutRef.current();
+      finishReflow();
+    };
+
+    window.addEventListener("resize", onViewportChange);
+    window.addEventListener("orientationchange", onViewportChange);
+    return () => {
+      window.removeEventListener("resize", onViewportChange);
+      window.removeEventListener("orientationchange", onViewportChange);
+      clearTimeout(settleTimer);
+    };
+  }, [scrollTopForProgress]);
+
+  /* Keep the page-level 100vh sheets in step with the real viewport. */
+  useEffect(() => {
+    const mq = window.matchMedia?.("(orientation: landscape)");
+    if (!mq) return undefined;
+    const onChange = () => setIsLandscape(window.innerWidth > window.innerHeight);
+    mq.addEventListener?.("change", onChange);
+    return () => mq.removeEventListener?.("change", onChange);
+  }, []);
 
   /* Full cleanup on unmount. */
   useEffect(
@@ -992,11 +1047,15 @@ function NoteReader() {
       docCleanupRef.current?.();
       restoreTimersRef.current.forEach(clearTimeout);
       clearTimeout(toastTimerRef.current);
+      clearTimeout(reflowTimerRef.current);
+      clearTimeout(dwellTimerRef.current);
       try {
         window.screen?.orientation?.unlock?.();
-        if (document.fullscreenElement) document.exitFullscreen();
+        if (enteredFullscreenRef.current && document.fullscreenElement) {
+          document.exitFullscreen?.().catch(() => {});
+        }
       } catch {
-        /* ignore */
+        /* nothing to release */
       }
     },
     []
@@ -1058,12 +1117,18 @@ function NoteReader() {
   }
 
   function resetProgress() {
+    /* Resets THIS note only: its saved position/progress and its
+       explicit completion mark (otherwise the reader would still say
+       "Completed" while Home no longer counts it). */
     store.remove(progressStorageKey);
+    store.remove(completedStorageKey);
+    setCompleted(false);
+    dwellDoneRef.current = false;
     progressRef.current = 0;
     setReadingProgress(0);
     canSaveRef.current = true;
     programmaticScrollRef.current = performance.now();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" });
     showToast("Reading progress reset");
   }
 
@@ -1091,7 +1156,7 @@ function NoteReader() {
       window.scrollY +
       frame.getBoundingClientRect().top +
       el.getBoundingClientRect().top -
-      (getHeaderHeight() + 14);
+      84;
     setPanel(null);
     window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   }
@@ -1099,6 +1164,63 @@ function NoteReader() {
   function togglePanel(name) {
     setMenuOpen(false);
     setPanel((current) => (current === name ? null : name));
+  }
+
+  function chooseLayout(layout) {
+    setSettings((current) => ({ ...current, layout }));
+    const label = LAYOUT_OPTIONS.find((o) => o.value === layout)?.label;
+    if (label) showToast(label);
+  }
+
+  /* Screen Orientation API: only works where the browser allows it
+     (usually fullscreen or an installed PWA on Android). It never
+     rotates the phone by itself when auto-rotate is the real control,
+     so failures are explained instead of hidden. */
+  async function toggleRotation() {
+    const orientation = window.screen?.orientation;
+    if (!orientation || typeof orientation.lock !== "function") {
+      showToast(
+        "This browser can't lock rotation. Turn on Auto-rotate in your phone's quick settings, then turn the phone.",
+        5200
+      );
+      return;
+    }
+
+    if (orientationLocked) {
+      try {
+        orientation.unlock();
+      } catch {
+        /* ignore */
+      }
+      setOrientationLocked(false);
+      showToast("Rotation unlocked. Your phone's Auto-rotate setting controls it again.", 4200);
+      return;
+    }
+
+    const target = window.innerWidth > window.innerHeight ? "portrait" : "landscape";
+    const tryLock = () => orientation.lock(target);
+
+    try {
+      await tryLock();
+    } catch {
+      /* Android Chrome needs fullscreen for a lock outside an installed app. */
+      try {
+        const standalone = window.matchMedia?.("(display-mode: standalone)")?.matches;
+        if (!standalone && document.documentElement.requestFullscreen && !document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+          enteredFullscreenRef.current = true;
+        }
+        await tryLock();
+      } catch {
+        showToast(
+          "Your browser didn't allow a rotation lock. Turn on Auto-rotate in your phone's quick settings and turn the phone instead.",
+          5800
+        );
+        return;
+      }
+    }
+    setOrientationLocked(true);
+    showToast(`Screen locked to ${target}`);
   }
 
   function updateSetting(key, value) {
@@ -1145,9 +1267,6 @@ function NoteReader() {
         break;
       case "s":
         togglePanel("settings");
-        break;
-      case "r":
-        toggleLandscape();
         break;
       case "?":
         togglePanel("shortcuts");
@@ -1198,12 +1317,20 @@ function NoteReader() {
     { label: "Copy note link", icon: "⧉", onSelect: copyLink },
     { label: "Share", icon: "↗", onSelect: shareNote, compactOnly: true },
     { label: "Contents", icon: "☰", onSelect: () => togglePanel("toc"), compactOnly: true },
-    {
-      label: isLandscapeLocked ? "Exit landscape mode" : "Rotate to landscape",
-      icon: "⟲",
-      onSelect: toggleLandscape,
-    },
     { label: "Reading settings", icon: "Aa", onSelect: () => togglePanel("settings") },
+    { heading: "Reading layout" },
+    ...LAYOUT_OPTIONS.filter((option) => option.value !== "auto").map((option) => ({
+      label: option.label,
+      icon: "▭",
+      checked: settings.layout === option.value,
+      onSelect: () => chooseLayout(option.value),
+    })),
+    {
+      label: orientationLocked ? "Unlock screen rotation" : "Rotate screen (lock orientation)",
+      icon: "⟲",
+      onSelect: toggleRotation,
+    },
+    { heading: "Note" },
     { label: "Reset reading progress", icon: "↺", onSelect: resetProgress },
     { label: "Retry loading note", icon: "⟳", onSelect: retryLoad, hidden: !noteError },
     { label: "Keyboard shortcuts", icon: "⌨", onSelect: () => togglePanel("shortcuts") },
@@ -1214,7 +1341,12 @@ function NoteReader() {
   ========================================================= */
 
   return (
-    <div className="note-reader-page" data-width={settings.width}>
+    <div
+      className="note-reader-page"
+      data-width={settings.width}
+      data-layout={settings.layout}
+      data-viewport={isLandscape ? "landscape" : "portrait"}
+    >
       {/* PROGRESS BAR */}
       <div
         className="reader-progress-container"
@@ -1281,7 +1413,7 @@ function NoteReader() {
             title={
               isHighlighterActive
                 ? "Highlighter on (H or Esc to turn off)"
-                : "Highlighter (H)"
+                : "Temporary highlighter (H)"
             }
           >
             <span aria-hidden="true">🖊️</span>
@@ -1325,6 +1457,20 @@ function NoteReader() {
         </div>
       )}
 
+      {/* HIGHLIGHTER NOTICE */}
+      {isHighlighterActive && (
+        <div className="reader-pen-banner" role="status">
+          <span aria-hidden="true">🖊️</span>
+          <span>
+            Highlighter on. Marks are temporary and fade after{" "}
+            {HIGHLIGHT_SECONDS} seconds.
+          </span>
+          <button type="button" onClick={() => setIsHighlighterActive(false)}>
+            Turn off
+          </button>
+        </div>
+      )}
+
       {/* PANELS */}
       {panel === "settings" && (
         <ReaderPanel title="Reading settings" onClose={() => setPanel(null)}>
@@ -1356,6 +1502,12 @@ function NoteReader() {
               { value: "comfortable", label: "Default" },
               { value: "relaxed", label: "Relaxed" },
             ]}
+          />
+          <Segmented
+            label="Layout"
+            value={settings.layout}
+            onChange={(v) => updateSetting("layout", v)}
+            options={LAYOUT_OPTIONS.map((o) => ({ value: o.value, label: o.short }))}
           />
           <p className="panel-note">
             Theme follows your app's light or dark setting. Notes keep their
@@ -1401,7 +1553,6 @@ function NoteReader() {
               ["F", "Favorite"],
               ["T", "Contents"],
               ["S", "Reading settings"],
-              ["R", "Rotate to landscape"],
               ["?", "This list"],
               ["Esc", "Close panel or turn off highlighter"],
             ].map(([keys, label]) => (
@@ -1437,7 +1588,10 @@ function NoteReader() {
           )}
         </div>
 
-        <section className="note-frame-container" ref={frameRef}>
+        <section
+          className={`note-frame-container ${loading ? "is-loading" : ""}`}
+          ref={frameRef}
+        >
           {loading && (
             <div className="reader-loading" role="status" aria-live="polite">
               <div className="loading-spinner" aria-hidden="true">
@@ -1472,15 +1626,41 @@ function NoteReader() {
             </div>
           )}
 
+          {noteEmpty && !noteError && (
+            <div className="reader-error reader-empty" role="status">
+              <div className="reader-error-small-icon" aria-hidden="true">
+                ∅
+              </div>
+              <h2>This note has no content yet</h2>
+              <p>
+                The file for this note exists but is empty, so there is
+                nothing to display. Its original content needs to be added
+                back to the project.
+              </p>
+              <div className="reader-error-actions">
+                <button
+                  type="button"
+                  className="reader-btn reader-btn-ghost"
+                  onClick={() => navigate(`/subjects/${subject.id}`)}
+                >
+                  Back to {subject.name}
+                </button>
+              </div>
+            </div>
+          )}
+
           {!noteError && (
             <iframe
               key={`${noteId}-${reloadKey}`}
               ref={iframeRef}
               className="note-iframe"
               src={noteUrl}
-              scrolling="no"
               title={getNoteIframeTitle(note.title)}
-              style={{ height: `${iframeHeight}px` }}
+              style={{
+                height: `${iframeHeight}px`,
+                visibility: noteEmpty ? "hidden" : undefined,
+                position: noteEmpty ? "absolute" : undefined,
+              }}
               onLoad={handleIframeLoad}
               onError={handleIframeError}
             />
@@ -1488,7 +1668,7 @@ function NoteReader() {
         </section>
 
         {/* COMPLETION */}
-        {!noteError && (
+        {!noteError && !noteEmpty && (
           <section className={`reader-complete ${completed ? "is-done" : ""}`}>
             <p>
               {completed
