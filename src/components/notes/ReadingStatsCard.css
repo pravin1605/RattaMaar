@@ -1,0 +1,79 @@
+/* Home: reading stats card + nicer "Continue reading" card */
+
+.stats-card {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: 18px;
+  margin: 0 0 18px;
+  padding: 14px 18px;
+  border-radius: 20px;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, color-mix(in srgb, #7c3aed 14%, var(--bg-secondary)), color-mix(in srgb, #f97316 10%, var(--bg-secondary)));
+  border: 1px solid var(--border-color);
+  box-shadow: 0 14px 30px -22px rgba(15, 23, 42, 0.5);
+}
+
+.stats-streak { display: flex; align-items: center; gap: 10px; }
+.stats-streak strong { display: block; font-size: 18px; }
+.stats-streak small, .stats-goal small, .stats-badges > small { font-size: 12px; color: var(--text-muted); }
+
+@keyframes flameFlicker {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  50% { transform: scale(1.12) rotate(2deg); }
+}
+
+.stats-flame { font-size: 30px; animation: flameFlicker 1.6s ease-in-out infinite; }
+.stats-goal { display: grid; justify-items: center; gap: 4px; }
+
+.stats-ring {
+  --pct: 0%;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: conic-gradient(#7c3aed var(--pct), color-mix(in srgb, #7c3aed 16%, transparent) 0);
+}
+
+.stats-ring span {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.stats-badges { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+
+.stats-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+}
+
+@media (max-width: 560px) {
+  .stats-card { grid-template-columns: 1fr auto; }
+  .stats-badges { grid-column: 1 / -1; justify-content: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) { .stats-flame { animation: none; } }
+
+/* Continue reading: subject-coloured icon and gradient progress */
+.continue-icon {
+  background: linear-gradient(135deg, var(--c-from, #a78bfa), var(--c-to, #6d28d9)) !important;
+  box-shadow: 0 10px 20px -10px var(--c-to, #6d28d9);
+}
+
+.continue-card .progress-value {
+  background: linear-gradient(90deg, var(--c-from, #a78bfa), var(--c-to, #6d28d9)) !important;
+}

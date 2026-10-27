@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import BottomNavigation from "../../components/layout/BottomNavigation";
 import subjects from "../../data/subjects";
+import ReadingStatsCard from "../../components/notes/ReadingStatsCard";
+import { getSubjectAccent } from "../../utils/subjectAccent";
 
 import "./Home.css";
 import "./ProgrammingUniverseEntry.css";
@@ -428,6 +430,8 @@ function Home() {
         </form>
 
         {/* ============ CONTINUE READING ============ */}
+        <ReadingStatsCard />
+
         <section className="home-section">
           <div className="section-heading">
             <div>
@@ -450,6 +454,10 @@ function Home() {
           {recentNote ? (
           <article
               className="continue-card"
+              style={{
+                "--c-from": getSubjectAccent(recentNote.subject.id).from,
+                "--c-to": getSubjectAccent(recentNote.subject.id).to,
+              }}
               onClick={() =>
                 navigate(
                   `/notes/${recentNote.subject.id}/${recentNote.note.id}`

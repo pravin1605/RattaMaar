@@ -13,6 +13,25 @@ import {
 } from "../../utils/htmlNote";
 
 import "./NoteReader.css";
+import "./ReaderExtras.css";
+import {
+  BookmarkRail,
+  Celebration,
+  FloatingToolbar,
+  ImageLightbox,
+  NotesPanelBody,
+  PenColors,
+  ProgressRing,
+  SectionPill,
+  penRgb,
+} from "./ReaderExtras";
+import { accentStyle } from "../../utils/subjectAccent";
+import {
+  getReadingStats,
+  recordCompletion,
+  recordReadingDay,
+} from "../../utils/readingStats";
+import { applyReadingTheme, attachNoteEnhancements } from "../../utils/noteEnhance";
 
 /* =========================================================
    CONSTANTS + HELPERS
@@ -24,7 +43,14 @@ const DEFAULT_SETTINGS = {
   width: "comfortable",
   spacing: "comfortable",
   layout: "auto",
+  theme: "app",
+  font: "note",
+  penColor: "orange",
+  swipe: true,
 };
+const THEME_OPTIONS = ["app", "sepia", "amoled", "midnight"];
+const FONT_OPTIONS = ["note", "inter", "merriweather", "lora", "dyslexic"];
+const PEN_IDS = ["orange", "yellow", "green", "pink", "blue"];
 const LAYOUT_OPTIONS = [
   { value: "auto", label: "Automatic layout", short: "Auto" },
   { value: "portrait", label: "Portrait-friendly layout", short: "Portrait" },
@@ -73,6 +99,10 @@ function readSettings() {
     if (!LAYOUT_OPTIONS.some((o) => o.value === merged.layout)) {
       merged.layout = DEFAULT_SETTINGS.layout;
     }
+    if (!THEME_OPTIONS.includes(merged.theme)) merged.theme = "app";
+    if (!FONT_OPTIONS.includes(merged.font)) merged.font = "note";
+    if (!PEN_IDS.includes(merged.penColor)) merged.penColor = "orange";
+    merged.swipe = merged.swipe !== false;
     return merged;
   } catch {
     return { ...DEFAULT_SETTINGS };
@@ -127,17 +157,18 @@ const PEN_STYLE = `
   }
   .nr-pen-box {
     position: absolute; box-sizing: border-box; min-width: 8px; min-height: 8px;
-    background: linear-gradient(90deg, rgba(204,74,0,.62), rgba(255,106,0,.82), rgba(204,74,0,.62));
-    border: 1px solid rgba(153,55,0,.55);
+    --pen-rgb: 255,106,0;
+    background: linear-gradient(90deg, rgba(var(--pen-rgb),.62), rgba(var(--pen-rgb),.86), rgba(var(--pen-rgb),.62));
+    border: 1px solid rgba(var(--pen-rgb),.7);
     border-radius: 3px 8px 3px 8px / 8px 3px 8px 3px;
     mix-blend-mode: multiply;
-    box-shadow: 0 1px 3px rgba(120,45,0,.28), inset 0 -3px 5px rgba(140,50,0,.22);
+    box-shadow: 0 1px 3px rgba(var(--pen-rgb),.35), inset 0 -3px 5px rgba(0,0,0,.14);
     transform: translateZ(0) rotate(-0.4deg);
     pointer-events: none;
     transition: opacity .45s ease, transform .45s ease;
   }
   .nr-pen-box.nr-pen-drawing {
-    background: linear-gradient(90deg, rgba(179,64,0,.72), rgba(255,106,0,.92), rgba(179,64,0,.72));
+    background: linear-gradient(90deg, rgba(var(--pen-rgb),.72), rgba(var(--pen-rgb),.95), rgba(var(--pen-rgb),.72));
   }
   .nr-pen-box.nr-pen-fade { opacity: 0; transform: translateY(-1px) scale(.99) rotate(-0.4deg); }
 `;
@@ -217,6 +248,7 @@ function attachHighlighter(doc, win) {
 
     activeBox = doc.createElement("div");
     activeBox.className = "nr-pen-box nr-pen-drawing";
+    if (win.__notesPenRgb) activeBox.style.setProperty("--pen-rgb", win.__notesPenRgb);
     Object.assign(activeBox.style, {
       left: `${startX}px`,
       top: `${startY - 13}px`,
@@ -461,6 +493,12 @@ function NoteReader() {
     typeof window !== "undefined" ? window.innerWidth > window.innerHeight : false
   );
   const [orientationLocked, setOrientationLocked] = useState(false);
+  const [leaving, setLeaving] = useState(false);
+  const [zoomImage, setZoomImage] = useState(null);
+  const [celebrate, setCelebrate] = useState(false);
+  const [sectionTitle, setSectionTitle] = useState("");
+  const [annotations, setAnnotations] = useState([]);
+  const [stats, setStats] = useState(() => getReadingStats());
 
   const iframeRef = useRef(null);
   const frameRef = useRef(null);
@@ -485,9 +523,26 @@ function NoteReader() {
   const enteredFullscreenRef = useRef(false);
   const lastLayoutRef = useRef("");
   const anchorRef = useRef({ until: 0, percent: 0 });
+  const celebratedRef = useRef(false);
+  const prevProgressRef = useRef(0);
+  const swipeRef = useRef(() => {});
+  const leaveTimerRef = useRef(0);
 
   settingsRef.current = settings;
   loadingRef.current = loading;
+
+  /* Short fade-out before leaving the reader (skipped for users who
+     prefer reduced motion). */
+  const go = (path) => {
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    if (reduce) {
+      navigate(path);
+      return;
+    }
+    setLeaving(true);
+    clearTimeout(leaveTimerRef.current);
+    leaveTimerRef.current = setTimeout(() => navigate(path), 170);
+  };
 
   /* ---------- data lookup ---------- */
 
@@ -508,6 +563,10 @@ function NoteReader() {
   );
   const progressStorageKey = useMemo(
     () => `notes-web-progress-${subjectId}-${noteId}`,
+    [subjectId, noteId]
+  );
+  const annotationsKey = useMemo(
+    () => `notes-web-annotations-${subjectId}-${noteId}`,
     [subjectId, noteId]
   );
   const completedStorageKey = useMemo(
@@ -570,6 +629,18 @@ function NoteReader() {
     setToc([]);
     setReadMinutes(null);
     setNoteEmpty(false);
+    setLeaving(false);
+    setZoomImage(null);
+    setCelebrate(false);
+    setSectionTitle("");
+    prevProgressRef.current = 0;
+    celebratedRef.current = Number(store.get(progressStorageKey)) >= 100;
+    try {
+      const saved = JSON.parse(store.get(annotationsKey));
+      setAnnotations(Array.isArray(saved) ? saved : []);
+    } catch {
+      setAnnotations([]);
+    }
     setIsFavorite(store.get(favoriteStorageKey) === "true");
     const wasCompleted = store.get(completedStorageKey) === "true";
     setCompleted(wasCompleted);
@@ -597,7 +668,7 @@ function NoteReader() {
 
     programmaticScrollRef.current = performance.now();
     window.scrollTo({ top: 0, behavior: "instant" });
-  }, [noteId, subjectId, favoriteStorageKey, completedStorageKey, progressStorageKey]);
+  }, [noteId, subjectId, favoriteStorageKey, completedStorageKey, progressStorageKey, annotationsKey]);
 
   /* ---------- give up on a note that never finishes loading ---------- */
 
@@ -866,6 +937,16 @@ function NoteReader() {
     }
     setNoteEmpty(false);
 
+    /* Code bars + colours, callouts, folding, image zoom, swipe. */
+    cleanups.push(
+      attachNoteEnhancements(doc, win, {
+        onZoomImage: setZoomImage,
+        onSwipe: (direction) => swipeRef.current(direction),
+      })
+    );
+    recordReadingDay();
+    setStats(getReadingStats());
+
     /* Responsive layer + reading settings + height. ONE scheduler
        coalesces every trigger (load, resize, fonts, images,
        observer) into at most one pass per animation frame. */
@@ -883,6 +964,7 @@ function NoteReader() {
 
       applyNoteLayoutCss(doc, layout);
       applyReaderSettings(doc, { ...rest, layout }, 1);
+      applyReadingTheme(doc, settingsRef.current);
       if (layout === "fit") {
         const natural = measureNaturalWidth(doc);
         const fit = natural > width + 1 ? Math.max(MIN_FIT_ZOOM, width / natural) : 1;
@@ -974,11 +1056,12 @@ function NoteReader() {
     const win = iframeRef.current?.contentWindow;
     if (!doc || !win) return;
     win.__notesPenActive = isHighlighterActive;
+    win.__notesPenRgb = penRgb(settings.penColor);
     (doc.body || doc.documentElement)?.classList.toggle(
       "nr-pen-mode",
       isHighlighterActive
     );
-  }, [isHighlighterActive, iframeReloadTick]);
+  }, [isHighlighterActive, iframeReloadTick, settings.penColor]);
 
   /* Apply + persist reading settings. The iframe is never shrunk
      artificially; the scheduler measures the real content height. */
@@ -1049,6 +1132,7 @@ function NoteReader() {
       clearTimeout(toastTimerRef.current);
       clearTimeout(reflowTimerRef.current);
       clearTimeout(dwellTimerRef.current);
+      clearTimeout(leaveTimerRef.current);
       try {
         window.screen?.orientation?.unlock?.();
         if (enteredFullscreenRef.current && document.fullscreenElement) {
@@ -1080,6 +1164,12 @@ function NoteReader() {
     if (next) {
       store.set(progressStorageKey, "100");
       showToast("Marked as completed");
+      if (!celebratedRef.current) {
+        celebratedRef.current = true;
+        setCelebrate(true);
+      }
+      recordCompletion(`${subjectId}/${noteId}`);
+      setStats(getReadingStats());
     } else {
       store.set(
         progressStorageKey,
@@ -1139,7 +1229,7 @@ function NoteReader() {
   }
 
   function openNote(target) {
-    if (target) navigate(`/notes/${subjectId}/${target.id}`);
+    if (target) go(`/notes/${subjectId}/${target.id}`);
   }
 
   function scrollToTop() {
@@ -1285,6 +1375,97 @@ function NoteReader() {
      NOT FOUND
   ========================================================= */
 
+  /* ---------- section tracking ("now reading") ---------- */
+
+  useEffect(() => {
+    let raf = 0;
+    const compute = () => {
+      raf = 0;
+      const doc = iframeRef.current?.contentDocument;
+      const g = getReadGeometry();
+      if (!doc || !doc.body || !g) return;
+      const readTop = g.headerBottom - g.rect.top + 24;
+      let current = "";
+      for (const heading of getHeadings(doc)) {
+        if (heading.getBoundingClientRect().top <= readTop) {
+          current = (heading.textContent || "").trim().replace(/\s+/g, " ");
+        } else {
+          break;
+        }
+      }
+      setSectionTitle((previous) => (previous === current ? previous : current));
+    };
+    const onChange = () => {
+      if (!raf) raf = requestAnimationFrame(compute);
+    };
+    window.addEventListener("scroll", onChange, { passive: true });
+    window.addEventListener("resize", onChange);
+    onChange();
+    return () => {
+      window.removeEventListener("scroll", onChange);
+      window.removeEventListener("resize", onChange);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [getReadGeometry, iframeReloadTick, iframeHeight]);
+
+  /* ---------- celebrate finishing a note by reading ---------- */
+
+  useEffect(() => {
+    const previous = prevProgressRef.current;
+    prevProgressRef.current = readingProgress;
+    if (
+      readingProgress >= 100 &&
+      previous < 100 &&
+      !celebratedRef.current &&
+      userScrolledRef.current &&
+      canSaveRef.current
+    ) {
+      celebratedRef.current = true;
+      setCelebrate(true);
+      recordCompletion(`${subjectId}/${noteId}`);
+      setStats(getReadingStats());
+    }
+  }, [readingProgress, subjectId, noteId]);
+
+  /* ---------- bookmarks and sticky notes (saved per note) ---------- */
+
+  function saveAnnotations(next) {
+    setAnnotations(next);
+    store.set(annotationsKey, JSON.stringify(next));
+  }
+
+  function addAnnotation(type, text = "", color = "#7c3aed") {
+    const item = {
+      id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
+      type,
+      text,
+      color,
+      percent: Math.round(progressRef.current),
+      section: sectionTitle,
+      t: Date.now(),
+    };
+    saveAnnotations([...annotations, item].sort((a, b) => a.percent - b.percent));
+    showToast(type === "bookmark" ? "Bookmark saved" : "Note saved");
+  }
+
+  function jumpToAnnotation(item) {
+    const top = scrollTopForProgress(item.percent);
+    setPanel(null);
+    if (top !== null) window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  }
+
+  function removeAnnotation(id) {
+    saveAnnotations(annotations.filter((item) => item.id !== id));
+  }
+
+  /* Swipe left / right inside the note opens the next / previous note. */
+  swipeRef.current = (direction) => {
+    const target = direction === "next" ? nextNote : previousNote;
+    if (!target || !settingsRef.current.swipe) return;
+    showToast(direction === "next" ? "Next note" : "Previous note");
+    openNote(target);
+  };
+
   if (!subject || !note) {
     return (
       <div className="reader-error-page">
@@ -1300,7 +1481,7 @@ function NoteReader() {
           type="button"
           className="reader-btn"
           onClick={() =>
-            navigate(subject ? `/subjects/${subject.id}` : "/subjects")
+            go(subject ? `/subjects/${subject.id}` : "/subjects")
           }
         >
           {subject ? `Back to ${subject.name}` : "Browse subjects"}
@@ -1317,6 +1498,7 @@ function NoteReader() {
     { label: "Copy note link", icon: "⧉", onSelect: copyLink },
     { label: "Share", icon: "↗", onSelect: shareNote, compactOnly: true },
     { label: "Contents", icon: "☰", onSelect: () => togglePanel("toc"), compactOnly: true },
+    { label: "My highlights & notes", icon: "🔖", onSelect: () => togglePanel("notes") },
     { label: "Reading settings", icon: "Aa", onSelect: () => togglePanel("settings") },
     { heading: "Reading layout" },
     ...LAYOUT_OPTIONS.filter((option) => option.value !== "auto").map((option) => ({
@@ -1342,7 +1524,9 @@ function NoteReader() {
 
   return (
     <div
-      className="note-reader-page"
+      className={`note-reader-page ${leaving ? "is-leaving" : ""}`}
+      style={accentStyle(subject.id)}
+      data-reader-theme={settings.theme}
       data-width={settings.width}
       data-layout={settings.layout}
       data-viewport={isLandscape ? "landscape" : "portrait"}
@@ -1367,7 +1551,7 @@ function NoteReader() {
         <button
           type="button"
           className="reader-icon-button"
-          onClick={() => navigate(`/subjects/${subject.id}`)}
+          onClick={() => go(`/subjects/${subject.id}`)}
           aria-label={`Back to ${subject.name}`}
           title={`Back to ${subject.name}`}
         >
@@ -1378,17 +1562,25 @@ function NoteReader() {
           <nav className="reader-crumb" aria-label="Breadcrumb">
             <button
               type="button"
-              onClick={() => navigate(`/subjects/${subject.id}`)}
+              onClick={() => go(`/subjects/${subject.id}`)}
             >
+              <span className="crumb-icon" aria-hidden="true">
+                {subject.icon}
+              </span>
               {subject.name}
             </button>
             <span aria-hidden="true">/</span>
-            <span>Note {noteIndex + 1}</span>
+            <span>📄 Note {noteIndex + 1}</span>
           </nav>
           <h1>{note.title}</h1>
         </div>
 
         <div className="reader-actions">
+          <span className="header-ring" title={`${progressRounded}% read`}>
+            <ProgressRing value={readingProgress} size={34} stroke={3}>
+              {progressRounded}
+            </ProgressRing>
+          </span>
           <button
             type="button"
             className={`reader-icon-button ${isFavorite ? "favorite-active" : ""}`}
@@ -1465,6 +1657,10 @@ function NoteReader() {
             Highlighter on. Marks are temporary and fade after{" "}
             {HIGHLIGHT_SECONDS} seconds.
           </span>
+          <PenColors
+            value={settings.penColor}
+            onChange={(v) => updateSetting("penColor", v)}
+          />
           <button type="button" onClick={() => setIsHighlighterActive(false)}>
             Turn off
           </button>
@@ -1509,9 +1705,42 @@ function NoteReader() {
             onChange={(v) => updateSetting("layout", v)}
             options={LAYOUT_OPTIONS.map((o) => ({ value: o.value, label: o.short }))}
           />
+          <Segmented
+            label="Reading theme"
+            value={settings.theme}
+            onChange={(v) => updateSetting("theme", v)}
+            options={[
+              { value: "app", label: "App" },
+              { value: "sepia", label: "Sepia" },
+              { value: "amoled", label: "AMOLED" },
+              { value: "midnight", label: "Midnight" },
+            ]}
+          />
+          <Segmented
+            label="Reading font"
+            value={settings.font}
+            onChange={(v) => updateSetting("font", v)}
+            options={[
+              { value: "note", label: "Note's own" },
+              { value: "inter", label: "Inter" },
+              { value: "merriweather", label: "Merriweather" },
+              { value: "lora", label: "Lora" },
+              { value: "dyslexic", label: "Easy read" },
+            ]}
+          />
+          <Segmented
+            label="Swipe to change notes"
+            value={settings.swipe ? "on" : "off"}
+            onChange={(v) => updateSetting("swipe", v === "on")}
+            options={[
+              { value: "on", label: "On" },
+              { value: "off", label: "Off" },
+            ]}
+          />
           <p className="panel-note">
-            Theme follows your app's light or dark setting. Notes keep their
-            own page colors.
+            The app's light or dark mode is set in Settings. Reading themes
+            recolor this reader and the note itself; fonts need an internet
+            connection the first time.
           </p>
           <button
             type="button"
@@ -1520,6 +1749,19 @@ function NoteReader() {
           >
             Reset to defaults
           </button>
+        </ReaderPanel>
+      )}
+
+      {panel === "notes" && (
+        <ReaderPanel title="My highlights & notes" onClose={() => setPanel(null)}>
+          <NotesPanelBody
+            items={annotations}
+            currentSection={sectionTitle}
+            onAddBookmark={() => addAnnotation("bookmark", "", "#f43f5e")}
+            onAddNote={(text, color) => addAnnotation("note", text, color)}
+            onJump={jumpToAnnotation}
+            onRemove={removeAnnotation}
+          />
         </ReaderPanel>
       )}
 
@@ -1581,6 +1823,28 @@ function NoteReader() {
             Note {noteIndex + 1} of {notes.length}
             {readMinutes ? ` · about ${readMinutes} min read` : ""}
           </span>
+          <span className="meta-chips">
+            <span className="meta-chip" title="Days in a row you've read">
+              <span aria-hidden="true">🔥</span>
+              {stats.streak} day{stats.streak === 1 ? "" : "s"}
+            </span>
+            <span className="meta-chip" title="Notes finished this week (weekly goal)">
+              <ProgressRing
+                value={(stats.weekDone / stats.goal) * 100}
+                size={22}
+                stroke={3}
+              >
+                {""}
+              </ProgressRing>
+              {stats.weekDone}/{stats.goal} this week
+            </span>
+            {stats.badges.filter((b) => b.earned).slice(-1).map((b) => (
+              <span key={b.id} className="meta-chip" title="Latest badge">
+                <span aria-hidden="true">{b.icon}</span>
+                {b.label}
+              </span>
+            ))}
+          </span>
           {completed ? (
             <span className="meta-done">✓ Completed</span>
           ) : (
@@ -1618,7 +1882,7 @@ function NoteReader() {
                 <button
                   type="button"
                   className="reader-btn reader-btn-ghost"
-                  onClick={() => navigate(`/subjects/${subject.id}`)}
+                  onClick={() => go(`/subjects/${subject.id}`)}
                 >
                   Back to {subject.name}
                 </button>
@@ -1641,7 +1905,7 @@ function NoteReader() {
                 <button
                   type="button"
                   className="reader-btn reader-btn-ghost"
-                  onClick={() => navigate(`/subjects/${subject.id}`)}
+                  onClick={() => go(`/subjects/${subject.id}`)}
                 >
                   Back to {subject.name}
                 </button>
@@ -1737,7 +2001,7 @@ function NoteReader() {
           <button
             type="button"
             className="reader-link"
-            onClick={() => navigate(`/subjects/${subject.id}`)}
+            onClick={() => go(`/subjects/${subject.id}`)}
           >
             ← Back to {subject.name}
           </button>
@@ -1754,6 +2018,27 @@ function NoteReader() {
           <span aria-hidden="true">↑</span>
         </button>
       )}
+
+      <BookmarkRail items={annotations} onJump={jumpToAnnotation} />
+
+      {readingProgress > 2 && !panel && (
+        <SectionPill title={sectionTitle} onClick={() => togglePanel("toc")} />
+      )}
+
+      <FloatingToolbar
+        panel={panel}
+        highlighterOn={isHighlighterActive}
+        hasBookmarks={annotations.length > 0}
+        progress={readingProgress}
+        onToc={() => togglePanel("toc")}
+        onHighlight={() => setIsHighlighterActive((current) => !current)}
+        onNotes={() => togglePanel("notes")}
+        onSettings={() => togglePanel("settings")}
+        onTop={scrollToTop}
+      />
+
+      <ImageLightbox image={zoomImage} onClose={() => setZoomImage(null)} />
+      <Celebration show={celebrate} onDone={() => setCelebrate(false)} />
     </div>
   );
 }
