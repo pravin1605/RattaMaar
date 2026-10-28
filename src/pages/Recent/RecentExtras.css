@@ -1,0 +1,185 @@
+/* =========================================================
+   RECENT PAGE EXTRAS: summary, resume card, filters, day
+   groups, progress, undo. Loaded after Recent.css; delete this
+   file and its import to return to the simple list.
+========================================================= */
+
+.rx-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- summary ---------- */
+
+.rx-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+
+.rx-stat {
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+  padding: 12px 6px;
+  border-radius: 16px;
+  text-align: center;
+  background:
+    radial-gradient(100% 120% at 50% 0%, color-mix(in srgb, #7c3aed 14%, transparent), transparent 70%),
+    var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.rx-stat strong { font-size: 22px; line-height: 1; color: var(--text-primary); }
+.rx-stat span { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+
+/* ---------- resume ---------- */
+
+.rx-resume {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 13px 15px;
+  border-radius: 18px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--c-from), var(--c-to));
+  box-shadow: 0 16px 30px -18px var(--c-to);
+  transition: transform 0.15s ease;
+}
+
+.rx-resume:active { transform: scale(0.985); }
+.rx-resume:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.rx-resume-icon { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 13px; font-size: 22px; background: rgba(255, 255, 255, 0.22); }
+.rx-resume-body { display: grid; gap: 3px; min-width: 0; flex: 1; }
+.rx-resume-body small { font-size: 10px; font-weight: 800; letter-spacing: 0.08em; opacity: 0.85; }
+.rx-resume-body strong { font-size: 15px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.rx-resume-bar { display: block; height: 5px; border-radius: 99px; background: rgba(255, 255, 255, 0.28); overflow: hidden; }
+.rx-resume-bar i { display: block; height: 100%; background: #fff; border-radius: inherit; }
+.rx-resume-go { font-size: 13px; font-weight: 800; white-space: nowrap; }
+
+/* ---------- toolbar tweaks ---------- */
+
+.clear-history-button.is-confirm { color: #fff; background: var(--danger); border-color: var(--danger); }
+
+/* ---------- filters ---------- */
+
+.rx-filters { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 6px; scrollbar-width: none; }
+.rx-filters::-webkit-scrollbar { display: none; }
+
+.rx-chip {
+  all: unset;
+  cursor: pointer;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.rx-chip b { font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--bg-tertiary); }
+.rx-chip:active { transform: scale(0.96); }
+.rx-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rx-chip.is-active { color: #fff; border-color: transparent; background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+.rx-chip.is-active b { background: rgba(255, 255, 255, 0.25); }
+.rx-subjects .rx-chip { font-size: 12px; padding: 6px 11px; }
+
+.rx-sortbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 6px 0 12px; }
+.rx-sortbar .recent-count { margin: 0; display: flex; align-items: center; gap: 10px; }
+.rx-link { all: unset; cursor: pointer; color: var(--accent); font-weight: 700; }
+
+.rx-sort select {
+  height: 36px;
+  padding: 0 28px 0 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ---------- day groups ---------- */
+
+.rx-group { display: grid; gap: 10px; margin-bottom: 18px; }
+
+.rx-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 2px 0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.rx-group-title::after { content: ""; flex: 1; height: 1px; background: var(--border-color); }
+.rx-group-title span { order: 2; padding: 1px 8px; border-radius: 99px; font-size: 11px; letter-spacing: 0; background: var(--bg-tertiary); }
+.rx-group-title::after { order: 1; }
+
+/* ---------- cards ---------- */
+
+@keyframes rxCardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+.rx-card { overflow: hidden; animation: rxCardIn 0.4s ease backwards; animation-delay: calc(var(--i, 0) * 40ms); }
+.rx-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: linear-gradient(180deg, var(--c-from), var(--c-to)); }
+.rx-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rx-icon { background: linear-gradient(135deg, color-mix(in srgb, var(--c-from) 30%, var(--bg-secondary)), color-mix(in srgb, var(--c-to) 22%, var(--bg-secondary))); }
+.rx-heart { margin-left: 8px; font-style: normal; font-size: 13px; color: #f43f5e; }
+
+.rx-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; margin-top: 7px; }
+.rx-meta .recent-time { margin-top: 0; }
+
+.rx-status { padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 800; background: var(--bg-tertiary); color: var(--text-secondary); }
+.rx-status-progress { background: color-mix(in srgb, var(--c-from) 24%, var(--bg-tertiary)); color: var(--text-primary); }
+.rx-status-done { background: #dcfce7; color: #166534; }
+
+.rx-bar { height: 4px; margin-top: 9px; border-radius: 99px; background: color-mix(in srgb, var(--c-to) 14%, var(--bg-tertiary)); overflow: hidden; }
+.rx-bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--c-from), var(--c-to)); }
+.rx-card.status-done .rx-bar i { background: linear-gradient(90deg, #4ade80, #16a34a); }
+
+html[data-theme="dark"] .rx-status-done { background: #123b29; color: #86efac; }
+@media (prefers-color-scheme: dark) { html[data-theme="system"] .rx-status-done { background: #123b29; color: #86efac; } }
+
+/* ---------- empty-result button ---------- */
+
+.rx-reset { all: unset; cursor: pointer; margin-top: 16px; padding: 10px 16px; border-radius: 12px; font-weight: 700; color: #fff; background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+.rx-reset:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- undo toast ---------- */
+
+@keyframes rxToastIn { from { opacity: 0; transform: translate(-50%, 14px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+.rx-undo {
+  position: fixed;
+  left: 50%;
+  bottom: 92px;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: calc(100vw - 24px);
+  padding: 10px 12px 10px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: #111827;
+  box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+  transform: translateX(-50%);
+  animation: rxToastIn 0.25s ease both;
+}
+
+.rx-undo button { all: unset; cursor: pointer; padding: 6px 14px; border-radius: 999px; font-weight: 800; color: #111827; background: #fbbf24; }
+.rx-undo button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+@media (min-width: 768px) { .rx-undo { bottom: 28px; } }
+@media (max-width: 380px) { .rx-stat strong { font-size: 18px; } .rx-stat span { font-size: 10px; } .rx-stats { gap: 6px; } }
+@media (prefers-reduced-motion: reduce) { .rx-card, .rx-undo { animation: none; } }

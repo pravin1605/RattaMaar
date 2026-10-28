@@ -1,0 +1,193 @@
+/* =========================================================
+   NOTES PAGE EXTRAS: subject banner, filters, progress rows.
+   Loaded after Notes.css; delete this file and its import to
+   return to the simple list.
+========================================================= */
+
+/* ---------- banner ---------- */
+
+.nx-banner {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  margin-bottom: 18px;
+  border-radius: 24px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--c-from), var(--c-to));
+  box-shadow: 0 22px 40px -24px var(--c-to);
+}
+
+.nx-banner::before,
+.nx-banner::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  pointer-events: none;
+}
+
+.nx-banner::before { width: 170px; height: 170px; right: -50px; top: -60px; }
+.nx-banner::after { width: 110px; height: 110px; left: -30px; bottom: -50px; background: rgba(255, 255, 255, 0.09); }
+.nx-banner > * { position: relative; z-index: 1; }
+
+.nx-banner-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.nx-banner-text { min-width: 0; }
+.nx-banner-text h2 { margin: 0 0 4px; font-size: 22px; line-height: 1.2; color: #fff; }
+.nx-banner-text p { margin: 0; font-size: 13px; line-height: 1.45; opacity: 0.92; }
+
+.nx-ring {
+  --pct: 0%;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: conic-gradient(#fff var(--pct), rgba(255, 255, 255, 0.28) 0);
+}
+
+.nx-ring span {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 15px;
+  font-weight: 800;
+  background: color-mix(in srgb, var(--c-to) 88%, #000);
+}
+
+.nx-stats { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.nx-stat {
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.nx-stat b { font-size: 13px; }
+
+.nx-cta {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  color: var(--c-to);
+  background: #fff;
+  box-shadow: 0 12px 24px -14px rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s ease;
+}
+
+.nx-cta:active { transform: scale(0.98); }
+.nx-cta:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.nx-cta-label { display: grid; gap: 2px; min-width: 0; }
+.nx-cta-label small { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; opacity: 0.75; }
+.nx-cta-label strong { font-size: 15px; color: #111827; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+/* ---------- filters ---------- */
+
+.nx-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.nx-filters { display: flex; flex: 1; min-width: 0; gap: 8px; overflow-x: auto; padding: 2px 0 4px; scrollbar-width: none; }
+.nx-filters::-webkit-scrollbar { display: none; }
+
+.nx-filter,
+.nx-sort {
+  all: unset;
+  cursor: pointer;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  transition: background 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.nx-filter b { font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--bg-tertiary); }
+.nx-filter:active, .nx-sort:active { transform: scale(0.96); }
+.nx-filter:focus-visible, .nx-sort:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.nx-filter.is-active,
+.nx-sort.is-active {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--c-from), var(--c-to));
+}
+
+.nx-filter.is-active b { background: rgba(255, 255, 255, 0.25); }
+
+.nx-result-count { display: flex; align-items: center; gap: 10px; margin: 6px 2px 12px; font-size: 12px; color: var(--text-muted); }
+.nx-result-count button { all: unset; cursor: pointer; color: var(--accent); font-weight: 700; }
+
+/* ---------- note rows ---------- */
+
+@keyframes nxRowIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.nx-row {
+  position: relative;
+  padding: 0 !important;
+  overflow: hidden;
+  animation: nxRowIn 0.4s ease backwards;
+  animation-delay: calc(var(--i, 0) * 35ms);
+}
+
+.nx-row-main {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+}
+
+.nx-row-main:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 16px; }
+
+.nx-row.is-current { border-color: var(--c-from); box-shadow: 0 0 0 1px var(--c-from), 0 10px 22px -16px var(--c-to); }
+
+.nx-row.status-done .note-number { color: #fff; background: linear-gradient(135deg, #22c55e, #15803d); font-size: 16px; }
+.nx-row.status-progress .note-number { color: #fff; background: linear-gradient(135deg, var(--c-from), var(--c-to)); }
+
+.nx-row-bar { height: 4px; margin-top: 7px; border-radius: 99px; background: color-mix(in srgb, var(--c-to) 14%, var(--bg-tertiary)); overflow: hidden; }
+.nx-row-bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--c-from), var(--c-to)); }
+.nx-row.status-done .nx-row-bar i { background: linear-gradient(90deg, #4ade80, #16a34a); }
+
+.nx-row-state { flex: none; font-size: 11px; font-weight: 800; color: var(--text-muted); }
+.nx-row.status-unread .nx-row-state { padding: 2px 7px; border-radius: 99px; color: var(--c-to); background: color-mix(in srgb, var(--c-from) 18%, transparent); font-size: 9px; letter-spacing: 0.06em; }
+.nx-row.status-progress .nx-row-state { color: var(--c-to); }
+
+.nx-tag { margin-left: 8px; padding: 1px 7px; border-radius: 99px; font-style: normal; font-size: 10px; font-weight: 800; color: #fff; background: linear-gradient(135deg, var(--c-from), var(--c-to)); }
+.nx-heart { margin-left: 6px; font-style: normal; color: #f43f5e; }
+
+@media (max-width: 420px) {
+  .nx-banner { padding: 15px; border-radius: 20px; }
+  .nx-banner-text h2 { font-size: 19px; }
+  .nx-ring { width: 60px; height: 60px; }
+  .nx-ring span { width: 47px; height: 47px; font-size: 13px; }
+  .nx-row-main { gap: 9px; padding: 11px; }
+}
+
+@media (min-width: 900px) {
+  .nx-row:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--shadow-color); }
+}
+
+@media (prefers-reduced-motion: reduce) { .nx-row { animation: none; } }
