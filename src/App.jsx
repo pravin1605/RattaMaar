@@ -10,6 +10,8 @@ import Settings from "./pages/Settings/Settings";
 
 import QuizResult from "./pages/QuizResult/QuizResult";
 
+import ScrollToTop from "./components/ScrollToTop";
+
 
 
 
@@ -35,6 +37,7 @@ import ProgrammingInterviewLab from "./pages/ProgrammingUniverse/ProgrammingInte
 function App() {
     return (
         <BrowserRouter>
+            <ScrollToTop />     
             <Routes>
 
                 {/* =========================
