@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 05 Members of Java</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-2 : Members of a class, Object ===== -->
+<section class="page">
+<h1>Java - 05 Members of Java</h1>
+<div class="blk"><b>Member of a class</b>
+<div class="two">
+<div><b class="r">static members (class level)</b><ul class="tree"><li>static Variable</li><li>static methods</li><li>static initializer</li></ul></div>
+<div><b class="r">Non-static member (object level)</b><ul class="tree"><li>Non-static Variable</li><li>Non-static method</li><li>Non-static Initializer</li><li>constructor</li></ul></div>
+</div></div>
+
+<h3>&#9312; Non-static</h3>
+<div class="code">//Non-static member of a class
+public class Demo-Non-static
+{
+    //Non-static variable
+    int x;
+
+    //Non-static method
+    public void m1()
+    {
+        System.out.println("Non static method");
+    }
+
+    //Non-static initializer
+    {
+        System.out.println("Non static initializer");
+    }
+}</div>
+<hr class="sep">
+
+<h2>Object</h2>
+<ul>
+<li>object is a block of memory which can have multiple variables and methods declared to store data and action [behaviours] respectively</li>
+<li>object contain unique address</li>
+<li>An object represent real world entity</li>
+</ul>
+<div class="blk" style="max-width:420px">
+<div class="note">Address or reference &darr;</div>
+<div class="bx">0x1</div>
+<div style="border-bottom:1.5px solid #14267a">Variable 1<br>Variable 2 <span class="note">&rarr; properties or Fields or instance variables</span></div>
+<div>Method 1<br>Method 2 <span class="note">&rarr; Behaviours or action</span></div>
+</div>
+<ul>
+<li>To create an object first we need to analyse which type of object we are creating and what are the <u>properties</u> and <u>behaviours</u> of that object</li>
+<li>After analysing we need to create a blueprint of an object.</li>
+</ul>
+<div class="code">Real-world Entity
+     |
+object Analysis (properties and behaviors)
+     |
+class (Blueprint)
+     |
+object creation (using new keyword)
+     |
+Memory Allocation</div>
+<hr class="sep">
+
+<h2>Class</h2>
+<ul>
+<li>class is a Java component</li>
+<li>We need class to execute an application or program</li>
+<li>class also acts as blueprint of an object</li>
+<li>We cannot create object without a blueprint [class]</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<div class="code">Class classname
+{
+  . . .
+}</div>
+<p><span class="r">object creation syntax</span></p>
+<div class="code">New classname();
+        OR
+New constructor();</div>
+<hr class="sep">
+<h2>New</h2>
+<ul>
+<li>It is unary operator [which accepts one operand]</li>
+<li>It creates a block of memory in the heap area during execution of Java program</li>
+<li>It calls the constructor</li>
+<li>Return the reference of the object or block of memory created.</li>
+</ul>
+</section>
+
+<!-- ===== PDF PAGES 3-4 : Heap diagrams, Reference variable, New keyword ===== -->
+<section class="page">
+<div class="code">Class Demo{
+}
+New Demo();   &rarr; creates a "Demo object" in the Heap area at 0x1</div>
+<div class="two">
+<div class="code">public class Mobile
+{
+    String brand;
+    int ram;
+    int storage;
+    int pixels;
+    int battery;
+}</div>
+<div>
+<p class="code">Mobile s = New Mobile();   &rarr; 0x2</p>
+<table class="tbl auto"><tr><th colspan="2">0x2 (Heap area, object)</th></tr>
+<tr><td>brand</td><td>null</td></tr><tr><td>ram</td><td>0</td></tr><tr><td>storage</td><td>0</td></tr><tr><td>pixels</td><td>0</td></tr><tr><td>battery</td><td>0</td></tr></table>
+</div></div>
+<p class="code">Mobile p = New Mobile();   &rarr; 0x3          Mobile Q = New Mobile();   &rarr; 0x4</p>
+<table class="tbl auto"><tr><th colspan="2">0x3</th></tr><tr><td>brand</td><td>Null</td></tr><tr><td>Ram</td><td>0</td></tr><tr><td>storage</td><td>0</td></tr><tr><td>pixels</td><td>0</td></tr><tr><td>battery</td><td>0</td></tr></table>
+<table class="tbl auto"><tr><th colspan="2">0x4</th></tr><tr><td>brand</td><td>Null</td></tr><tr><td>Ram</td><td>0</td></tr><tr><td>storage</td><td>0</td></tr><tr><td>pixels</td><td>0</td></tr><tr><td>battery</td><td>0</td></tr></table>
+<p class="r">Note: Every object has unique address</p>
+<hr class="sep">
+
+<h2>Reference Variable [Non-primitive variable]</h2>
+<ul>
+<li>A variable which is used to store address of an object is known as reference variable</li>
+<li>The data type of the reference variable should be same as the object type that is created using new operator</li>
+</ul>
+<p><span class="r">Syntax</span></p>
+<p class="code">className ref-Var = New className();</p>
+<p class="code">Mobile m1 = New Mobile();   <span class="note">(m1 holds 0x1; object has brand, ram, storage, Pixel, batt...)</span></p>
+<p>Inside m1 address of mobile object will be stored</p>
+
+<h3>New Keyword</h3>
+<ul class="tree">
+<li>&#9312; JVM allocates memory in HEAP
+ <ul class="tree"><li>Instance variables created</li><li>Default value assigned</li></ul></li>
+<li>&#9313; constructor is called
+ <ul class="tree"><li>constructor code fetched from method area</li><li>Instance variable initialized</li></ul></li>
+<li>&#9314; JVM returns object reference
+ <ul class="tree"><li>Reference stored in stack</li></ul></li>
+<li>&#9315; object Ready to use</li>
+</ul>
+<div class="two">
+<div class="code">student()
+{
+    rollNo = 103
+    name = "Pravin";
+}</div>
+<div class="code">student s1 = New student();</div>
+</div>
+<div class="four">
+<div><b class="r">Static pool area</b></div>
+<div><b class="r">Method area</b><br>entire code will be copied Here<br><br>student class<br>constructor</div>
+<div><b class="r">Stack memory</b><br>entire execution will take place Here<br><br>s1 &rarr; object reference</div>
+<div><b class="r">Heap area</b><br>All the objects will be stored Here<br><br>student object<br>rollNo = 103<br>name = "Pravin"</div>
+</div>
+<p>When the constructor is called, its code remain in the method area (Meta space), the constructor execute on the object present in Heap memory, and after execution, the JVM stores the reference of created object in stack memory</p>
+</section>
+
+<!-- ===== PDF PAGES 5-6 : Non-static variables and methods ===== -->
+<section class="page">
+<h2 class="red">Non-static Part</h2>
+<h3>&#9312; Non-static Variables</h3>
+<p>[properties or fields or data member or attribute]</p>
+<ul>
+<li>A variable created inside the class body without using static keyword is known as non-static variable</li>
+<li>Whenever an object of a class is created (<s>and stored</s>) using the New keyword, a separate copy of the non-static variable is created and stored in memory for that object.</li>
+<li>Becoz each object has its own copy, changes made to a non-static variable through one object do not affect the same variable in another object</li>
+</ul>
+<h3>characteristics</h3>
+<p>&#9312; they represent the data member of a real world object</p>
+<p>&#9313; Memory is allocated inside the object</p>
+<p>&#9314; We cannot use the non static variables without object of the class</p>
+<p>&#9315; Non static variables will be allocated once in every object</p>
+<p>&#9316; Non static variables are initialized with default values during the object creation</p>
+<p>&#9317; We can use non-static variable only with the help of reference of an object</p>
+<p>&#9318; cannot be accessed from static context directly<br>&nbsp;&nbsp;A static method must use an object to access non-static</p>
+
+<h3>&#9313; Non-static Method</h3>
+<ul>
+<li>A method which is created without using static keyword and belongs to object is known as non-static method</li>
+<li>Non static represent action or behaviors of an object</li>
+<li>Inside non static method we can access <u>data member</u> of an object and perform operation on the data <span class="note">(data member = Non-static variable)</span></li>
+</ul>
+<h3>characteristics</h3>
+<p>&#9312; Non static method is allocated inside the object</p>
+<p>&#9313; We cannot call or use a non static method without creating an object</p>
+<p>&#9314; The only way to access non-static method is by using object reference</p>
+<p>&#9315; Non static method will get memory allocation inside every object created of that class</p>
+<p>&#9316; The body of the non static method is called as non static context</p>
+<p>&#9317; Non-static methods can access static members Directly</p>
+<p>why</p>
+<ul>
+<li>static members belong to the class</li>
+<li>Non-static methods run inside an object, but they still know the class</li>
+<li>so Java allows direct access to static members from non-static methods</li>
+</ul>
+<div class="code">class Demo
+{
+    static int count = 10;   //static variable
+    static void showCount()  //static method
+    {
+        System.out.println("static method = " + count);
+    }
+    void display()           //Non-static method
+    {
+        System.out.println("Non-static method = " + count);
+        showCount();         //access static members
+    }
+    public static void main(String[] args)
+    {
+        Demo d = new Demo();
+        d.display();
+    }
+}
+output
+Non-static method = 10
+static method = 10</div>
+<p>&#9318; Inside non-static context we can access Non-static members without using object address <span class="flag">verify: "Non-" written above "static"</span></p>
+<div class="code">public class mobile
+{
+    string brand;
+    int Ram;
+    public void display details()
+    {
+        System.out.println(brand);
+        System.out.println(RAM);
+    }
+}</div>
+</section>
+
+<!-- ===== PDF PAGES 7-12 : Constructor ===== -->
+<section class="page">
+<h2 class="red">Constructor</h2>
+<p>constructor is a special non-static member of a class whose name is same as class name and used to load and initialize the object</p>
+<div class="code">public class Demo
+{
+    Demo() //constructor
+    {
+    }
+}</div>
+<h3>characteristic</h3>
+<p>&#9312; constructor is a non static initializer of an object</p>
+<p>&#9313; The name of the constructor is always same as class Name</p>
+<p>&#9314; constructor Doesn't return anything after execution. Hence constructor doesn't have a return type</p>
+<p>&#9315; Default constructor is provided by <s>JVM</s> compiler<br>&nbsp;&nbsp;IF No constructor is written, compiler provides one</p>
+<p>&#9316; Executes only once per object<br>&nbsp;&nbsp;each object calls constructor once</p>
+<p>&#9317; cannot be static</p>
+<div class="blk"><b>constructor</b>
+<div class="two">
+<div><b>compiler defined</b><ul class="tree"><li>default constructor</li></ul></div>
+<div><b>user defined</b><ul class="tree"><li>No argument</li><li>Parameterized</li><li>copy constructor</li></ul></div>
+</div></div>
+
+<h3>Default</h3>
+<p>When a programmer doesn't create a constructor compiler will add no argument constructor after compilation which is known as default constructor</p>
+<div class="two">
+<div><b>Before compilation</b><div class="code">Public class Demo
+{
+
+}</div></div>
+<div><b>After compilation</b><div class="code">Public class Demo
+{
+    Demo() //added by compiler
+    {
+    }
+}</div></div>
+</div>
+
+<h3>User Defined no-arg constructor</h3>
+<ul><li>Is a constructor that is written by the programmer and does not take any parameter.</li></ul>
+<div class="code">public class Demo
+{
+    Demo()
+    {
+        System.out.println("executing no-arg constructor")
+    }
+}</div>
+
+<h3>Parameterized constructor</h3>
+<ul><li>A parameterized constructor is a constructor that accepts one or more parameter and is used to initialize an object with specific values at the time of object creation</li></ul>
+<div class="code">public class Student
+{
+    int id;
+    String name;
+    Float cgpa;
+    double Fees;
+    String gmail;
+
+    student(int a, String b, Float c, double d, String e)
+    {
+        id = a
+        name = b
+        cgpa = c
+        Fees = d
+        gmail = e
+    }
+    public void display()
+    {
+        S.O.P.l(id)
+        S.O.P.l(name)
+        S.O.P.l(cgpa)
+        S.O.P.l(Fees)
+        S.O.P.l(gmail)
+    }
+    public static void main(String[] args)
+    {
+        student s = new student();
+        s.display
+    }
+}</div>
+<span class="flag">verify: new student() has no arguments, as written</span>
+
+<p>In the above example the variables of the constructor are a, b, c, d, e <span class="flag">first line partly cut off</span>. But according to the organisation standard we should follow some conventions:</p>
+<p>The variable names should be easily understand that to which global variable we are using that local variable</p>
+<p>But if we give the same name as global variable we can not access global variable directly inside constructor</p>
+<p>Local variable dominate the global variable inside the constructor so we have to use the object reference and access the global variable. For that we use <span class="r">this keyword</span></p>
+
+<h3>This keyword</h3>
+<ul>
+<li>this is a keyword which contains the address of the current calling object</li>
+<li>this keyword can only be used inside non-static context</li>
+<li>we use this keyword to access global variable when the local and global variable have same name</li>
+</ul>
+<div class="code">public class student
+{
+    int id;
+    string name;
+    Float cgpa;
+    double Fees;
+    string gmail;
+
+    string(int id, string name, Float cgpa, double fees, string gmail)  <span class="flag">verify: "string(" written</span>
+    {
+        this.id = id
+        this.name = name
+        this.cgpa = cgpa
+        this.Fees = fees
+        this.gmail = gmail
+    }
+    public void display()
+    {
+        S.O.P.l(id)
+        S.O.P.l(name)
+        S.O.P.l(cgpa)
+        S.O.P.l(fees)
+        S.O.P.l(gmail)
+    }
+}</div>
+
+<h3>Copy constructor</h3>
+<p>A copy constructor is a constructor that creates a new object by copying the data of an existing object of the same class</p>
+<p>why</p>
+<ul>
+<li>one object stores it own data</li>
+<li>But sometimes we want <ul><li>A duplicate object</li><li>with same value</li><li>But different memory location</li></ul></li>
+</ul>
+<p><span class="r">syntax</span></p>
+<div class="code">ClassName(ClassName obj)
+{
+    this.variable = obj.variable
+}</div>
+<div class="code">class student
+{
+    int id;
+    string name;
+
+    student(int id, string name) //parameterized
+    {
+        this.id = id
+        this.name = name
+    }
+    student(student s) //copy constructor
+    {
+        this.id = s.id
+        this.name = s.name
+    }
+    void display()
+    {
+        S.O.P.l(id)
+        S.O.P.l(name)
+    }
+    public static void main(String[] args)
+    {
+        student s1 = new student(101, "pravin");
+        student s2 = new student(s1);
+        s1.display();   101, Pravin
+        s2.display();   101, pravin
+    }
+}</div>
+</section>
+
+<!-- ===== PDF PAGES 13-16 : Constructor overloading and chaining ===== -->
+<section class="page">
+<h2 class="red">Constructor overloading</h2>
+<ul><li>creating more than one constructor with different formal argument within the same class is know as constructor overloading</li></ul>
+<p>signature must differ either by sequence or datatype or number of formal args</p>
+<div class="code">Public class student
+{
+    int id;
+    string name;
+    Float cgpa;
+    double Fees;
+
+    public void display()
+    {
+        S.O.P.l(id)
+        S.O.P.l(name)
+        S.O.P.l(cgpa)
+        S.O.P.l(Fees)
+    }
+    //constructor 1
+    Student(int id, string name, Float cgpa, double Fees)
+    {
+        this.id = id
+        this.name = name
+        this.cgpa = cgpa
+        this.Fees = Fees
+    }
+    //constructor 2
+    student(int id, string name, Float cgpa)
+    {
+        this.id = id
+        this.name = name
+        this.cgpa = cgpa
+    }
+    //constructor 3
+    student(int id, string name)
+    {
+        this.id = id
+        this.name = name
+    }
+    //constructor 4
+    student(int id)
+    {
+        this.id = id
+    }
+}</div>
+<div class="code">//calling constructor 1
+student s1 = new student(101, "Pravin", 11.0F, 10000);
+s1.Display();
+//calling constructor 2
+student s2 = new student(101, "Pravin", 11.0F)
+s2.display();
+//calling constructor 3
+student s3 = new student(101, "pravin")
+s3.display()
+//calling constructor 4
+student s4 = new student(101)
+s4.display()</div>
+<div class="cols">
+<table class="tbl auto"><tr><th colspan="2">s1 = 0x1</th></tr><tr><td>id</td><td>101</td></tr><tr><td>name</td><td>Pravin</td></tr><tr><td>cgpa</td><td>11.0F</td></tr><tr><td>Fees</td><td>10000</td></tr><tr><td colspan="2">Display()</td></tr></table>
+<table class="tbl auto"><tr><th colspan="2">s2 = 0x2</th></tr><tr><td>id</td><td>101</td></tr><tr><td>name</td><td>Pravin</td></tr><tr><td>cgpa</td><td>11.0F</td></tr><tr><td>Fees</td><td>0.0 (Default Value)</td></tr></table>
+<table class="tbl auto"><tr><th colspan="2">s3 = 0x3</th></tr><tr><td>id</td><td>101</td></tr><tr><td>name</td><td>Pravin</td></tr><tr><td>cgpa</td><td>0.0</td></tr><tr><td>Fees</td><td>0.0</td></tr><tr><td colspan="2">Display</td></tr></table>
+</div>
+<table class="tbl auto"><tr><th colspan="2">s4</th></tr><tr><td>id</td><td>101</td></tr><tr><td>name</td><td>null (default value)</td></tr><tr><td>cgpa</td><td>0.0</td></tr><tr><td>Fees</td><td>0.0</td></tr></table>
+<ul>
+<li>Here In overloding same initialization statements are repeated in every constructor</li>
+<li>code length increases unnecessarily</li>
+<li>If any change is required, it must be updated in all constructor</li>
+<li>To avoid this we use constructor chaining</li>
+</ul>
+
+<h2>Constructor chaining</h2>
+<ul><li>one constructor calling another constructor is known as constructor chaining</li></ul>
+<p>Why</p>
+<ul><li>To avoid code duplication</li><li>To Use initialization logic.</li></ul>
+<div class="blk"><b>Constructor Chaining</b>
+<div class="two"><div><b>Same class</b> &rarr; using this()</div><div><b>parent class</b> &rarr; using super()</div></div></div>
+<h3>Rules</h3>
+<p>&#9312; this () can be used inside the constructor body</p>
+<p>&#9313; this() should be first statement inside constructor body</p>
+<p>&#9314; Recursive call to this() Not allowed</p>
+<div class="code">Public class student
+{
+    int id;
+    string name;
+    Float cgpa;
+    double Fees;
+
+    public void Display()
+    {
+        S.O.P.l(id)
+        S.O.P.l(name)
+        S.O.P.l(cgpa)
+        S.O.P.l(fees)
+    }
+    student(int id, string name, Float cgpa, double Fees)
+    {
+        this(id, name, cgpa);   //calls constructor below
+        this.Fees = Fees;
+    }
+    student(int id, string name, Float cgpa)
+    {
+        this(id, name)          //calls constructor below
+        this.cgpa = cgpa
+    }
+    student(int id, string name)
+    {
+        this(id)                //calls constructor below
+        this.name = name
+    }
+    student(int id)
+    {
+        this.id = id
+    }
+}</div>
+<p class="note">(In the notes, arrows show each this(...) call jumping down to the next constructor, and after it finishes, control returns to the line after the call, back up the chain.)</p>
+</section>
+
+<!-- ===== PDF PAGES 14-15 : Non-static initializer ===== -->
+<section class="page">
+<h2 class="red">Non-static initializer</h2>
+<p>A single or multi line instruction which gets executed during object creation</p>
+<h3>characteristics</h3>
+<p>&#9312; Non-static initializer get executed automatically during the object creation</p>
+<p>&#9313; Non-static initializer get executed <u>once</u> for every object created</p>
+<h3>Note</h3>
+<p>IF there are more than one non-static initializer they get executed in a top to bottom order during object creation</p>
+<div class="code">Public class Demo
+{
+    int x = 1000; //single line non-static initializer
+    {
+        x = 25;
+    }
+    Demo()
+    {
+        System.out.println("executing constructor");
+    }
+    public static void main(String[] args)
+    {
+        Demo d1 = new Demo();
+        System.out.println(d1.x)
+    }
+}
+O/P
+executing constructor
+25</div>
+<ul>
+<li>We can use display statements inside a constructor, becoz a constructor can contain any valid Java statement</li>
+<li>However it is not recommended, since the main purpose of a constructor is to initialize object data, not to display it</li>
+<li>Display logic should be placed in separate method.</li>
+</ul>
+<div class="code">class Test
+{
+    {
+        System.out.println("Non-static initializer")
+    }
+    Test()
+    {
+        System.out.println("constructor");
+    }
+    public static void main(String[] args)
+    {
+        Test t1 = new Test();
+        Test t2 = new Test();
+    }
+}
+O/P
+Non-static initializer
+constructor
+Non-static initializer
+constructor</div>
+<h3>When we are creating the object what will be the Flow of execution</h3>
+<p>1st - New operator will allocate block of memory</p>
+<p>2nd - And calls the constructor</p>
+<p>3rd - constructor will load all the non-static member</p>
+<p>4th - After loading first non-static initializer will get executed from top to bottom order</p>
+<p>5th - and then constructor body will get executed</p>
+<p>6th - AND then new operator will return the address</p>
+</section>
+
+<!-- ===== PDF PAGES 16-19 : Static ===== -->
+<section class="page">
+<h2 class="red">Static</h2>
+<ul>
+<li>static is a non-access modifier</li>
+<li>static keyword can be used to create variables, methods, blocks</li>
+<li>all the static members of a class will get memory allocation inside static pool area.</li>
+</ul>
+<div class="code">public class Demo
+{
+    static int x;   //static Variable
+    public static void m1()   //static method
+    {
+        System.out.println("static method");
+    }
+    static   //static initializer or static Block
+    {
+        System.out.println("static block");
+    }
+}</div>
+<h3>Static variable</h3>
+<ul><li>A variable which is declared with in the class body by using static keyword is known as static variable</li></ul>
+<div class="code">class Demo
+{
+    static datatype variablename
+}</div>
+<h3>characteristics</h3>
+<p>&#9312; static variable will be assigned with the default value when they get memory allocation</p>
+<p>&#9313; static variable can be used anywhere, within the class or in a different class</p>
+<p>&#9314; static variables will get memory allocation only once irrespective of how many object created. [one copy]</p>
+<p>&#9315; static variables will get memory allocation inside the static pool area</p>
+<p>&#9316; IF the local and static variable are having same name then we can use classname to access static variable</p>
+
+<h3>Static method</h3>
+<ul><li>A method which is created using static keyword is known as static method</li></ul>
+<h3>characteristics</h3>
+<p>&#9312; static method memory will be allocated in the class block inside static pool area</p>
+<p>&#9313; we can call a static method without creating object</p>
+<p>&#9314; we can call static method with in the same class directly using method signature</p>
+<p>&#9315; static method of a class can be used in different class with the help of class name as reference as well as object reference</p>
+
+<h3>Static initializer</h3>
+<ul>
+<li>A static initializer is a block of code written inside a class using the static keyword</li>
+<li>single line static initializer</li>
+<li>Multiple line static initializer</li>
+</ul>
+<h3>characteristics</h3>
+<p>&#9312; static initializer gets executed during class loading process</p>
+<p>&#9313; static initializer is executed only once</p>
+<p>&#9314; IF a class contains multiple static initializer they get executed in the top to bottom order</p>
+</section>
+
+<!-- ===== PDF PAGES 20-21 : Class loading ===== -->
+<section class="page">
+<h2 class="red">Class Loading</h2>
+<ul><li>class loading is the process of loading a .class File from hard disk into the JRE memory (method area) inside the RAM</li></ul>
+<ul class="tree">
+<li><b>Class Loading</b>
+ <ul class="tree">
+ <li>Loading &rarr; .class File &rarr; Method Area</li>
+ <li>Linking
+  <ul class="tree">
+  <li>Verification &rarr; checks bytecode for correctness and security</li>
+  <li>preparation &rarr; Allocates memory for static variables; Assigns default values</li>
+  <li>Resolution &rarr; converts symbolic reference into direct reference</li>
+  </ul></li>
+ <li>Initialization &rarr; static variables initialized; static blocks executed.</li>
+ </ul></li>
+</ul>
+<h3>Memory Partitions</h3>
+<ul><li>JRE divides memory into different areas, and each area has a specific responsibility</li></ul>
+<p>&#9312; <b class="r">Static pool area</b><br>static pool area is the memory area used to store all static members of a class</p>
+<p>&#9313; <b class="r">Method area</b><br>Method area is the memory area where the complete class structure and bytecode are stored</p>
+<p>&#9314; <b class="r">Stack Area</b><br>stack area is the memory area where method execution takes place</p>
+<p>&#9315; <b class="r">Heap area</b><br>Heap area is the memory area where all objects and instance variables are stored.</p>
+
+<div class="code">Public class Demo        ---- Demo.class
+{
+    static int x = 10;                        // 0x1
+    public static void m1()                   // 0x2
+    {
+        S.O.P.l("static method");
+    }
+    static                                    // 0x3
+    {
+        S.O.P.l("static block")
+    }
+    Public static void main(String[] args)    // 0x4
+    {
+        S.O.P.l("main started");
+        S.O.P.l("main ended");
+    }
+}</div>
+<div class="four">
+<div><b class="r">SPA</b><br>x : 0 &rarr; 10<br>signature | reference<br>&mdash; | 0x1<br>m1() | 0x2<br>&mdash; | 0x3<br>main(args) | 0x4</div>
+<div><b class="r">Method area</b><br>Demo.class</div>
+<div><b class="r">Stack</b><br>static Block (x)<br>x = 10 (x)<br>main: Main started, m1(), Main ended<br>m1(): static method <span class="flag">stack drawing partly unclear</span></div>
+<div><b class="r">Heap</b></div>
+</div>
+<p>&#9312; First a Block of memory will be created for the class inside the static pool area</p>
+<p>&#9313; entire code will be copied into method area and each and every member of a class will be having its own address inside the method area</p>
+<p>&#9314; static members of a class will get memory allocation inside the static pool area</p>
+<p>&#9315; IF there are any static initializer, they will get executed from top to bottom order before JVM calls the main method</p>
+<p>&#9316; once the execution of static initializer is completely done, then we can say that class loading process is completed.</p>
+</section>
+
+<!-- ===== PDF PAGES 22-27 : Examples ===== -->
+<section class="page">
+<h2 class="red">Example-01</h2>
+<div class="code">public class Demo-01
+{
+    static int x = m1();
+    public static int m1()
+    {
+        S.O.P.l("m1 started");
+        S.O.P.l(x)
+        S.O.P.l("m1 ended");
+        return 10
+    }
+    public static void main(String[] args)
+    {
+        S.O.P.l("main started");
+        S.O.P.l(x);
+        S.O.P.l("main ended");
+    }
+}
+O/P
+m1 started
+0
+m1 ended
+main started
+10
+main ended</div>
+<h2 class="red">Example-02</h2>
+<div class="code">public class Demo-02
+{
+    static int x;
+    static
+    {
+        S.O.P.l(x)
+        x = 10
+    }
+    static
+    {
+        S.O.P.l(x)
+        x = 20
+    }
+    public static void main(String[] args)
+    {
+        S.O.P.l("main started");
+        S.O.P.l(x)
+        S.O.P.l("main ended");
+    }
+}
+O/P
+0
+10
+main started
+20
+main ended</div>
+<h2 class="red">Example-03</h2>
+<p class="r">program with both static and non-static members</p>
+<div class="code">public class Demo-03
+{
+    static
+    {
+        x = 30
+    }
+    static int x = 10;  // static Variable
+    int y = 20;         // Non-static variable
+    public static void m1()
+    {
+        S.O.P.l("m1 start");
+        S.O.P.l(x);
+        S.O.P.l("m1 end");
+    }
+    public void m2()
+    {
+        S.O.P.l("m2 start")
+        S.O.P.l(y);
+        S.O.P.l("m2 end")
+    }
+    public static void main(String[] args)
+    {
+        S.O.P.l("main start")
+        m1();
+        Demo-03 obj = new Demo-03();
+        obj.m2();
+        S.O.P.l("main end");
+    }
+}
+O/P
+main start
+m1 start
+10
+m1 end
+m2 start
+20
+m2 end
+main end</div>
+<h2 class="red">Example-04</h2>
+<p class="r">can we access static member inside non-static context &rarr; yes</p>
+<div class="code">public class Demo-04
+{
+    static int x = 10
+    public static void m1()
+    {
+        S.O.P.l(x);
+    }
+    public void m2()
+    {
+        S.O.P.l(x)
+    }
+    public static void main(String[] args)
+    {
+        Demo-04.m1();
+        Demo-04 obj = new Demo-04();
+        obj.m2();
+    }
+}
+10
+10</div>
+<p><b>Note</b> &#9733; static member can be accessed both inside static context and non-static context</p>
+<h3>Can we access non-static member inside static context</h3>
+<ul><li>Directly It is not possible<br>If we want to access we have to create object</li></ul>
+<h2 class="red">Example-05</h2>
+<div class="code">public class Demo-05
+{
+    int x = 10
+    public static void m1() //Direct access is not possible
+    {
+        //S.O.P.l(x); //CTE
+    }
+    public static void m2() //Access non-static inside static context
+    {                       //By creating object
+        Demo-05 obj = new Demo-05()
+        S.O.P.l(obj.x)
+    }
+    public void m3() //non-static member inside non-static context
+    {
+        S.O.P.l(x)
+    }
+    public static void main(String[] args)
+    {
+        m1() //Nothing print
+        m2() //static method calling non-static variable
+        Demo-05 obj = new Demo-05
+        obj.m3() //Non-static method access non-static variable
+    }
+}</div>
+<h2 class="red">Example-06</h2>
+<p class="r">access static member using object reference</p>
+<div class="code">Public class Demo-06
+{
+    static int x = 10;
+    Public static void main(String[] args)
+    {
+        Demo-06 d1 = new Demo-06
+        S.O.P.l(d1.x)
+        d1.x = 20;
+        Demo-06 d2 = new Demo-06
+        d2.x = 100
+        S.O.P.l(d1.x)
+    }
+}
+O/P
+10
+100</div>
+<ul>
+<li>static variables belongs to the class, not to individual object. only one copy of a static variable is created in memory when the class is loaded</li>
+<li>All objects of that class use this same copy</li>
+<li>Because of this, if a static variable is modified using any one object, the change is made to the single shared copy</li>
+<li>As a result updated value becomes visible to all other objects of the same class</li>
+</ul>
+</section>
+
+<!-- ===== PDF PAGES 28-34 : Multiple classes, references, utility, chaining ===== -->
+<section class="page">
+<h3>Example to understand multiple classes loading into JRE</h3>
+<div class="two">
+<div class="code">Public class student
+{
+    static
+    {
+        S.O.P.l("loading student");
+    }
+    int id;
+    static string college = "JNNCE";
+}</div>
+<div class="code">public class Driver
+{
+    static
+    {
+        S.O.P.l("loading Driver")
+    }
+    public static void main(String[] args)
+    {
+        S.O.P.l("main start")
+        S.O.P.l(student.college)
+        S.O.P.l(student.college)
+        S.O.P.l("main end")
+    }
+}</div>
+</div>
+<div class="code">O/P
+loading Driver
+main start
+loading Student
+JNNCE
+JNNCE
+main end</div>
+
+<h3>&#9733; Multiple Reference pointing to the same Object in Java</h3>
+<div class="code">Public class Fruit
+{
+    string name
+    public Fruit(string name)
+    {
+        this.name = name;
+    }
+}
+Public class Driver
+{
+    public static void main(String[] args)
+    {
+        Fruit F1 = new Fruit("apple")  //object created
+        Fruit F2 = F1                  //same object reference
+        S.O.P.l(F1.name)               //apple
+        F2.name = "Banana";            //Modify using F2
+        S.O.P.l(F1.name)               //Banana
+        S.O.P.l(F2.name)               //Banana
+    }
+}</div>
+<p class="note">Diagram: F1 [0x1] and F2 [0x1] both point to the same Fruit object 0x1, whose name changes from apple to banana.</p>
+<ul>
+<li>When multiple reference variables are pointing to the same object, and if we modify the object using any one reference variable that modification reflects on all the reference variable</li>
+<li>Because it is one object which is being pointed by multiple reference variables</li>
+</ul>
+
+<h3>&#9733; Passing objects as Arguments</h3>
+<div class="code">Class Box
+{
+}
+Class Bottle
+{
+}
+Public class Driver
+{
+    //Method with non-primitive formal argument
+    Public static void display(Box b)
+    {
+        S.O.P.l(b);
+    }
+    Public static void main(String[] args)
+    {
+        Box b1 = new Box();      //creating Box object
+        S.O.P.l(b1);             //printing reference of Box object
+        display(b1);             //passing object reference as argument
+        //display(new Bottle()); //CTE
+    }
+}</div>
+<ul>
+<li>When we have a method with a formal argument of primitive type, we pass a primitive value as the actual argument while calling the method</li>
+<li>When we have a method with a formal argument of non-primitive type, we must pass the address (reference) of an object as the actual argument while calling the method</li>
+</ul>
+
+<h3>&#9733; Factory method (Return an object From a method)</h3>
+<div class="code">Public class Demo
+{
+}
+Public class Driver
+{
+    //this method creates and return a Demo object
+    Public static Demo m1()
+    {
+        Demo d = new Demo() //creating Demo object in Heap
+        return d;           //Returning the reference
+    }
+    Public static void main(String[] args)
+    {
+        S.O.P.l(m1());  //calling Factory method
+        S.O.P.l(m1());  //calling Factory method again
+    }
+}
+output
+Demo@3feba861
+Demo@526ba47 <span class="flag">verify hash codes</span></div>
+<h3>Factory method</h3>
+<p>The method which creates the object and return the address back to the caller is known as Factory method</p>
+<h3>Utility class</h3>
+<p>A utility class is a class that contains only static methods which perform particular tasks on objects or data<br>EX Arrays, collection</p>
+<h3>Utility method</h3>
+<p>A utility method is a static method that perform a common operation on an object or data and can be accessed using the class name without creating an object.</p>
+
+<h3>&#9733; Utility class and utility method</h3>
+<div class="code">//This is normal class with a non-static member radius
+Public class circle
+{
+    double radius
+    Public circle(double radius) //constructor
+    {
+        this.radius = radius
+    }
+}
+//Utility class for performing operation on circle object.
+Public class circleMethod
+{
+    //utility method
+    Public static double circleArea(circle c)
+    {
+        return (22.0/7) * c.radius * c.radius;   //It holds address of circle object.
+    }
+    //utility method
+    Public static double circleDiameter(circle c)
+    {
+        return 2 * c.radius
+    }
+    //utility method
+    Public static double circleCircumference(circle c)
+    {
+        return 2 * (22.0/7) * c.radius
+    }
+}
+Public class calling circleMethod
+{
+    Public static void main(string[] args)
+    {
+        circle obj = new circle(20)
+        //calling utility method using class name
+        double c = circleMethod.circleCircumference(obj);
+        double d = circleMethod.circleDiameter(obj)
+        double a = circleMethod.circleArea(obj)
+
+        S.O.P.l("circumference=" + c +
+                " Diameter " + d +
+                " Area " + a
+        );
+    }
+}</div>
+
+<h2 class="red">Method chaining</h2>
+<p>Method chaining means calling one method after another on the same object in a single line of code</p>
+<div class="code">Public class Demo
+{
+    public Demo m1()
+    {
+        S.O.P.l("m1 method")
+        return this;   &rarr; the current object returned
+    }                  &rarr; next method can be called
+    public Demo m2()
+    {
+        S.O.P.l("m2 method")
+        return this;
+    }
+    public Demo m3()
+    {
+        S.O.P.l("m3 method")
+        return this;
+    }
+    public Demo m4()
+    {
+        S.O.P.l("m4 method")
+        return this;
+    }
+    Public static void main(String[] args)
+    {
+        Demo d = new Demo();
+        d.m1().m2().m3().m4();  //Method chaining
+    }
+}
+O/P
+m1 method
+m2 method
+m3 method
+m4 method</div>
+</section>
+
+</main>
+</body>
+</html>

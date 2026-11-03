@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 03 Condition Statement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#14267a"/></marker></defs>
+</svg>
+<main class="jn">
+
+<!-- ===== PDF PAGE 1 : Control flow, If, If else ===== -->
+<section class="page">
+<h1>Java - 03 Condition Statement</h1>
+<h2 class="red">Control Flow Statement</h2>
+<p>&#9312; conditional statement | Decision making statement</p>
+<p>&#9313; Looping statement</p>
+<p>&#9314; Jumping statement</p>
+
+<h2 class="red">&#9312; Conditional statement</h2>
+<ul>
+<li>conditional statement are used to decide whether the set of instruction or program has to be be executed or not based on the condition
+ <ul><li>&#9312; IF statement</li><li>&#9313; If else statement</li><li>&#9314; else if ladder</li><li>&#9315; switch statement .</li></ul></li>
+</ul>
+
+<h3>&#9312; IF statement</h3>
+<div class="two">
+<div class="code">{
+    S1;
+    IF(condition)
+    {
+        S2
+    }
+    S3;
+    S4;
+}</div>
+<svg viewBox="0 0 360 340" role="img" aria-label="If statement flowchart">
+ <rect class="b" x="130" y="4" width="70" height="24" rx="12"/><text x="148" y="21">Start</text>
+ <path class="ln" d="M165 28V50" marker-end="url(#ar)"/>
+ <rect class="b" x="135" y="50" width="60" height="26"/><text x="156" y="68">S1</text>
+ <path class="ln" d="M165 76V100" marker-end="url(#ar)"/>
+ <path class="b" d="M165 100L225 130L165 160L105 130Z"/><text x="132" y="127" style="font-size:12px">IF</text><text x="124" y="142" style="font-size:12px">condition</text>
+ <path class="ln" d="M225 130H300V185" marker-end="url(#ar)"/><text class="rt" x="248" y="123">True</text>
+ <rect class="b" x="270" y="185" width="60" height="26"/><text x="292" y="203">S2</text>
+ <path class="ln" d="M105 130H50V248H135" marker-end="url(#ar)"/><text class="rt" x="52" y="123">False</text>
+ <path class="ln" d="M300 211V248H195" marker-end="url(#ar)"/>
+ <rect class="b" x="135" y="235" width="60" height="26"/><text x="156" y="253">S3</text>
+ <path class="ln" d="M165 261V282" marker-end="url(#ar)"/>
+ <rect class="b" x="135" y="282" width="60" height="26"/><text x="156" y="300">S4</text>
+ <path class="ln" d="M165 308V328" marker-end="url(#ar)"/><text x="172" y="334">stop</text>
+</svg>
+</div>
+
+<h3>&#9313; If else statement</h3>
+<div class="two">
+<div class="code">{
+    S1;
+    IF(condition)
+    {
+        S2;
+    }
+    else {
+        S3;
+    }
+    S4;
+}</div>
+<svg viewBox="0 0 360 340" role="img" aria-label="If else flowchart">
+ <rect class="b" x="145" y="4" width="70" height="24" rx="12"/><text x="163" y="21">Start</text>
+ <path class="ln" d="M180 28V50" marker-end="url(#ar)"/>
+ <rect class="b" x="150" y="50" width="60" height="26"/><text x="171" y="68">S1</text>
+ <path class="ln" d="M180 76V100" marker-end="url(#ar)"/>
+ <path class="b" d="M180 100L250 130L180 160L110 130Z"/><text x="167" y="127" style="font-size:12px">IF</text><text x="152" y="142" style="font-size:12px">condition</text>
+ <path class="ln" d="M110 130H50V195" marker-end="url(#ar)"/><text class="rt" x="62" y="123">True</text>
+ <path class="ln" d="M250 130H310V195" marker-end="url(#ar)"/><text class="rt" x="262" y="123">False</text>
+ <rect class="b" x="20" y="195" width="60" height="26"/><text x="42" y="213">S2</text>
+ <rect class="b" x="280" y="195" width="60" height="26"/><text x="302" y="213">S3</text>
+ <path class="ln" d="M50 221V268H150" marker-end="url(#ar)"/>
+ <path class="ln" d="M310 221V268H210" marker-end="url(#ar)"/>
+ <rect class="b" x="150" y="255" width="60" height="26"/><text x="171" y="273">S4</text>
+ <path class="ln" d="M180 281V306" marker-end="url(#ar)"/><text x="188" y="322">stop</text>
+</svg>
+</div>
+</section>
+
+<!-- ===== PDF PAGE 2 : Else if ladder, Switch ===== -->
+<section class="page">
+<h3>&#9314; else if ladder</h3>
+<div class="two">
+<div class="code">{
+    S1;
+    If (condition)
+    {
+        S2;
+    }
+    else if(condition)
+    {
+        S3;
+    }
+    .
+    .
+    else {
+        S4
+    }
+    S5;
+}</div>
+<svg viewBox="0 0 420 340" role="img" aria-label="Else if ladder flowchart">
+ <rect class="b" x="95" y="4" width="70" height="24" rx="12"/><text x="113" y="21">Start</text>
+ <path class="ln" d="M130 28V50" marker-end="url(#ar)"/>
+ <rect class="b" x="100" y="50" width="60" height="26"/><text x="121" y="68">S1</text>
+ <path class="ln" d="M130 76V95" marker-end="url(#ar)"/>
+ <path class="b" d="M130 95L190 125L130 155L70 125Z"/><text x="117" y="122" style="font-size:12px">IF</text><text x="100" y="137" style="font-size:12px">condition</text>
+ <path class="ln" d="M130 155V185" marker-end="url(#ar)"/><text class="rt" x="136" y="175">True</text>
+ <rect class="b" x="100" y="185" width="60" height="26"/><text x="121" y="203">S2</text>
+ <path class="ln" d="M190 125H220" marker-end="url(#ar)"/><text class="rt" x="188" y="116">False</text>
+ <path class="b" d="M280 95L340 125L280 155L220 125Z"/><text x="267" y="122" style="font-size:12px">IF</text><text x="250" y="137" style="font-size:12px">condition</text>
+ <path class="ln" d="M280 155V200" marker-end="url(#ar)"/><text class="rt" x="286" y="180">True</text>
+ <rect class="b" x="250" y="200" width="60" height="26"/><text x="271" y="218">S3</text>
+ <path class="ln" d="M340 125H390V200" marker-end="url(#ar)"/><text class="rt" x="355" y="116">False</text>
+ <rect class="b" x="360" y="200" width="58" height="26"/><text x="380" y="218">S4</text>
+ <path class="ln" d="M130 211V245H240V270" marker-end="url(#ar)"/>
+ <path class="ln" d="M280 226V270" marker-end="url(#ar)"/>
+ <path class="ln" d="M390 226V245H300V270" marker-end="url(#ar)"/>
+ <rect class="b" x="200" y="270" width="120" height="26"/><text x="250" y="288">S5</text>
+ <path class="ln" d="M260 296V318" marker-end="url(#ar)"/><text x="268" y="332">stop</text>
+</svg>
+</div>
+<ul>
+<li>only one block gets executed</li>
+<li>else block should be the last block</li>
+<li>else block is optional.</li>
+</ul>
+
+<h3>&#9315; switch statement</h3>
+<div class="code">switch(value/variable/expression)
+{
+    case value/expression :
+    {
+        statements
+    }
+    [break;]
+    case value/expression :
+    [ statements
+    }
+    [break;]
+    .
+    .
+    [default : {
+        statements
+    }
+    [break] ]
+}</div>
+<span class="flag">verify: bracket "[ statements }" in the second case as written</span>
+</section>
+
+<!-- ===== PDF PAGE 3 : Loop statement, while, do while ===== -->
+<section class="page">
+<h2 class="red">&#9313; Loop statement.</h2>
+<ul>
+<li>It is used to execute an instruction or a set of instruction for multiple times</li>
+<li>It helps to control flow of execution</li>
+<li>Types of Loops
+ <ul><li>&#9312; while loop</li><li>&#9313; do while loop</li><li>&#9314; for loop</li><li>&#9315; for each / enhanced For</li></ul></li>
+</ul>
+
+<h3>&#9312; while loop</h3>
+<div class="two">
+<div class="code">S1;
+while(condition)
+{
+    S2;
+}
+S3;</div>
+<svg viewBox="0 0 300 300" role="img" aria-label="While loop flowchart">
+ <rect class="b" x="75" y="4" width="70" height="24" rx="12"/><text x="93" y="21">Start</text>
+ <path class="ln" d="M110 28V45" marker-end="url(#ar)"/>
+ <rect class="b" x="80" y="45" width="60" height="26"/><text x="101" y="63">S1</text>
+ <path class="ln" d="M110 71V95" marker-end="url(#ar)"/>
+ <path class="b" d="M110 95L170 125L110 155L50 125Z"/><text x="95" y="122" style="font-size:12px">while</text><text x="82" y="137" style="font-size:12px">condition</text>
+ <path class="ln" d="M110 155V190" marker-end="url(#ar)"/><text class="rt" x="116" y="175">True</text>
+ <rect class="b" x="80" y="190" width="60" height="26"/><text x="101" y="208">S2</text>
+ <path class="ln" d="M80 203H20V125H50" marker-end="url(#ar)"/>
+ <path class="ln" d="M170 125H230V250H140" marker-end="url(#ar)"/><text class="rt" x="190" y="118">False</text>
+ <rect class="b" x="80" y="237" width="60" height="26"/><text x="101" y="255">S3</text>
+</svg>
+</div>
+<p>&#9312; The condition is used to control the number of repetition</p>
+<p>&#9313; the statements inside the loop gets executed until the condition becomes False</p>
+
+<h3>&#9313; do while loop</h3>
+<div class="two">
+<div class="code">do
+{
+    S1;
+    S2;
+}
+while (condition);
+S3;</div>
+<svg viewBox="0 0 300 350" role="img" aria-label="Do while loop flowchart">
+ <rect class="b" x="75" y="4" width="70" height="24" rx="12"/><text x="93" y="21">Start</text>
+ <path class="ln" d="M110 28V45" marker-end="url(#ar)"/>
+ <rect class="b" x="70" y="45" width="80" height="38"/><text x="100" y="62">S1</text><text x="100" y="77">S2</text>
+ <path class="ln" d="M110 83V100" marker-end="url(#ar)"/>
+ <rect class="b" x="80" y="100" width="60" height="24"/><text x="88" y="117">update</text>
+ <path class="ln" d="M110 124V150" marker-end="url(#ar)"/>
+ <path class="b" d="M110 150L170 180L110 210L50 180Z"/><text x="82" y="184" style="font-size:12px">condition</text>
+ <path class="ln" d="M170 180H250V64H150" marker-end="url(#ar)"/><text class="rt" x="190" y="173">True</text>
+ <path class="ln" d="M110 210V245" marker-end="url(#ar)"/><text class="rt" x="116" y="232">False</text>
+ <rect class="b" x="80" y="245" width="60" height="26"/><text x="101" y="263">S4</text>
+ <path class="ln" d="M110 271V300" marker-end="url(#ar)"/>
+ <rect class="b" x="75" y="300" width="70" height="24" rx="12"/><text x="93" y="317">stop</text>
+</svg>
+</div>
+<p>&#9312; The do block execute 1 time without checking condition</p>
+<p>&#9313; In do while statement do block is executed first and then it checks the condition</p>
+<p>&#9314; It is recommended to use do whil in situation where a set of instruction have to be executed once mandatorily and later based on the demand ( <span class="flag">line cut off at page edge</span></p>
+</section>
+
+<!-- ===== PDF PAGE 4 : For loop, Nested loop ===== -->
+<section class="page">
+<h3>For loop</h3>
+<div class="two">
+<div class="code">S1
+For(initialization ; condition ; updation)
+{
+    statement 2 ;
+}
+S3 ;</div>
+<svg viewBox="0 0 320 340" role="img" aria-label="For loop flowchart">
+ <rect class="b" x="115" y="4" width="70" height="24" rx="12"/><text x="133" y="21">Start</text>
+ <path class="ln" d="M150 28V48" marker-end="url(#ar)"/>
+ <rect class="b" x="120" y="48" width="60" height="26"/><text x="141" y="66">S1</text>
+ <path class="ln" d="M150 74V92" marker-end="url(#ar)"/>
+ <text x="118" y="88" style="font-size:11px">initial</text><text x="205" y="100" style="font-size:11px">update</text>
+ <path class="b" d="M150 100L215 135L150 170L85 135Z"/><text x="120" y="139" style="font-size:12px">condition</text>
+ <path class="ln" d="M150 170V205" marker-end="url(#ar)"/><text class="rt" x="156" y="192">True</text>
+ <rect class="b" x="120" y="205" width="60" height="26"/><text x="141" y="223">S2</text>
+ <path class="ln" d="M180 218H260V135H215" marker-end="url(#ar)"/>
+ <path class="ln" d="M85 135H30V275H120" marker-end="url(#ar)"/><text class="rt" x="32" y="128">False</text>
+ <rect class="b" x="120" y="262" width="60" height="26"/><text x="141" y="280">S3</text><text x="190" y="280">&mdash; stop</text>
+</svg>
+</div>
+<p class="note">Order marks &#9312; to &#9316; are written on the code diagram: &#9312; initialization, &#9313; condition, &#9314; statement, &#9315; updation <span class="flag">verify numbers</span></p>
+
+<h3>Nested loop</h3>
+<ul><li>Writing a loop statement inside another loop statement is known as Nested loop</li></ul>
+<div class="code">For( initialization ; condition ; updation)   &larr; outer loop
+{
+    while   &larr; Inner loop
+    {
+    }
+}</div>
+
+<div class="scroll">
+<table class="tbl">
+<tr><th>For loop</th><th>do-while loop</th></tr>
+<tr><td>&#9312; statement is executed once the condition is satisfied</td><td>&#9312; condition is checked after the statement is executed.</td></tr>
+<tr><td>&#9313; Minimum number of iteration of For loop is zero</td><td>&#9313; Minimum number of iteration For do while loop is one</td></tr>
+<tr><td>&#9314; For loop is entry controlled</td><td>&#9314; do-while loop is exit controlled</td></tr>
+</table>
+</div>
+</section>
+
+<!-- ===== PDF PAGE 5-6 : Dynamic Read ===== -->
+<section class="page">
+<h2>Dynamic Read</h2>
+<ul>
+<li>Reading the data from the end user while the application is under execution</li>
+<li>The user enters data using the keyboard</li>
+<li>A Java application cannot directly communicate with the keyboard</li>
+<li>every operating system provides standard input and output files [stream] that act as intermediate betn the program and the input and output file</li>
+</ul>
+<h3>System.in</h3>
+<ul>
+<li>System is the name of a built-in (predefind) class in java.lang package</li>
+<li>In is a static variable of type Input stream present inside the System class</li>
+<li>It represents the standard input stream, which is typically connected to the keyboard</li>
+</ul>
+<h3>Scanner class</h3>
+<ul>
+<li>Scanner is a built in class in the java.util package</li>
+<li>It provides non-static methods to read input dynamically from keyboard</li>
+<li>when reading from the keyboard it takes input from System.in</li>
+<li>The scanner object sends a request to the input stream (to System.in) fetches the data, converts it into the required data type (like int, double, String) and give it to the Java application</li>
+</ul>
+<h3>Working Process</h3>
+<ul>
+<li>when the program is running, the Java application waits for the user to enter data</li>
+<li>The Java application communicate with the standard input and output streams through System.in</li>
+<li>The standard input stream waits for the user to type data using the keyboard</li>
+<li>whatever data user enters is stored in the standard input file in binary form</li>
+<li>The scanner class converts this binary form data into Java understandable types (like int, Float, String)</li>
+</ul>
+
+<h3>Steps to read integer data from the end user</h3>
+<p>step&#9312; import scanner class from java.util package</p>
+<p class="code">import java.util.Scanner;</p>
+<p>step&#9313; create object of scanner class and initialize it with System.in</p>
+<p class="code">Scanner sc = new Scanner(System.in);</p>
+<p>step&#9314; request for the data from the user by calling methods.</p>
+<p class="code">int x = sc.nextInt();</p>
+<h3>Note</h3>
+<ul><li>when the input format doesn't match the expected data type while reading user input using scanner we get InputMismatchException</li></ul>
+
+<div class="scroll">
+<table class="tbl">
+<tr><th>Method</th><th>Used to Read</th><th>Data Type Returned</th><th>Example Input</th></tr>
+<tr><td>next()</td><td>Single word (till space)</td><td>String</td><td>Hello</td></tr>
+<tr><td>nextLine()</td><td>Entire line (till enter key)</td><td>String</td><td>Hello world</td></tr>
+<tr><td>nextInt()</td><td>Integer</td><td>int</td><td>25</td></tr>
+<tr><td>nextLong()</td><td>Long Integer</td><td>long</td><td>9594550655 <span class="flag">verify digits</span></td></tr>
+<tr><td>nextFloat()</td><td>Floating point number</td><td>Float</td><td>12.34</td></tr>
+<tr><td>nextDouble()</td><td>Double precision number</td><td>Double</td><td>23.456</td></tr>
+<tr><td>nextByte()</td><td>small integer</td><td>Byte</td><td>12</td></tr>
+<tr><td>nextShort()</td><td>small Integer</td><td>Short</td><td>12345</td></tr>
+<tr><td>nextBoolean()</td><td>True/False value</td><td>Boolean</td><td>true or False</td></tr>
+</table>
+</div>
+</section>
+
+</main>
+</body>
+</html>

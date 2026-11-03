@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 06 Modifiers 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGE 1 : Package, Access Modifiers ===== -->
+<section class="page">
+<h1>Java - 06 Modifiers 1</h1>
+<h2>Package</h2>
+<ul>
+<li>A package is like a folder that is used to organize a set of related classes and interfaces</li>
+<li>Package help in preventing naming conflicts and provider better code organization</li>
+</ul>
+<h3>Rule</h3>
+<p>&#9312; package Declaration must be first statement of the source file</p>
+<p>&#9313; multiple package declaration statement in one source file is not allowed</p>
+<p>&#9314; In a package classname must be unique irrespective of the sourcefile where it is defined</p>
+<h3>import statement</h3>
+<p>used to import a class from other package to current source file</p>
+<p><span class="r">syntax</span></p>
+<p class="code">import packagename.classname ;</p>
+
+<h2>Access Modifiers</h2>
+<ul>
+<li>Access modifiers are keywords in Java that control the visibility or accessibillity of class member (fields, method, constructor) and classes themselves</li>
+<li>they determine, from where in your code, you can access these element</li>
+<li>In Java language, there are four access modifier
+ <ul><li>&#9312; private</li><li>&#9313; default (Not keyword)</li><li>&#9314; protected</li><li>&#9315; public</li></ul></li>
+</ul>
+</section>
+
+<!-- ===== PDF PAGE 2 : The four access levels ===== -->
+<section class="page">
+<h2 class="red">&#9312; Private</h2>
+<ul>
+<li>Any member declared with private keyword will have the private access level</li>
+<li>the private members are restricted upto the class</li>
+<li>the private members are permitted to access in the same class body where it is declared</li>
+<li>the private members cannot be accessed outside the class body</li>
+<li>the private keyword can be used in the declaration of variable, method, constructor and nested class</li>
+<li>the private access modifier gives very good security</li>
+<li>private can not be used for outer class</li>
+</ul>
+<h2 class="red">&#9313; Default</h2>
+<ul>
+<li>IF any member doesn't have access modifier, it will have default level access</li>
+<li>the member which have default level access can be accessed in the same class as well as from other class belonging to the same package</li>
+<li>It cannot accessed outside the package</li>
+<li>Hence, it is also known as package level access</li>
+</ul>
+<h2 class="red">&#9314; Protected</h2>
+<ul>
+<li>Any member declared by using protected keyword will have protected level access</li>
+<li>the protected members are similar to default access member</li>
+<li>protected members can be accessed from any class belonging to the same package</li>
+<li>It can be accessed outside the package by using inheritance</li>
+<li>the protected keyword can be used in the declaration of variables, method, constructor and nested class</li>
+</ul>
+<h2 class="red">&#9315; Public</h2>
+<ul>
+<li>Any member declared using public keyword will have public level access</li>
+<li>the public members doesn't have any restriction and it can be accessed from anywhere</li>
+<li>the public keyword can be used declaration of variable, method, constructor and class</li>
+</ul>
+</section>
+
+<!-- ===== PDF PAGE 3 : Access examples ===== -->
+<section class="page">
+<div class="code">Package p1;
+Public class Demo
+{
+    public int x;
+    Protected int y;
+    int z;
+    Private int a;
+    Public static void main(String[] args)
+    {
+        Demo d1 = new Demo();
+        S.O.P.l(d1.x);  //public
+        S.O.P.l(d1.y);  //protected
+        S.O.P.l(d1.z);  //default
+        S.O.P.l(d1.a);  //private
+    }
+}</div>
+<hr class="sep">
+<div class="code">Package p1;
+public class Demo1
+{
+    public static void main(String[] args)
+    {
+        Demo d1 = new Demo();
+        S.O.P.l(d1.x)   //public
+        S.O.P.l(d1.y)   //protected
+        S.O.P.l(d1.z)   //default
+        S.O.P.l(d1.a)   //CTE &rarr; Private
+    }
+}</div>
+<hr class="sep">
+<div class="code">Package p2;
+import p1.Demo;
+Public class Test
+{
+    Public static void main(String[] args)
+    {
+        Demo d1 = new Demo();
+        S.O.P.l(d1.x)   //Only public member accessible
+        //cannot access all this outside the package
+        S.O.P.l(d1.y)   //CTE &rarr; protected
+        S.O.P.l(d1.z)   //CTE &rarr; default
+        S.O.P.l(d1.a)   //CTE &rarr; private.
+    }
+}</div>
+</section>
+
+<!-- ===== PDF PAGES 4-6 : Class and constructor access ===== -->
+<section class="page">
+<h3>&#9733; Public class with compiler defined constructor</h3>
+<div class="code">Package p1
+Public class Demo
+{
+    //Access modifier of default constructor will be same as Class access modifier
+    Public static void main(String[] args)
+    {
+        new Demo()
+    }
+}</div>
+<div class="code">Package p1
+public class Test01
+{
+    //creating object with in package outside the class
+    Public static void main(String[] args)
+    {
+        new Demo();
+    }
+}</div>
+<div class="code">Package p2
+import p1.Demo
+public class Test02
+{
+    //creating object outside the package
+    Public static void main(String[] args)
+    {
+        new Demo();
+    }
+}</div>
+
+<h3>&#9733; Default class with compiler defined constructor</h3>
+<div class="code">Package p1
+class Demo //default access modifier (Am)
+{   //Am of default constructor will be same as class Am
+    Public static void main(String[] args)
+    {
+        new Demo(); //creating object with in package AND class
+    }
+}</div>
+<div class="code">Package p1
+public class Test01
+{
+    public static void main(String[] args)
+    {
+        new Demo(); //creating object with in the package outside the class
+    }
+}</div>
+<div class="code">Package p2
+//can not import the class which have default access modifier
+import p1.Demo
+public class Test02
+{
+    public static void main(String[] args)
+    {
+        new Demo() &rarr; CTE
+    }
+}</div>
+
+<h3>&#9733; public class with user defined constructor</h3>
+<div class="code">Package p1
+Public class Demo
+{
+    //access modifier of user defined constructor will be decided by user
+    public Demo()
+    {
+    }
+    Public static void main(String[] args)
+    {
+        new Demo() //creating object within class
+    }
+}</div>
+<div class="code">Package p2
+public class Test01
+{
+    public static void main(String[] args)
+    {
+        new Demo(); //creating object with in package outside the class
+    }
+}</div>
+<span class="flag">verify: Test01 is in package p2 but comment says "within package"</span>
+<div class="code">Package p2
+import p2.Demo  <span class="flag">verify: p1 or p2?</span>
+public class Test02
+{
+    public static void main(String[] args)
+    {
+        new Demo(); //creating object outside the package
+    }
+}</div>
+
+<h3>&#9733; what access modifier is permited to class</h3>
+<ul>
+<li>For outer class only 2 access modifier are allowed default and private <span class="flag">verify: Java allows public and default for an outer class</span></li>
+<li>For inner class all 4 access modifier are allowed</li>
+</ul>
+<h3>&#9733; In single source file how many public class defined?</h3>
+<ul><li>only one</li></ul>
+<h3>&#9733; In single source file how many non-public class defined</h3>
+<ul><li>ANY Number</li></ul>
+<h3>&#9733; what should be the source file name to save Java program</h3>
+<ul>
+<li>Filename should be same as classname, which has public access modifier</li>
+<li>In case file doesn't have public class, Filename can be anything</li>
+</ul>
+<h3>&#9733; what access is allowed to constructor</h3>
+<ul><li>All 4 access modifier are allowed</li></ul>
+<h3>&#9733; what happen if constructor is declared as private</h3>
+<ul><li>It restricts object creation to the class</li></ul>
+<h3>&#9733; what is the access modifier of default constructor</h3>
+<ul><li>same as its class</li></ul>
+</section>
+
+</main>
+</body>
+</html>

@@ -1,5 +1,55 @@
 
 const subjects = [
+
+  {
+    id: "java",
+    name: "Java",
+    description: "Core Java concepts and programming notes",
+    icon: "☕",
+    color: "red",
+    notes: [  
+      {
+        id: "java-01",
+        title: "Introduction to Java",
+        file: "/java/index_01.html",
+      },
+      {
+        id: "java-02",
+        title: "Data Types in Java",   
+      file: "/java/index_02_datatypes.html",  
+      },
+      {
+        id: "java-03",
+        title: "Statements",
+        file: "/java/java_03_statements.html",
+      },
+      {
+        id: "java-04",
+        title: "Methods",
+        file: "/java/java_04_method.html",
+      },
+      {
+        id: "java-05",
+        title: "Members",
+        file: "/java/java_05_members.html",
+      },
+
+      {
+        id: "java-06",
+        title:"Modifiers",
+        file: "/java/java_06_modifiers.html",
+      },
+
+       {
+        id: "java-07",
+        title:"OOps",
+        file: "/java/java_07_oops.html",
+       }
+    ]
+
+  },
+
+
   {
     id: "hibernate",
     name: "Hibernate",
@@ -18,7 +68,7 @@ const subjects = [
         file: "/hibernate/part_02_Orm.html",
       },
 
-       {
+      {
         id: "hibernate-03",
         title: "Persistence.xml",
         file: "/hibernate/part_05_Persistence.html",
@@ -412,70 +462,70 @@ const subjects = [
   },
 
   {
-  id: "servlet",
-  name: "Servlet",
-  description: "Java Servlet technology and web development",
-  icon: "🌐",
-  color: "green",
+    id: "servlet",
+    name: "Servlet",
+    description: "Java Servlet technology and web development",
+    icon: "🌐",
+    color: "green",
 
-  notes: [
-    {
-      id: "servlet-01",
-      title: "Servlet",
-      file: "/servlet/part_01.html",
-    },
-    {
-      id: "servlet-02",
-      title: "Servlet API",
-      file: "/servlet/part_02.html",
-    },
-    {
-      id: "servlet-03",
-      title: "Request & Response in Servlet",
-      file: "/servlet/part_03.html",
-    },
-    {
-      id: "servlet-04",
-      title: "Servlet Container & Life Cycle",
-      file: "/servlet/part_04.html",
-    },
-    {
-      id: "servlet-05",
-      title: "Ways to Create a Servlet",
-      file: "/servlet/part_05.html",
-    },
-    {
-      id: "servlet-06",
-      title: "web.xml & @WebServlet",
-      file: "/servlet/part_06.html",
-    },
-    {
-      id: "servlet-07",
-      title: "Query Parameters, Welcome Files & Project Flow",
-      file: "/servlet/part_07.html",
-    },
-    {
-      id: "servlet-08",
-      title: "load-on-startup & Servlet Loading",
-      file: "/servlet/part_08.html",
-    },
-    {
-      id: "servlet-09",
-      title: "PrintWriter in Servlets",
-      file: "/servlet/part_09.html",
-    },
-    {
-      id: "servlet-10",
-      title: "RequestDispatcher",
-      file: "/servlet/part_10.html",
-    },
-    {
-      id: "servlet-11",
-      title: "RequestDispatcher — Task_01 (Login Project)",
-      file: "/servlet/part_11.html",
-    },
-  ],
-},
+    notes: [
+      {
+        id: "servlet-01",
+        title: "Servlet",
+        file: "/servlet/part_01.html",
+      },
+      {
+        id: "servlet-02",
+        title: "Servlet API",
+        file: "/servlet/part_02.html",
+      },
+      {
+        id: "servlet-03",
+        title: "Request & Response in Servlet",
+        file: "/servlet/part_03.html",
+      },
+      {
+        id: "servlet-04",
+        title: "Servlet Container & Life Cycle",
+        file: "/servlet/part_04.html",
+      },
+      {
+        id: "servlet-05",
+        title: "Ways to Create a Servlet",
+        file: "/servlet/part_05.html",
+      },
+      {
+        id: "servlet-06",
+        title: "web.xml & @WebServlet",
+        file: "/servlet/part_06.html",
+      },
+      {
+        id: "servlet-07",
+        title: "Query Parameters, Welcome Files & Project Flow",
+        file: "/servlet/part_07.html",
+      },
+      {
+        id: "servlet-08",
+        title: "load-on-startup & Servlet Loading",
+        file: "/servlet/part_08.html",
+      },
+      {
+        id: "servlet-09",
+        title: "PrintWriter in Servlets",
+        file: "/servlet/part_09.html",
+      },
+      {
+        id: "servlet-10",
+        title: "RequestDispatcher",
+        file: "/servlet/part_10.html",
+      },
+      {
+        id: "servlet-11",
+        title: "RequestDispatcher — Task_01 (Login Project)",
+        file: "/servlet/part_11.html",
+      },
+    ],
+  },
 
   {
     id: "spring-boot",
@@ -492,51 +542,51 @@ const subjects = [
     ],
   },
 
- {
-  id: "spring-core",
-  name: "Spring Core",
-  description: "Core Spring framework concepts",
-  icon: "🌱",
-  color: "teal",
+  {
+    id: "spring-core",
+    name: "Spring Core",
+    description: "Core Spring framework concepts",
+    icon: "🌱",
+    color: "teal",
 
-  notes: [
-    {
-      id: "spring-core-01",
-      title: "Introduction & History",
-      file: "/spring-core/part_01.html",
-    },
-    {
-      id: "spring-core-02",
-      title: "Inversion of Control (IoC)",
-      file: "/spring-core/part_02.html",
-    },
-    {
-      id: "spring-core-03",
-      title: "Types of IoC Container",
-      file: "/spring-core/part_03.html",
-    },
-    {
-      id: "spring-core-04",
-      title: "Spring Core Project — XML Configuration",
-      file: "/spring-core/part_04.html",
-    },
-    {
-      id: "spring-core-05",
-      title: "Dependency Injection (DI)",
-      file: "/spring-core/part_05.html",
-    },
-    {
-      id: "spring-core-06",
-      title: "Bean Life Cycle",
-      file: "/spring-core/part_06.html",
-    },
-    {
-      id: "spring-core-07",
-      title: "Spring Core Annotations",
-      file: "/spring-core/part_07.html",
-    },
-  ],
-},
+    notes: [
+      {
+        id: "spring-core-01",
+        title: "Introduction & History",
+        file: "/spring-core/part_01.html",
+      },
+      {
+        id: "spring-core-02",
+        title: "Inversion of Control (IoC)",
+        file: "/spring-core/part_02.html",
+      },
+      {
+        id: "spring-core-03",
+        title: "Types of IoC Container",
+        file: "/spring-core/part_03.html",
+      },
+      {
+        id: "spring-core-04",
+        title: "Spring Core Project — XML Configuration",
+        file: "/spring-core/part_04.html",
+      },
+      {
+        id: "spring-core-05",
+        title: "Dependency Injection (DI)",
+        file: "/spring-core/part_05.html",
+      },
+      {
+        id: "spring-core-06",
+        title: "Bean Life Cycle",
+        file: "/spring-core/part_06.html",
+      },
+      {
+        id: "spring-core-07",
+        title: "Spring Core Annotations",
+        file: "/spring-core/part_07.html",
+      },
+    ],
+  },
 
   {
     id: "spring-mvc",
@@ -552,6 +602,8 @@ const subjects = [
       },
     ],
   },
+
+
 ];
 
 export default subjects;

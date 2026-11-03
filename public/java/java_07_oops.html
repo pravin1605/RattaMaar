@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 07 OOPs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGE 1 : OOP's ===== -->
+<section class="page">
+<h1>Java - 07 OOP's</h1>
+<h2>OOP's</h2>
+<ul>
+<li>It is a paradigm means design principle</li>
+<li>It helps a programmer to design an application by considering real world object</li>
+<li>Also it helps to store the data and action of the real world projects</li>
+</ul>
+<h3>Bottom-up design approach</h3>
+<ul>
+<li>we call oops Bottom-up design approach</li>
+<li>In oops we don't get directly with programming</li>
+<li>It consists few step
+ <ul>
+ <li>&#9312; Analyse real world project
+  <ul><li>(a) Identify properties</li><li>(b) Identify actions | behaviours</li></ul></li>
+ <li>&#9313; Design the blueprint</li>
+ <li>&#9314; Instantiate the class</li>
+ </ul></li>
+</ul>
+<h3>Design principle in OOP's</h3>
+<p>&#9312; Encapsulation</p><p>&#9313; Inheritance</p><p>&#9314; polymorphism</p><p>&#9315; Abstraction</p>
+</section>
+
+<!-- ===== PDF PAGES 2-5 : Encapsulation ===== -->
+<section class="page">
+<h2>Encapsulation</h2>
+<ul>
+<li>The process of wrapping properties and behaviours of an object together is called as encapsulation</li>
+<li>encapsulation specifies us that make the data member as private to provide security to data</li>
+</ul>
+<h3>Advantage</h3>
+<p>&#9312; <b>Data hiding</b><br>Data hiding is the process of restricting the direct access to the properties of the object and providing controlled and restricted access to the properties of the object<br>We can provide the controlled access using getter and setter method</p>
+<p>&#9313; <b>Verification</b><br>Verification is the process of checking whether the input value given to a class variable is correct and acceptable before it is stored in the object</p>
+<p>&#9314; <b>Validation</b><br>Validation is the process of ensuring that the data stored inside an object follows all required rules and remains logically correct throughout the program execution</p>
+<h3>getter Method</h3>
+<ul><li>Method which is used to fetch the data which is having private access modifier is called as getter method</li></ul>
+<p><span class="r">Syntax</span></p>
+<ul>
+<li>Access modifier will be public always</li>
+<li>return type should be same as the variable data type</li>
+<li>and the name of the method follows some naming conventions
+ <ul><li>IF the variable name is id, method name will be <span class="r">getId()</span>;</li></ul></li>
+<li>getter methods are also called as accessors</li>
+</ul>
+<h3>Setter Method</h3>
+<ul>
+<li>Method which is used to modify the data which is having private access modifier is called as setter method</li>
+<li>setter methods are also called as modifiers</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<p>&#9312; Access modifier will be public always</p>
+<p>&#9313; return type will be void</p>
+<p>&#9314; And name of the method follow some naming convention<br>&nbsp;&nbsp;If the variable name is id, method name will be <b>setId(formal arg)</b>;<br>&nbsp;&nbsp;Formal arg data type should be same as type of variable.</p>
+<div class="code">Public class GetterSetter
+{
+    private int id;
+    Private string name;
+    Private int age;
+    Private string gmail;
+    Private string password;
+    //constructor
+    GetterSetter(int id, string name, int age, string gmail, string password)
+    {
+        setId(id)
+        setName(name)
+        setAge(age)
+        setGmail(gmail)
+        setPassword(password)
+        // We use setter method instead of this in a constructor so that validation rules are applied and only valid data is assigned to the object maintaining encapsulation
+    }
+    //Non-static method
+    //getter method
+    Public int getId()
+    {
+        return id;
+    }
+    Public string getName()
+    {
+        return name;
+    }
+    Public int getAge()
+    {
+        return age;
+    }
+    Public string getGmail(string password) // Verification
+    {
+        if (this.password.equals(password))
+            return gmail
+        else
+            S.O.P.l("invalid password");
+        return null;
+    }
+    public string getPassword()
+    {
+        return password
+    }
+
+    //setter Method
+    public void setAge(int age) //validation of data
+    {
+        if (age >0 && age > this.age)
+        {
+            this.age = age;
+        }
+        else
+        {
+            S.O.P.l("Age must be positive");
+        }
+    }
+    public void setName(string name)
+    {
+        this.name = name
+    }
+    public void setId(int id)
+    {
+        if (id >0)
+            this.id = id;
+    }
+    public void setGmail(string gmail)
+    {
+        this.gmail = gmail
+    }
+    public void setpassword(string password)
+    {
+        this.password = password;
+    }
+}   &rarr; class end
+
+Public class Driver
+{
+    public static void main(string[] args)
+    {
+        GetterSetter obj = new GetterSetter(101,"abc",25,"abc@com","1234"); <span class="flag">verify arguments</span>
+
+        S.O.P.l("Before " + obj.getId());
+        obj.setId(201);
+        S.O.P.l("After " + obj.getId());
+
+        S.O.P.l("Before " + obj.getName());
+        obj.setName("Pravin");
+        S.O.P.l("After " + obj.getName());
+
+        S.O.P.l("Before " + obj.getAge());
+        obj.setAge(22)
+        S.O.P.l("After " + obj.getAge());
+
+        S.O.P.l("Before " + obj.getGmail("1234"));
+        obj.setGmail("xyz")
+        S.O.P.l("After " + obj.getGmail("1234"));
+
+        S.O.P.l("Before " + obj.getpassword());
+        obj.setpassword("4321")
+        S.O.P.l("After " + obj.getpassword());
+    }
+}</div>
+</section>
+
+<!-- ===== PDF PAGES 6-8 : Relationship between objects ===== -->
+<section class="page">
+<h2>Relationship betn the objects</h2>
+<ul>
+<li>In oop's real world entities are represented as objects. In real life, object do not exist alone - they are connected to other objects<br>This connection is called a relationship</li>
+<li>when one object have some connection or association with another object then we can say that there is relationship betn 2 objects<br>The connection can be like &rarr; one object want to use properties and behaviours of other object or vice versa</li>
+<li>Types of object relationship
+ <ul><li>&#9312; HAS-A (Association)</li><li>&#9313; IS-A (Inheritance)</li></ul></li>
+</ul>
+<div class="blk">
+<div class="two"><div class="bx">Object-A (0x1)</div><div class="bx">Object-B (0x2)</div></div>
+<p class="note">Object-A &harr; connection &harr; Object-B</p>
+<div class="two"><div><b>Has-A</b><ul class="tree"><li>Aggregation</li><li>composition</li></ul></div><div><b>IS-A</b></div></div>
+</div>
+<h3>Has-A</h3>
+<p>Has-a relationship is an association betn two classes, where one class contain an object of another class as a data member</p>
+<p>Simple words</p>
+<ul><li>one object uses another object</li><li>No inheritance involved.</li></ul>
+<h3>Why Has-A Relationship is Needed ?</h3>
+<p>&#9312; To reuse functionality</p><p>&#9313; To model real-world relationship</p><p>&#9314; To reduce tight coupling</p><p>&#9315; To achieve modular design</p>
+<h3>How can we achieve Has-A betn two classes?</h3>
+<ul>
+<li>Inside one class create a non-static variable of other class type (which can store other class object address)</li>
+<li>The object in which we are storing the reference of other object is called as depending object or container object.</li>
+<li>The object whose reference is stored in depending object class as dependent object or containment object.</li>
+</ul>
+<div class="two">
+<div class="code">class Demo1
+{
+    Demo2 d1 = new Demo2()
+}</div>
+<div class="code">class Demo2
+{
+}</div>
+</div>
+<div class="two">
+<table class="tbl auto"><tr><th colspan="2">Demo1 (0x1) &mdash; Depending</th></tr><tr><td>d1</td><td>0x2</td></tr></table>
+<table class="tbl auto"><tr><th>Demo2 (0x2) &mdash; Dependent</th></tr><tr><td>&nbsp;</td></tr></table>
+</div>
+<p class="r">Demo1 HAS-A Demo2</p>
+<p>Example</p>
+<ul><li>car has-A engine</li><li>car has-A Radio</li><li>phone has-A sim</li><li>phone has-A battery</li><li>person has-A Aadhar</li></ul>
+
+<h3 class="r">Aggregation (lazy) Not shaded</h3>
+<ul>
+<li>the dependency betn the object is in such a way that dependent object will exit even without the help of depending object</li>
+<li>the relationship or dependency betn the object is Not strong</li>
+<li>aggregation can be achieved using a design technique called as <span class="r">lazy instantiation</span></li>
+<li>example<br>library-book<br>Flipcart - product<br>netflix - movies<br>dept - professor</li>
+</ul>
+<h3 class="r">Composition</h3>
+<ul>
+<li>The dependency betn the objects is in such a way that dependent object will not exist without the help of depending object.</li>
+<li>the relationship or dependency betn the object is strong</li>
+<li>composition can be achieved using a design technique called as <span class="r">early instantiation</span></li>
+<li>example.<br>car - engine<br>person - aadhar<br>phone - sim</li>
+</ul>
+<h3>Design technique</h3>
+<p>&#9312; Early instatiation</p><p>&#9313; Lazy instatiation</p>
+</section>
+
+<!-- ===== PDF PAGES 9-15 : Early and lazy instantiation ===== -->
+<section class="page">
+<h2 class="red">Early instantiation</h2>
+<ul>
+<li>The dependent object is created immediately during the creation of the depending object</li>
+<li>It is achieved with the help of a initializer</li>
+<li>when we create the main object, the dependent object is created and assigned automatically during object creation</li>
+</ul>
+<div class="code">Public class Engine
+{
+    Private int cc
+    Public Engine(int cc)
+    {
+        this.cc = cc
+    }
+    Public int getcc()
+    {
+        return cc;
+    }
+    Public int setcc(int cc)   <span class="flag">verify: "int" return type as written</span>
+    {
+        this.cc = cc
+    }
+}
+
+Public class Car
+{
+    private string brand;
+    Private string color;
+    Private double price;
+    Private string model;
+
+    Private Engine engine = new Engine(1200)
+
+    Public car(string brand, string color, double price, string model)
+    {
+        this.brand = brand
+        this.color = color
+        this.price = price
+        this.model = model
+    }
+    Public string getBrand()
+    {
+        return brand;
+    }
+    Public void setBrand(string brand)
+    {
+        this.brand = brand
+    }
+    Public string getColor()
+    {
+        return color;
+    }
+    Public void setcolor(string color)
+    {
+        this.color = color
+    }
+    Public double getPrice()
+    {
+        return price
+    }
+    Public void setPrice(double price)
+    {
+        this.price = price
+    }
+    Public string getModel()
+    {
+        return model
+    }
+    Public void setModel(string model)
+    {
+        this.model = model
+    }
+    Public Engine getEngine()
+    {
+        return engine
+    }
+    Public void setEngine(Engine engine)
+    {
+        this.engine = engine
+    }
+}
+
+Public class CarDriver
+{
+    Public static void main(string[] args)
+    {
+        Car c = new Car("BMW","white",10000,"M3-GTR");
+        S.O.P.l(c.getBrand());
+        S.O.P.l(c.getColor())
+        S.O.P.l(c.getPrice())
+        S.O.P.l(c.getModel());
+        S.O.P.l(c.getEngine());
+        S.O.P.l(c.getEngine().getcc());
+    }
+}</div>
+<div class="two">
+<table class="tbl auto"><tr><th colspan="2">Car (0x1)</th></tr><tr><td>brand</td><td>BMW</td></tr><tr><td>color</td><td>white</td></tr><tr><td>Price</td><td>10000</td></tr><tr><td>model</td><td>M3-GTR</td></tr><tr><td>Engine</td><td>0x2</td></tr></table>
+<table class="tbl auto"><tr><th colspan="2">Engine (0x2)</th></tr><tr><td>cc</td><td>1200</td></tr></table>
+</div>
+<p>In the above example we are instantiating engine object during the object creation of car. so this design referred as early instantiation</p>
+<p>A car constructor has 4 values (brand, color, price, model)<br>But using Has-A relationship we can also access one more value (cc) from the engine class</p>
+
+<h2 class="red">Lazy instantiation</h2>
+<ul>
+<li>Dependent object is not created at the time of creation of depending object.</li>
+<li>It is achieved with the help of a method [helper method]</li>
+<li>Whenever user calls the method the only dependent object will get created.</li>
+</ul>
+<div class="code">Public class car
+{
+    Private string brand;
+    Private string color;
+    Private double price;
+    Private string model;
+    //Lazy instantiation: object not created Here
+    Private Radio radio;
+
+    Public car(string brand, string color, double price, string model)
+    {
+        this.brand = brand
+        this.color = color
+        this.price = price
+        this.model = model
+    }
+    Public string getBrand()      { return brand; }
+    Public void setBrand(string brand)   { this.brand = brand; }
+    Public string getcolor()      { return color; }
+    Public void setcolor(string color)   { this.color = color; }
+    Public double getPrice()      { return price }
+    Public void setPrice(double price)   { this.price = price }
+    Public string getModel()      { return model; }
+    Public void setModel(string model)   { this.model = model }
+    Public Radio getRadio()       { return radio }
+    Public void setRadio(string brand, double price)
+    {
+        Radio r = new Radio(brand, price);
+        this.radio = r;
+    }
+}
+
+Public class Radio
+{
+    Private string brand;
+    Private double price;
+    Public Radio(string brand, double price)
+    {
+        this.brand = brand
+        this.price = price
+    }
+    Public string getBrand()      { return brand; }
+    Public void setBrand(string brand)   { this.brand = brand; }
+    Public double getPrice()      { return price; }
+    Public void setPrice(double price)   { this.price = price }
+}
+
+Public class CarDriverWithRadio
+{
+    Public static void main(string[] args)
+    {
+        Car c = new Car("Tata","Red",5000,"Nano");
+        //car details
+        S.O.P.l(c.getBrand());
+        S.O.P.l(c.getcolor());
+        S.O.P.l(c.getPrice());
+        S.O.P.l(c.getModel());
+        //Lazy instantiation of Radio
+        c.setRadio("carva",20000);
+        //Radio details accessed through car
+        S.O.P.l(c.getRadio());
+        S.O.P.l(c.getRadio().getBrand());
+        S.O.P.l(c.getRadio().getPrice());
+    }
+}</div>
+<div class="two">
+<div><p>&#9733; Before calling setRadio();</p>
+<table class="tbl auto"><tr><th colspan="2">Car (0x1)</th></tr><tr><td>brand</td><td>Tata</td></tr><tr><td>color</td><td>Red</td></tr><tr><td>Price</td><td>5000</td></tr><tr><td>Model</td><td>Nano</td></tr><tr><td>Radio</td><td>Null</td></tr></table></div>
+<div><p>&#9733; After calling setRadio();</p>
+<table class="tbl auto"><tr><th colspan="2">Car (0x1)</th></tr><tr><td>brand</td><td>Tata</td></tr><tr><td>color</td><td>Red</td></tr><tr><td>Price</td><td>5000</td></tr><tr><td>Model</td><td>Nano</td></tr><tr><td>Radio</td><td>0x2</td></tr></table>
+<table class="tbl auto"><tr><th colspan="2">radio (0x2)</th></tr><tr><td>brand</td><td>carva</td></tr><tr><td>Price</td><td>20000</td></tr></table></div>
+</div>
+<div class="scroll"><table class="tbl">
+<tr><th>Feature</th><th>Early Instantiation</th><th>Lazy Instantiation</th></tr>
+<tr><td>object creation</td><td>At object creation</td><td>on demand</td></tr>
+<tr><td>Relationship</td><td>strong (composition)</td><td>weak (Aggregation)</td></tr>
+<tr><td>Memory usage</td><td>More</td><td>Less</td></tr>
+<tr><td>Flexibility</td><td>Low</td><td>High</td></tr>
+</table></div>
+<div class="scroll"><table class="tbl">
+<tr><th>Feature</th><th>Aggregation</th><th>composition</th></tr>
+<tr><td>Dependency strength</td><td>weak</td><td>Strong</td></tr>
+<tr><td>object life cycle</td><td>Independent</td><td>Dependent</td></tr>
+<tr><td>object creation</td><td>Lazy</td><td>early</td></tr>
+<tr><td>Memory usage</td><td>efficient</td><td>Higher</td></tr>
+<tr><td>Example</td><td>Library-Book</td><td>car-engine</td></tr>
+</table></div>
+<p class="note">(two more empty tables are drawn below these on the page)</p>
+</section>

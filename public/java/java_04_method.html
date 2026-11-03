@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 04 Method</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#14267a"/></marker></defs>
+</svg>
+<main class="jn">
+
+<!-- ===== PDF PAGE 1 : Method, syntax, terminology ===== -->
+<section class="page">
+<h1>Java - 04 Method</h1>
+<h2>Method</h2>
+<ul><li>It is a block of instructions which is used to perform a specific task.</li></ul>
+<h3>syntax</h3>
+<div class="code">[modifiers] return_type name([Formal arguments])
+{
+    Instructions/statements
+    [return [value/expression];]
+}</div>
+<ul>
+<li>modifiers = <b>optional</b> &nbsp;|&nbsp; Formal arguments = <b>optional</b></li>
+<li>[modifiers] return_type name([Formal arguments]) = <span class="r">Method Declaration</span> (the name and formal arguments = <span class="r">method signature</span>)</li>
+<li>{ Instructions/statements } = <span class="r">Method body</span> &nbsp;|&nbsp; whole thing together = <span class="r">Method Definition</span></li>
+<li>return [value/expression]; &rarr; Its depends on return-type</li>
+</ul>
+<p><span class="g">&#9733;</span> Formal arguments are a local variable</p>
+<ul><li>In this syntax of method modifiers, formal arguments and return statement are optional</li></ul>
+
+<h2 class="red">Important Terminology</h2>
+<p>&#9312; <b>Method signature</b></p>
+<p>&nbsp;&nbsp;The method name and formal arguments together are called as method signature</p>
+<p>&#9313; <b>Method Declaration</b> <span class="note"></span></p>
+<p>&nbsp;&nbsp;The modifiers, return_type and method signature together are called as method declaration</p>
+<p>&#9314; <b>Method Definition</b></p>
+<p>&nbsp;&nbsp;The method declaration and block/body together are called as method Definition</p>
+
+<h3>Question</h3>
+<p>&#9312; where to create a method?<br>&nbsp;&nbsp;We can create a method only inside a class block</p>
+<p>&#9313; How many methods can we create inside a class?<br>&nbsp;&nbsp;We can create infinite number of methods inside a class</p>
+<p>&#9314; can we create a method inside another method?<br>&nbsp;&nbsp;No, we can't</p>
+</section>
+
+<!-- ===== PDF PAGE 2 : Modifiers, Return-Type, Why use methods ===== -->
+<section class="page">
+<h2 class="red">Modifiers</h2>
+<ul>
+<li>Modifiers are special keywords that are used to define the accessibility and behavior of classes, methods, variable and constructor.</li>
+<li>They tell the Java compiler
+ <ul><li>Who can access a class, method or variable</li><li>How it should behave during program execution</li></ul></li>
+<li>Modifiers help in implementing important concepts like encapsulation, inheritance</li>
+<li>Behaviour means characteristics of class members</li>
+</ul>
+<div class="blk"><b>Modifiers</b>
+<div class="two">
+<div><b class="r">Access modifiers</b><ul class="tree"><li>public</li><li>protected</li><li>default</li><li>private</li></ul></div>
+<div><b class="r">Non-access modifier</b><ul class="tree"><li>static</li><li>abstract</li><li>Final</li><li>transient</li><li>synchronized</li><li>native</li></ul></div>
+</div></div>
+
+<h2 class="red">Return-Type</h2>
+<ul>
+<li>It is a datatype which specifies what type of data is given back to the caller of method, once the execution is completed</li>
+<li>It can be,
+ <ul><li>1. Primitive datatype</li><li>2. Non-primitive datatype</li><li>3. void</li></ul></li>
+</ul>
+<h2 class="red">Why use methods</h2>
+<p>&#9312; Reusability - Write once, use many times</p>
+<p>&#9313; Readability - Break your logic into smaller chunks</p>
+<p>&#9314; Debugging - Easier to find and fix issues in small code</p>
+<p>&#9315; Modularity - keep code well organized and manageable</p>
+</section>
+
+<!-- ===== PDF PAGE 3 : Types, To call a method ===== -->
+<section class="page">
+<div class="blk"><b>Method</b>
+<div class="two">
+<div><b>Based on Argument</b><ul class="tree"><li>&#9312; No-argument method</li><li>&#9313; Parameterized method</li><li>&#9314; Variable-arg method</li></ul></div>
+<div><b>Based on modifier</b><ul class="tree"><li>&#9312; static method</li><li>&#9313; Non-static method</li><li>&#9314; Final method</li><li>&#9315; abstract method</li><li>&#9316; concrete method</li></ul></div>
+</div></div>
+
+<h2 class="red">To call a method</h2>
+<ul><li>method signature or method call statement is used to call a method</li></ul>
+<p><span class="r">syntax</span></p>
+<p class="code">method_name([actual arguments, ...]);</p>
+<p class="note">actual arguments = optional</p>
+<ul><li>Here the actual arguments are optional.</li></ul>
+
+<div class="code">public class program
+{
+    public static void demo()  &rarr; called          <span class="note">} user defined method</span>
+    {
+        System.out.println("Hello");
+    }
+    public static void main(String[] args)  &rarr; caller   <span class="note">} Main method</span>
+    {
+        System.out.println("Main start");
+        demo();
+        System.out.println("Main end");
+    }
+}</div>
+
+<h2 class="red">what happen when a method is called</h2>
+<p>&#9312; Execution of current method is paused</p>
+<p>&#9313; control is transferred from caller to the called method</p>
+<p>&#9314; Execution of called method starts from beginning</p>
+<p>&#9315; once the execution is completed, control returns to the caller</p>
+<p>&#9316; execution of caller resumes</p>
+<h3>Note</h3>
+<ul>
+<li>Whenever a caller calls a method a block of memory is formed for the particular method and the instruct<span class="flag">cut off</span> inside the method gets executed</li>
+<li>once completing the execution, the memory created for<span class="flag">cut off</span> the particular methods gets destroyed.</li>
+</ul>
+</section>
+
+<!-- ===== PDF PAGE 4 : No-Argument, Parameterized ===== -->
+<section class="page">
+<h2 class="red">No-Argument Method</h2>
+<ul><li>Method declared without formal arguments is known as NO-Argument method</li></ul>
+<p><span class="r">syntax</span></p>
+<div class="code">modifiers return_type name()
+{
+
+}</div>
+<h3>Advantages</h3>
+<p>&#9312; Easy to use - No need to pass values, you just call the method</p>
+<p>&#9313; simple and clean code</p>
+<p>&#9314; Useful for fixed operation - best task. Does not depend on user input</p>
+<p>&#9315; Better readability</p>
+<p>&#9316; Less chance of wrong input - since no values are passed, input-related errors are avoided</p>
+<h3>Disadvantage</h3>
+<p>&#9312; caller of the method cannot pass data to the method</p>
+<p>&#9313; Less flexible</p>
+<p>&#9314; Limited reusability</p>
+<p>&#9315; Often depends on global or instance data</p>
+<div class="code">public class No-Arg-method
+{
+    public static void add()      // No Formal Argument
+    {
+        int a = 10;
+        int b = 20;
+        System.out.println(a+b);
+    }
+    public static void main(String[] args)
+    {
+        add();        //call without Actual values
+        add(20,40);   //CTE
+    }
+}</div>
+<hr class="sep">
+<h2 class="red">Parameterized Method</h2>
+<ul><li>Method which is having formal arguments is called as Parameterized method</li></ul>
+<p><span class="r">syntax</span></p>
+<div class="code">modifiers return_type name(datatype V1, datatype VN)
+{
+
+}</div>
+<ul><li>V1 and VN are Formal arguments</li><li>we can pass N Number of Formal arguments.</li></ul>
+</section>
+
+<!-- ===== PDF PAGE 5 : Parameterized advantages and rules ===== -->
+<section class="page">
+<h3>Advantage</h3>
+<p>&#9312; caller can pass the data</p>
+<p>&#9313; Better reusability - No need to write multiple method for similar tasks</p>
+<p>&#9314; Dynamic behavior - output change based on input values</p>
+<p>&#9315; More Flexible - same method work with different values</p>
+<h3>Disadvantage</h3>
+<p>&#9312; caller cannot call a Parameterized method without passing data</p>
+<p>&#9313; Wrong input can cause error - passing wrong data type</p>
+<h3>Rules to use parameterized method</h3>
+<p>&#9312; Parameters must be declared with data type</p>
+<div class="code">void add(int a, int b, String name)</div>
+<p>&#9313; The number of formal and actual arguments should be same</p>
+<div class="code">demo(int a)
+add(10, 20)  //CTE
+add(10)      //CTS <span class="flag">verify: CTS/CTE</span>
+add()        //CTE</div>
+<p>&#9314; The datatype of corresponding actual and formal argument should be same</p>
+<div class="code">add(int a, int b)
+add(10, "20")  //CTE
+add(10, 20)    //correct</div>
+<p>&#9315; Parameter names must be unique</p>
+<div class="code">void add(int a, int a)  //error</div>
+<p>&#9316; Parameter are local to the method</p>
+<p>&#9317; IF method is non-static, object is required</p>
+<div class="code">Demo d = new Demo();
+d.add(10,20)</div>
+<p>&#9318; IF method is static, no object creation required. It can be called using the class name</p>
+<div class="code">Demo.add(10,20)</div>
+<div class="code">public class program
+{
+    public static void demo(int a)
+    {
+    }
+    public static void main(String[] args)
+    {
+        demo()       //CTE
+        demo(20)
+        demo('a')
+        demo(10.01)  //CTE <span class="flag">verify: scan reads "1001"</span>
+    }
+}</div>
+</section>
+
+<!-- ===== PDF PAGE 6 : Returning a value ===== -->
+<section class="page">
+<h2 class="red">To design a method which can return value to the caller</h2>
+<ul>
+<li>A method will return data when we mention the return type other than void</li>
+<li>A method will return the value when we use the primitive and Non-primitive datatypes</li>
+<li>When a method return a primitive type, it return the actual value.<br>When it returns a non-primitive type, it return a reference to the object</li>
+</ul>
+<p>A reference in Java is a variable that refers to an object in memory and is used to access that object.</p>
+<svg viewBox="0 0 520 150" role="img" aria-label="Caller and called method">
+ <rect class="b" x="10" y="35" width="160" height="80"/><text x="75" y="80">Caller</text>
+ <path class="ln" d="M170 55H378" marker-end="url(#ar)"/><text x="215" y="48">calls demo() method</text>
+ <rect class="b" x="380" y="25" width="130" height="100"/>
+ <text x="388" y="48">demo() {</text><text x="394" y="70">Instruction</text><text x="388" y="92">}</text><text x="440" y="116">called</text>
+ <path class="ln" d="M380 105H172" marker-end="url(#ar)"/><text x="215" y="125">can return value</text>
+</svg>
+<p>step 1. provide the return type</p>
+<p>step 2. Use return statement with value or expression</p>
+<div class="code">public static int add(int a, int b)
+{
+    int res = a+b;
+    return res;
+}
+public static void main(String[] args)
+{
+    add(10,20);
+}</div>
+<ul>
+<li>In the above program we understood that the method will return data to caller</li>
+<li>But the drawback is that we are not consuming it, so it is of waste</li>
+<li>so, in order to consume the data, we have to store it in any variable</li>
+<li>or also we can use method call statement as an expression when it returns any type of data other than <span class="r">void</span></li>
+<li>Redesigned main method</li>
+</ul>
+<div class="code">public static void main(String[] args)
+{
+    int res = add(10,20)
+    System.out.println(res);
+         OR
+    System.out.println(add(10,20));
+}</div>
+</section>
+
+<!-- ===== PDF PAGE 7 : Return statement ===== -->
+<section class="page">
+<h2 class="red">Return statement</h2>
+<ul>
+<li>It is a keyword</li>
+<li>It is a control transfer statement that means it stop the execution of current method and transfer the control back to the caller</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<p class="code">return [value, variable, expression];</p>
+<h3>Rules to use return</h3>
+<p>&#9312; Return statement is mandatory if return type of the method is anything other than void</p>
+<div class="code">public static int demo()
+{
+}  ------> CTE</div>
+<p>&#9313; IF the return type is void, return statement is optional</p>
+<div class="code">public static void demo()
+{
+}</div>
+<div class="two">
+<div class="code">public static void demo()
+{
+    return;    &rarr; CTS <span class="flag">verify: CTS/CTE</span>
+}  <span class="note">&#8627; used to exit directly</span></div>
+<div class="code">public static void demo()
+{
+    return 10; &rarr; CTE
+}</div>
+</div>
+<p>&#9314; Return statement in Java, can return only one value.</p>
+<div class="code">public static int demo()
+{
+    return 10,20;  &rarr; CTE
+}</div>
+<div class="code">public static int demo()
+{
+    return 10;
+    return 20;  &rarr; CTE   //unreachable code
+}</div>
+</section>
+
+<!-- ===== PDF PAGE 8 : Method overloading, Compile time binding ===== -->
+<section class="page">
+<h2 class="red">Method overloading</h2>
+<ul><li>The process of creating more than one method in a class with same name but different formal arguments is known as Method overloading</li></ul>
+<h3>Rules for method overloading</h3>
+<p>&#9312; Name of the methods should be same</p>
+<p>&#9313; Different number of Formal Arguments</p>
+<p>&#9314; By changing the data type</p>
+<p>&#9315; By changing the sequence of order</p>
+<p>&#9316; Modifiers and return type can be same or different</p>
+<div class="code">public class Method_overloading
+{
+    public static void test(int i)
+    {
+    }
+    public static byte test(byte b)
+    {
+        return 10;
+    }
+    public static void test(int a, int b)
+    {
+    }
+    public void test(short a)   //Non-static Method
+    {                           //CTS
+    }
+}</div>
+
+<h2 class="red">Compile Time Binding</h2>
+<ul>
+<li>The process of Binding method call statement with method definition at the compile time by the compiler by looking at the actual and formal arguments is known as compile Time Binding</li>
+<li>This binding is done by the compiler by examining the method name, number of parameters, order of parameter and data types of actual and formal arguments</li>
+<li>In compile-time binding, the decision of which method to call is made before the program is executed, so the method call is fixed at compile time</li>
+</ul>
+</section>
+
+<!-- ===== PDF PAGE 9 : Binding diagram, Type promotion ===== -->
+<section class="page">
+<svg viewBox="0 0 520 190" role="img" aria-label="Compile time binding of test calls">
+ <text x="10" y="25">test(10);</text><path class="ln" d="M90 21H295" marker-end="url(#ar)"/><text x="300" y="25">void test(int i)</text>
+ <text x="10" y="70">test(10.2);</text><path class="ln" d="M95 66H295" marker-end="url(#ar)"/><text x="300" y="70">void test(double d)</text>
+ <text x="10" y="115">test('a');</text><path class="ln" d="M90 111H295" marker-end="url(#ar)"/><text x="300" y="115">void test(char c)</text>
+ <text x="10" y="160">test(2.6F);</text><path class="ln" d="M95 156H260V70" marker-end="url(#ar)"/>
+</svg>
+<ul>
+<li>the compiler will always bind the method with same signature</li>
+<li>IF there is no method with same signature means then the compiler tries for type promotion</li>
+<li><span class="g">&#9733;</span> Type promotion is the automatic conversion of a lower range data type into a higher range data type during an operation or expression
+ <ul><li><b>Why Needed</b></li><li>To avoid data loss</li><li>To maintain accuracy in calculation</li><li>To standardize operation betn different data types</li></ul></li>
+<li>If it is also not possible means then the compiler throws an error.</li>
+</ul>
+<div class="code">Public class Method-overloading
+{
+    public static int add(int a, int b)
+    {
+        return a+b;
+    }
+    public static int add(int a, int b, int c)
+    {
+        return a+b+c;
+    }
+    public static void main(String[] args)
+    {
+        System.out.println(add(10,45));
+        System.out.println(add(10,20,30));
+    }
+}</div>
+<p>output</p>
+<div class="code">55
+50  <span class="flag">verify: add(10,20,30) = 60</span></div>
+</section>
+
+<!-- ===== PDF PAGE 10 : Built-in class ===== -->
+<section class="page">
+<h2 class="red">Built-in class</h2>
+<ul>
+<li>Built-in classes are predefined classes provided by Java inside its standard libraries (Java API)</li>
+<li>All built-in classes are stored in package, mainly
+ <ul><li>java.lang</li><li>java.util</li><li>java.io</li><li>java.sql</li><li>java.time</li><li>java.net</li><li>java.math</li></ul></li>
+</ul>
+<p><span class="g">&#9733;</span> All classes present in <u>java.lang</u> package are imported by default by the compiler</p>
+<div class="two">
+<div><b class="r">java.lang (Auto imported)</b>
+ <ul class="tree"><li>Object</li><li>String</li><li>Math</li><li>System</li><li>Wrapper classes
+  <ul class="tree"><li>Integer</li><li>Float</li><li>Double</li><li>character</li></ul></li></ul></div>
+<div><b class="r">java.util</b>
+ <ul class="tree"><li>Scanner</li><li>Date</li><li>Collection Framework
+  <ul class="tree"><li>List<ul class="tree"><li>ArrayList</li><li>LinkList</li></ul></li>
+  <li>Set<ul class="tree"><li>Hashset</li><li>treeset</li></ul></li>
+  <li>Map<ul class="tree"><li>Hashmap</li><li>treemap</li></ul></li></ul></li></ul></div>
+</div>
+<div class="cols">
+<div><b class="r">java.io</b><ul class="tree"><li>File</li><li>Inputstream</li><li>outputstream</li><li>Reader</li><li>Writer</li></ul></div>
+<div><b class="r">java.sql</b><ul class="tree"><li>connection</li><li>statement</li><li>Resultset</li></ul></div>
+<div><b class="r">java.time</b><ul class="tree"><li>LocalDate</li><li>LocalTime</li><li>LocalDateTime</li></ul></div>
+</div>
+<div class="code">public class Largest    //java.lang is auto imported by compiler
+{
+    public static void main(String[] args)
+    {
+        int a = 100;
+        int b = 125;
+        int large = Math.max(a,b);   //125
+        System.out.println(large);
+    }
+}</div>
+</section>
+
+</main>
+</body>
+</html>

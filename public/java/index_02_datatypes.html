@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 02 Datatypes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGE 1 : Tokens, Keyword ===== -->
+<section class="page">
+<h1>Java - 02 Datatypes</h1>
+<h2 class="red">&#9733; Tokens :</h2>
+<ul>
+<li>Token is a smallest unit of prog lang which helps to execute the program systematically</li>
+<li>Types of token:
+ <ul><li>&#9312; keyword</li><li>&#9313; Identifier</li><li>&#9314; Literal</li><li>&#9315; comment</li><li>&#9316; seperator</li><li>&#9317; operator</li></ul></li>
+</ul>
+
+<h2>&#9312; Keyword</h2>
+<ul>
+<li>keyword are the predefined words which is known by the compiler</li>
+<li>keyword are also known as compiler aware words OR Reserved words</li>
+<li>we cannot change the meaning of keyword</li>
+<li>In Java keywords are Follows: <span class="bx">As of Java 21 &mdash; 53 keyword</span></li>
+</ul>
+<div class="scroll">
+<table class="tbl">
+<tr><th>Category</th><th>Keywords</th></tr>
+<tr><td class="r">Data Type</td><td>byte, short, int, long, Float, double, char, boolean, void</td></tr>
+<tr><td class="r">control Flow</td><td>if, else, switch, case, default, For, while, do, break, continue, return</td></tr>
+<tr><td class="r">object oriented</td><td>class, interface, extends, implements, new, this, super, abstract, Final, static, sealed, permits</td></tr>
+<tr><td class="r">Exception Handling</td><td>try, catch, Finally, throw, throws, assert</td></tr>
+<tr><td class="r">Access control</td><td>public, protected, private</td></tr>
+<tr><td class="r">Modifier and utility</td><td>strictfp</td></tr>
+<tr><td class="r">Reserved keyword</td><td>const, goto</td></tr>
+<tr><td class="r">Package and import</td><td>package, import</td></tr>
+<tr><td class="r">Special literal</td><td>true, False, null</td></tr>
+<tr><td class="r">Threading</td><td>synchronized, volatile</td></tr>
+<tr><td class="r">Memory mgmt and object serialization</td><td>transient, native</td></tr>
+</table>
+</div>
+</section>
+
+<!-- ===== PDF PAGE 2 : Note, Identifiers ===== -->
+<section class="page">
+<h3>Note</h3>
+<ul>
+<li>True, null and False seems to be keyword but they are Not, they are literals</li>
+<li>keywords always must be in lowercase</li>
+</ul>
+<hr class="sep">
+<h2>Identifiers</h2>
+<ul>
+<li>Identifiers are the names given by the programmer to the component of Java or a member of Java</li>
+<li>Identifiers are used to name, variable, methods, classes, objects, interface and package</li>
+<li>They help the programmer and the Java compiler refers understand what each part of the program</li>
+</ul>
+<h3>Rules of Identifier.</h3>
+<p>&#9312; We cannot start an Identifier with a numeric value, but we can have a numeric value in an Identifier other than the initial position</p>
+<div class="code">e.g  class 1karan   <span class="no">&#10007;</span>
+     class pravin   <span class="ok">&#10003;</span>
+     class pra3vin  <span class="ok">&#10003;</span></div>
+<p>&#9313; In Identifier except '$' and '_' we are not supposed to use any other special character</p>
+<div class="two"><div class="code">class De$mo     <span class="ok">&#10003;</span>
+class $Demo     <span class="ok">&#10003;</span>
+class _$Demo_   <span class="ok">&#10003;</span>
+class DC@mo     <span class="no">&#10007;</span></div>
+<div class="code">class _     <span class="no">&#10007;</span>
+class $     <span class="ok">&#10003;</span>
+class $_    <span class="ok">&#10003;</span></div></div>
+<p>&#9314; keywords cannot be used as an identifier</p>
+<div class="two"><div class="code">class Class   <span class="no">&#10007;</span>  <span class="note">(capital C)</span> <span class="flag">verify</span>
+class static  <span class="no">&#10007;</span>
+class Static  <span class="ok">&#10003;</span></div>
+<div class="code">class CLASS   <span class="ok">&#10003;</span></div></div>
+<p>&#9315; We cannot have a white space in an identifier</p>
+<div class="code">class program test   <span class="no">&#10007;</span>
+class program_test   <span class="ok">&#10003;</span></div>
+</section>
+
+<!-- ===== PDF PAGE 3-4 : Literal ===== -->
+<section class="page">
+<h2>Literal</h2>
+<ul>
+<li>A Literal is Fixed value that is directly assigned to a variable in Java</li>
+<li>It represent the Actual data or constant value used in program</li>
+<li>A value or data which is written by the programmer or user into the program is known as Literal.</li>
+</ul>
+<h3>Literals :</h3>
+<ul class="tree">
+<li>Number Literal
+ <ul class="tree"><li>Integer &rarr; 12</li><li>Floating &rarr; 12.2</li></ul></li>
+<li>character Literal
+ <ul class="tree">
+ <li>Alphabet &rarr; uppercase (A to Z) , lowercase (a to z)</li>
+ <li>special char</li>
+ <li>Digit &rarr; '0' to '9'</li></ul></li>
+<li>String Literal</li>
+<li>Boolean Literal
+ <ul class="tree"><li>True</li><li>False</li></ul></li>
+</ul>
+
+<h3>[1] Number Literal</h3>
+<ul>
+<li>It is a numerical value which can be used directly into the program.</li>
+<li>We have two different type of number literal.
+ <ul><li>(a) Integer = 12, 2, 3 ...</li><li>(b) Floating = 12.2, 3.1, ...</li></ul></li>
+</ul>
+<h3>[2] character Literal</h3>
+<ul>
+<li>It is written inside single quotes ' '</li>
+<li>Anything which is one of the character</li>
+<li>In the single quotes, we can pass only single value or character <span class="code" style="display:inline-block">e.g 'A' 'z' '1'</span></li>
+<li>Length of char is only one.</li>
+</ul>
+
+<h3>[3] String Literal</h3>
+<ul>
+<li>String is group of character which is always enclosed within double quotes " "</li>
+<li>Anything which is written inside double quotes is considered as a String</li>
+<li>The length of a String is can be anything</li>
+</ul>
+<h3>[4] Boolean Literal</h3>
+<ul>
+<li>Boolean literal are of two types i.e true or False</li>
+<li>We use them majorly to take a decision where true means 'yes' or 'satisfied'; False means 'No' or 'Not satisfied'</li>
+</ul>
+<h3>Note</h3>
+<p>&#9312; True, False and Null are not keywords, they are literals</p>
+<p>&#9313; True, False and Null Follow's the rules of keyword i.e it must be in lowercase and it cannot be used as an identifier</p>
+<hr class="sep">
+<h2>Seperators</h2>
+<ul>
+<li>seperators are the symbols which are used to seperat from one statement to another statement or one member to another member</li>
+</ul>
+<p class="code">eg   ;   ,   :   ( )   { }   [ ]   .   etc.</p>
+</section>
+
+<!-- ===== PDF PAGE 5 : Variable ===== -->
+<section class="page">
+<h2>Variable</h2>
+<ul>
+<li>Variable is a container that stores a value, this value can be changed during the execution of the program</li>
+<li>The value store inside a variable is not permant, its a temporary value which can be modify at any point of time</li>
+<li>Variable can store only single value or data, it cannot store multiple values</li>
+<li>The advantage of providing name to the variable is, we can access the value or data anytime from anywhere in the program using name of Variable</li>
+</ul>
+<h3>Variable Declaration statement.</h3>
+<p><span class="r">syntax</span> &nbsp;<span class="code" style="display:inline-block">Datatype Identifier;</span> &nbsp;<span class="note">(Identifier = variable)</span></p>
+<p class="code">int a;</p>
+<p><span class="bx">int<br>a</span> &rarr; Variable &nbsp;|&nbsp; "a" contains &rarr; We can store only integer value</p>
+
+<h3>Initialization statement.</h3>
+<ul><li>The statement which is used to assign the value or data to the variable is known as Initialization statement.</li></ul>
+<p><span class="r">syntax</span> &nbsp;<span class="code" style="display:inline-block">Variable_name = Value data</span> &nbsp;<span class="note">(= operator, Variable_name is LHS, Value data is RHS)</span></p>
+<p class="code">int a;
+a = 10;</p>
+<p><span class="bx">int<br>a &rarr; 10</span></p>
+
+<h3>Variable declaration and initialization statement.</h3>
+<p><span class="r">syntax</span> &nbsp;<span class="code" style="display:inline-block">datatype identifier/varname = value/data</span> <span class="note">(datatype identifier = variable declaration stat<sup>n</sup>)</span></p>
+<div class="code">Ex1  int a = 10;
+Ex2  int a=10, b=20, c=30;</div>
+<h3>Note.</h3>
+<ul><li>We can create multiple variables in a single statement but only of same datatype.</li></ul>
+</section>
+
+<!-- ===== PDF PAGE 6 : Types of Variable ===== -->
+<section class="page">
+<h2 class="red">Types of Variable</h2>
+<div class="two">
+<div><b>Based on Datatype</b><ul class="tree"><li>&#9312; Primitive Var</li><li>&#9313; Non-primitive</li></ul></div>
+<div><b>Based on scope</b><ul class="tree"><li>&#9312; Global
+ <ul class="tree"><li>static</li><li>Non-static</li></ul></li><li>&#9313; Local</li></ul></div>
+</div>
+
+<h2 class="red">Based on Datatype</h2>
+<h3>[1] Primitive Variable</h3>
+<ul>
+<li>Primitive variable is created by using primitive datatype</li>
+<li>primitive variable is used to store a single valued data</li>
+</ul>
+<p class="code">short a = 10</p>
+<p class="note">short = primitive datatype &nbsp;|&nbsp; a = primitive variable &nbsp;|&nbsp; 10 = value/data</p>
+
+<h3>[2] Non-Primitive Variable</h3>
+<ul>
+<li>A variable which is created/declared using non-primitive datatype is known as non-primitive variable</li>
+<li>Inside non-primitive var we can store either an address of object or null;</li>
+</ul>
+<p class="code">String s = "Hello"</p>
+<p class="note">String = Non-primitive datatype &nbsp;|&nbsp; s = Non-primitive variable &nbsp;|&nbsp; "Hello" = multivalued data</p>
+<p>String &nbsp;<span class="bx">s : 0x1</span> &rarr; 0x1 &nbsp;<span class="bits"><i>H</i><i>e</i><i>l</i><i>l</i><i>o</i></span></p>
+<p class="note">&nbsp;&nbsp;index: 0 1 2 3 4</p>
+<p class="code">className@ Hexadecimal value</p>
+<p class="note">&uarr; object address format</p>
+</section>
+
+<!-- ===== PDF PAGE 7-8 : Based on scope ===== -->
+<section class="page">
+<h2 class="red">Based on Scope</h2>
+<h3>[1] Local Variable</h3>
+<ul><li>A variable which is declared inside the method block or initializer block or constructor block or any other block except than class block, such variable is called as Local variable</li></ul>
+<h3>Rules of Local variable</h3>
+<p>&#9312; We cannot access a local variable, without initializing a value to it</p>
+<p>&#9313; Local variable can be accessed only inside the block where it is declared, we cannot access it outside the block</p>
+<div class="blk"><b>class {</b>
+<div class="two">
+<div class="blk"><span class="note">Main method</span><div class="code">{
+  int a = 10;
+  sopl(a);   <span class="ok">&#10003;</span>
+  sopl(ch);  <span class="no">&#10007;</span>
+}</div><span class="note">&#8627; method block</span></div>
+<div class="blk"><span class="note">Test method</span><div class="code">{
+  char ch = 's';
+  sopl(ch);  <span class="ok">&#10003;</span>
+  sopl(a);   <span class="no">&#10007;</span>
+}</div><span class="note">&#8627; method block</span></div>
+</div><b>}</b> <span class="note">&larr; class block</span></div>
+
+<p>&#9314; We cannot have more than one local var with a same name inside the same block or scope. We can have a same local var name in different block</p>
+<div class="blk"><b>class {</b>
+<div class="two">
+<div class="blk"><span class="note">main method</span><div class="code">{
+  int a = 10;
+}</div></div>
+<div class="blk"><span class="note">Test method</span><div class="code">{
+  int a = 100;
+}</div></div>
+</div><b>}</b></div>
+
+<p>&#9315; We can have a global variable and a local variable with a same name, always the highest priority will be given to the local variable</p>
+<p>&#9316; If global variable and local variable are having same name, in a situation if I want to access the global var then using classname along with var is mandatory</p>
+<p class="code">S.O.println(Program.Demo)</p>
+<p class="note">Program = class Name &nbsp;|&nbsp; Demo = Variable Name</p>
+<div class="code">class Program {
+    static int Demo = 10;          // global variable
+    public static void main(String[] args)
+    {
+        int Demo = 12;             // Local variable
+        S.O.println(Demo);         // 12   (accessing local var)
+        S.O.println(Program.Demo); // 10   (accessing global variable)
+    }
+}</div>
+
+<h3>[2] Global Variable</h3>
+<ul>
+<li>A variable which is declared inside class block directly is known as global var</li>
+<li>Global var can be accessed in any block throughout the class block.</li>
+</ul>
+</section>
+
+<!-- ===== PDF PAGE 9 : Data Type ===== -->
+<section class="page">
+<h2>Data Type</h2>
+<ul><li>Data type is used to specify, what type of data to be stored inside the container/memory/variable.</li></ul>
+<div class="blk"><b>Data type</b>
+<div class="two">
+<div><b class="r">Primitive</b>
+ <ul class="tree"><li>Numeric: byte, short, int, long, Float, double</li><li>Non-Numeric: char, boolean</li></ul></div>
+<div><b class="r">Non-primitive</b>
+ <ul class="tree"><li>String</li><li>Array</li><li>classes</li></ul></div>
+</div></div>
+<div class="scroll">
+<table class="tbl">
+<tr><th>Primitive Type</th><th>Bytes</th><th>Default Value</th><th>min and max</th><th>Range</th></tr>
+<tr><td>byte</td><td>1 byte (8-bit signed)</td><td>0</td><td>-2<sup>7</sup> to 2<sup>7</sup>-1</td><td>-128 to 127</td></tr>
+<tr><td>short</td><td>2 bytes (16-bit signed)</td><td>0</td><td>-2<sup>15</sup> to 2<sup>15</sup>-1</td><td>&mdash; <span class="flag">unclear</span></td></tr>
+<tr><td>int</td><td>4 bytes (32-bit signed)</td><td>0</td><td>-2<sup>31</sup> to 2<sup>31</sup>-1</td><td>-2<sup>8</sup> to 2<sup>8</sup> <span class="flag">unclear</span></td></tr>
+<tr><td>long</td><td>8 bytes (64-bit)</td><td>0L</td><td>-2<sup>63</sup> to 2<sup>63</sup>-1</td><td>-</td></tr>
+<tr><td>Float</td><td>4 bytes (32 bit Floating)</td><td>0.0F</td><td>-2<sup>149</sup> to 2<sup>127</sup> <span class="flag">verify</span></td><td>-</td></tr>
+<tr><td>double</td><td>8 bytes (64 bit Floating)</td><td>0.0D</td><td>-2<sup>1074</sup> to 2<sup>1023</sup></td><td>-</td></tr>
+<tr><td>char</td><td>2 bytes (16 bit unsigned)</td><td>'\u0000'</td><td>0 to 2<sup>16</sup> <span class="flag">verify</span></td><td>A, b, B</td></tr>
+<tr><td>boolean</td><td>1 byte (N/A)</td><td>False</td><td>Not Applicable</td><td>true / False</td></tr>
+</table>
+</div>
+<ul>
+<li>Primitive Datatype is used to store or allow to store a single value data</li>
+<li>In Java, all the primitive datatypes are keyword.</li>
+</ul>
+
+<h3>[2] Non-Primitive</h3>
+<ul>
+<li>A datatype which is used to store or allows to store multi-valued data. is known as non primitive</li>
+<li>Non-Primitive Datatype are
+ <ul><li>(a) String</li><li>(b) Array</li><li>(c) Every classname is non-Primitive datatype</li></ul></li>
+<li>the default value of every non-primitive datatype is <span class="r">Null</span></li>
+</ul>
+<p>Note 1:- In Java, every class is a non-primitive datatype</p>
+</section>
+
+<!-- ===== PDF PAGE 11-12 : Operator ===== -->
+<section class="page">
+<h2>Operator</h2>
+<ul><li>operator is a symbol which is used to perform a specific task on the operands.</li></ul>
+<h3>&#9733; Operand</h3>
+<ul><li>The value or data passed by the users to operator is known as operand</li></ul>
+<p class="code">7 + 11 = 18</p>
+<p class="note">7 = operand &nbsp;|&nbsp; + = operator &nbsp;|&nbsp; 11 = operand &nbsp;|&nbsp; 18 = Result/value</p>
+<h3>Type of operator</h3>
+<div class="two">
+<div><b>Based on operand</b><ul class="tree"><li>&#9312; Unary</li><li>&#9313; Binary</li><li>&#9314; Ternary</li></ul></div>
+<div><b>Based on task</b><ul class="tree"><li>&#9312; Arithmetic</li><li>&#9313; Relational</li><li>&#9314; conditional</li><li>&#9315; Logical operator</li><li>&#9316; Increment and Decrement</li><li>&#9317; compound assignment</li><li>&#9318; Typecasting / Typecast</li></ul></div>
+</div>
+
+<h2 class="red">Based on operand</h2>
+<h3>[1] Unary operand</h3>
+<ul><li>An operator which accepts only one operand to perform a specific task is known as Unary operator <span class="note">(written "operand")</span>
+ <ul><li>e.g Increment and Decrement op</li><li>Typecast op</li><li>Logical Not op</li></ul></li></ul>
+<h3>[2] Binary operand</h3>
+<ul><li>An operator which accept two operands to perform a specific task is knowed as Binary operand
+ <ul><li>e.g Arithmetic op</li><li>Relational op</li><li>compound Assignment op.</li></ul></li></ul>
+<h3>[3] Ternary operator</h3>
+<ul><li>An operator which accepts three operands to perform a specific task is known as ternary operator.
+ <ul><li>e.g conditional operator.</li></ul></li></ul>
+
+<h2 class="red">Characteristics of Operator</h2>
+<p>&#9312; every operator returns a result</p>
+<p>&#9313; every operator has a precedence | priority</p>
+<ul><li>Precedence determines which operator is evaluated first is an expression with multiple operator</li></ul>
+<p>&#9314; Every operator has an associativity or order of execution</p>
+<ul><li>When two or more operator have the same precedence, associativity determines the direction of evaluation
+ <ul><li>Left to right</li><li>Right to left</li></ul></li></ul>
+</section>
+
+<!-- ===== PDF PAGE 12-13 : Arithmetic ===== -->
+<section class="page">
+<h2 class="red">Based on type of task :</h2>
+<h3>1] Arithmetic operator</h3>
+<ul>
+<li>It is a binary operator</li>
+<li>It is used to perform an arithmetic operation such as Addition, subtraction, Division, multiplication and modulus</li>
+<li>( + , - , * , / , % )</li>
+</ul>
+<h3>&#9733; Addition operator</h3>
+<ul>
+<li>This op has two behaviours i.e adding and concatenation</li>
+<li>whenever we use this operator in both the number or character it acts like addion operator.</li>
+<li>whenever we use this operator in both string value or any of the operand is string than it acts like a concatenation operator</li>
+</ul>
+<div class="two"><div class="code">2 + 3 &rarr; 5
+'a' + 'b' &rarr; 195
+"2" + "3" &rarr; 23</div>
+<div class="code">"Hi" + "Hello" &rarr; HiHello
+"Bye" + 2 + 3 &rarr; Bye6 <span class="flag">verify: Java gives Bye23</span></div></div>
+
+<h3>( - ) operator</h3>
+<ul><li>used to subtract 2 data</li></ul>
+<div class="code">20 - 10 = 10
+'a' - 5 = 97 - 5 = 92</div>
+<h3>( * ) operator</h3>
+<ul><li>used to multiply 2 data</li></ul>
+<div class="code">10 * 2 = 20
+'a' * 2 = 194</div>
+<h3>( / ) operator</h3>
+<ul><li>It performs division and provides the quotient as result</li></ul>
+<div class="code">10 / 2 = 5
+3.0 / 4.0 = 0.75
+'a' / 'b' = 97 / 98 = 0
+'a' / 1 &rarr; CTE (compile time error) <span class="flag">verify</span>
+true / 1 &rarr; CTE</div>
+<h3>( % ) operator</h3>
+<ul><li>It performs division and provides the remainder as result</li></ul>
+<p class="code">Eg  30 % 10 => 3 <span class="flag">verify values</span></p>
+<p><span class="r">Assume</span> m % n</p>
+<ul>
+<li>&#9312; IF m &lt; n then output = m &nbsp;<span class="note">(Result &rarr; 0, 1, 2, ... m)</span> <span class="flag">verify</span></li>
+<li class="code" style="font-size:.8em">  3<br>4)15<br>  12<br>  --<br>   3</li>
+<li>&#9313; IF m == n then output = 0</li>
+<li>&#9314; IF m &gt; n
+ <ul><li>a) IF m is multiple of n, then output = 0</li><li>b) m is not a multiple of n then = {1, 2, 3, ... n-1}</li></ul></li>
+</ul>
+</section>
+
+<!-- ===== PDF PAGE 14-16 : Relational, Inc/Dec ===== -->
+<section class="page">
+<h3>Relational operator</h3>
+<ul>
+<li>These operator are used to compare two values</li>
+<li>The relational operator are, == , != , &gt; , &lt; , &gt;= , &lt;=</li>
+<li>They are binary operator</li>
+<li>It return boolean type data</li>
+</ul>
+<div class="scroll">
+<table class="tbl">
+<tr><th class="c">op</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+<tr><td class="r c">==</td><td>10==10<br>True</td><td>10==20<br>False</td><td>'a'=='a'<br>True</td><td>True==True<br>True</td><td>"a"=="a"<br>True</td></tr>
+<tr><td class="r c">!=</td><td>10!=10<br>False</td><td>10!=20<br>True</td><td>'a'!='a'<br>False</td><td>true!=true<br>False</td><td>"a"!="a"<br>False</td></tr>
+<tr><td class="r c">&gt;</td><td>10&gt;10<br>False</td><td>20&gt;10<br>True</td><td>'a'&gt;'b'<br>False</td><td>true&gt;true<br><u>CTE</u></td><td>"a"&gt;"a"<br><u>CTE</u></td></tr>
+<tr><td class="r c">&lt;</td><td>10&lt;10<br>False</td><td>20&lt;10<br>False</td><td>'a'&lt;'b'<br><span class="flag">result not visible</span></td><td>true&lt;true<br><u>CTE</u></td><td>"a"&lt;"a"<br><u>CTE</u></td></tr>
+<tr><td class="r c">&gt;=</td><td>10&gt;=10<br>True</td><td>20&gt;=10<br>True</td><td>'a'&gt;='b'<br>False</td><td>true&gt;=true<br><u>CTE</u></td><td>"a"&gt;="a"<br><u>CTE</u></td></tr>
+<tr><td class="r c">&lt;=</td><td>10&lt;=10<br>True</td><td>20&lt;=10<br>False</td><td>'a'&lt;='b'<br>True</td><td>true&lt;=true<br><u>CTE</u></td><td>"a"&lt;="a"<br><u>CTE</u></td></tr>
+</table>
+</div>
+<hr class="sep">
+
+<h2>INCREMENT AND DECREMENT OP</h2>
+<h3>&#9312; Increment (++)</h3>
+<ul>
+<li>It is unary operator which is represented by (++)</li>
+<li>used to increase the value by 1</li>
+<li>We can use increment operator only with variable not with direct value</li>
+<li>Except boolean we can use this with all primitive datatype</li>
+</ul>
+<div class="two">
+<div><h3>Pre-increment (++a)</h3>
+<ul><li>In pre-increment op 1st the value is increased by 1 and then update value is used</li></ul>
+<div class="code">int a = 10
+S.O.P.l(++a);
+// 11</div></div>
+<div><h3>Post-increment (a++)</h3>
+<ul><li>In post-increment 1st the value is used and then increased by 1</li></ul>
+<div class="code">int a = 10
+S.O.P.l(a++);
+// 10</div></div>
+</div>
+
+<h3>Decrement operator (--)</h3>
+<ul>
+<li>It is a unary operator</li>
+<li>This op is used to decrease the value by 1 into the variable</li>
+</ul>
+<div class="two">
+<div><h3>Pre-Decrement (--a)</h3>
+<ul><li>In pre-Decrement op 1st the value is decreased by 1 and then updated value is used</li></ul>
+<div class="code">int a = 10
+S.O.P.l(--a);
+// 9</div></div>
+<div><h3>Post-Decrement (a--)</h3>
+<ul><li>In post-decrement op 1st the value is used then decreased by 1</li></ul>
+<div class="code">int a = 10
+S.O.P.l(a--);
+// 10</div></div>
+</div>
+</section>
+
+<!-- ===== PDF PAGE 16 : Assignment ===== -->
+<section class="page">
+<h2>Assignment operator</h2>
+<ul><li>It is a binary operator which is used to assign the value present at RHS into the variable present at LHS <span class="flag">written "RHS" twice</span></li></ul>
+<p class="code">int a = 10;</p>
+<p class="note">int = primitive datatype &nbsp;|&nbsp; a = primitive variable &nbsp;|&nbsp; = assignment operator &nbsp;|&nbsp; 10 = data/value</p>
+<p><span class="bx">int<br>a : 10</span></p>
+<hr class="sep">
+<h2>Compound Assignment operator.</h2>
+<ul>
+<li>It is a combination of Arithmetic op and Assignment op</li>
+<li>It is binary operator</li>
+<li>We use this op whenever we need to update and modify the variable by performing arithmetic operation</li>
+<li>compound assignments operator are:</li>
+</ul>
+<p class="code">+= , -= , *= , /= , %=</p>
+</section>
+
+<!-- ===== PDF PAGE 17-18 : Conditional ===== -->
+<section class="page">
+<h2>conditional operator</h2>
+<ul><li>It is a ternary operator which is used to make a decision by verifying the condition</li></ul>
+<p><span class="r">syntax</span></p>
+<p class="code">Op1 ? Op2 : Op3</p>
+<p class="note">Op1 = Condition/Boolean (It return Boolean value) &nbsp;|&nbsp; True &rarr; Op2 &nbsp;|&nbsp; False &rarr; Op3 &nbsp;|&nbsp; Op2, Op3 = Value/expression/variable</p>
+<ul>
+<li>In the place of operand 1 we can pass either a boolean value or condition which returns a boolean value</li>
+<li>In the place of operand 2 and operand 3 we can pass a value | expression/variable</li>
+</ul>
+<h3>Working Principle</h3>
+<ul><li>whenever controller reach to this op, it will check the condition which is operand 1, if the condition returns true than operand 2 will get executed, if condition is False, operand 3 will get executed</li></ul>
+<h3>Note</h3>
+<p>The return type of conditional operator is decimal <span class="flag">verify: "decide"?</span> on the basis of the type of value is used in operand 2 and operand 3</p>
+<div class="code">class program
+{
+    public static void main(String[] args)
+    {
+        S.O.P.l(true ? 10 : 20);                      // 10
+        S.O.P.l(False ? 10.4F : 12.7F);               // 12.7
+        S.O.P.l(10>20 ? ("Hi") : "Hello");            // Hello
+        S.O.P.l('a' <=97 ? True : False);             // True
+        S.O.P.l("Hi" == "Hello" ? 10+12.5 : 'a'>'b'); // 22.5
+    }
+}</div>
+<span class="flag">verify: 'a'&lt;=97 line, True/False capitalised as written</span>
+
+<h3>&#9733; To Identify the largest of three number</h3>
+<div class="code">class LargestNumber
+{
+    public static void main(String[] args)
+    {
+        int a = 10;
+        int b = 20;
+        int c = 30;
+        S.O.P.l(a>b ? a>c : b>c);                    <span class="no">&#10007;</span>
+        S.O.P.l(a>b ? (a>c ? a:c) : (b>c ? b:c));   <span class="ok">&#10003;</span>
+    }
+}</div>
+<h3>&#9733; write a program to check the candidate is eligible for voting or Not</h3>
+<div class="code">class Vote
+{
+    public static void main(String[] args)
+    {
+        int age = 19;
+        S.O.P.l(age>=18 ? "Eligible" : "Not eligible");
+    }
+}</div>
+<h3>&#9733; Write a java program to identify the largest of 4 number.</h3>
+<p class="note">(exercise question, no solution written in the notes)</p>
+</section>
+
+<!-- ===== PDF PAGE 19-20 : Logical ===== -->
+<section class="page">
+<h2>Logical operator</h2>
+<ul>
+<li>Logical operator is used to check or compare the conditions and returns the result in boolean</li>
+<li>we have 3 types of logical operator
+ <ul><li>&#9312; Logical AND operator (&amp;&amp;)</li><li>&#9313; Logical OR operator (||)</li><li>&#9314; Logical Not operator (!)</li></ul></li>
+</ul>
+<h3>&#9312; Logical AND operator (&amp;&amp;)</h3>
+<ul>
+<li>It is a binary operator which accept two operands</li>
+<li>The operands must be either a boolean value or a condition which return a boolean value</li>
+<li>AND operator return true, only if both the condition are satisfied/True, If any one of the condition is not satisfied then it return False</li>
+</ul>
+<table class="tbl"><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></table>
+<span class="flag">truth table is empty in the scan</span>
+<h3>Note</h3>
+<p>&#9312; The AND operator first evaluate the left side condition. IF it is true then only the right side condition is evaluated</p>
+<p>&#9313; IF the left side condition (First condition) itself is false then it won't go for 2nd condition, directly give false as the final output</p>
+
+<h3>&#9313; Logical Not operator (!)</h3>
+<ul>
+<li>It is unary operator which is used to inverse the result</li>
+<li>This op can be used either with a boolean value or with a condition which return boolean value.</li>
+</ul>
+<div class="code">S.O.P.l(!True);      // False
+S.O.P.l(!10);        CTE
+S.O.P.l(!10==10);    CTE
+S.O.P.l(!(10==10));  // False   !(True)</div>
+
+<h3>&#9314; Logical OR operator</h3>
+<ul>
+<li>It is a binary op which is used to accept two operand</li>
+<li>The operands must be a boolean value or the condition that return a boolean value</li>
+<li>OR operator returns the result as true if any one the condition is true/satisfied else it return False</li>
+</ul>
+<table class="tbl"><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></table>
+<span class="flag">truth table is empty in the scan</span>
+<h3>Note:</h3>
+<p>whenever the first condition is true, OR operator will never check for 2nd condition, it directly returns result as true</p>
+</section>
+
+<!-- ===== PDF PAGE 21-22 : Typecasting ===== -->
+<section class="page">
+<h2>Typecasting</h2>
+<ul><li>The process of converting one datatype into another datatype is known as typecasting</li></ul>
+<p>&#9312; Typecasting can be done by two people, compiler and programmer</p>
+<p>&#9313; IF typecasting is done by compiler then it is called <span class="r">Implicit typecasting</span></p>
+<p>&#9314; IF typecasting is done by programmer then it is <span class="r">explicit typecasting</span></p>
+<div class="blk"><b>Typecasting</b>
+<div class="two">
+<div><b>Primitive</b><ul class="tree"><li>widening (Implicit/Explicit)</li><li>Narrowing (Explicit)</li></ul></div>
+<div><b>Non primitive</b> <span class="note">(second part)</span><ul class="tree"><li>upcasting (Implicit/Explicit)</li><li>Downcasting (Explicit)</li></ul></div>
+</div></div>
+<h3>Primitive Typecasting</h3>
+<ul><li>The process of converting one primitive datatype into another primitive datatype <u>except boolean</u> is known as primitive Typecasting</li></ul>
+<h3>Widening</h3>
+<ul>
+<li>The process of converting smaller range datatype into a larger range datatype</li>
+<li>there is no dataloss in widening</li>
+<li>Widening can be done by the compiler as well as programmer</li>
+</ul>
+<div class="code">byte b = 10
+int a = b
+short c = a   &rarr; CTE</div>
+<h3>Narrowings</h3>
+<ul>
+<li>The process of converting larger range data into smaller range data type is known as Narrowing</li>
+<li>Narrowing cannot be done by the compiler it must be done by the programmer</li>
+<li>In narrowing we might see the data loss and memory loss</li>
+</ul>
+<h3>Typecast operator</h3>
+<ul><li>It is unary operator which is used to convert one datatype into another datatype</li></ul>
+<p><span class="r">syntax</span></p>
+<p class="code">(Datatype to be converted) value/expr/variable</p>
+<div class="code">byte a = 10
+double b = a      &rarr; implicit widening
+int c = b
+int c = (int) b   &rarr; Narrowing
+long d = (long) c &rarr; Explicit widening
+
+long a = (char) 67.7;   <span class="note">(67.7 is double)</span>
+ // (long) = widening ; (char) = Narrowing</div>
+</section>
+
+<!-- ===== PDF PAGE 23-25 : Bitwise ===== -->
+<section class="page">
+<h2 class="g">BITWISE Operator</h2>
+<ul>
+<li>This operator is used to perform an operation directly on binary bits (0's and 1's) of integer datatype (byte, short, int, long and char)</li>
+<li>Bitwise operator are
+ <ul>
+ <li>&#9312; Bitwise AND operator (&amp;)</li><li>&#9313; Bitwise OR operator (|)</li><li>&#9314; Bitwise XOR operator (^)</li><li>&#9315; Bitwise complement operator (~)</li><li>&#9316; Bitwise left shift operator (&lt;&lt;)</li><li>&#9317; Bitwise right shift operator (&gt;&gt;)</li><li>&#9318; Bitwise unsigned right shift operator (&gt;&gt;&gt;)</li>
+ </ul></li>
+</ul>
+
+<h3>&#9312; Bitwise AND operator (&amp;)</h3>
+<ul>
+<li>It is a binary operator which is used to perform an operation on binary values of given number</li>
+<li>Bitwise AND returns the result as 1 if both the bits are 1 else it returns 0</li>
+</ul>
+<p class="code">S.O.P.l(8 &amp; 12)</p>
+<div class="code">  8 = 1 0 0 0
+ 12 = 1 1 0 0
+ ---------------
+      1 0 0 0  &rarr; 8</div>
+<p class="note">(binary of 8 and 12 found by repeated division by 2, shown as division ladders in the notes)</p>
+
+<h3>&#9313; Bitwise OR operator (|)</h3>
+<ul><li>It return 1 if any one of the bit is 1 else it return 0</li></ul>
+<div class="code">S.O.P.l(5 | 10)  &rarr; 15
+  0 1 0 1
+  1 0 1 0
+  -------
+  1 1 1 1  &rarr; 15</div>
+
+<h3>&#9314; Bitwise XOR operator (^)</h3>
+<ul><li>It return 1 if both the bits are different else it return 0</li></ul>
+<div class="code">S.O.P.l(15 ^ 23) &rarr; 24
+  0 1 1 1 1
+  1 0 1 1 1
+  ---------
+  1 1 0 0 0  &rarr; 24</div>
+
+<h3>&#9315; Bitwise complement operator (~)</h3>
+<ul>
+<li>It is a unary operator which performs operation on the binary values of single number</li>
+<li>It inverse the binary value of given number</li>
+</ul>
+<div class="code">S.O.P.l(~8)   // -9  <span class="flag">verify number</span>
+~num = -(num+1)
+~13  = -(13+1)</div>
+
+<h3>&#9316; Bitwise left shift operator.</h3>
+<ul>
+<li>The left shift operator moves all bits of number to the left. zeros are filled on the right side</li>
+</ul>
+<p>simple Rule &nbsp;<span class="code" style="display:inline-block">n &lt;&lt; k = n &times; 2<sup>k</sup></span> &nbsp;// For answer directly</p>
+<p><span class="r">syntax</span> &nbsp;<span class="code" style="display:inline-block">x &lt;&lt; num of 0's to be added</span></p>
+<div class="code">int a = 2
+S.O.P.l(a&lt;&lt;1)   // 4
+   2 in binary &rarr; 0 0 1 0
+   shift left by 1 &rarr; 0 1 0 0   Result = 4</div>
+<div class="two">
+<div class="code">int n = 3
+S.O.P.l(n&lt;&lt;1);  // 6
+S.O.P.l(n&lt;&lt;2);  // 12
+S.O.P.l(n&lt;&lt;3);  // 24</div>
+<div class="code">int x = -5
+S.O.P.l(-5&lt;&lt;2);  // -20
+S.O.P.l(-5&lt;&lt;3);  // -40
+S.O.P.l(-5&lt;&lt;4);  // -80</div>
+</div>
+<ul><li>Left shift does not change sign logic manually, Java automatically handles sign using 2's complement</li></ul>
+
+<h3>&#9317; Right shift operator</h3>
+<ul><li>The Bitwise right shift operator (&gt;&gt;) moves bits to the right</li></ul>
+<p>simple rule &nbsp;<span class="code" style="display:inline-block">n &gt;&gt; k = n &divide; 2<sup>k</sup></span> (Integer division)</p>
+<p><span class="r">syntax</span> &nbsp;<span class="code" style="display:inline-block">x &gt;&gt; num of 0's to be added</span></p>
+<div class="code">int a = 8
+S.O.P.l(a>>1);    8 = 1 0 0 0 ; right shift by 1 = 0 1 0 0 ; Result = 4
+
+int x = 32
+S.O.P.l(x>>2)     // 8   (32 &divide; 2<sup>2</sup> = 8) <span class="flag">verify shift count</span>
+
+int n = -8
+S.O.P.l(n>>1)     // -4</div>
+
+<h3>&#9318; unsigned right shift operator</h3>
+<ul>
+<li>The unsigned right shift operator (&gt;&gt;&gt;) shifts the bits of a number to the right and always fills the leftmost bits with 0, regardless of whether the number is positive or negative</li>
+<li>The &gt;&gt;&gt; operator ignores the sign bit and treats the number as a pure binary value, not as a signed number</li>
+<li>That is why the result of &gt;&gt;&gt; is always positive</li>
+</ul>
+<div class="two">
+<div class="code">int a = 20
+S.O.P.l(a>>2)    // 5
+S.O.P.l(a>>>2)   // 5</div>
+<div class="code">int a = -8
+S.O.P.l(a>>1)    // -4
+S.O.P.l(a>>>1)   // 2147483644</div>
+</div>
+<div class="scroll">
+<table class="tbl">
+<tr><th>Operator</th><th>Direction</th><th>Left Bits Filled with</th><th>Sign preserved</th><th>Result type</th></tr>
+<tr><td>&lt;&lt;</td><td>Left</td><td>0</td><td>Yes</td><td>May be (+,-)</td></tr>
+<tr><td>&gt;&gt;</td><td>Right</td><td>sign bit</td><td>Yes</td><td>(+ or -)</td></tr>
+<tr><td>&gt;&gt;&gt;</td><td>Right</td><td>0</td><td>No</td><td>always +</td></tr>
+</table>
+</div>
+</section>
+
+</main>
+</body>
+</html>

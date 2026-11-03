@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 01 Introduction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#14267a"/></marker>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c00"/></marker>
+  <symbol id="man" viewBox="0 0 30 56"><circle cx="15" cy="8" r="7" fill="#fff" stroke="#14267a" stroke-width="1.6"/><path d="M15 15V38M15 38L7 52M15 38L23 52M15 24L5 32M15 24L25 32" stroke="#14267a" stroke-width="1.6" fill="none"/></symbol>
+ </defs>
+</svg>
+
+<main class="jn">
+
+<!-- ================= PDF PAGE 1 ================= -->
+<section class="page">
+<p class="date">04-12-2025 <span class="flag" title="date partly cut off in scan">verify date</span></p>
+<h1>Java - 01 Introduction</h1>
+
+<h2>Program</h2>
+<ul>
+<li>set of Instruction or Block of code is known as program</li>
+<li>A program is a collection of instruction that a computer execute to perform a specific task</li>
+</ul>
+
+<h2>Language</h2>
+<ul>
+<li>It is medium which is used for communicate purpose</li>
+<li>A language is a set of rules and words used to write instruction for a computer</li>
+</ul>
+
+<h2>Types of programming Language</h2>
+<ul><li>A programming language is used to write program so the computer can understand what task to perform</li></ul>
+
+<h3>&#9312; High Level Language (HLL)</h3>
+<ul>
+<li>A programming Language which is easily readable and understand by the human is known as HLL <span class="flag">verify wording</span></li>
+<li>Example Java, python, .Net, Ruby</li>
+</ul>
+
+<h3>&#9313; Mid Level Language (MLL)</h3>
+<ul>
+<li>A programming Language which is neither understand by human nor by maschine completely</li>
+<li>make due to security purpose <span class="flag">verify</span></li>
+<li>Example bytecode</li>
+</ul>
+
+<h3>&#9314; Low Level Language (LLL)</h3>
+<ul>
+<li>A programming Language which is easily readable and understand by the maschine not by the human</li>
+<li>binary language.</li>
+</ul>
+
+<h2>Binary Language</h2>
+<ul>
+<li>A Language which is used to communicate with a maschine using 0's and 1's is known as binary lang.</li>
+<li>binary values are stored in a bit system</li>
+<li>Bit is smallest unit or Block of a memory</li>
+</ul>
+
+<h2>convert to binary</h2>
+<p>a &rarr; ( ? )</p>
+<p>according ASCII values a = 97</p>
+<div class="scroll">
+<table class="tbl" style="width:auto">
+<tr><td>a = 97 =</td><td>2<sup>6</sup></td><td>2<sup>5</sup></td><td>2<sup>4</sup></td><td>2<sup>3</sup></td><td>2<sup>2</sup></td><td>2<sup>1</sup></td><td>2<sup>0</sup></td></tr>
+<tr><td></td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+</table>
+</div>
+<p>so binary = <span class="hl">1100001</span></p>
+</section>
+
+<!-- ================= PDF PAGE 2 ================= -->
+<section class="page">
+<p class="date">11-12-2025 <span class="flag">verify date</span></p>
+<h2>Bit</h2>
+<p>To store the binary values into bit system</p>
+<p>1 bit = <span class="bits"><i>&nbsp;</i></span> only stor either 0's and 1's</p>
+
+<div class="cols">
+<div>
+<h3>1 bit</h3>
+<span class="bits"><i>0</i><i>1</i></span>
+<p>Max value = 1</p>
+<p>Number of type value = 2</p>
+<p>0<br>1</p>
+</div>
+<div>
+<h3>2 bit</h3>
+<span class="bits"><i>&nbsp;</i><i>&nbsp;</i></span>
+<p>Max value = 3</p>
+<p>Number of type value = 4</p>
+<p>0 0<br>0 1<br>1 0<br>1 1</p>
+</div>
+<div>
+<h3>3 bit</h3>
+<span class="bits"><i>&nbsp;</i><i>&nbsp;</i><i>&nbsp;</i></span>
+<p>Max value = 7</p>
+<p>Number of Type value = 8</p>
+<p>0 0 0<br>0 0 1<br>0 1 0<br>0 1 1<br>1 0 0<br>1 0 1<br>1 1 0<br>1 1 1 <span class="flag">verify rows</span></p>
+</div>
+</div>
+
+<p>According to it the Formula.</p>
+<ul>
+<li><span class="r">2<sup>n</sup></span> &rarr; It gives No. of type value</li>
+<li><span class="r">2<sup>n</sup> - 1</span> &rarr; Max value <span class="flag">verify: written 2^(n-1)</span></li>
+</ul>
+
+<p><span class="g">&#9733;</span> In Java in order to store binary value minimum memory used i.e 1 byte</p>
+<p class="r">1 byte = 8 bits</p>
+<span class="bits"><i class="x">&#10005;</i><i>&nbsp;</i><i>&nbsp;</i><i>&nbsp;</i><i>&nbsp;</i><i>&nbsp;</i><i>&nbsp;</i><i>&nbsp;</i></span>
+<p>&uarr; signature bit (+ , -)</p>
+<p>Remaining bits = 7</p>
+<table class="tbl" style="width:auto">
+<tr><td>2<sup>7</sup> = 128 &rarr;</td><td>128 +ve value</td></tr>
+<tr><td></td><td>128 -ve value</td></tr>
+<tr><td></td><td>256 total Number stored</td></tr>
+</table>
+<p>Max value &rarr; 127 ( 0 to 127 )</p>
+<p>Min value &rarr; -128 ( -1 to -128 )</p>
+</section>
+
+<!-- ================= PDF PAGE 3 ================= -->
+<section class="page">
+<p class="date">12-12-2025</p>
+<h2>Java</h2>
+<ul><li>Java is a high level programming Lang which support oop's concept</li></ul>
+
+<h2 class="red"># Features</h2>
+<ul>
+<li>&#9312; Java is a simple programming lang
+ <ul><li>syntax are simple</li><li>Don't use pointer</li></ul></li>
+<li>&#9313; Java is a secured lang
+ <ul>
+ <li>It runs inside the JVM, does not allow direct access to memory, and protect program from harmful action</li>
+ <li>Java does not allow direct access to memory means the programmer cannot manually control memory, the JVM manages it safely</li>
+ </ul></li>
+<li>&#9314; Java is a Robust (&rarr; strong) language
+ <ul><li>It handles errors and memory automatically, so program do not crash easily</li></ul></li>
+<li>&#9315; Java is a platform Independent lang (&rarr; operating system)</li>
+<li>&#9316; Java has Automatic garbage collector
+ <ul><li>automatically removes unused object from memory</li></ul></li>
+<li>&#9317; Java support multithreading | Multitasking</li>
+<li>&#9318; Java support oop's concept
+ <ul><li>Encapsulation</li><li>Inheritance</li><li>polymorphism</li><li>Abstraction</li></ul>
+ <p class="g">&nbsp;&nbsp;&uarr; Builder's / pillars of oop's</p></li>
+</ul>
+
+<h2>USES</h2>
+<ul>
+<li>&#9312; Java is used to make Android mobile apps, which people use on their phones every day.</li>
+<li>&#9313; Java is used to build web application, which run on the internet and handle data</li>
+<li>&#9314; Java is used in bank system to keep money transaction safe</li>
+<li>&#9315; Java helps companies create big business software, to manage their work</li>
+<li>&#9316; Java is used to make desktop application for office and personal use</li>
+<li>&#9317; Because Java is safe and stable, it is used in large and important system</li>
+</ul>
+</section>
+
+<!-- ================= PDF PAGE 4 ================= -->
+<section class="page">
+<h2>HISTORY</h2>
+<ul>
+<li>Java is intented by James Gosling and team, in the year 1991 under the compny called as sun microsystem</li>
+<li>The first name given to language is green talk later on the name changed to OAK</li>
+<li>seen the name OAK is already taken by some other organization so they changed to again Java (coffee bean seed)</li>
+<li>The First version of Java is released in the year <span class="r">1995 &rarr; Java alpha beta</span></li>
+<li>In the year 1996 again new version release named as JDK 1.0 and they keep on releasing new version</li>
+<li>In the year 2010 the language Java is bought by oracle compny</li>
+</ul>
+<p class="note">side note: syntax &rarr; rule, structure</p>
+
+<h2>Platform Independent</h2>
+<svg viewBox="0 0 640 270" role="img" aria-label="Platform independent diagram: Marathi to English to English to Chinese">
+ <use href="#man" x="30" y="40" width="30" height="56"/>
+ <use href="#man" x="170" y="40" width="30" height="56"/>
+ <use href="#man" x="400" y="40" width="30" height="56"/>
+ <use href="#man" x="560" y="40" width="30" height="56"/>
+ <path class="rd" d="M70 70L160 56" marker-end="url(#arr)"/>
+ <path class="rd" d="M210 56Q300 20 392 56" marker-end="url(#arr)"/>
+ <path class="rd" d="M440 70L552 56" marker-end="url(#arr)"/>
+ <text x="22" y="120">Marathi</text>
+ <text x="160" y="120">English</text>
+ <text x="392" y="120">English</text>
+ <text x="548" y="120">chinese</text>
+ <path class="ln" d="M185 128V168" marker-end="url(#ar)"/>
+ <path class="ln" d="M415 128V168" marker-end="url(#ar)"/>
+ <text x="140" y="188">Compiler</text><text x="140" y="208">HLL &#8594; MLL</text>
+ <text x="378" y="188">JVM</text><text x="365" y="208">MLL &#8594; LLL</text>
+</svg>
+<ul>
+<li><span class="g">&#9733;</span> IF a program is written using a High level programming language in one platform, IF it can be used or execute in any other platform, then such lang is called <span class="r">platform Independent</span></li>
+<li><span class="g">&#9733;</span> IF a program is written in one platform, using a HLL, IF it can be run only in similar platform then such lang is called platform dependent.<br>Ex - c, c++</li>
+</ul>
+</section>
+
+<!-- ================= PDF PAGE 5 (scanned rotated 90 degrees) ================= -->
+<section class="page">
+<p class="date">16-12-2025</p>
+<div class="scroll">
+<svg viewBox="0 0 720 300" role="img" aria-label="Java compile and run flow" style="min-width:560px">
+ <rect class="b" x="6" y="115" width="74" height="56"/><text x="14" y="148">software</text>
+ <path class="ln" d="M80 143H118" marker-end="url(#ar)"/>
+ <rect class="b" x="120" y="100" width="92" height="86"/>
+ <text x="124" y="136">Demo.java</text><text x="124" y="156" style="font-size:11px">SourceFileName.java</text>
+ <text x="124" y="206">Source File</text>
+ <path class="ln" d="M212 143H258" marker-end="url(#ar)"/><text class="rt" x="224" y="136">HLL</text>
+ <rect class="b" x="260" y="123" width="76" height="40"/><text x="268" y="148">Compiler</text>
+ <path class="ln" d="M336 143H372" marker-end="url(#ar)"/><text class="rt" x="340" y="136">MLL</text>
+ <rect class="b" x="374" y="100" width="100" height="86"/>
+ <text x="380" y="136" style="font-size:12px">className.class</text><text x="380" y="206">class File</text>
+ <path class="ln" d="M474 125L545 45" marker-end="url(#ar)"/>
+ <path class="ln" d="M474 143L545 143" marker-end="url(#ar)"/>
+ <path class="ln" d="M474 160L545 245" marker-end="url(#ar)"/>
+ <text class="rt" x="500" y="80">MLL</text><text class="rt" x="500" y="136">MLL</text><text class="rt" x="500" y="225">MLL</text>
+ <rect class="b" x="547" y="28" width="60" height="34"/><text x="558" y="50">JVM</text>
+ <rect class="b" x="547" y="126" width="60" height="34"/><text x="558" y="148">JVM</text>
+ <rect class="b" x="547" y="228" width="60" height="34"/><text x="558" y="250">JVM</text>
+ <text x="555" y="20">Win</text><text x="555" y="118">Mac</text><text x="552" y="220">Linux</text>
+ <path class="ln" d="M607 45H655" marker-end="url(#ar)"/><text class="rt" x="615" y="38">LLL</text>
+ <path class="ln" d="M607 143H655" marker-end="url(#ar)"/><text class="rt" x="615" y="136">LLL</text>
+ <path class="ln" d="M607 245H655" marker-end="url(#ar)"/><text class="rt" x="615" y="238">LLL</text>
+ <rect class="b" x="657" y="28" width="56" height="34"/><text x="666" y="50">Win</text>
+ <rect class="b" x="657" y="126" width="56" height="34"/><text x="666" y="148">Mac</text>
+ <rect class="b" x="657" y="228" width="56" height="34"/><text x="660" y="250">Linux</text>
+</svg>
+</div>
+<p><span class="g">&#9733;</span> Bytecode is platform Independent</p>
+<p><span class="g">&#9733;</span> JVM is a platform dependent needs specific version for operating system</p>
+<p>To call compiler</p>
+<div class="code">javac SourceFileName.java
+javac Demo.java</div>
+<p>To call JVM</p>
+<div class="code">java classFileName
+java Test</div>
+</section>
+
+<!-- ================= PDF PAGE 6 ================= -->
+<section class="page">
+<p class="date">16-12-2025</p>
+<h2>JDK Architecture</h2>
+<div class="jdk"><b class="g">JDK</b>
+ <div class="row">
+  <div class="in"><span class="g">Development tools</span><br>Javac<br>Javaw<br>Java docx <span class="flag">verify</span><br>Java</div>
+  <div class="in jre"><span class="g">JRE</span>
+   <div class="row">
+    <div class="in"><span class="g">JVM</span><br>JIT<br>Interpreter<br>Garbage collector<br>class loader</div>
+    <div style="align-self:center">+ Package and Built in library</div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<h3>JDK</h3>
+<ul><li>It is collection of development tools and sub essential resource which help the execute the program</li></ul>
+<h3>JRE</h3>
+<ul>
+<li>JRE is to provide enviroment or area where we can do execution of program</li>
+<li>you can't develop, but you can run exiting program</li>
+</ul>
+<h3>JVM</h3>
+<ul>
+<li>It is used to convert the bytecode into machine code with the help of Interpreter and JIT compiler and executes the program</li>
+<li>JVM uses both Interpreter and JIT
+ <ul>
+ <li>Interpreter executes bytecode line by line</li>
+ <li>JIT complies a frequently bytecode into machine code for faster execution</li>
+ </ul></li>
+</ul>
+<p>that's why JVM use both for optimal performance</p>
+<h3>JIT compiler</h3>
+<ul>
+<li>It is used to compile the frequently executed bytecode into machine code during the runtime</li>
+<li>JIT overcomes the problem of Interpreter which is performance issue</li>
+<li>Here JIT will store frequently used code in <span class="r">cache memory</span></li>
+<li>every time compile code which is present in cache memory will get execute directly</li>
+<li>the main Disadvantage is it uses extra memory for cache and also slight delay during compilation <span class="flag">verify "slight"</span></li>
+</ul>
+</section>
+
+<!-- ================= PDF PAGE 7 ================= -->
+<section class="page">
+<p><b>Cache memory</b> is a high speed memory used to stored frequently accessed data to reduce cpu access time.</p>
+
+<h3>Interpreter</h3>
+<ul>
+<li>It is part of JVM which is used to execute the Java bytecode line by line</li>
+<li>Interpreter takes one bytecode at a time and converts into machine code and executes Immediatly</li>
+</ul>
+
+<h3>Simple one line flow</h3>
+<div class="flow">
+ <b>First run</b><span>&rarr;</span><b>JIT Identifies hot code</b><span>&rarr;</span><b>compile it</b>
+ <b>next run are Faster</b><span>&larr;</span><b>cpu cache speed it up</b><span>&larr;</span><b>stores it</b>
+</div>
+<hr class="sep">
+
+<h2 class="red">Basic Structure of Java Program</h2>
+<svg viewBox="0 0 560 190" role="img" aria-label="Basic structure of Java program">
+ <text class="rt" x="60" y="22">Class className</text>
+ <text class="rt" x="58" y="48" style="font-size:20px">{</text>
+ <text x="2" y="95">class</text><text x="2" y="113">Block</text>
+ <path class="ln" d="M44 40Q38 100 44 168"/>
+ <text x="110" y="84">Declaration statement</text><text x="125" y="102">&#8627; creation</text>
+ <path class="ln" d="M245 80H300" marker-end="url(#ar)"/><text x="305" y="70">Variable</text>
+ <path class="ln" d="M265 82L300 96" marker-end="url(#ar)"/><text x="305" y="104">Method</text>
+ <text x="110" y="150">Initialization statement</text>
+ <path class="ln" d="M265 146L300 128" marker-end="url(#ar)"/><text x="305" y="132">static Initialization</text>
+ <path class="ln" d="M265 148H300" marker-end="url(#ar)"/><text x="305" y="152">Non static</text>
+ <path class="ln" d="M265 152L300 174" marker-end="url(#ar)"/><text x="305" y="180">constructor</text>
+ <text class="rt" x="58" y="186" style="font-size:20px">}</text>
+</svg>
+<ul>
+<li>For write a program first of all we need File in which we can have three components of Java
+ <ul><li>&#9312; class</li><li>&#9313; Interface</li><li>&#9314; enum</li></ul></li>
+<li>In Java class is a blueprint of an object and also class is a keyword in Java which has block.</li>
+<li>A statement is which is used to Declare or create a variable or a method</li>
+<li>whenever we create a class, we must give Name to it</li>
+<li>the name of source File and name of class should be same. (for avoiding confusion beth JVM and compiler)</li>
+</ul>
+</section>
+
+<!-- ================= PDF PAGE 8 ================= -->
+<section class="page">
+<p class="date">17-12-2025</p>
+<h2>Steps to Execute Java program</h2>
+<ul><li>Create a source File</li><li>compile the source File</li><li>To execute the code / program</li></ul>
+<hr class="sep">
+
+<h3>&#9312; (Create a source File)</h3>
+<svg viewBox="0 0 640 130" role="img" aria-label="Create source file">
+ <text x="20" y="18">Window</text>
+ <rect class="b" x="10" y="24" width="220" height="90"/>
+ <rect class="b" x="30" y="52" width="90" height="26"/><text x="38" y="105">&#8627; software</text>
+ <path class="ln" d="M230 66H370" marker-end="url(#ar)"/>
+ <text x="380" y="18">Demo.java</text>
+ <rect class="b" x="375" y="24" width="120" height="90"/>
+ <text x="383" y="48">class Demo</text><text x="383" y="68">{</text><text x="395" y="82">- - -</text><text x="383" y="104">}</text>
+ <text x="505" y="52">HLL (Java)</text>
+ <path class="ln" d="M495 90H515"/><text x="518" y="94">source File</text>
+</svg>
+<ul>
+<li>In the source File set of instruction where written in HLL and always the class name and source File should be same</li>
+<li>we can create a source File with the help of editiors <span class="flag">verify</span></li>
+<li>editor is nothing but a software which provides platform to develop a Java source code.</li>
+</ul>
+<hr class="sep">
+
+<h3>&#9313; compile the source File</h3>
+<svg viewBox="0 0 640 140" role="img" aria-label="Compile the source file">
+ <text x="10" y="16">Demo.java</text>
+ <rect class="b" x="10" y="22" width="130" height="90"/>
+ <text x="20" y="130">&#8627; source File</text>
+ <path class="ln" d="M140 78H200" marker-end="url(#ar)"/><text class="rt" x="150" y="70">HLL</text>
+ <rect class="b" x="202" y="62" width="80" height="32"/><text x="210" y="84">Compiler</text>
+ <path class="ln" d="M282 78H380" marker-end="url(#ar)"/><text class="rt" x="315" y="70">MLL</text>
+ <text x="440" y="16">Demo.class</text>
+ <rect class="b" x="382" y="22" width="130" height="90"/>
+ <text x="520" y="76">&#8627; class File</text><text x="530" y="96">(bytecode)</text>
+</svg>
+<ul>
+<li>In order to compile which is present in source file we take a help of Java compiler</li>
+<li>In order to assess Java compiler we need to install JDK software</li>
+<li>Java compiler will check syntax, IF there is mistake in syntax, then it generate class File. Named it same as class Name <span class="flag">verify: as written (IF mistake -> generate?)</span></li>
+<li>to call Java compiler we need command <span class="r">javac SourceFile.java</span></li>
+</ul>
+
+<h3>&#9314; To execute the code / program</h3>
+<svg viewBox="0 0 640 190" role="img" aria-label="Execute the program">
+ <rect class="b" x="10" y="45" width="110" height="100"/><text x="22" y="100">Demo.class</text>
+ <path class="ln" d="M120 80L210 50" marker-end="url(#ar)"/><text class="rt" x="145" y="58">MLL</text>
+ <path class="ln" d="M120 110L210 140" marker-end="url(#ar)"/><text class="rt" x="145" y="144">MLL</text>
+ <rect class="b" x="212" y="32" width="70" height="30"/><text x="228" y="53">JVM</text>
+ <rect class="b" x="212" y="128" width="70" height="30"/><text x="228" y="149">JVM</text>
+ <path class="ln" d="M282 47H440" marker-end="url(#ar)"/><text class="rt" x="340" y="40">LLL</text>
+ <path class="ln" d="M282 143H440" marker-end="url(#ar)"/><text class="rt" x="340" y="136">LLL</text>
+ <rect class="b" x="442" y="28" width="100" height="40"/><text x="456" y="53">Binary code</text><text x="552" y="24">Window</text>
+ <rect class="b" x="442" y="124" width="100" height="40"/><text x="456" y="149">Binary code</text><text x="552" y="120">window</text>
+</svg>
+<ul>
+<li>Here JRE will execute an enviroment or area to execute the program</li>
+<li>JVM will read the bytecode line by line with the help of Interpreter and JIT compiler, and convert into machine code or LLL and execute in the machine.</li>
+</ul>
+</section>
+
+<!-- ================= PDF PAGE 9 ================= -->
+<section class="page">
+<h2>Display statement</h2>
+<ul>
+<li>A statement which is used to print the value or data on the console is know as display statement</li>
+<li>the following Display statement are
+ <ul>
+ <li>&#9312; system.out.print( );</li><li>&#9313; system.out.println( );</li><li>&#9314; system.out.printF( );</li><li>&#9315; system.out.format( );</li>
+ </ul></li>
+</ul>
+<div class="scroll">
+<table class="tbl">
+<tr><th>S.O. Print ( )</th><th>S.O. Println ( )</th></tr>
+<tr>
+<td>&#8627; Print statement is used to print the data on the console and then cursor will be move to the same line next position</td>
+<td>&#8627; println statement used to print the data on the console and the move cursor to next line Initial position</td>
+</tr>
+<tr>
+<td>&#8627; we can not used print statement without passing data<br><span class="code" style="display:inline-block">print( ) &rarr; show CTE</span></td>
+<td>&#8627; we can use println statement without passing data<br><span class="code" style="display:inline-block">println( ) &rarr; Not CTE</span></td>
+</tr>
+<tr>
+<td>&#8627;
+<div class="code">S.O.print(10)
+S.O.print("Hi")
+S.O.print("Pravin")</div>
+<table class="grid">
+<tr><td>1</td><td>0</td><td>H</td><td>I</td><td>P</td><td>r</td><td>a</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+<span class="flag">verify: scan shows only these 7 cells</span></td>
+<td>&#8627;
+<div class="code">S.O.println(10)
+S.O.println('Hi')
+S.O.println("Pravin")</div>
+<span class="flag">verify: 'Hi' written with single quotes</span>
+<table class="grid">
+<tr><td>1</td><td>0</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>H</td><td>i</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>P</td><td>r</td><td>a</td><td>v</td><td>i</td><td>n</td></tr>
+</table></td>
+</tr>
+</table>
+</div>
+</section>
+
+<!-- ================= PDF PAGE 10 ================= -->
+<section class="page">
+<p class="date">18-12-25</p>
+<h2>Updated structure of Java</h2>
+<div class="code">package packageName
+class className
+{
+    public static void main(String[] args)
+    {
+        System.out.println( );
+    }
+}</div>
+<ul>
+<li>Class Block = outer { } of class className</li>
+<li>Method Block = { } of main method</li>
+<li>public static void main(String[] args): &#8627; Method &nbsp; &#8627; An array to receive command line argument <span class="flag">verify: edge cut off</span></li>
+<li>main: It is starting and ending point execution</li>
+<li>System.out.println( ) : &#8627; Built in Java class</li>
+</ul>
+
+<h3>Note</h3>
+<ul>
+<li>Empty class can be compiled but cannot be executed</li>
+<li>to start the execution program we need a starting point, which is nothing but a main method in Java</li>
+<li>main method is considered as starting point and also ending point of execution</li>
+<li>execution is done by JVM and it start from main method</li>
+<li>From JDK 25 having argument of main method is not mandotory <span class="flag">verify version</span></li>
+<li>Java, pre-program In which JVM start execution Always from main method.</li>
+</ul>
+<hr class="sep">
+
+<h2 class="red">&#9733; Commands in command prompt.</h2>
+<h3>&#9312; Absolute path</h3>
+<ul><li>The path which starts from a root folder and ends at a working folder is known as absolute path</li></ul>
+<p class="code">C:\users\Leo</p>
+<p class="note">C: &rarr; Root Folder directory &nbsp;|&nbsp; \users\Leo &rarr; Working Folder directory</p>
+<h3>&#9313; Root Folder</h3>
+<ul>
+<li>It is a Folder or drive which indicates the starting point of absolute path</li>
+<li>In a operating system it is possible to have multiple root folders based on no. of drives</li>
+</ul>
+<h3>&#9314; Working Folder directory</h3>
+<ul>
+<li>It is a Folder where the absolute path ends</li>
+<li>A Folder where currently the cursor or a control is present is know as working Folder.</li>
+</ul>
+</section>
+
+<!-- ================= PDF PAGE 11 ================= -->
+<section class="page">
+<h2 class="red">COMMANDS</h2>
+<h3>&#9312; MKDIR or MD</h3>
+<ul><li>this command is used to create Folder in working Directory</li></ul>
+<p class="r">syntax</p>
+<div class="code">MKDIR/MD Foldername1 Foldername2 ... etc</div>
+
+<h3>&#9313; CD</h3>
+<ul><li>change directory command is used to change the folder and Moves forward direction</li></ul>
+<p class="r">syntax</p><div class="code">cd Foldername</div>
+<p class="r">To change multiple Folder</p>
+<div class="code">cd Foldername1/subFolder/subFolder...</div>
+
+<h3>&#9314; CD..</h3>
+<ul><li>this command is used to change the folder to the parent Folder, It moves in backward direction</li></ul>
+<p class="r">Note:</p>
+<ul>
+<li>single dot will hold the address of current Folder</li>
+<li>Double dot will hold the address of parent Folder</li>
+</ul>
+
+<h3>&#9315; Root ( / ) :</h3>
+<ul><li>the given symbol indicates to the root Folder</li></ul>
+<p class="r">syntax:</p><div class="code">cd /</div>
+
+<h3>&#9316; To change the drive</h3>
+<p class="r">syntax :</p><div class="code">DriveName:</div>
+<p>Ex.</p><div class="code">D:\&gt; E:
+E:\&gt;</div>
+
+<h3>&#9317; RMDIR <span class="flag">written "RNDir" in notes</span></h3>
+<ul><li>this command is used to remove the Folder from working directory</li></ul>
+<p class="r">syntax :</p><div class="code">RNDir Foldername</div>
+</section>
+
+</main>
+</body>
+</html>
