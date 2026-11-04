@@ -44,7 +44,25 @@ const subjects = [
         id: "java-07",
         title:"OOps",
         file: "/java/java_07_oops.html",
+       },
+
+       {
+        id: "java-08",
+        title:"Inheritance",
+        file: "/java/java_08_interface.html",
+       },
+       {
+        id: "java-09",
+        title:"Object Class",
+        file: "/java/java_09_objectClass.html",
+       },
+       {
+        id: "java-10",
+        title:"String Class",
+        file:"/java/java_10_string.html",
        }
+      
+       
     ]
 
   },

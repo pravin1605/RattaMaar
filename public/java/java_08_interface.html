@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 08 Interface</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-3 : Interface basics ===== -->
+<section class="page">
+<h1>Java - 08 Interface</h1>
+<h2>Interface</h2>
+<ul>
+<li>An interface is a blueprint of a class. it tells a class what to do, but not how to do it</li>
+<li>Interface is a collection of abstract methods and static, final variables that is used to achieve abstraction and multiple inheritence in Java</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<div class="code">modifier interface InterfaceName
+{
+
+}</div>
+<h3>&#9733; Where can we create interface ?</h3>
+<ul><li>inside .Java File<br>after compilation we get .class file with the name same as interface name.</li></ul>
+<h3>&#9733; Why Interface is used ?</h3>
+<p>&#9312; To achieve abstraction</p>
+<p>&#9313; To support multiple inheritance</p>
+<p>&#9314; To define common behaviour for different classes</p>
+<p>&#9315; To achieve loose coupling</p>
+<h3>&#9733; Members of interface</h3>
+<p>&#9312; Abstract Method (implicitly public and abstract)</p>
+<p>&#9313; Variables in interface are implicitly public, static and Final</p>
+<p>&#9314; Default Methods introduced in Java 8</p>
+<p>&#9315; Static methods introduced in Java 8</p>
+<p>&#9316; Private Non-static method (Java 9 onwards)</p>
+<p>&#9317; private static method</p>
+<div class="code">public interface Demo_of_Interface
+{
+    #==== Before Java 8 ====
+    // Variables is an interface are by default:
+    // public, static and Final
+    int x = 10
+
+    // Methods in an interface are by default:
+    // public and abstract
+    void m1();
+
+    #==== Java 8 Features ====
+    // Default method introduced in Java 8
+    // Uses 'default' keyword
+    // Access modifier is public
+    // Non-static (belongs to object)
+    // can have method body
+    default void m2()
+    {
+        //default implementation
+    }
+    // static method introduced in Java 8
+    // Belong to interface, not to implementing class object
+    // Must be called using interface Name
+    static void m3()
+    {
+        //static method implementation
+    }
+
+    #==== Java 9 Features ====
+    // private non-static method introduced in Java 9
+    // used to share common code inside interface
+    // can be called only inside this interface
+    private void m4()
+    {
+        // private helper method
+    }
+    // private static method introduced in Java 9
+    // used for code reusability inside interface
+    // cannot be accessed outside the interface
+    private static void m5()
+    {
+        // private static helper method
+    }
+}</div>
+<h3>&#9733; Not Allowed inside interface</h3>
+<p>&#9312; Instance variable [non static variables]</p>
+<p>&#9313; constructors</p>
+<p>&#9314; Instance initializer blocks [non static blocks]</p>
+<h3>&#9733; characteristics</h3>
+<p>&#9312; We can't instantiate interface but we can create interface type reference variable</p>
+<p>&#9313; Inside interface we cannot have constructor and initializer except single line static initializer</p>
+<h3>&#9733; can We inherit interface</h3>
+<p>Yes, using implements keyword</p>
+<div class="code">interface parent
+{
+}
+class child implements parent
+{
+}</div>
+<h3>&#9733; can we create a reference variable of interface</h3>
+<p>Yes</p>
+</section>
+
+<!-- ===== PDF PAGES 4-5 : Interface BankAcc example and comparison ===== -->
+<section class="page">
+<div class="code">Public interface BankAcc
+{
+    Public abstract double checkBal(int pin);
+    Public abstract void deposit(double amount, int pin)
+    Public abstract void withdraw(double amount, int pin)
+}
+
+Public abstract class AbstractBankAcc implements BankAcc
+{
+    int accno
+    double bal
+    int pin
+    string name
+
+    Public AbstractBankAcc(int accno, double bal, int pin, string name)
+    {
+        this.accno = accno
+        this.bal = bal
+        this.pin = pin
+        this.name = name
+    }
+    Public double checkBal(int pin)
+    {
+        if(this.pin == pin)
+            return bal;
+        S.O.P.l("Invalid pin");
+        return 0;
+    }
+    public void deposit(double amount, int pin)
+    {
+        if(this.pin == pin)
+        {   bal += amount
+            S.O.P.l("balance after deposit =" +bal);
+        }
+        else
+        {
+            S.O.P.l("Invalid pin");
+        }
+    }
+}
+
+Public class currentAcc extends AbstractBankAcc
+{
+    static double min-bal = 10000;
+    Public currentAcc(int accno, double bal, int pin, string name)
+    {
+        super(accno, bal, pin, name)
+    }
+    Public void withdraw(double amount, int pin)
+    {
+        IF(this.pin == pin && bal-amount >= min-bal)
+        {
+            bal -= amount
+            S.O.P.l("Balance after withdraw =" +bal);
+        }
+        else
+        {
+            S.O.P.l("Invalid pin or maintain bal");
+        }
+    }
+}
+
+Public class savingAcc extends AbstractBankAcc
+{
+    Public savingAcc(int accno, double bal, int pin, string name)
+    {
+        super(accno, bal, pin, name
+    }
+    Public void withdraw(double amount, int pin)
+    {
+        IF(this.pin == pin && bal >= amount)
+        {
+            bal -= amount
+            S.O.P.l("balance after withdraw =" +bal);
+        }
+        else
+        {
+            S.O.P.l("Invalid pin");
+        }
+    }
+}
+
+public class Driver
+{
+    public static void main(string[] args)
+    {
+        BankAcc sa = new savingsAcc(12345, 10000, 123, "Pravin")
+        S.O.P.l(sa.checkBal(1234));   <span class="flag">verify: pin 123 vs 1234</span>
+        sa.deposite(5000, 123);
+        sa.withdraw(4000, 123)
+
+        BankAcc ca = new currentAcc(123123, 10000, 321, "kumar")
+        S.O.P.l(ca.checkBal(321))
+        ca.deposit(5000, 321)
+        ca.withdraw(1000, 321)
+    }
+}
+O/P
+10,000
+balance after deposit =15000
+balance after withdraw =11000
+
+10,000
+balance after deposit =15000
+balance after withdraw =14000</div>
+<div class="scroll"><table class="tbl">
+<tr><th>Interface</th><th>Abstract class</th></tr>
+<tr><td>&#9312; uses interface</td><td>&#9312; uses abstract</td></tr>
+<tr><td>&#9313; Multiple inheritance allowed</td><td>&#9313; Not allowed</td></tr>
+<tr><td>&#9314; only abstract method (Before J8)</td><td>&#9314; abstract + concrete</td></tr>
+<tr><td>&#9315; No constructor</td><td>&#9315; can have constructor</td></tr>
+</table></div>
+</section>
+
+<!-- ===== PDF PAGES 6-8 : Multiple inheritance in Java ===== -->
+<section class="page">
+<h2>Multiple inheritance in Java</h2>
+<ul>
+<li>one child having more than one parent at same level</li>
+<li>We can not achieve multiple inheritance using classes alone</li>
+<li>When we want to achieve multiple inheritance we should make use of interface.</li>
+</ul>
+<h3 class="r">&#9312; Multiple inheritance using classes (Not allowed)</h3>
+<p>Because of Diamond problem<br>&#9312; Two parent classes may have same method<br>&#9313; child gets confused which one to call<br>&#9314; constructor chaining becomes ambiguous</p>
+<div class="code">public class parent-1
+{
+}
+Public class parent-2
+{
+}
+class child extends parent-1, parent-2 //CTE
+{
+}   //one class can extends only one class</div>
+<h3 class="r">&#9313; Class First extends class and implements interface</h3>
+<p class="note">Diagram: Parent-1 (class) and Parent-2 (Interface); the child box has an "extends" arrow to Parent-1 and a dashed "implements" arrow to Parent-2.</p>
+<div class="code">Public class parent-1
+{
+}
+Public interface parent-2
+{
+}
+class child extends parent-1 implements parent-2
+{
+    //one class First extends, and then implements
+}</div>
+<h3 class="r">&#9314; Class implements Multiple interface</h3>
+<ul><li>one class can implements n number of interface.</li></ul>
+<p class="note">Diagram: Parent-1 (interface) and Parent-2 (interface); child (class) has an "implements" arrow to each.</p>
+<div class="code">public interface parent-1
+{
+}
+public interface parent-2
+{
+}
+public class implements Parent-1, Parent-2
+{
+}</div>
+<h3 class="r">&#9315; Interface Extends Multiple Interface</h3>
+<p class="note">Diagram: Parent-1 and Parent-2 (Interface); child (Interface) has an "extends" arrow to each.</p>
+<div class="code">public interface parent-1
+{
+}
+public interface parent-2
+{
+}
+interface child extends parent-1, Parent-2
+{
+    // one Interface can extends n number of interface
+}</div>
+<ul>
+<li>Java does not support multiple inheritance using classes because of the Diamond problem, where ambiguity occurs in method and constructor inheritance. constructor chaining becomes impossible when multiple parent classes exist.</li>
+<li>Java solve this problem using interface. Interface do not have constructor because they cannot create objects and they do not contain instance variable to initialize<br>since interface only declare abstract method and constants there is no ambiguity. therefore multiple inheritance is achieved using interface.</li>
+</ul>
+</section>
+
+<!-- ===== PDF PAGES 9-11 : Conflicts, default and static methods ===== -->
+<section class="page">
+<h3 class="r">&#9316; Class + Interface Method conflict</h3>
+<p>class extends a parent class and implements an interface<br>Both have same method name.</p>
+<div class="code">class Parent-1
+{
+    Public void m1()
+    {
+        S.O.P.l("Parent-1 method");
+    }
+}
+Interface parent-2
+{
+    void m1();
+}
+Public class child extends Parent-1 implements parent-2
+{
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        child c = new child();
+        c.m1();
+        S.O.P.l(c instanceof Parent-1)
+        S.O.P.l(c instanceof Parent-2)
+        S.O.P.l(c instanceof child)
+    }
+}
+O/P
+Parent-1 method</div>
+<span class="flag">only the first output line is written; the instanceof lines have no output written</span>
+<p>In the above example</p>
+<ul><li>The child class extends parent-1</li><li>The child class implements parent-2</li></ul>
+<p>First the child class inherits from parent-1. parent-1 already has complete (concrete) method m1()<br>then child implements parent-2, which has an abstract method m1()<br>Normally when we implement an interface, we must provide implementation for its abstract methods<br>But here, we don't need to write m1() again in child</p>
+<p>Why ?<br>Because<br>&#9312; The m1() method already inherited from parent-1 has the same method name and signature<br>&#9313; that inherited method automatically works as the implementation for the interface method</p>
+<p>So<br>&#8226; No error<br>&#8226; No need to override again<br>&#8226; parent-1 m1() method will execute.</p>
+
+<h3 class="r">&#9317; Default Method Ambiguity (Must Override)</h3>
+<div class="code">Public interface parent-1
+{
+    default void m1()
+    {
+        S.O.P.l("parent-1 method");
+    }
+}
+Public interface parent-2
+{
+    default void m1()
+    {
+        S.O.P.l("Parent-2 method");
+    }
+}
+class childs implements parent-1, Parent-2
+{
+    Public void m1()
+    {
+        Parent-1.super.m1();
+        Parent-2.super.m1();
+        S.O.P.l("child method")
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        Parent-1 p = new child();   <span class="flag">verify: class is named childs above</span>
+        P.m1()
+    }
+}</div>
+<p>In the above example<br>IF a child class has more than one parent interface, and both interface contain default methods with the same name, the child class must provide it's own implementation otherwise we get a compile-time error due to ambiguity</p>
+<p>To access specific parent interface method, we can use</p>
+<p class="code r">InterfaceName.super.methodName();</p>
+<p>This can be used only inside the child class</p>
+
+<h3 class="r">&#9318; static Methods in interface (Not inherited)</h3>
+<div class="code">Public interface parent-1
+{
+    Public static void m1()
+    {
+        S.O.P.l("parent-1 static method");
+    }
+}
+Public interface parent-2
+{
+    Public static void m1()
+    {
+        S.O.P.l("Parent-2 static method");
+    }
+}
+class child implements parent-1, Parent-2
+{
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        Parent-1 p = new child();
+        p.m1();  //CTE (static method Not inherited)
+    }
+}</div>
+<p><span class="g">&#9733;</span> We already know about static are not inherited<br>Because<br>&#9312; The main reason we have interface to achieve multiple inheritance<br>&#9313; IF we have more than one parent interface and if both the parent interfaces are having static methods, it may lead to ambigus state<br>&#9314; IF it was default method we can avoid ambigious state using method overriding<br>But static method we can not override. so IF the static methods are inherited from interface to class again it leads to ambigus state<br>To avoid this Java developers did not allow static method to inherit from interface to class</p>
+<h3 class="r">&#9733; what are inherited from interface to class</h3>
+<p>&#9312; static variable &#9313; abstract method &#9314; default method</p>
+<h3 class="r">&#9733; what are Not inherited from interface to class</h3>
+<p>&#9312; public static method &#9313; private static method &#9314; private Non-static method</p>
+<p><span class="r">&#9733;</span> We already know about private methods are not inherited because they are accessible only within the class or within that interface.</p>
+</section>
+
+</main>
+</body>
+</html>

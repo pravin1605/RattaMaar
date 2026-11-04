@@ -430,3 +430,1069 @@ Public class CarDriverWithRadio
 </table></div>
 <p class="note">(two more empty tables are drawn below these on the page)</p>
 </section>
+
+<!-- ===== PDF PAGES 16-21 : IS-A, accessing parent members ===== -->
+<section class="page">
+<h2 class="red">IS-A relationship [Inheritance]</h2>
+<ul>
+<li>Inheritance in Java is a mechanism in which one class acquires all the properties and behaviours of a other class</li>
+</ul>
+<h3>child class | sub class | derived class</h3>
+<p>A class which acquires or inherits properties and behaviours from the other class is called as derived class or child class or sub class</p>
+<h3>parent class or super class | base class</h3>
+<p>A class from where a subclass inherits the feature. It is also called a base class or a parent class</p>
+<h3>How to establish Is-A relationship</h3>
+<p>&#9312; By using <span class="r">extends</span> keyword (class-class, interface-interface)</p>
+<p>&#9313; By using implements keyword (interface-class)</p>
+<p><span class="r">syntax</span></p>
+<div class="code">class subclass_name extends superclass_name
+{
+
+}</div>
+<div class="two"><div class="code">class A
+{
+}</div><div class="code">class B extends A
+{
+}</div></div>
+<p class="note">Diagramatic representation of Is-A relationship: box B &rarr; arrow to box A</p>
+
+<h2 class="red">Accessing Parent Members Inside child class</h2>
+<h3>Case-1 &rarr; Accessing static Variable of parent inside child</h3>
+<div class="code">Public class Parent
+{
+    static int x;  //parent class static variable
+}
+Public class child extends parent
+{
+    public static void m1()  //child class static context
+    {   //Accessing parent class static variable
+        S.O.P.l(x);
+    }
+    public void m2()  //child class Non-static context
+    {   //Accessing parent class static variable
+        S.O.P.l(x)
+    }
+}</div>
+<p><b>&#9733; Explanation &#9733;</b> &#9312; x is a static variable of the parent class &#9313; static member belong to the class, not to an object &#9314; static member are inherited by the child class &#9315; so the child class can access x (a) Inside static method (b) Inside non-static method</p>
+<h3>Case-2 &rarr; Accessing static method of parent Inside child class</h3>
+<div class="code">Public class Parent
+{
+    //static method of parent class
+    Public static void m1()
+    {
+        S.O.P.l("m1");
+    }
+}
+Public class child extends Parent
+{
+    Public static void demo() //child class static method
+    {   //Accessing parent class static method
+        m1();
+    }
+    Public void demo() //child class non-static context
+    {   //Accessing parent class static method
+        m1();
+    }
+}</div>
+<span class="flag">verify: both methods named demo() as written</span>
+<p><b>&#9733; Explanation &#9733;</b> &#9312; m1() is a static method of parent &#9313; static method are inherited &#9314; they can be accessed (a) Inside child static method (b) Inside child non-static method &#9315; No object is required</p>
+<h3>Case-3 &rarr; Accessing Non-static Variable of a parent Inside child class</h3>
+<div class="code">Public class Parent
+{
+    int x; //Non-static variable of parent.
+}
+Public class child extends Parent
+{
+    //child class non-static context
+    Public void m1()
+    {   //Accessing parent class non-static variable
+        S.O.P.l(x);
+    }
+    //child class static context
+    Public static void m2()
+    {
+        //S.O.P.l(x); //CTE
+    }
+}</div>
+<p><b>&#9733; Explanation &#9733;</b> &#9312; x is a non-static variable &#9313; Non-static members belong to object &#9314; In child non-static method, object exists &rarr; so access is allowed &#9315; In child static method, no object exists &rarr; &#10007; CTE</p>
+<h3>Case-4 &rarr; Accessing Non-static Method of parent inside child</h3>
+<div class="code">Public class Parent
+{   //parent class non-static method
+    public void m1()
+    {
+        S.O.P.l("Executing m1 method");
+    }
+}
+Public class child extends Parent
+{
+    public void test()
+    {   //Accessing parent class non-static method
+        m1();
+    }
+    public static test_2() //child class static context
+    {
+        //m1(); //CTE
+    }
+}</div>
+<p><b>&#9733; Explanation &#9733;</b> &#9312; m1() is non-static method &#9313; non-static methods require an object. &#9314; child non-static method has object &rarr; access allowed &#9315; child static method has no object &rarr; &#10007; CTE</p>
+<h3>which member of parent inherited</h3>
+<div class="two">
+<div><b>static</b><ul class="tree"><li>variable &#10003;</li><li>method &#10003;</li><li>static initializer &#10007;</li></ul></div>
+<div><b>Non-static</b><ul class="tree"><li>variable &#10003;</li><li>method &#10003;</li><li>initializer &#10007;</li><li>constructor &#10007;</li></ul></div>
+</div>
+
+<h2 class="red">Way to Access</h2>
+<p>&#9679; static members of parent class: By using parent class name as reference; By using child class name as reference; By using parent class object; By using child class object</p>
+<p>&#9679; static member of child class: By using child class name as reference; By using child class object</p>
+<div class="code">public class parent
+{
+    static int x; //parent class static variable
+}
+public class child extends parent
+{
+    static int y; //child class static variable
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        //Using parent class name
+        S.O.P.l(Parent.x)
+        S.O.P.l(Parent.y)  //CTE
+        //Using parent class object
+        Parent p1 = new parent()
+        S.O.P.l(p1.x)
+        S.O.P.l(p1.y)  //CTE
+        //Using child class name
+        S.O.P.l(child.x)
+        S.O.P.l(child.y)
+        //Using child class object
+        child c1 = new child()
+        S.O.P.l(c1.x)
+        S.O.P.l(c1.y)
+    }
+}</div>
+<p>&#9679; Non-static members of parent class: By using parent class object; By using child class object<br>&#9679; Non-static member of child class: By using child class object</p>
+<div class="code">Public class parent
+{
+    int x; // parent class non-static variable
+}
+Public class child extends parent
+{
+    int y; //child class non-static variable
+}
+Public class Driver
+{   //ways to Access Non-static member of parent and child
+    Public static void main(string[] args)
+    {
+        //Using parent object reference
+        Parent P = new Parent();
+        S.O.P.l(P.x);
+        S.O.P.l(P.y);  &rarr; CTE
+        //Using child class object reference
+        child c = new child();
+        S.O.P.l(c.x);
+        S.O.P.l(c.y);
+    }
+}</div>
+<div class="scroll"><table class="tbl">
+<tr><th rowspan="2">Using</th><th colspan="2">Parent</th><th colspan="2">child</th></tr>
+<tr><th>static</th><th>Non-static</th><th>static</th><th>Non-static</th></tr>
+<tr><td>Parrent class name</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td><td>&#10007;</td></tr>
+<tr><td>child class name</td><td>&#10003;</td><td>&#10007;</td><td>&#10003;</td><td>&#10007;</td></tr>
+<tr><td>Parrent object</td><td>&#10003;</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td></tr>
+<tr><td>child object</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+</table></div>
+</section>
+
+<!-- ===== PDF PAGES 22-26 : Class/object loading, super ===== -->
+<section class="page">
+<h2 class="red">Class Loading Process with inheritance</h2>
+<ul><li>When ever there is inheritance betn the classes, and if child class is involved in the execution always Parent class will be <u>loaded into the JRE First</u> and then only child class will be loaded</li></ul>
+<p>Because<br>&#9312; The child class depends on the parent class<br>&#9313; JVM Must know the parent class structure before using the child class</p>
+<div class="code">Public class Parent
+{
+    static
+    {
+        S.O.P.l("Parent loaded");
+    }
+    static int x = 10;
+}
+Public class child extends parent
+{
+    static
+    {
+        S.O.P.l("child loaded");
+    }
+    static int y = 100;
+}
+Public class Driver
+{
+    static
+    {
+        S.O.P.l("Driver loaded");
+    }
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main started");
+        S.O.P.l(child.y);
+        S.O.P.l("main ended");
+    }
+}
+O/P
+Driver loaded
+Main start
+Parent loaded
+child loaded
+100
+Main end</div>
+<div class="four">
+<div><b class="r">Static pool area</b><br>Driver: static{} &rarr; 0x1, main &rarr; 0x2<br><br>Parent: x = 10; static{} 0x3, static int x 0x4<br><br>child: static{} 0x5, static int y 0x6 (written y=20) <span class="flag">verify y</span></div>
+<div><b class="r">Method area</b><br>Driver loaded: static{} 0x1, main{} 0x2<br>Parent: static{} 0x3, static int x=10 0x4<br>child: static{} 0x5, static int y=20 0x6</div>
+</div>
+<h3>&#9733; Which member of parent class are <u>not</u> inherited to child class?</h3>
+<p>&#9312; constructor &#9313; initializer &#9314; private member</p>
+<h2 class="red">Object loading with inheritance</h2>
+<ul>
+<li>whenever we create object of child class, the child class constructor will call the parent class constructor using <u>super()</u> to load non-static member of the parent class into the child class object.</li>
+<li>so whenever you create an instance of the child, the constructor of child as well as constructor of parent gets executed.</li>
+</ul>
+
+<h2 class="red">Super()</h2>
+<ul>
+<li>super() is used to achieve constructor chaining betn parent and child class.</li>
+<li>super() is a statement which is used to call the immediate parent class constructor</li>
+<li>super() calls the parent class constructor and parent class constructor will load and initialize the parent non-static member into child class object.</li>
+</ul>
+<h3>characteristics</h3>
+<p>&#9312; super() can be written only inside the constructor body</p>
+<p>&#9313; super() should be the First instruction inside the constructor body.</p>
+<p>&#9314; only one super() can be used inside one constructor</p>
+<p>&#9315; this() and super() can not be used in the same constructor</p>
+<div class="code">Public class parent
+{
+    int x;
+    parent()
+    {
+        S.O.P.l("creating instance of Parent.");
+    }
+}
+Public class child extends parent
+{
+    int y;
+    child()
+    {
+        super(); //compiler will add implicitly even if u Don't write
+        S.O.P.l("creating instance of child");
+    }
+}
+Public class Driver
+{
+    public static void main(string[] args)
+    {
+        child c = new child();
+    }
+}
+O/P
+creating instance of parent
+creating instance of child</div>
+<h3>Note</h3>
+<p class="r">compiler will add super() implicitly if and only if parent constructor is No-argument constructor</p>
+<h3>Parent class constructor is parameterized</h3>
+<div class="code">Public class parent
+{
+    int x;
+    parent(int x)
+    {
+        S.O.P.l("creating parent instance");
+    }
+}
+Public class child extends parent
+{   //IF we are not explicitly calling parent constructor
+    //we get CTE, since parent constructor is parameterized
+    child(int x)
+    {   //IF we are not using super() explicitly we get CTE
+        super(x)
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        child c = new child(10);
+    }
+}</div>
+<p><b>&#9733; Super</b> it is keyword which is used to access parent class static and non-static members from the child class non-static context</p>
+<div class="code">Public class parent
+{
+    string name = "Father";
+}
+Public class child extends parent
+{
+    string name = "son";
+    Public void m1()
+    {   //Accessing parent variable which has same name as in child
+        S.O.P.l("Father name " + super.name);
+        S.O.P.l("son name " + name);
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        child c = new child();
+        c.m1();
+    }
+}</div>
+<h3>where you cannot use super keyword</h3>
+<p>&#9312; Inside static member<br>&#9313; Inside static block<br>&#9314; To access private members of parent<br>&#9315; outside a constructor or instance method<br>&#9316; After any statement in a constructor</p>
+</section>
+
+<!-- ===== PDF PAGES 27-30 : Types of inheritance ===== -->
+<section class="page">
+<h2 class="red">INHERITANCE</h2>
+<p>INHERITance is a mechanism in Java where one class acquires the properties and methods of another class using the extends keyword</p>
+<h3>Types of Inheritance</h3>
+<p>&#9312; single level &#9313; multi level &#9314; Hierarchical inheritance &#9315; hybrid &#9316; multiple</p>
+<hr class="sep">
+<h3 class="r">&#9312; single level</h3>
+<p>Inheritance of only one level is known as single level Inheritance</p>
+<p class="note">Diagram: child &rarr; Parent</p>
+<h3 class="r">&#9313; Multi level</h3>
+<p>Inheritance of more than one level is known as Multi level inheritance</p>
+<div class="two">
+<p class="note">Diagram: child &rarr; parent &rarr; Grandparent</p>
+<div class="code">Public class GrandParent
+{
+}
+Public class parent extends Grandparent
+{
+}
+Public class child extends parent
+{
+}</div></div>
+<hr class="sep">
+<h3 class="r">&#9314; Hierarchical inheritance</h3>
+<ul><li>When one parent have more than one child at same level we call it as Hierarchical inheritance.</li></ul>
+<p class="note">Diagram: A (Base class) with B (Derived 1), C (Derived 2), D (Derived 3) below</p>
+<div class="code">Public class parent
+{
+}
+Public class child_1 extends parent
+{
+}
+Public class child_2 extends parent
+{
+}
+Public class Derived
+{
+    Public static void main(string[] args)
+    {
+        child_1 c1 = new child_1();
+        child_2 c2 = new child_2()
+    }
+}</div>
+<hr class="sep">
+<h3 class="r">&#9315; Multiple inheritance</h3>
+<ul>
+<li>A child having more than one parent at same level is known as multiple inheritance</li>
+<li>multiple inheritance in Java is not possible using classes alone because of diamond problem.</li>
+</ul>
+<p class="note">Diagram: Parent A and Parent B, both with arrows from child C</p>
+<h3>Diamond problem</h3>
+<p>the ambiguity in multiple inheritance, which arises when a super class member is being accessed from a child class</p>
+<ul>
+<li>IF we don't have any member in both the parent classes still the problem of Diamond arises<br><span class="r">Because</span> every class contain default constructor and child class will get <u>super()</u> by the compiler after the compilation<br>so the super() inside the child class will get confused to call which parent class constructor.<br>that is why multiple inheritance is not possible in Java using classes alone</li>
+</ul>
+<div class="code">class parent_1
+{
+    parent_1() //constructor
+    {
+    }
+}
+class parent_2
+{
+    parent_2() //constructor
+    {
+    }
+}
+class child
+{
+    child()
+    {
+        super()  //ambigious State
+    }
+}</div>
+<p class="note">Diagram: Parent-1 and Parent-2 at the top of a "Diamond problem" funnel, with Child's super() pointing to both.</p>
+<hr class="sep">
+<h3 class="r">&#9316; Hybrid inheritance</h3>
+<ul>
+<li>the combination of multiple inheritance and Hierarchical inheritance is known as hybrid</li>
+<li>hybrid inheritance include multiple inheritance, Hence we can not achieve hybrid inheritance with the help of class.</li>
+</ul>
+<p class="note">Diagram: Parent-1 and Parent-2 above Child; Grandchild-1 and Grandchild-2 below Child.</p>
+</section>
+
+<!-- ===== PDF PAGES 31-35 : Non-primitive type casting ===== -->
+<section class="page">
+<h2 class="red">&#9733; Non-Primitive Type Casting</h2>
+<ul>
+<li>The process of converting one non primitive Data type into other non-primitive Data type is called as derived type casting or non-primitive type casting<br>OR</li>
+<li>Non-primitive type casting is the process of converting the type of reference from one non-primitive type into other non-primitive type</li>
+</ul>
+<p>When non-primitive typecasting can be achieved?<br>We can achieve non-primitive type casting if and only if there Is-A relationship betn the classes</p>
+<h3>Note</h3>
+<p>We can also convert from one parent to other parent type if both the parents are having common child. (multiple inheritance)</p>
+<h3>Types</h3>
+<p>&#9312; upcasting (implicitly and explicitly)<br>&#9313; Down casting (explicitly)</p>
+<hr class="sep">
+<h2 class="red">&#9312; UPCASTING</h2>
+<ul><li>The process of converting sub class type reference to super class type reference is called as upcasting</li></ul>
+<div class="code">class parent        class child extends parent
+{                   {
+}                   }
+public class Derived
+{
+    Public static void main(string[] args)
+    {
+        Parent p = new child; //upcasting
+    }
+}   &larr; create object of child class, give reference variable of Parent class.</div>
+<h3>How to achieve upcasting?</h3>
+<p>&#9312; Implicitly can be done automatically by the compiler</p>
+<p class="code">Parent p = new child();</p>
+<p>&#9313; explicitly can be done by the programmer using typecast operator</p>
+<p class="code">Parent p = (parent) new child();</p>
+<h3>Important Note</h3>
+<p>After upcasting we can not use the member of child class with upcasted reference variable</p>
+<h3>Purpose</h3>
+<p>&#9312; Generalisation? &#9313; Runtime polymorphism</p>
+<div class="code">class parent
+{
+    void show()
+    {
+        S.O.P.l("Parent method");
+    }
+}
+class child extends Parent
+{
+    void display()
+    {
+        S.O.P.l("child method");
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        Parent p = new child(); //upcasting
+        P.show();
+        // P.display(); &rarr; CTE &rarr; Not allowed
+    }
+}</div>
+<h2 class="red">Downcasting</h2>
+<ul>
+<li>the process of converting reference type from Parent type to child type is known as downcasting.</li>
+<li>Downcasting can only be done by explicitly by programmer</li>
+<li>We can perform downcasting explicitly by using typecast operator</li>
+</ul>
+<p>syntax</p><p class="code">(Target type) obj_ref;</p>
+<h3>Purpose of Downcasting</h3>
+<ul>
+<li>In an upcasted scenario if I want to access member of child, downcasting is necessary</li>
+<li>Without downcasting we cannot access member of child</li>
+</ul>
+<div class="code">Public class parent
+{
+    void show()
+    {
+        S.O.P.l("Parent method");
+    }
+}
+Public class child extends parent
+{
+    void display()
+    {
+        S.O.P.l("child method");
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        Parent p = new child(); // upcasting
+        child c = (child) P; // Downcasting
+        c.display();
+    }
+}</div>
+<h2 class="red">ClassCast Exception</h2>
+<ul>
+<li>It is an exception which might occur while downcasting</li>
+<li>When we try to downcast a reference to a subclass type, but the object doesn't contain instance of that subclass then we get classcast exception</li>
+</ul>
+<div class="code">class parent
+{
+}
+Public class child extends parent
+{
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        parent p = new parent(); //parent object
+        child c = (child) p; // Runtime error
+    }
+}</div>
+<p>why error: object created parent, Trying to convert it into child</p>
+<hr class="sep">
+<h2 class="red">Instance of operator</h2>
+<ul>
+<li>It is used to check whether the object contains the instance [object] of particular class or not</li>
+<li>IF the object contains instance of the particular class then it return true</li>
+<li>IF the object doesn't contain instance of the particular class then it returns False</li>
+</ul>
+<p><span class="r">syntax</span></p><p class="code">Obj_ref instanceOf classname</p>
+<h3>How to Avoid classCast Exception</h3>
+<ul><li>Use instanceOf</li></ul>
+<div class="code">Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        parent p = new parent();
+        IF( p instanceof child)
+        {
+            child c = (child) p;
+        }
+        else
+        {
+            S.O.P.l("Downcasting Not possible");
+        }
+    }
+}</div>
+</section>
+
+<!-- ===== PDF PAGES 36-41 : Overriding and shadowing ===== -->
+<section class="page">
+<h2 class="red">&#9733; Method overriding</h2>
+<ul>
+<li>The process of providing new implementation to the Parent class method in the child class known as method overriding</li>
+<li>Method overriding allows a same method name and parameters but different class</li>
+</ul>
+<h3>Rules to achieve method overriding</h3>
+<p>&#9312; create a method in subclass whose declaration should be same as in parent class</p>
+<p>&#9313; Access modifier of overriding method [child class] should be either same or higher than visibility of overriden method [parent class]</p>
+<p>&#9314; Inheritance is mandatory</p>
+<p>&#9315; Method must Not be static</p>
+<p>&#9316; Method must Not be final</p>
+<p>&#9317; Method must Not be private</p>
+<p>&#9318; Runtime polymorphism required</p>
+<h3>@override annotation</h3>
+<ul>
+<li>It is used to compare method declaration of sub class with method declaration of super class by the compiler</li>
+<li>IF there is no matching declaration found by the compiler it gives compile time error</li>
+<li>we can override only <u>non-static method</u></li>
+</ul>
+<h3 class="r">Example-01</h3>
+<div class="code">Public class GrandParent
+{
+    Public void m1() //Method to be overridden
+    {
+        S.O.P.l("GrandParent method");
+    }
+}
+Public class parent extends Grandparent
+{
+    @override
+    Public void m1() //overriding Grandparent's m1
+    {
+        S.O.P.l("parent method");
+    }
+}
+Public child extends parent
+{
+    @override
+    Public void m1() //overriding Parent's m1()
+    {
+        S.O.P.l("executing child m1");
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        Grandparent gp1 = new Grandparent();
+        gp1.m1()
+        Grandparent gp2 = new Grandparent();   <span class="flag">verify: output suggests new Parent()</span>
+        gp2.m1();
+        Grandparent gp3 = new child();
+        gp3.m1();
+    }
+}
+O/P
+GrandParent method
+Parent method
+executing child m1</div>
+<h3 class="r">Example-02</h3>
+<div class="code">Public class WhatsAPP_1
+{
+    Public void sendMessage()
+    {
+        S.O.P.l("V-1");
+    }
+    Public void calls()
+    {
+        S.O.P.l("C-1");
+    }
+}
+Public class whatsAPP_2 extends whatsAPP-1
+{
+    Public void sendMessage()
+    {
+        super.sendMessage()
+        S.O.P.l("V-2");
+    }
+    Public void calls()
+    {
+        super.calls()
+        S.O.P.l("C-2");
+    }
+}
+Public class whatsAPP_3 extends whatsAPP-2
+{
+    Public void sendMessage
+    {
+        super.sendMessage()
+        S.O.P.l("V-3");
+    }
+    Public void calls()
+    {
+        super.calls()
+        S.O.P.l("C-3");
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        WhatsAPP_1 obj = new whatsAPP_3 //upcasting
+        obj.sendMessage();
+        obj.calls();
+    }
+}
+O/P
+V1
+V2
+V3
+C1
+C2
+C3</div>
+<p>This code shows method overriding using multilevel inheritance. Even though the reference is of WhatsApp-1, the methods of WhatsApp-3 run at runtime using super.</p>
+<h3 class="r">Example-03</h3>
+<div class="code">Public class payment
+{
+    public void pay(double amount)
+    {
+        S.O.P.l("Processing generic payment = " + amount);
+    }
+}
+Public class creditcardPayment extends payment
+{
+    Public void pay(double amount)
+    {
+        S.O.P.l("Processing generic payment = " + amount);
+    }
+}
+Public class UPIpayment extends payment
+{
+    Public void pay(double amount)
+    {
+        S.O.P.l("Processing generic payment = " + amount);
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        payment p1;
+        p1 = new creditcardpayment();
+        p1.pay(1500)   //1500.0
+        p1 = new UPIpayment();
+        p1.pay(800)    //800.0
+    }
+}</div>
+<span class="flag">verify: the messages in the three pay() methods look identical in the scan; comments read 150.0 / 900</span>
+<p>This example demonstrate method overriding and runtime polymorphism where a parent class reference used to call different overriden methods method based on object.</p>
+
+<h2 class="red">Method shadowing</h2>
+<ul>
+<li>The process of creating static method inside parent and child with same method declaration</li>
+<li>It is Not overriding</li>
+<li>Methods call depends on reference, Not object type</li>
+</ul>
+<div class="code">Public class Parent
+{
+    static void m1()
+    {
+        S.O.P.l("executing Parent method");
+    }
+}
+Public class child extends Parent
+{
+    static void m1() //Method shadow
+    {
+        S.O.P.l("executing child method");
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        Parent p1 = new parent();
+        P1.m1(); //executing parent method
+        child c1 = new child();
+        c1.m1(); //executing child method
+        //which implementation gets executed depends on
+        //the type of reference variable
+        //irrespective of the object created
+        //here type of reference variable p2 is parent
+        //so parent m1() get executed
+        //binding happens during compile time
+        Parent p2 = new child();
+        p2.m1();  //Execute parent method.
+    }
+}</div>
+<h2 class="red">Variable shadowing</h2>
+<ul>
+<li>The process of declaring the variable inside parent scope and child scope with same name<br>OR</li>
+<li>The process of declaring the variables inside local scope and global scope with same name</li>
+<li>No runtime polymorphism for Variables</li>
+<li>Access parent variable using super.</li>
+</ul>
+<div class="code">Public class PARENT
+{
+    string name = "Pravin";
+}
+Public class child extends parent
+{
+    string name = "Rokade";
+    public void display()
+    {
+        S.O.P.l("child name :" + name);
+        //parent class name variable acts as shadow
+        //we can access only child Name = Rokade
+        //IF we want to access parent variable name
+        //we should use super keyword.
+        S.O.P.l("parent Name :" + super.name);
+    }
+}
+Public class Driver
+{
+    public static void main(string[] args)
+    {
+        child c = new child();
+        c.display();
+    }
+}</div>
+</section>
+
+<!-- ===== PDF PAGES 42-44 : Polymorphism, concrete class ===== -->
+<section class="page">
+<h2>Polymorphism</h2>
+<ul>
+<li>polymorphism means "one name, many forms" where the same method behaves differently based on the object.</li>
+<li>the ability of an object to exhibit multiple behaviours with same name is known as polymorphism</li>
+</ul>
+<h3>&#9733; Types of polymorphism</h3>
+<p>&#9312; compile time polymorphism | static binding</p>
+<p>&#9313; runtime polymorphism | dynamic binding</p>
+<h3 class="r">&#9312; compile Time polymorphism</h3>
+<p>(static binding | early binding)</p>
+<ul><li>the process of binding method call statement with method defintion during compile time by the compiler by looking at formal argument and actual argument is known as compile time polymorphism</li></ul>
+<p>Ex &#9312; Method overloading &#9313; constructor overloading &#9314; Method shadowing &#9315; variable shadowing</p>
+<h3 class="r">&#9313; Runtime polymorphism</h3>
+<p>(dynamic method dispatch or dynamic binding | late binding | Non-static binding)</p>
+<ul>
+<li>The process of binding method call statement with method definition during run time by the JVM based on the object created is known as runtime polymorphism</li>
+<li>since the binding is done during the execution it is called late binding</li>
+<li>once the binding is done during compile time by the compiler, later it can be changed by the JVM during runtime so it is also called as runtime binding</li>
+</ul>
+<p>Ex &#9312; Method overriding</p>
+<hr class="sep">
+<h2>Concrete class</h2>
+<ul>
+<li>A concrete class is a normal class that has a complete implementation and can be used to create objects</li>
+<li>It is Not abstract</li>
+<li>All methods must have method bodies</li>
+<li>we can create objects using New</li>
+<li>It can extend an abstract class or implement an interface (but must implement all methods)</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<div class="code">Class className
+{
+    // Variables
+    // concrete methods
+}</div>
+<h2>Concrete Method</h2>
+<ul>
+<li>A concrete method is a method that has a body (implementation)</li>
+<li>It contains method logic</li>
+<li>can be inside &#9312; concrete class &#9313; Abstract class</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<div class="code">returnType methodName(parameters)
+{
+    // method body (logic)
+}</div>
+<div class="code">Class student
+{
+    int id
+    void display()
+    { S.O.P.l('concrete method') }
+}</div>
+<p class="note">student is a concrete class which contain concrete method.</p>
+</section>
+
+<!-- ===== PDF PAGES 45-50 : Abstraction ===== -->
+<section class="page">
+<h2>Abstraction</h2>
+<ul><li>The process of Hiding the implementation and providing the functionality to the user is known as abstraction</li></ul>
+<h3>How can we achieve abstraction</h3>
+<ul><li>using abstract methods</li></ul>
+<h3>Abstract component</h3>
+<p>A component which is not full or incomplete can be considered as abstract component &#9312; abstract class &#9313; interface</p>
+<hr class="sep">
+<h2 class="red">Abstract method</h2>
+<ul><li>A method which doesn't have implementation [incomplete] and prefixed with abstract keyword is known as abstract method</li></ul>
+<p><span class="r">syntax</span></p>
+<div class="code">modifier abstract return-type method name(formal-arg);
+public abstract void add(int x, int y)</div>
+<h3>Note</h3>
+<p>&#9312; We cannot execute abstract method<br>&#9313; We can create abstract methods inside <span class="r">abstract class or interface</span></p>
+<h2 class="red">Abstract class</h2>
+<ul><li>A class which is declared by using abstract keyword is called as abstract class</li></ul>
+<p><span class="r">syntax</span></p>
+<div class="code">public abstract class Demo
+{
+    //abstract method
+    //concrete method
+}</div>
+<h3>Characteristics</h3>
+<p>&#9312; It can have both abstract and concrete methods</p>
+<p>&#9313; For abstract class we can not create the object</p>
+<p>&#9314; If a class has at least one abstract method, the class must be abstract</p>
+<p>&#9315; child class must implement all abstract methods</p>
+<p>&#9316; can have constructors</p>
+<p>&#9317; can have instance and static variable</p>
+<p>&#9318; supports inheritance</p>
+<p>&#9319; cannot be <span class="r">final</span> Because final classes cannot be inherited</p>
+<h3>Note</h3>
+<p>&#9312; It is not mandatory to create abstract method inside abstract class.</p>
+<p>&#9313; We can make non-static method as abstract but we cannot make static method as abstract</p>
+<h3>Can we inherit abstract class ?</h3>
+<p>Yes<br>When we inherit abstract class the abstract method also gets inherited so the subclass is also having one abstract method.<br>since the child class is concrete class it cannot have abstract method so we get compile time error</p>
+<div class="code">Public abstract class Demo //abstract class
+{
+    //abstract method
+    Public abstract void m1();
+}
+Public class Demo-2 extends Demo //CTE
+{
+}</div>
+<p>In this case we can do any one of the following things &#9312; make subclass as abstract &#9313; we can override inherited abstract method</p>
+<p>&#9312; We can make subclass as abstract</p>
+<div class="code">Public abstract class Demo-2 extends Demo
+{
+}</div>
+<p>&#9313; We can override inherited abstract method, means we can provide implementation to the inherited abstract method</p>
+<div class="code">Public class Demo-2 extends Demo
+{
+    @override
+    Public void m1()
+    {
+        S.O.P.l("Implementation of abstract method");
+    }
+}</div>
+<h3>steps to achieve abstraction using abstract class</h3>
+<p>&#9312; create an abstract class with abstract method</p>
+<p>&#9313; provide implementation to the abstract methods by creating a child class by method overriding</p>
+<p>&#9314; create the object of child class and store it in a variable of type parent. (upcasting)</p>
+<p>&#9315; using upcasted variable call the abstract method</p>
+<p><span class="g">&#9733;</span> During compile time method call statement will be bound with abstract method present in parent class i.e (abstract class) <span class="r">[compile time binding]</span></p>
+<p><span class="g">&#9733;</span> During run time method call statement will be rebound with child class method definition based on the object created <span class="r">[run time binding]</span></p>
+<div class="code">Public abstract class BankAcc
+{
+    int accNo;
+    double bal;
+    int pin;
+    string name;
+    //constructor
+    Public BankAcc(int accNo, double bal, int pin, string name)
+    {
+        this.accNo = accNo
+        this.bal = bal
+        this.pin = pin
+        this.name = name
+    }
+    //Abstract methods
+    Public abstract double checkBal(int pin);
+    Public abstract void deposit(double amount, int pin);
+    Public abstract void withdraw(double amount, int pin);
+}
+
+Public class Saving_Account extends BankAcc
+{
+    Public Saving_Account(int accNo, double bal, int pin, string name)
+    {
+        super(accNo, bal, pin, name);
+    }
+    Public double checkBal(int pin)
+    {
+        IF (this.pin == pin)
+            return bal;
+        else
+            S.O.P.l("Invalid pin");
+        return 0;
+    }
+    Public void deposite(double amount, int pin)
+    {
+        IF(this.pin == pin)
+        {
+            bal += amount;
+            S.O.P.l("Balance after deposite = " + bal);
+        }
+        else
+            S.O.P.l("Invalid pin");
+    }
+    Public void withdraw(double amount, int pin)
+    {
+        if(this.pin == pin && bal >= amount)
+        {
+            bal -= amount;
+            S.O.P.l("Balance after withdraw = " + bal);
+        }
+        else
+        {
+            S.O.P.l("Invalid pin");
+        }
+    }
+}
+
+Public class Current_Account extends BankAcc
+{
+    static double min_bal = 10000;
+    Public Current_Account(int accNo, double bal, int pin, string name)
+    {
+        super(accNo, bal, pin, name);
+    }
+    Public double checkBal(int pin)
+    {
+        IF(this.pin == pin)
+            return bal
+        S.O.P.l("Invalid pin")
+        return 0;
+    }
+    Public void deposite(double amount, int pin)
+    {
+        IF(this.pin == pin)
+        {
+            bal += amount;
+            S.O.P.l("balance after deposite = " + bal);
+        }
+        else
+        {
+            S.O.P.l("Invalid pin");
+        }
+    }
+    Public void withdraw(double amount, int pin)
+    {
+        IF(this.pin == pin && bal - amount >= min_bal)
+        {
+            bal -= amount;
+            S.O.P.l("balance after withdraw = " + bal);
+        }
+        else
+        {
+            S.O.P.l("Invalid pin or maintain min bal");
+        }
+    }
+}
+
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("==== saving ACC ===")
+        BankAcc sa1 = new Saving_Account(12345, 5000, 1234, "Pravin");
+        S.O.P.l(sa1.checkBal(1234));
+        sa1.deposit(1000, 1234);
+        sa1.withdraw(3000, 1234);
+
+        S.O.P.l("==== current ACC ====")
+        BankAcc ca = new Current_Account(54321, 10000, 4321, "Rokade");
+        S.O.P.l(ca.checkBal(4321));
+        ca.deposit(3000, 4321)
+        ca.withdraw(1000, 4321)
+    }
+}
+O/P
+5000
+Balance after deposite = 6000
+Balance after withdraw = 3000
+
+10000
+Balance after deposite = 13000
+Balance after withdraw = 12000</div>
+<h3>&#9733; What is the purpose of constructor inside abstract class?</h3>
+<p>&#9312; To load all the non static members of abstract class inside sub class object<br>&#9313; we can also initialize the properties of abstract class using the constructor</p>
+<h3>Note</h3>
+<p>&#9312; object class is the parent class for abstract class also<br>&#9313; the constructor present inside abstract class will invoke the constructor of object class.</p>
+</section>
+
+<!-- ===== PDF PAGES 51-52 : Final keyword ===== -->
+<section class="page">
+<h2>Final keyword</h2>
+<ul>
+<li>It is a non access modifier which is available in the form of keyword in Java</li>
+<li>It can be used in the declaration of &#9312; Variable &#9313; Method &#9314; class</li>
+</ul>
+<h3>Final variable</h3>
+<p>when a variable is declared using Final we can not re-initialize it's value</p>
+<div class="code">Public class Demo
+{
+    Final int x = 10
+    Public static void main(string[] args)
+    {
+        Demo obj = new Demo();
+        // obj.x = 12 &rarr; CTE
+    }
+}</div>
+<h3>Final method</h3>
+<p>When a method is declared using Final keyword it can not be overridden by it's child classes</p>
+<div class="code">class parent
+{
+    Public Final void m1()
+    {
+        S.O.P.l("parent m1");
+    }
+}
+class child extends parent
+{
+    Public void m1() &rarr; //CTE //can not be override
+    {
+        S.O.P.l("parent m1");
+    }
+}</div>
+<h3>Final class</h3>
+<p>When a class is declared using Final it can not be inherited to other classes.<br>Which means Final class can not have child class</p>
+<div class="code">Final class parent
+{
+}
+class child extends parent &rarr; //CTE
+{
+}</div>
+</section>
+
+</main>
+</body>
+</html>

@@ -1,190 +1,359 @@
-/* Java Chapter 01 - handwritten notebook style (fully responsive)
-   All rules scoped under .jn
-   REQUIRED in your HTML <head>:
+/* =========================================================
+   JAVA NOTEBOOK — CALLIGRAPHY MASTER STYLESHEET v2
+   Needs in HTML <head>:
    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-*/
+   Supports: .jn .page .date .code .tbl .scroll .cols .two .four
+   .note .definition .important .warning .purple .flag .g .r .hl
+   .sep .bits .grid .jdk .flow .diagram + svg helpers
+========================================================= */
 
-/* ---------- Base ---------- */
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-html,body{margin:0;padding:0;background:#e8e8e8;width:100%;max-width:100%;overflow-x:hidden}
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Dancing+Script:wght@500;600;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&display=swap');
 
-.jn{
-  font-family:'Kalam','Patrick Hand','Comic Sans MS',cursive;
-  color:#14267a;
-  font-size:clamp(15px, 14px + .45vw, 19px);   /* fluid: ~15px phones -> 19px big screens */
-  line-height:1.65;
-  padding:clamp(4px,1.5vw,16px);
-  padding-left:max(clamp(4px,1.5vw,16px), env(safe-area-inset-left));
-  padding-right:max(clamp(4px,1.5vw,16px), env(safe-area-inset-right));
-  padding-bottom:max(clamp(4px,1.5vw,16px), env(safe-area-inset-bottom));
+/* ---------- 1. RESET ---------- */
+*,*::before,*::after{box-sizing:border-box}
+
+html{
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+  color-scheme:light;
+  scroll-behavior:smooth;
+}
+html,body{
+  width:100%;max-width:100%;min-height:100%;
+  margin:0;padding:0;
   overflow-x:hidden;
+  background:#dfe3e9;
+  background-image:radial-gradient(circle at 15% 0%,#f3f5f8 0,#dfe3e9 65%);
+  background-attachment:fixed;
+}
+img,svg,video,canvas,iframe{max-width:100%}
+img{height:auto}
+
+/* ---------- 2. ROOT ---------- */
+.jn{
+  --paper:#fffefa;
+  --rule:#d6e3f2;
+  --ink:#1b2f7a;        /* blue-black fountain pen */
+  --red:#c8283a;        /* red pen */
+  --green:#14803d;      /* green pen */
+  --purple:#6f3aa6;
+  --orange:#d9680a;
+  --hi:#fff0a0;         /* highlighter */
+  --muted:#5b6676;
+
+  --body:'Kalam','Patrick Hand','Segoe Print','Bradley Hand','Comic Sans MS',cursive;
+  --script:'Dancing Script','Caveat','Segoe Script','Brush Script MT','Apple Chancery',cursive;   /* calligraphy */
+  --pen:'Caveat','Kalam','Segoe Print','Bradley Hand',cursive;
+  --mono:Consolas,'Cascadia Code',SFMono-Regular,Menlo,'Courier New',monospace;
+  --wob:14px 4px 12px 4px / 4px 12px 4px 14px;        /* subtle hand-cut corners */
+
+  width:100%;max-width:100%;min-width:0;
+  margin:0 auto;
+  padding:clamp(6px,2vw,28px);
+  padding-left:max(clamp(6px,2vw,28px),env(safe-area-inset-left));
+  padding-right:max(clamp(6px,2vw,28px),env(safe-area-inset-right));
+  padding-bottom:max(clamp(6px,2vw,28px),env(safe-area-inset-bottom));
+
+  font-family:var(--body);
+  font-size:clamp(15px,14px + .5vw,20px);
+  line-height:1.75;
+  letter-spacing:.01em;
+  color:var(--ink);
+  background:transparent;
+
   overflow-wrap:break-word;
   word-wrap:break-word;
+  overflow-x:hidden;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
-.jn *,.jn *:before,.jn *:after{box-sizing:border-box}
-.jn img,.jn video,.jn canvas{max-width:100%;height:auto}
+@supports (overflow:clip){.jn{overflow-x:clip}}
 
-/* ---------- Page sheet ---------- */
+.jn ::selection{background:var(--hi);color:#111}
+.jn :focus-visible{outline:3px dashed var(--red);outline-offset:3px}
+
+/* ---------- 3. PAGE (clean ruled paper, NO vertical lines) ---------- */
 .jn .page{
-  width:100%;
-  max-width:794px;
-  margin:0 auto clamp(10px,2vw,20px);
-  background:#fff;
-  padding:clamp(14px,3vw,30px) clamp(12px,3vw,30px) clamp(18px,3.5vw,34px) clamp(26px,5.5vw,48px);
-  border-left:3px solid #e9a0a0;
-  box-shadow:0 1px 4px rgba(0,0,0,.25);
+  position:relative;
+  width:100%;max-width:840px;min-width:0;
+  margin:0 auto clamp(14px,3vw,32px);
+  padding:clamp(20px,4.5vw,48px) clamp(16px,5vw,56px) clamp(24px,4.5vw,52px);
+
+  background-color:var(--paper);
+  background-image:linear-gradient(transparent calc(1.75em - 1px),var(--rule) calc(1.75em - 1px));
+  background-size:100% 1.75em;
+  background-position:0 .55em;
+
+  border:1px solid #e6e2d6;
+  border-radius:6px;
+  box-shadow:0 1px 1px rgba(20,30,60,.06),0 8px 18px rgba(20,30,60,.12),0 22px 38px -16px rgba(20,30,60,.18);
   overflow-x:hidden;
 }
+@supports (overflow:clip){.jn .page{overflow-x:clip}}
+.jn .page::before,.jn .page::after{content:none;display:none}   /* margin line + holes removed */
 
-/* ---------- Text ---------- */
-.jn .date{color:#c00;text-align:right;font-size:.85em;margin:0}
-.jn h1{color:#c00;font-size:clamp(1.25em,1.1em + 1vw,1.7em);line-height:1.25;margin:0 0 6px;text-align:center;border-bottom:2px solid #c00}
-.jn h2{color:#0a7a2a;font-size:1.15em;line-height:1.3;margin:16px 0 2px;font-weight:700;border-bottom:2px solid #0a7a2a;display:inline-block;max-width:100%}
-.jn h2.red{color:#c00;border-color:#c00}
-.jn h3{color:#c00;font-size:1.05em;line-height:1.3;margin:12px 0 2px;font-weight:700}
-.jn p{margin:2px 0}
-
-/* ---------- Lists ---------- */
-.jn ul{list-style:none;margin:2px 0 4px;padding-left:22px}
-.jn ul ul{padding-left:20px}
-.jn li{position:relative;margin:1px 0}
-.jn li:before{content:"\21B3";position:absolute;left:-18px;color:#14267a}
-
-/* ---------- Helpers ---------- */
-.jn .g{color:#0a7a2a;font-weight:700}
-.jn .r{color:#c00;font-weight:700}
-.jn .sep{border:0;border-top:2px dashed #14267a;margin:14px 0;opacity:.6}
-.jn .note{color:#555;font-size:.85em}
-.jn .flag{color:#c00;font-size:.7em;border:1px dashed #c00;border-radius:3px;padding:0 4px;margin-left:4px;white-space:nowrap}
-.jn .hl{background:#fff3a8;padding:0 3px}
-
-/* ---------- Code ---------- */
-.jn .code{
-  font-family:Consolas,'Courier New',monospace;
-  font-size:.85em;
-  background:#f6f6f0;
-  border-left:3px solid #14267a;
-  padding:6px 10px;
-  margin:4px 0;
-  white-space:pre-wrap;
-  word-break:break-word;
-  overflow-x:auto;
-  max-width:100%;
-  color:#111;
-  -webkit-overflow-scrolling:touch;
+/* ---------- 4. TEXT ---------- */
+.jn .date{
+  margin:0 0 6px;text-align:right;
+  font-family:var(--pen);font-size:1.15em;font-weight:600;color:var(--red);
 }
+.jn p{margin:.35em 0}
+.jn strong,.jn b{font-weight:700}
+.jn em,.jn i{color:#33449a}
+.jn mark,.jn .hl{
+  color:inherit;padding:0 .25em;border-radius:3px;
+  background:linear-gradient(transparent 14%,var(--hi) 14%,var(--hi) 88%,transparent 88%);
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.jn .g{color:var(--green);font-weight:700}
+.jn .r{color:var(--red);font-weight:700}
+.jn .purple{color:var(--purple);font-weight:700}
+.jn a{color:var(--purple);text-decoration:underline;text-decoration-style:wavy;text-underline-offset:4px;overflow-wrap:anywhere}
+.jn a:hover{color:var(--red)}
+.jn kbd{font-family:var(--mono);font-size:.8em;padding:1px 6px;border:1.5px solid var(--ink);border-bottom-width:3px;border-radius:5px;background:#fff}
+.jn blockquote{margin:.8em 0;padding:.3em 1em;border:0;background:rgba(217,104,10,.07);border-radius:var(--wob);font-style:italic;color:#4a3a2a}
+.jn code{
+  font-family:var(--mono);font-size:.85em;padding:1px 6px;
+  color:#a3203a;background:#fdf0f2;border:1px solid #efc3cb;border-radius:5px;
+  overflow-wrap:anywhere;
+}
+.jn .flag{
+  display:inline-block;max-width:100%;margin:2px 4px 2px 6px;padding:0 9px;
+  color:var(--red);font-family:var(--pen);font-size:.85em;font-weight:700;line-height:1.55;
+  border:1.5px solid var(--red);border-radius:999px;background:#fff6f6;
+  vertical-align:middle;overflow-wrap:anywhere;
+}
+.jn .sep{height:0;margin:18px 0;border:0;border-top:2px dashed var(--ink);opacity:.35}
+.jn hr{height:0;margin:22px 0;border:0;border-top:1.5px solid var(--ink);opacity:.25}
 
-/* ---------- Tables ---------- */
-.jn .scroll{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
-.jn .tbl{width:100%;border-collapse:collapse;margin:6px 0}
-.jn .tbl td,.jn .tbl th{border:1.5px solid #14267a;padding:4px 8px;vertical-align:top;text-align:left;overflow-wrap:anywhere}
-.jn .tbl th{color:#c00}
+/* ---------- 5. HEADINGS (calligraphy) ---------- */
+.jn h1,.jn h2,.jn h3,.jn h4,.jn h5,.jn h6{max-width:100%;line-height:1.3;overflow-wrap:break-word}
 
-/* ---------- Bits / binary boxes ---------- */
-.jn .bits{display:inline-flex;max-width:100%;margin:4px 6px 4px 0;border:1.5px solid #14267a}
+.jn h1{
+  margin:0 0 .6em;padding-bottom:.25em;text-align:center;
+  font-family:var(--script);font-weight:700;
+  font-size:clamp(1.9em,1.4em + 2.2vw,2.9em);
+  color:var(--red);
+  letter-spacing:.01em;
+  border-bottom:3px double var(--red);      /* professional double rule */
+}
+.jn h2{
+  display:inline-block;max-width:100%;margin:1em 0 .3em;padding:0 .4em;
+  font-family:var(--script);font-weight:700;
+  font-size:clamp(1.45em,1.2em + 1.1vw,1.95em);
+  color:var(--green);
+  background:linear-gradient(transparent 58%,rgba(255,240,160,.9) 58%);   /* marker highlight */
+  border-bottom:2.5px solid var(--green);
+  border-radius:4px 4px 0 0;
+}
+.jn h2.red{color:var(--red);border-color:var(--red)}
+.jn h3{
+  margin:.9em 0 .2em;
+  font-family:var(--pen);font-weight:700;
+  font-size:clamp(1.3em,1.15em + .7vw,1.65em);
+  color:var(--red);
+}
+.jn h3::before{content:"\270E\00a0";color:var(--orange);font-family:var(--body)}
+.jn h4{margin:.7em 0 .2em;font-family:var(--pen);font-size:1.3em;font-weight:700;color:var(--purple)}
+.jn h5,.jn h6{margin:.6em 0 .2em;font-family:var(--pen);font-size:1.15em;color:var(--muted)}
+
+/* ---------- 6. LISTS ---------- */
+.jn ul{list-style:none;margin:.2em 0 .4em;padding-left:1.6em;max-width:100%}
+.jn ul ul{padding-left:1.3em}
+.jn ol{margin:.2em 0 .4em;padding-left:1.8em;max-width:100%}
+.jn ol li::marker{color:var(--red);font-family:var(--pen);font-weight:700}
+.jn li{position:relative;margin:.05em 0;padding-left:2px;overflow-wrap:break-word}
+.jn ul>li::before{content:"\21B3";position:absolute;left:-1.3em;color:var(--red);font-weight:700}
+.jn ul ul>li::before{content:"\203A";left:-1em;color:var(--green)}
+.jn li>ul,.jn li>ol{margin-top:0;margin-bottom:0}
+
+/* ---------- 7. CODE ---------- */
+.jn .code,.jn pre{
+  display:block;position:relative;
+  width:100%;max-width:100%;min-width:0;
+  margin:.8em 0;padding:12px 16px;
+  font-family:var(--mono);font-size:.82em;line-height:1.55;color:#1b1b1b;
+  background:#f8f7f0;
+  background-image:repeating-linear-gradient(transparent 0 1.55em,rgba(27,47,122,.06) 1.55em calc(1.55em + 1px));
+  border:1.8px solid var(--ink);border-radius:var(--wob);
+  box-shadow:3px 3px 0 rgba(27,47,122,.16);
+  white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;tab-size:4;
+  overflow-x:auto;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+}
+.jn .code.nowrap,.jn pre.nowrap{white-space:pre;overflow-wrap:normal}
+.jn .code code,.jn pre code{padding:0;color:inherit;background:none;border:0;font:inherit}
+
+/* ---------- 8. TABLES ---------- */
+.jn .scroll{
+  display:block;width:100%;max-width:100%;min-width:0;margin:.7em 0;
+  overflow-x:auto;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+}
+.jn .tbl{width:100%;border-collapse:collapse;border-spacing:0;margin:.5em 0;background:rgba(255,255,255,.8);font-size:.92em}
+.jn .scroll .tbl{min-width:420px;margin:0}
+.jn .tbl th,.jn .tbl td{
+  padding:6px 11px;border:1.6px solid var(--ink);text-align:left;vertical-align:top;
+  overflow-wrap:anywhere;
+}
+.jn .tbl th{color:var(--red);background:#fff4c9;font-family:var(--pen);font-size:1.12em;font-weight:700}
+.jn .tbl tr:nth-child(even) td{background:rgba(214,227,242,.35)}
+.jn .tbl caption{caption-side:bottom;padding:4px;color:var(--muted);font-size:.85em}
+.jn table:not(.tbl):not(.grid){display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ---------- 9. COLUMNS ---------- */
+.jn .two,.jn .cols,.jn .four{display:grid;width:100%;max-width:100%;min-width:0;align-items:start}
+.jn .two,.jn .cols{grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(10px,2vw,22px)}
+.jn .four{grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,1.5vw,16px)}
+.jn .two>*,.jn .cols>*,.jn .four>*{min-width:0;max-width:100%}
+
+/* ---------- 10. CALL-OUT BOXES ---------- */
+.jn .note,.jn .definition,.jn .important,.jn .warning{
+  position:relative;max-width:100%;min-width:0;
+  margin:.9em 0;padding:.65em 1.1em;
+  border-radius:var(--wob);overflow-wrap:break-word;
+  box-shadow:2px 3px 0 rgba(20,30,60,.1);
+}
+.jn .note>:first-child,.jn .definition>:first-child,.jn .important>:first-child,.jn .warning>:first-child{margin-top:0}
+.jn .note>:last-child,.jn .definition>:last-child,.jn .important>:last-child,.jn .warning>:last-child{margin-bottom:0}
+
+.jn .note{color:#25384d;font-size:.94em;background:#e9f3ff;border:1.8px solid #6aa0dd}
+.jn .definition{color:var(--ink);background:#f0f6ff;border:2px dashed var(--ink)}
+.jn .important{color:#614300;background:#fff6c9;border:1.8px solid #deb200}
+.jn .warning{color:#86202d;background:#ffecee;border:2px dashed var(--red)}
+
+/* ---------- 11. BIT BOXES / GRID ---------- */
+.jn .bits{display:inline-flex;max-width:100%;margin:4px 6px 4px 0;border:1.7px solid var(--ink);background:#fff}
 .jn .bits i{
-  font-style:normal;
-  flex:0 1 auto;
-  width:clamp(20px,6.5vw,28px);
-  height:clamp(22px,6.5vw,28px);
-  border-right:1.5px solid #14267a;
-  text-align:center;
-  line-height:clamp(20px,6.2vw,26px);
-  font-size:.85em;
+  flex:0 1 auto;width:clamp(20px,6.5vw,30px);height:clamp(22px,6.5vw,30px);
+  font-style:normal;font-size:.85em;text-align:center;line-height:clamp(20px,6.2vw,28px);
+  border-right:1.7px solid var(--ink);color:var(--ink);
 }
 .jn .bits i:last-child{border-right:0}
-.jn .bits i.x{background:#fff3a8}
-
-/* ---------- Multi-column grid: 3 -> 2 -> 1 automatically ---------- */
-.jn .cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-
-/* ---------- Small number grid ---------- */
+.jn .bits i.x{background:var(--hi)}
 .jn .grid{border-collapse:collapse;margin:6px 0;max-width:100%}
-.jn .grid td{border:1px solid #14267a;width:clamp(20px,6vw,26px);height:clamp(20px,6vw,26px);text-align:center;padding:0;font-size:.85em}
+.jn .grid td{width:clamp(20px,6vw,28px);height:clamp(20px,6vw,28px);padding:0;font-size:.85em;text-align:center;border:1.3px solid var(--ink)}
 
-/* ---------- JDK / JRE / JVM diagram ---------- */
-.jn .jdk{border:2px solid #14267a;padding:6px 10px;margin:6px 0}
-.jn .jdk .row{display:flex;gap:14px;flex-wrap:wrap;align-items:stretch}
-.jn .jdk .in{border:2px solid #14267a;padding:4px 10px;margin-top:2px;flex:1 1 140px;min-width:0}
-.jn .jdk .in.jre{flex:2 1 240px;min-width:0}
-.jn .jdk .in .in{margin-top:4px}
+/* ---------- 12. JDK / JRE / JVM ---------- */
+.jn .jdk{margin:.7em 0;padding:8px 12px;border:2.2px solid var(--ink);border-radius:var(--wob);background:rgba(255,255,255,.65)}
+.jn .jdk .row{display:flex;flex-wrap:wrap;gap:14px;align-items:stretch}
+.jn .jdk .in{flex:1 1 140px;min-width:0;margin-top:3px;padding:4px 10px;border:1.8px solid var(--ink);border-radius:var(--wob)}
+.jn .jdk .in.jre{flex:2 1 240px}
+.jn .jdk .in .in{margin-top:5px}
 
-/* ---------- Flow (a -> b -> c) ---------- */
-.jn .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:4px;align-items:center;text-align:center;margin:6px 0}
-.jn .flow b{border:1.5px solid #14267a;padding:2px 6px;font-weight:400;overflow-wrap:anywhere}
+/* ---------- 13. FLOW ---------- */
+.jn .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px;align-items:center;text-align:center;margin:.7em 0}
+.jn .flow b{padding:3px 8px;font-weight:400;border:1.8px solid var(--ink);border-radius:var(--wob);background:#fff;overflow-wrap:anywhere}
 
-/* ---------- SVG diagrams ---------- */
+/* ---------- 14. DIAGRAM / SVG ---------- */
+.jn .diagram{
+  display:block;width:100%;max-width:100%;min-width:0;margin:.8em 0;padding:12px;
+  font-family:var(--mono);white-space:pre;overflow-x:auto;overflow-y:hidden;
+  background:rgba(255,255,255,.75);border:1.8px dashed var(--ink);border-radius:var(--wob);
+  -webkit-overflow-scrolling:touch;
+}
 .jn svg{display:block;max-width:100%;height:auto;margin:8px auto}
-.jn svg text{font-family:'Kalam','Patrick Hand',cursive;fill:#14267a;font-size:14px}
-.jn svg .b{fill:#fff;stroke:#14267a;stroke-width:1.6}
-.jn svg .ln{stroke:#14267a;stroke-width:1.6;fill:none}
-.jn svg .rd{stroke:#c00;stroke-width:1.6;fill:none}
-.jn svg text.rt{fill:#c00;font-weight:700}
-.jn svg text.gt{fill:#0a7a2a;font-weight:700}
+.jn svg text{font-family:var(--pen);fill:var(--ink);font-size:15px}
+.jn svg .b{fill:#fff;stroke:var(--ink);stroke-width:1.8}
+.jn svg .ln{stroke:var(--ink);stroke-width:1.8;fill:none}
+.jn svg .rd{stroke:var(--red);stroke-width:1.8;fill:none}
+.jn svg text.rt{fill:var(--red);font-weight:700}
+.jn svg text.gt{fill:var(--green);font-weight:700}
+
+/* ---------- 15. IMAGES ---------- */
+.jn img{display:block;margin:.8em auto;padding:6px;background:#fff;border:1px solid #ddd;border-radius:4px;box-shadow:2px 4px 10px rgba(20,30,60,.18)}
+
+/* ---------- 16. EDGE CASES ---------- */
+.jn .page>*:first-child{margin-top:0}
+.jn .page>*:last-child{margin-bottom:0}
+.jn details{margin:.6em 0;padding:.3em .9em;border:1.8px dashed var(--ink);border-radius:var(--wob)}
+.jn summary{cursor:pointer;font-family:var(--pen);font-size:1.15em;font-weight:700;color:var(--red)}
+.jn math,.jn .katex-display{max-width:100%;overflow-x:auto}
 
 /* =========================================================
-   RESPONSIVE BREAKPOINTS
-   ========================================================= */
+   RESPONSIVE
+========================================================= */
 
-/* Large desktops / TVs */
-@media (min-width:1400px){
-  .jn .page{max-width:860px}
+/* 4K / TV */
+@media (min-width:1800px){
+  .jn{font-size:22px}
+  .jn .page{max-width:980px}
 }
-
-/* Tablets landscape & small laptops */
+/* Large desktop */
+@media (min-width:1400px) and (max-width:1799px){
+  .jn{font-size:20px}
+  .jn .page{max-width:900px}
+}
+/* Laptops / tablets landscape */
 @media (max-width:1024px){
-  .jn .cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .jn .four{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-
-/* Tablets portrait */
-@media (max-width:768px){
-  .jn .page{max-width:100%}
+/* Tablets portrait / large phones */
+@media (max-width:700px){
+  .jn .two,.jn .cols{grid-template-columns:minmax(0,1fr)}
   .jn .jdk .in.jre{flex-basis:100%}
+  .jn .code,.jn pre{font-size:.78em}
 }
-
-/* Large phones */
+/* Phones */
 @media (max-width:600px){
-  .jn .cols{grid-template-columns:1fr}
   .jn .flow{grid-template-columns:1fr}
-  .jn .flow > :not(b){transform:rotate(90deg);justify-self:center}   /* arrows point down when stacked */
-  .jn .jdk{padding:5px 7px}
+  .jn .flow>:not(b){justify-self:center;transform:rotate(90deg)}
+  .jn .jdk{padding:6px 8px}
   .jn .jdk .row{gap:8px}
   .jn .jdk .in,.jn .jdk .in.jre{flex-basis:100%}
-  .jn .tbl td,.jn .tbl th{padding:3px 5px}
-  .jn .page{box-shadow:0 1px 3px rgba(0,0,0,.2)}
-}
-
-/* Small phones (iPhone SE, older Androids) */
-@media (max-width:400px){
-  .jn .page{padding:12px 10px 16px 22px;border-left-width:2px}
-  .jn ul{padding-left:18px}
-  .jn ul ul{padding-left:16px}
-  .jn li:before{left:-15px}
-  .jn .code{padding:5px 7px;font-size:.8em}
+  .jn .tbl th,.jn .tbl td{padding:4px 7px}
+  .jn .page{border-radius:4px}
   .jn .flag{white-space:normal}
 }
-
-/* Very small / foldables (cover screens) */
+/* Small phones */
+@media (max-width:400px){
+  .jn .four{grid-template-columns:minmax(0,1fr)}
+  .jn .page{padding-left:12px;padding-right:12px}
+  .jn ul{padding-left:1.4em}
+  .jn .code,.jn pre{padding:9px 10px;font-size:.74em}
+}
+/* Tiny / foldable cover screens */
 @media (max-width:320px){
   .jn{font-size:14px}
-  .jn .page{padding:10px 8px 14px 18px}
+  .jn .page{padding:12px 9px 16px}
 }
-
-/* Phones in landscape (short height) */
+/* Landscape phones */
 @media (max-height:480px) and (orientation:landscape){
-  .jn{line-height:1.5}
+  .jn{line-height:1.6}
   .jn .page{max-width:100%}
-  .jn .cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* Touch */
+@media (hover:none) and (pointer:coarse){
+  .jn .code,.jn pre,.jn .scroll,.jn .diagram{-webkit-overflow-scrolling:touch}
+}
+/* Mouse hover */
+@media (hover:hover){
+  .jn .note,.jn .definition,.jn .important,.jn .warning{transition:transform .2s ease,box-shadow .2s ease}
+  .jn .note:hover,.jn .definition:hover,.jn .important:hover,.jn .warning:hover{transform:translateY(-2px);box-shadow:3px 6px 0 rgba(20,30,60,.13)}
 }
 
-/* Touch devices: comfortable scrolling for wide content */
-@media (hover:none) and (pointer:coarse){
-  .jn .code,.jn .scroll{-webkit-overflow-scrolling:touch}
+/* Accessibility */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .jn *,.jn *::before,.jn *::after{animation:none!important;transition:none!important}
+}
+@media (forced-colors:active){
+  .jn .page{border:2px solid CanvasText;background-image:none}
+  .jn .note,.jn .definition,.jn .important,.jn .warning,.jn .code{border:2px solid CanvasText}
+}
+@media (prefers-contrast:more){
+  .jn{--rule:#9dbbe0;--ink:#0d1f66}
 }
 
 /* Print */
 @media print{
-  html,body{background:#fff}
-  .jn{padding:0;font-size:12pt}
-  .jn .page{box-shadow:none;max-width:100%;margin:0;page-break-after:always}
+  html,body{background:#fff!important}
+  .jn{padding:0;font-size:12pt;overflow:visible}
+  .jn .page{max-width:none;margin:0;padding:14mm;background-image:none;box-shadow:none;border:0;overflow:visible;break-after:page}
+  .jn .page:last-child{break-after:auto}
+  .jn .code,.jn pre,.jn .diagram{white-space:pre-wrap;overflow:visible;box-shadow:none}
+  .jn .scroll{overflow:visible}
+  .jn .tbl{min-width:0}
+  .jn .note,.jn .definition,.jn .important,.jn .warning,.jn .tbl,.jn .code,.jn svg{break-inside:avoid;box-shadow:none;transform:none}
 }

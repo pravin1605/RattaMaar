@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 10 String</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-6 : Strings, literal, SCP, new ===== -->
+<section class="page">
+<h1>Java - 10 String</h1>
+<h2>Strings</h2>
+<p>A string in Java is an immutable object that represent a sequence of characters and is implemented using the java.lang.string class</p>
+<h3>&#9733; Properties</h3>
+<p>&#9312; Immutable - once string created, its value cannot be changed</p>
+<p>&#9313; string is a class - string is built in class in Java.lang</p>
+<p>&#9314; Final class - The string class declared as Final, so it cannot be inherited</p>
+<p>&#9315; object based - every string in Java is an object</p>
+<p>&#9316; Thread safe</p>
+<p>&#9317; Immediate child of object class - The string class directly extends the object class</p>
+<h2 class="red">String Literal</h2>
+<ul>
+<li>In Java string literal is a group of character which is enclosed with " "</li>
+<li>string literals in Java are stored using objects</li>
+</ul>
+<p>There are 3 built in classes to store string literal<br>&#9312; java.lang.string<br>&#9313; java.lang.stringBuilder<br>&#9314; java.lang.stringBuffer</p>
+<h3>&#9312; java.lang.string</h3>
+<ul>
+<li>string is a built in class which is present in Java.lang package</li>
+<li>string class is declared as Final which means it can not be inherited</li>
+<li>string class is immediate child class for object class</li>
+</ul>
+<h3 class="r">Case-I</h3>
+<p class="code">string s = "abc"</p>
+<p class="note">Diagram: s holds 0x1 &rarr; String object 0x1 inside the string constant pool (SCP, in the Heap area). Inside it: arr = 0x2 &rarr; char[] object 0x2 holding 'a' 'b' 'c' (index 0, 1, 2), plus Method.</p>
+<p><span class="g">&#9733;</span> string constant pool (scp)<br>&#8627; scp is a special memory area inside the Heap area in Java where string literal objects are stored to avoid duplicate object and to improve memory efficiency</p>
+<h3 class="r">Case-II</h3>
+<div class="code">string s1 = "abc"
+string s2 = "abc"</div>
+<p class="note">Diagram: both s1 and s2 hold 0x1, pointing to the same String object 0x1 (arr = 0x2) in the string constant pool.</p>
+<h3>Case-I explanation</h3>
+<p>&#9312; "abc" is a string literal<br>&#9313; Java checks the string constant pool (scp) too see if "abc" already exists<br>&#9314; since this is the First time, "abc" is Not present<br>&#9315; Java creates one object "abc" inside the scp<br>&#9316; the reference variable s points to that object.</p>
+<h3>Case-II explanation</h3>
+<p>&#9312; "abc" is already present in the string constant pool<br>&#9313; Java does not create a new object<br>&#9314; the reference variable s2 points to the same object that s1 is pointing to</p>
+<h3>&#9733; string pool</h3>
+<p>IF the same literals appears again, no new object is created.<br>Java reuses the existing object to save memory<br>This process is called string pool</p>
+<h3>&#9733; Note</h3>
+<ul>
+<li>string constant pool area is also present inside heap area</li>
+<li>string object internally uses char array to store the group of character</li>
+<li>after Java 9 version they started using byte[] array instead of character array to consume less memory space</li>
+<li>since byte use only one byte - 8 bits and char uses 2 bytes - 16 bits</li>
+</ul>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        string s = "abc";
+        S.O.P.l(s.tostring());  //abc
+    }
+}
+//tostring() of object class is overridden in string class which returns the string value present in given string object
+
+Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        string s = "a"
+        S.O.P.l(s.hashCode());
+    }
+}</div>
+<ul><li>hashCode() of an object class is overriden in string class which return an integer value that is generated based on string literals</li></ul>
+
+<h2 class="red">Important constructor of String class</h2>
+<p>&#9312; string() &#9313; string(string) &#9314; string(char[]) &#9315; string(stringBuilder) &#9316; string(stringBuffer)</p>
+<h3>&#9733; Creating string object Using New keyword</h3>
+<p>In Java we can create a string object using the New keyword by calling the constructor of the string class</p>
+<p><span class="r">syntax</span></p>
+<p class="code">String Variable_name = new String("Value");</p>
+<div class="code">string s1 = new string("abc")
+string s2 = new string("abc")</div>
+<p class="note">Diagram: SCP holds one String 0x1 (arr 0x2, 'a' 'b' 'c'). s1 = 0x3 is a separate heap object (arr 0x4 with its own a b c); s2 = 0x5 is another heap object (arr 0x8 with its own a b c).</p>
+<ul>
+<li>When we create a string object by using new operator and by passing string literal to string class constructor</li>
+<li>Internally one object will be created for the literal "abc" inside string constant pool area</li>
+<li>AND one more object will be created by new operator outside the string constant pool and inside the heap area with the same data which is in the string literal</li>
+</ul>
+<p>Total object created<br>string constant pool &nbsp; 1<br>Heap &nbsp; 2<br>----------<br>3 objects</p>
+<h3>Note</h3>
+<ul>
+<li>Inside string constant pool, duplicate string object are not allowed</li>
+<li>outside string constant pool, i.e inside heap area duplicate string objects are allowed.</li>
+</ul>
+<h3>&#9733; equals()</h3>
+<ul>
+<li>The equals() method is used to compare the content (data) of two objects</li>
+<li>It is defined in the object class</li>
+<li>equals() of object class is overridden in string class</li>
+<li>which compares character present in given two strings and return true if they are same else return False.</li>
+</ul>
+<div class="code">Public class Demo
+{
+    public static void main(string[] args)
+    {
+        String s1 = "abc"
+        String s2 = "abc"
+        S.O.P.l(s1);               //abc
+        S.O.P.l(s2);               //abc
+        S.O.P.l(s1 == s2);         //False   <span class="flag">verify: both are literals (written False)</span>
+        S.O.P.l(s1.equals(s2));    //True
+    }
+}</div>
+<div class="scroll"><table class="tbl">
+<tr><th>Feature</th><th>== operator</th><th>equals() method</th></tr>
+<tr><td>comparison</td><td>Reference (memory add)</td><td>data betn objects</td></tr>
+<tr><td>used For</td><td>checking same object</td><td>checking same value</td></tr>
+<tr><td>Method type</td><td>operator</td><td>method</td></tr>
+<tr><td>In string class</td><td>Not overridden</td><td>overridden</td></tr>
+</table></div>
+</section>
+
+<!-- ===== PDF PAGES 7-13 : Concatenation and immutability ===== -->
+<section class="page">
+<h3 class="r">&#9733; String Concatenation and object creation</h3>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        String s1 = "abc"; //object created in scp
+        string s2 = "abc"; //object already exist
+        String s3 = s1 + s2; //Heap area
+        S.O.P.l(s3);
+    }
+}</div>
+<p><span class="g">&#9733;</span> when we are concatenating 2 reference variable using plus operator then the resultant string will be created inside <span class="flag">word missing: "heap"?</span> area</p>
+<p><span class="g">&#9733;</span> Total string objects created = 2<br>1 object "abc" in scp<br>1 object "abcabc" in Heap area</p>
+<p class="note">Diagram: s1 and s2 both point to 0x1 ("abc") in the SCP; s3 points to 0x2 ("abcabc") in the Heap area.</p>
+<h3 class="r">&#9733; String concatenation with variable and Literal</h3>
+<div class="code">public class Demo
+{
+    Public static void main(string[] args)
+    {
+        string s1 = "abc"
+        string s2 = s1 + "cdf"
+        S.O.P.l(s2)
+    }
+}</div>
+<p><span class="g">&#9733;</span> when we are concatenating on string literals and one reference variable then the resultant string will be created inside the heap area</p>
+<ul><li>Total string objects created = 3<br>"abc" &rarr; scp<br>"cdf" &rarr; scp<br>"abccdf" &rarr; Heap</li></ul>
+<p class="note">Diagram: s1 &rarr; 0x1 ("abc") and 0x2 ("def") in the SCP; s2 &rarr; "abcdef" in the Heap area.</p>
+<h3 class="r">&#9733; compile-time string concatenation</h3>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        String s = "abc" + "DEF";
+        S.O.P.l(s)
+    }
+}</div>
+<ul>
+<li>When we are concatenating 2 string literals using + operator the resultant string object will be created inside string constant pool only</li>
+<li>AND separate object will not be created inside string literals involved in concatenation this is known as compile time optimization</li>
+</ul>
+<p><span class="g">&#9733;</span> compile-time concatenation is the process in which the Java compiler combines string literals into a single string during compilation, before the program is executed</p>
+<ul><li>"abc" and "DEF" are string literals, but since both are constants, Java perform <u>compile-time optimization</u> only one object in scp.</li></ul>
+<p class="note">Diagram: s1 &rarr; 0x1 ("abcdef") in the SCP only.</p>
+<h3 class="r">&#9733; Mixed compile-time and Runtime string concatenation</h3>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        string s1 = "abc"
+        string s2 = "def"
+        string s3 = "123" + "456" + s1 + s2
+    }
+}</div>
+<ul><li>Total string objects = 4<br>"abc" &rarr; scp<br>"def" &rarr; scp<br>"123"+"456" &rarr; scp &rarr; Both are literals so compile-time concatenation<br>"123456"+s1+s2 &rarr; Heap &rarr; runtime concatenation</li></ul>
+<p class="note">Diagram: s1 0x1 "abc", s2 0x2 "def", 0x3 "123456" in the SCP; s3 0x4 "123456abcdef" in the Heap area.</p>
+<h3 class="r">&#9733; Runtime String concatenation with variable and literal</h3>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        String s1 = "abc"
+        string s2 = "def"
+        String s3 = s1 + "123" + "456"
+        S.O.P.l(s3)
+    }
+}</div>
+<ul>
+<li>Total 5 string object created<br>"abc" &rarr; scp<br>"def" &rarr; scp<br>"123" &rarr; scp<br>"456" &rarr; scp<br>"abcdef123456" &rarr; Heap Memory <span class="flag">verify: s3 = s1 + "123" + "456" gives abc123456</span></li>
+<li>IF any variable is involved (s1), the whole expression become runtime concatenation</li>
+<li>therefore "123" and "456" are not combined at compile time</li>
+</ul>
+<h3 class="r">&#9733; Reverse string (Immutability example)</h3>
+<div class="code">Public class Reverse-string
+{
+    Public static void main(string[] args)
+    {
+        string s1 = "abcd";
+        string rev = " ";
+        For(int i = 0; i < s1.length(); i++)
+        {
+            rev = s1.charAt(i) + rev;
+        }
+        S.O.P.l(rev);
+    }
+}</div>
+<p>Example iteration<br>i = 0 &rarr; a &rarr; rev = "a"<br>i = 1 &rarr; b &rarr; rev = "ba"<br>i = 2 &rarr; c &rarr; rev = "cba"<br>i = 3 &rarr; d &rarr; rev = "dcba"</p>
+<p class="note">Diagram: s1 = 0x1 "abcd" in the SCP, rev first points to 0x2 (empty string), then to heap objects 0x3 "a", 0x4 "ba", 0x5 "cba", 0x6 "dcba"; each earlier rev pointer is crossed out.</p>
+<ul>
+<li>when we reverse a normal string using the string class like this <b>rev = s1.charAt(i) + rev</b><br>Java creates many temporary string objects in the Heap memory because
+ <ul><li>string is immutable</li><li>Every concatenation (+) creates a new string object instead of modifying the existing one</li></ul></li>
+</ul>
+<h3>Effect on performance</h3>
+<p>&#9312; More object creation - More Heap memory usage<br>&#9313; Frequent garbage collection - slower execution<br>&#9314; string immutability - Decrease performance for repeated concatenation</p>
+</section>
+
+<!-- ===== PDF PAGES 13-21 : String methods ===== -->
+<section class="page">
+<h2 class="red">&#9733; length()</h2>
+<ul><li>Length() is a string method in Java used to find the total number of character present in a string</li></ul>
+<p><span class="r">syntax</span></p><p class="code">String-Variable.length();</p>
+<h3>Imp points</h3>
+<ul>
+<li>length() is used for string</li>
+<li>It return an integer value</li>
+<li>string &rarr; length() &rarr; method; Array &rarr; length &rarr; property, without parenthes<span class="flag">cut off</span></li>
+</ul>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        string s = "abcd"
+        S.O.P.l(s.length());  //4
+    }
+}</div>
+<h2 class="red">&#9733; charAt(int index)</h2>
+<ul><li>charAt(int index) is a method of the string class used to return the character present at a specified index position in a string</li></ul>
+<p><span class="r">syntax</span></p><p class="code">StringName.charAt(index)</p>
+<ul>
+<li>index starts from 0</li>
+<li>Return type char</li>
+<li>IF the index is invalid (less than 0 or greater than length() -1), it shows <span class="r">stringIndexOutOfBoundsException</span></li>
+</ul>
+<div class="code">Public class charAtExample
+{
+    Public static void main(string[] args)
+    {
+        string s = "abc"
+        char ch = s.charAt(1);
+        S.O.P.l(ch);   //b
+    }
+}</div>
+
+<h2>Comparison</h2>
+<h3 class="r">&#9312; equals(string str)</h3>
+<ul>
+<li>is a method of the string class used to compare the data (values) of two string</li>
+<li>It returns true if both string have the same sequence of characters</li>
+<li>It returns False if the contents are different</li>
+<li>It is case-sensitive</li>
+</ul>
+<div class="code">string s1 = "abc"
+string s2 = "abc"
+S.O.P.l(s1.equals(s2));  //true</div>
+<h3 class="r">&#9313; equalsIgnoreCase(string str)</h3>
+<ul>
+<li>is a method of the string class used to compare the contents of two strings without considering case (uppercase or lowercase)</li>
+<li>Return true if both string have the same character ignoring case</li>
+<li>Return False if the contents are different</li>
+</ul>
+<div class="code">string1.equalsIgnoreCase(string 2);
+string s1 = "abc"
+string s2 = "ABC"
+S.O.P.l(s1.equalsIgnoreCase(s2));  //True</div>
+<h3 class="r">&#9314; compareTo(string str)</h3>
+<ul>
+<li>is a method of string class used to compare two strings lexicographically (dictionary order).</li>
+<li>Return 0 &rarr; if both strings are equals</li>
+<li>Return +ve value &rarr; IF the 1st string is greater than 2nd</li>
+<li>Return -ve value &rarr; IF the 1st string is smaller than 2nd</li>
+<li>It is case-sensitive</li>
+</ul>
+<div class="code">string1.compareTo(string 2);
+string s1 = "apple"
+string s2 = "banana"
+S.O.P.l(s1.compareTo(s2));  //-1
+&#8226; a in "apple" &rarr; ASCII 97
+&#8226; b in "banana" &rarr; ASCII 98
+97-98 = -1</div>
+<p>s1 == s2 &rarr; 0 &nbsp;|&nbsp; s1 &lt; s2 &rarr; Negative &nbsp;|&nbsp; s1 &gt; s2 &rarr; Positive</p>
+<h3 class="r">&#9315; compareToIgnoreCase(string str)</h3>
+<ul><li>is a method of the string class used to compare two strings lexicographically without considering case (uppercase or lowercase)</li></ul>
+<div class="code">string1.compareToIgnoreCase(string 2)
+string s1 = "apple"
+string s2 = "BANANA"
+S.O.P.l(s1.compareToIgnoreCase(s2));  //-1</div>
+
+<h2>Searching and Finding</h2>
+<h3 class="r">&#9312; indexOf(char ch)</h3>
+<ul><li>is a method of string class used to find the position (index) of a character</li><li>IF the character is not found, it return -1</li></ul>
+<h3 class="r">&#9313; indexOf(string str)</h3>
+<ul><li>Return the index of the first occurrence of substring</li></ul>
+<div class="code">string s1 = "abcd"
+S.O.P.l(s1.indexOf('b'));    //1
+S.O.P.l(s1.indexOf('z'));    //-1
+S.O.P.l(s1.indexOf("bc"));   //2   <span class="flag">verify: scan reads "be" // 2</span>
+S.O.P.l(s1.indexOf("ac"));   //-1</div>
+<h3 class="r">&#9314; indexOf(string str, int fromIndex)</h3>
+<ul><li>It is used to search a substring starting from a specified index position instead of searching from the beginning.</li></ul>
+<div class="code">string s1 = "abcdefgh";
+S.O.P.l(s1.indexOf("def", 2)  //3
+S.O.P.l(s1.indexOf("def", 4)  //-1</div>
+<h3 class="r">&#9315; lastIndexOf(string str)</h3>
+<ul><li>Return the index of the last occurence of a substring</li></ul>
+<div class="code">string s = "abcdefdef"
+S.O.P.l(s.lastIndexOf('d'));  //6</div>
+<h3 class="r">&#9316; startsWith(string prefix)</h3>
+<ul><li>checks if the string starts with the specified index <span class="flag">written "index"</span></li></ul>
+<div class="code">S.O.P.l(s.startsWith("abc"));  //True
+S.O.P.l(s.startsWith("def"));  //False</div>
+<h3 class="r">&#9317; startsWith(string prefix, int toffset)</h3>
+<ul><li>checks if the string starts with the specified prefix,</li></ul>
+<div class="code">S.O.P.l(s.startsWith("def", 0));  //False
+S.O.P.l(s.startsWith("def", 3));  //True</div>
+<h3 class="r">&#9318; endsWith(string suffix)</h3>
+<ul><li>Checks if the string ends with the specified suffix</li></ul>
+<div class="code">S.O.P.l(s.endsWith("def"));  //True
+S.O.P.l(s.endsWith("abc"));  //False</div>
+
+<h2>Modification and transformation</h2>
+<h3 class="r">&#9312; concat(string str)</h3>
+<ul><li>concat() is a string method used to combine one string with another string and return new string</li></ul>
+<div class="code">String1.concat(string2)
+string s1 = "Hello"
+string s2 = "World"
+S.O.P.l(s1.concat(s2));</div>
+<h3 class="r">&#9313; + operator</h3>
+<ul><li>+ operator is used to join two or more string and is the most commonly used method</li></ul>
+<div class="code">string result = s1 + " " + s2
+S.O.P.l(result)  //Hello World</div>
+<div class="scroll"><table class="tbl">
+<tr><th>concat()</th><th>+ operator</th></tr>
+<tr><td>Method</td><td>operator</td></tr>
+<tr><td>use only For string</td><td>can join string+char+Num</td></tr>
+<tr><td>Less used</td><td>Most commonly used</td></tr>
+</table></div>
+<h3 class="r">&#9314; substring(int beginIndex)</h3>
+<ul><li>Returns a new string starting from the given beginIndex to the end of the string</li></ul>
+<div class="code">StringName.substring(beginIndex);
+string s = "abcdefghi"
+S.O.P.l(s.substring(3));  //defghi</div>
+<h3 class="r">&#9315; substring(int beginIndex, int endIndex)</h3>
+<ul><li>Return a new string from beginIndex to endIndex-1<br>&#8226; Begin index included<br>&#8226; End index is excluded</li></ul>
+<div class="code">S.O.P.l(s.substring(2, 6));  //cdef</div>
+<h3 class="r">&#9316; toLowerCase()</h3><p>Converts the string to lowercase</p>
+<h3 class="r">&#9317; toUpperCase()</h3><p>converts the string to uppercase</p>
+<div class="code">S.O.P.l(s.toLowerCase());
+S.O.P.l(s.toUpperCase());</div>
+<h3 class="r">&#9318; replace(char oldChar, char newChar)</h3>
+<p>Replace all occurrences of a specified character with a new character</p>
+<div class="code">string s = "banana"
+S.O.P.l(s.replace('a', 'o'));  //bonono</div>
+<h3 class="r">&#9319; replace(string oldstring, string newstring)</h3>
+<p>Replace all occurrences of a specified substring with another substring</p>
+<div class="code">string s = "Onkar is best"
+S.O.P.l(s.replace("Onkar", "ketan"));</div>
+<h3 class="r">&#9320; trim()</h3>
+<ul>
+<li>is a string method used to remove extra spaces from the beginning and end of a string</li>
+<li>It removes start and end spaces only</li>
+<li>It does not remove spaces betn words</li>
+</ul>
+<div class="code">string s = "   My name is Don   "
+S.O.P.l(s.trim());  //My name is Don</div>
+
+<h2 class="red">split(string regex)</h2>
+<ul>
+<li>A string array stores reference (addresses) of string objects, not the actual string data</li>
+<li>the array object itself is created in heap memory</li>
+<li>Each index in string array can store &#9312; The address of a string object &#9313; Null (default value before assignment)</li>
+<li>when values are assigned, string objects are created in memory, and their address are stored in the array indexes</li>
+<li>when we print an array element (S.O.P.l(arr[0])) Java prints the actual string value, Not the address</li>
+<li>This happen because the string class override tostring(), which return the string content.</li>
+</ul>
+<div class="code">String[] sarr = new string[3]
+S.arr[0] = "abc"
+S.O.P.l(sarr[0])  //abc</div>
+<p class="note">Diagram: sarr = 0x1 &rarr; array object 0x1 [Null, Null, Null] (index 0, 1, 2); after sarr[0] = "abc" index 0 holds 0x2, which points to the String object 0x2 "abc".</p>
+<p>split(string regex) is a string method used to divide a string into multiple substrings based on a separator and return them as a string array</p>
+<div class="code">String-Name.split(regex)</div>
+<p>regex &rarr; separator (space, comma, special char)<br>Return type &rarr; string[]</p>
+<h3 class="r">&#9733; Example without space</h3>
+<div class="code">Public class Demosplit
+{
+    Public static void main(string[] args)
+    {
+        string s = "Hello"
+        string[] s-arr = s.split("");    //No space (empty string)
+        For(int i = 0; i < s-arr.length; i++)
+        {
+            S.O.P.l(s-arr[i])
+        }
+    }
+}
+O/P
+h
+e
+l
+l
+o</div>
+<p class="note">Diagram: s-arr = 0x1 &rarr; ["h","e","l","l","o"] (index 0 to 4). The scan's first letter looks like lowercase h.</p>
+<h3 class="r">&#9733; Example with space</h3>
+<div class="code">Public class Demo-split
+{
+    Public static void main(string[] args)
+    {
+        string s = "Hello how are you"
+        string[] s-arr = s.split(" ");   //space
+        For(int i = 0; i < s-arr.length; i++)
+        {
+            S.O.P.l(s-arr[i])
+        }
+    }
+}
+O/P
+Hello
+how
+are
+you</div>
+<p class="note">Diagram: s-arr = 0x2 &rarr; ["Hello","how","are","you"] (index 0 to 3).</p>
+</section>
+
+<!-- ===== PDF PAGES 22-28 : StringBuffer ===== -->
+<section class="page">
+<h2>Java.lang.stringBuffer</h2>
+<ul>
+<li>stringBuffer is a built in class present in Java.lang</li>
+<li>string Buffer is mutable sequence of character</li>
+<li>A stringBuffer is same like a string but can be modified without creating any de-referenced objects</li>
+<li>stringBuffer class is Final and cannot be inherited</li>
+<li>stringBuffer class is also immediate child class of object class</li>
+<li>stringBuffer objects can be created only by using New operator</li>
+</ul>
+<div class="code">stringBuffer sb = "abc"   //CTE
+stringBuffer sb = new stringBuffer()</div>
+<h3 class="r">IMP constructors</h3>
+<p>&#9312; stringBuffer() - creates a stringBuffer object with capacity 16<br>&#9313; stringBuffer(string s) - Creates a stringBuffer object with capacity 16+stringLength<br>&#9314; stringBuffer(int capacity) - creates a stringBuffer object with given capacity</p>
+<div class="code">Public static void main(string[] args)
+{
+    stringBuffer sb1 = new stringBuffer()
+    S.O.P.l(sb1.capacity());   //16
+
+    stringBuffer sb2 = new stringBuffer("abc")
+    S.O.P.l(sb2.capacity());   //19
+
+    stringBuffer sb3 = new stringBuffer(5)
+    S.O.P.l(sb3.capacity());   //5
+}</div>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        //For string we can concat using + operator
+        string s1 = "abc"
+        string s2 = "def"
+        S.O.P.l(s1 + s2);
+
+        //For stringBuffer we need to make use of append method
+        stringBuffer sb1 = new stringBuffer();
+        S.O.P.l(sb1.capacity());       //16
+        sb1.append("123456789");
+        sb1.append("1234567");         //with this capacity is full
+        S.O.P.l(sb1.capacity());       //16
+        //appending one extra character
+        sb1.append('8');
+        S.O.P.l(sb1.capacity());       //34
+        S.O.P.l(sb1);                  //12345678912345678
+    }
+}</div>
+<p class="note">Diagram: sb1 = 0x1 with array 0x2 (16 slots, full); after appending '8' a new array 0x3 (34 slots) is created, the data is copied into it, and the old array 0x2 is crossed out.</p>
+<h3>&#9733; append() Method</h3>
+<p>append() is a method of stringBuffer class used to add (concatenate) data at the end of the existing string</p>
+<ul><li>It modify the same object</li><li>It return the same stringBuffer object for chaining</li></ul>
+<p class="code">stringBufferObject.append(value);</p>
+<ul>
+<li>In the above example we created a stringBuffer object which internally creates an array of capacity 16</li>
+<li>IF we try to append more than 16 character into that stringBuffer, it internally creates a new array with the bigger capacity using the following formula</li>
+</ul>
+<h3 class="r">Formula for new capacity</h3>
+<p class="code">New capacity = (old capacity * 2) + 2</p>
+<ul>
+<li>after creating the new array entire data from the old array will be copied into the new array in the corresponding indexes</li>
+<li>after copying the data into new array the old array will be dereferenced and the new array address will be stored inside the stringBuffer object</li>
+</ul>
+<h3 class="r">Note</h3>
+<ul>
+<li>concatenation operation by using + operator is not possible in string Buffer</li>
+<li>Any modification to stringBuffer can be done only by using methods of stringBuffer class</li>
+<li>the only way to concatenate stringBuffer is by using append() present in string Buffer class</li>
+<li>append method is overloaded in such a way that it accept all datatypes as formal argument</li>
+</ul>
+<div class="code">Public class Democomparing
+{
+    Public static void main(string[] args)
+    {
+        stringBuffer sb1 = new stringBuffer("abcd");  //20
+        stringBuffer sb2 = new stringBuffer("abcd");  //20
+        S.O.P.l(sb1)    } both have same data but different address
+        S.O.P.l(sb2)
+        //It compare address
+        S.O.P.l(sb1 == sb2)  //False
+        //equals is not overridden, so compare address
+        S.O.P.l(sb1.equals(sb2));
+        //converting stringBuffer into a string to compare
+        string s1 = sb1.toString()
+        string s2 = sb2.toString()
+        S.O.P.l(s1.equals(s2));
+        //or we can directly compare
+        S.O.P.l(sb1.toString().equals(sb2.toString()));
+    }
+}</div>
+<h3 class="r">Note</h3>
+<ul>
+<li>tostring() of object class is overridden in stringBuffer class which returns the string value present in given stringBuffer object</li>
+<li>hashCode() and equals() methods are not overridden</li>
+</ul>
+<h3 class="r">&#9733; Reverse string Using stringBuffer</h3>
+<div class="code">Public class stringBuffer-Reverse
+{
+    Public static void main(string[] args)
+    {
+        string s = "abcde"
+        stringBuffer rev = new stringBuffer();
+        For(int i = s.length()-1; i >= 0; i--)
+        {
+            char ch = s.charAt(i)
+            rev.append(ch)
+        }
+        S.O.P.l(rev);
+    }
+}</div>
+<p class="note">Diagram: rev = 0x2 &rarr; StringBuffer "edcba" (Heap); s = 0x1 &rarr; String "abcde" (SCP).</p>
+<ul><li>using stringBuffer in loops saves memory, reduce object creation, and improves performance compared to the string class</li></ul>
+<h3>Comparison: String, StringBuffer, StringBuilder</h3>
+<div class="scroll"><table class="tbl">
+<tr><th>Feature</th><th>String</th><th>StringBuffer</th><th>StringBuilder</th></tr>
+<tr><td>Mutability</td><td>Immutable</td><td>Mutable</td><td>Mutable</td></tr>
+<tr><td>object creation</td><td>Literals or New</td><td>only New</td><td>only New</td></tr>
+<tr><td>Default Capacity</td><td>No default capacity</td><td>16</td><td>16</td></tr>
+<tr><td>Memory area</td><td>SCP + Heap</td><td>Only Heap area</td><td>Heap only</td></tr>
+<tr><td>Concatenation</td><td>+ operator</td><td>use append()</td><td>use append()</td></tr>
+<tr><td>Synchronization</td><td>Not synchronized</td><td>Synchronized</td><td>Not synchronized</td></tr>
+<tr><td>Thread safety</td><td>yes (Immutable)</td><td>yes</td><td>No</td></tr>
+<tr><td>Performance</td><td>Low</td><td>medium</td><td>High</td></tr>
+<tr><td>Methods overridden</td><td>tostring(), equals(), hashCode()</td><td>tostring()</td><td>tostring()</td></tr>
+<tr><td>Best use</td><td>No frequent changes</td><td>Frequent changes + Multithreading</td><td>Frequent changes + single thread</td></tr>
+<tr><td>Introduced in</td><td>Java 1.0</td><td>Java 1.0</td><td>Java 1.5</td></tr>
+</table></div>
+<p class="note">(This table is drawn rotated 90&deg; on its page in the scan.)</p>
+<div class="code">Public class stringBuffered-Method
+{
+    Public static void main(string[] args)
+    {
+        stringBuffer sb = new stringBuffer("Hello");
+        // append() -> Adds New Data at the end of the existing stringBuffer, It modify same object
+        S.O.P.l(sb.append(" world"));
+        // capacity() -> Returns the total storage capacity
+        S.O.P.l(sb.capacity());      //16   <span class="flag">verify: new StringBuffer("Hello") gives 21</span>
+        // length() -> Return number of character present
+        S.O.P.l(sb.length());        //11
+        // charAt(index) -> Return char at the given index position
+        S.O.P.l(sb.charAt(1));       //e
+        // setCharAt(index, char) -> Replace the character at the given index
+        S.O.P.l(sb.setCharAt(0, 'h'));   //hello world
+        // insert(index, data) -> Inserts the given data at specified position
+        S.O.P.l(sb.insert(5, " Java"));  //hello Java world
+        // delete(start, end) -> Delete character from start to end -1
+        S.O.P.l(sb.delete(5, 10));       //hello world
+        // deleteCharAt(index) -> Delete character at given index
+        S.O.P.l(sb.deleteCharAt(0));     //ello world
+        // indexOf(string str) -> Return first occurence index
+        S.O.P.l(sb.indexOf("world"));    //5
+        // replace(start, end, string) -> Replace character
+        S.O.P.l(sb.replace(0, 4, "Hi")); //Hi world
+        // substring(start) -> Return new string from start index
+        S.O.P.l(sb.substring(0));        //Hi world
+        // substring(start, end) -> Return New string
+        S.O.P.l(sb.substring(0, 2));     //Hi
+        // Reverse() -> Reverse character
+        S.O.P.l(sb.reverse());           //dlrow iH
+        // ensureCapacity(size) -> Increase capacity if Needed
+        sb.ensureCapacity(50)
+        S.O.P.l(sb.capacity());
+        // tostring() -> converts stringBuffer to string
+        string s = sb.tostring
+        S.O.P.l(s);                      //dlrow iH
+    }
+}</div>
+</section>
+
+</main>
+</body>
+</html>

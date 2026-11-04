@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 09 Object Class</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-3 : Object class, toString ===== -->
+<section class="page">
+<h1>Java - 09 Object Class</h1>
+<h2>Object class</h2>
+<ul>
+<li>object class is defined in java.lang package</li>
+<li>It is the root class or parent class for all the class created in Java either predefined class or user classes</li>
+<li>object class can be immediate parent class or super class most parent class</li>
+<li>As a programmer if are creating any parent class for the child class then object class will be super most parent class for that child class</li>
+</ul>
+<div class="code">Public class Demo
+{
+    //Here are two instance such as object class
+    instance, then Demo class instance
+}
+public class parent
+{
+    //there are two instance such as object class
+    instance then parent class instance
+}
+class child extends parent
+{
+    // Here there are 3 instance such as First one is
+    object then parent instance then child class
+    instance
+}</div>
+<ul>
+<li>It is common methods which are required for all the objects in Java</li>
+<li>We have 11 non-static methods in object class</li>
+</ul>
+<p>&#9312; public string tostring()<br>&#9313; public boolean equals(object o)<br>&#9314; public int hashcode()<br>&#9315; protected void finalize()<br>&#9316; protected object clone()<br>&#9317; public final void wait()<br>&#9318; public final void wait(long)<br>&#9319; public final void wait(long, int)<br>&#9320; public final void notify()<br>&#9321; public final void notifyAll()<br>&#9322; public final class getclass() <span class="flag">verify: written "final class getclass()"</span></p>
+
+<h2 class="red">&#9312; public string tostring()</h2>
+<ul>
+<li>The return type of this method is String</li>
+<li>It is used to generate Address of an object in the String format</li>
+<li>Whenever we are trying to print the reference variable or reference of any object internally tostring() method will be called.</li>
+</ul>
+<p><span class="g">&#9733;</span> String format address</p>
+<p class="code">PackageName.className@ Hexa Decimal</p>
+<p><span class="g">&#9733;</span> Fully qualified name<br>There can be multiple classes with same name in different package so to avoid the confusion they invented Fully qualified name.</p>
+<p class="code">PackageName.className</p>
+<p><span class="g">&#9733;</span> tostring() implementation in object class</p>
+<div class="code">Public string tostring()
+{
+    return getclass().getName() + "@ " +
+        Integer.toHexString(hashCode());
+}</div>
+<p><span class="g">&#9733;</span> getclass().getName() will provide Fully qualified class name<br><span class="g">&#9733;</span> Integer.toHexString(hashcode()) will give hexa decimal number</p>
+<div class="code">Public class Demo
+{
+    int x;
+    Public static void main(string[] args)
+    {
+        Demo d = new Demo();
+        S.O.P.l(d);   //internally calls tostring()
+        S.O.P.l(d.tostring());
+    }
+}
+O/P   (Package)
+objectclassIntro.Demo@378db92
+objectclassIntro.Demo@378db92</div>
+<h3>&#9733; can we override tostring()</h3>
+<p>Yes, since object class is a parent for all the classes so we can override tostring() method</p>
+<div class="code">Public class Demo
+{
+    //overriding tostring() method of object class
+    @override
+    Public string tostring()
+    {
+        return "Hello"; //Returning custom String instead of default
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        Demo d = new Demo();
+        S.O.P.l(d.tostring()); //Explicitly calling
+        S.O.P.l(d); //Internally Java calls d.tostring()
+    }
+}</div>
+<p class="note">Diagram: object 0x1 holds an Object instance (toString()) and a Demo instance (toString()) from New Demo().</p>
+<h3>&#9733; Why to override tostring() ?</h3>
+<p>We can override tostring() method in such a way that if we print reference variable of an object, we can get the states of that object instead of the address<br>We use for write the Data of an address</p>
+<div class="code">Public class student
+{
+    int id;
+    string name;
+    int age;
+    Public student(int id, string name, int age)
+    {
+        this.id = id
+        this.name = name
+        this.age = age
+    }
+    Public string tostring() //overriding
+    {
+        return "id = " +id+" name = "+name+" age = "+age
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        student obj = new student(102, "Pravin", 21);
+        S.O.P.l(obj)
+    }
+}</div>
+<p>This program Demonstrate the overriding of the tostring() method in Java,<br>By overriding tostring(), we print the actual object data (id, name, age) instead of default memory address.<br>When S.O.P.l(obj) is called, the overridden tostring() method is automatically executed to display readable student details</p>
+<div class="code">* public class parent        public class child extends parent
+{                              {
+}                              }
+class Driver
+{
+    public static void main(string[] args)
+    {
+        object o1 = new parent()
+        object o2 = new child()
+    }
+}</div>
+<ul>
+<li>whenever we are creating the reference variable of parent type we can store object of parent class and also we can store object of child class through upcasting</li>
+<li>When we create a variable of object class type we can store any type of object address inside that, because object class is the super class for all the classes in Java.<br>implicitly through upcasting we can store any type of object address.</li>
+</ul>
+<div class="code">public void m1(object o)
+{
+    S.O.P.l(o)
+}</div>
+<ul><li>when we are having a method with formal argument of object class type we can pass any type of object address as the actual argument when we are calling the method.</li></ul>
+</section>
+
+<!-- ===== PDF PAGES 7-9 : equals ===== -->
+<section class="page">
+<h2 class="red">&#9313; public boolean equals(object obj)</h2>
+<ul>
+<li>The return type of this method is Boolean</li>
+<li>equals method compares the reference of the current object with the reference of the passed object</li>
+<li>if both the reference are same it returns true else returns False</li>
+</ul>
+<p><span class="g">&#9733;</span> Syntax to call equals method</p>
+<p class="code">current_obj.equals(passed-obj);</p>
+<p><b>current obj</b><br>an object using which we are calling the method<br><b>Passed object</b><br>an object which we are passing as a actual argument</p>
+<h3>&#9733; Note</h3>
+<p>Since the formal argument is of object type we can pass any type of object to equals(object) method</p>
+<p><span class="g">&#9733;</span> Implementation in object class</p>
+<div class="code">Public boolean equals(object obj)
+{
+    return (this == obj)
+}</div>
+<ul>
+<li>equals (==) operator will compare the reference of an object.</li>
+<li>equals() present in object class also will compare the reference of <span class="flag">line cut off at page end</span></li>
+</ul>
+<div class="code">Public class Demo
+{
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        Demo d1 = new Demo()
+        Demo d2 = new Demo()
+        S.O.P.l(d1 == d2);       //False
+        S.O.P.l(d1.equals(d2));  //False
+    }
+}</div>
+<p>This code Demonstrates object comparison in Java show that</p>
+<ul>
+<li>== &rarr; compares addresses.</li>
+<li>equals() &rarr; compare address by default, but can compare data if overridden</li>
+</ul>
+<h3>&#9733; Can we override equals method?</h3>
+<p>Yes, it is possible to override the equals method</p>
+<h3>&#9733; Why We need to override equals method ?</h3>
+<p>We can override equals() in any class to compare the states of an object instead of reference</p>
+<div class="code">Public class student
+{
+    int id;
+    string name;
+    int age;
+    Public student(int id, string name, int age)
+    {
+        this.id = id
+        this.name = name
+        this.age = age
+    }
+    Public boolean equals(object obj)
+    {
+        student s = (student) obj
+        if (this.id != s.id)
+            return False;
+        IF(!(this.name.equals(s.name)))
+            return False;
+        IF(this.age != s.age)
+            return False;
+        return true;
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        student d1 = new student(101, "pravin", 21);
+        student d2 = new student(101, "Pravin", 21);
+        S.O.P.l(d1 == d2);       //False  &rarr; It compare address
+        S.O.P.l(d1.equals(d2));  //True   &rarr; It compare data of an address
+    }
+}</div>
+</section>
+
+<!-- ===== PDF PAGES 10-11 : hashCode ===== -->
+<section class="page">
+<h2 class="red">&#9314; public int hashcode()</h2>
+<ul>
+<li>the return type of hashcode() is int</li>
+<li>hashcode() will be having access to the original object address in the memory</li>
+<li>it will return unique integer value based on the object reference [original address]</li>
+</ul>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        Demo d1 = new Demo();
+        S.O.P.l(d1.hashcode());   //a327324 <span class="flag">verify digits</span>
+    }
+}</div>
+<h3>&#9733; can we override hashcode() ?</h3>
+<p>Yes</p>
+<h3>&#9733; why to override hashcode ?</h3>
+<p>We can override hashcode() to generate unique integer value based on the states of an object.</p>
+<div class="code">Public class student
+{
+    int id;
+    string name;
+    int age;
+    Public student(int id, string name, int age)
+    {
+        this.id = id ;
+        this.name = name
+        this.age = age
+    }
+    Public int hashcode() //overriding hashcode to generate integer based on data
+    {
+        return id;
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        student obj = new student(101, "pravin", 21);
+        S.O.P.l(obj.hashcode());   //101
+    }
+}</div>
+<ul>
+<li>The program demonstrates overriding the hashCode() method in Java</li>
+<li>The student class returns the id as the custom hash value instead of the Default memory-based hash</li>
+<li>It shows how an object can be identified using data rather than memory address</li>
+<li>hashcode() is mainly used for Fast searching and storage in hash-based collections</li>
+<li>In real application, hashCode() is usually overridden along with equals()</li>
+</ul>
+<h3>Note</h3>
+<ul><li>Java doesn't provide original address of an object, instead it will print String format address whenever we print the reference variable by calling tostring() implicitly, which internally uses hashcode().</li></ul>
+</section>
+
+</main>
+</body>
+</html>
