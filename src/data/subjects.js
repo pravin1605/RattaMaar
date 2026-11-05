@@ -60,7 +60,21 @@ const subjects = [
         id: "java-10",
         title:"String Class",
         file:"/java/java_10_string.html",
-       }
+       },
+       {id: "java-11",
+        title:"Wrapper Class",
+        file:"/java/java_11_wrapper class.html", },
+
+      {
+        id: "java-12",
+        title:"Exceptions",
+        file:"/java/java_12_exception.html",
+      },
+      {
+        id: "java-13",
+        title:"Array Objects",
+        file:"/java/java_13_array object.html",
+      }
       
        
     ]

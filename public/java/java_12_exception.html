@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 12 Exception</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-3 : Termination, Exception ===== -->
+<section class="page">
+<h1>Java - 12 Exception</h1>
+<h2>Termination</h2>
+<ul><li>Termination is the process of stopping a program after the main() method finishes execution normally or when it stop due to an error</li></ul>
+<h3>Types of termination</h3>
+<p>&#9312; Normal termination &nbsp; &#9313; Forced termination &nbsp; &#9314; Abrupt termination</p>
+<h3 class="r">&#9312; Normal termination</h3>
+<ul><li>when entire program executes successfully till the last instruction then we say it is normal termination</li></ul>
+<div class="code">Public class Normal_termination
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main started")
+        S.O.P.l("main ended")
+    }
+}
+O/P
+main started
+main ended</div>
+<h3 class="r">&#9313; Forced Termination</h3>
+<ul>
+<li>Forced termination means stopping a Java program manually before it finishes executing all statements when system.exit(0)</li>
+<li>The JVM stop running the program immediately</li>
+<li>All currently running threads are terminated</li>
+<li>Remaining statements after system.exit() are ignored</li>
+<li>control returns to the operating system</li>
+</ul>
+<p>so the program ends instantly</p>
+<div class="code">Public class Forced-termination
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main started")
+        system.exit(0);
+        S.O.P.l("main end")
+    }
+}
+O/P
+main started</div>
+<h3 class="r">&#9314; Abrupt Termination</h3>
+<ul><li>Abrupt termination means suddenly stopping the normal flow of program execution before reaching the expected end of a block or statement</li></ul>
+<div class="code">Public class Demo3
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main started ")
+        S.O.P.l(10/0)  //Arithmetic Exception
+        S.O.P.l("main ended")
+    }
+}
+O/P
+main started
+Exception in thread "main" java.lang.ArithmeticException: / by zero at module1/ExceptionIntro.Demo3.main(Demo3.java:9)</div>
+
+<h2>Exception</h2>
+<ul>
+<li>It is an unexpected event or a problem that occur during the execution of a program and disturbs the normal flow of the program.</li>
+<li>when an exception occurs program execution will be abruptly terminated from the line where exception occurred [if not handled]</li>
+</ul>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main started")
+        string s = null;
+        char c = s.charAt(0);  // Null Pointer Exception
+        S.O.P.l(c);
+        S.O.P.l("main end")
+    }
+}
+O/P
+main started
+Exception in thread "main" java.lang.NullPointerException: cannot invoke "string.charAt(int)" because "s" is null at module1/ExceptionIntro.Demo4.main(Demo4.java:9)</div>
+<h3 class="r">Note</h3>
+<ul><li>Program will be abruptly terminated only if exception is not handled when it occured</li></ul>
+<p><span class="g">&#9733;</span> What is exception with respect to Java?</p>
+<ul>
+<li>In Java every exception is an object</li>
+<li>For every exception object there is a built in class <span class="flag">sentence ends at the page edge; the next scan page is blank</span></li>
+</ul>
+</section>
+
+<!-- ===== PDF PAGES 5-7 : Throwable, what happens, try-catch ===== -->
+<section class="page">
+<h2>Throwable class</h2>
+<ul>
+<li>Throwable is a super class of error and exception</li>
+<li>The Throwable class defines the common properties and behaviours of error and Exception</li>
+<li>The throwable class is present in Java.lang package</li>
+</ul>
+<h3>Imp methods in throwable class</h3>
+<p>&#9312; <b>public string getMessage()</b></p>
+<ul><li>is a method used to return the detailed error message of exception</li><li>Defined in throwable class</li><li>Returns only message part</li><li>Returns null if no message is provided</li><li>Helps in custom exception handling</li></ul>
+<p>&#9313; <b>public void printStackTrace();</b></p>
+<ul><li>It is used to print the complete details of an exception, including<br>- exception name<br>- Error message<br>- Line number<br>- File name<br>- Method call history</li></ul>
+<h3 class="r">What exactly happens when an exception occur in Java?</h3>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main started");
+        S.O.P.l(10/0);      &rarr; JVM creates ArithmeticException object (0x1)
+        S.O.P.l("main ended");
+    }
+}</div>
+<ul>
+<li>When an exception occurs, one object of appropriate exception type will be created</li>
+<li>That object contains instance of Throwable class</li>
+<li>That object contains the details of exception, like line number at which the the exception occurred the method name and the class name and it also contains the reason for the exception</li>
+<li>This process is called as raising an exception</li>
+<li>once the exception is raised or occured JVM will check if the exception is handle or not</li>
+<li>IF exception is handled program execution will be continued</li>
+<li>IF the exception is not handled program execution will be abruptly stopped from the line where exception occured and default exception handler will call printstackTrace() method</li>
+<li>what ever exception message we are seeing on the console is just because of the printstackTrace()</li>
+</ul>
+<h2 class="red">Exception handling</h2>
+<p>In Java exception are handled by using try-catch block</p>
+<p><span class="r">syntax</span></p>
+<div class="code">try {
+    //instruction which may give exception
+}
+catch(Exception-name Variable)
+{
+    //handler
+}</div>
+<ul>
+<li>We use try block block to write the instruction which may cause exception</li>
+<li>catch block is used to handle the exception if occured</li>
+<li>IF any exception occurs in any line inside try block, control will directly go to catch block without executing further instructions inside try block.</li>
+<li>IF the catch block is able to handle the exception occurred catch block will get executed without abrupt termination</li>
+<li>IF no exception occurs in try block, try block will be completely executed and catch block will never get executed</li>
+</ul>
+<h3 class="r">Note</h3>
+<ul><li>We can use n number of catch blocks along with one try block</li></ul>
+<div class="code">try
+{
+}
+catch(Exception_name variable_name)
+{
+}
+catch(Exception_name variable_name)
+{
+}</div>
+<ul><li>IF 2 or more catch blocks are defined and exception occurred control will go to the First catch block which can handle the occurred Exception</li></ul>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main started ")
+        try
+        {
+            S.O.P.l("try started ");
+            S.O.P.l(10/0);   // ArithmeticException
+            S.O.P.l("Hello");       &#10007;
+            S.O.P.l("try ended");   &#10007;
+        }
+        catch(ArithmeticException exp)
+        {
+            S.O.P.l("catch started")
+            S.O.P.l("exception handled");
+            S.O.P.l("catch ended")
+        }
+        S.O.P.l("main ended");
+    }
+}
+O/P
+main started
+try started
+catch started
+exception handled
+catch ended
+main ended</div>
+</section>
+
+<!-- ===== PDF PAGES 8-13 : finally and nested try-catch ===== -->
+<section class="page">
+<h2 class="red">Try-catch Finally</h2>
+<h3>syntax-01</h3>
+<div class="code">try
+{   //Instruction which many give exception
+}
+catch(Exception-name variable)
+{   //handler code
+}
+finally
+{   //always execute;
+}</div>
+<ul>
+<li>IF exception occurs in try block
+ <ul><li>First catch block will be executed if that catch block is able to handle occurred exception and then finally will be executed</li><li>IF the catch block is not able to handle code or the exception occured even though it is not handled finally block will get executed.</li></ul></li>
+<li>IF exception doesn't occurs in try block
+ <ul><li>catch block will never executed</li><li>only finally will be executed</li></ul></li>
+</ul>
+<h3>syntax-02</h3>
+<div class="code">try
+{   //Instruction which may give exception
+}
+finally
+{   //always executes
+}</div>
+<p>We can use finally along with try block without using catch block.</p>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main start ");
+        try
+        {
+            S.O.P.l("Try start")
+            S.O.P.l(10/0)  //Arithmetic exception
+            S.O.P.l("Try end)
+        }
+        catch(ArithmeticException e)
+        {
+            S.O.P.l("catch start");
+            S.O.P.l("exception handled");
+            S.O.P.l("catch end");
+        }
+        Finally
+        {
+            S.O.P.l("Finally start")
+            S.O.P.l("Finally end")
+        }
+        S.O.P.l("main end")
+    }
+}
+O/P
+main Start
+try start
+catch start
+exception handled
+catch end
+Finally start
+Finally end
+main end</div>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        Scanner sc = new scanner(system.in)
+        S.O.P.l("main start ")
+        try
+        {
+            S.O.P.l("try start")
+            S.O.P.l(10/0)
+        }  S.O.P.l("Try end")
+        Finally
+        {
+            S.O.P.l("Finally start")
+            sc.close();
+            S.O.P.l("Finally end")
+        }
+        S.O.P.l("main end")
+    }
+}
+O/P
+main start
+try start
+Finally start
+Finally end
+Exception in thread "main" java.lang.ArithmeticException</div>
+<h3 class="r">Note</h3>
+<ul>
+<li>Finally block will get executed whether exception occurred or not occurred whether it is handled or not handled</li>
+<li>mainly we use Finally block to close the costly resources like scanner object and connection object.</li>
+</ul>
+<h2 class="red">Nested try-catch</h2>
+<p>A Nested try-catch block means writting a try-catch block inside another try block<br>This help when<br>&#8226; you have multiple riskey operation<br>&#8226; you want to handle exception separately</p>
+<div class="code">try {                    try {
+    try {                }
+    }                    catch()
+    catch                {   try {
+    {                        }
+    }                        catch(){ }
+    ...                  }</div>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main start")
+        string s = null
+        try //outer try
+        {
+            S.O.P.l("outer try start")
+            S.O.P.l(10/2);
+            try //Inner try/Nested try
+            {
+                S.O.P.l("Inner try start")
+                S.O.P.l(s.charAt(0))   //NullpointerException
+                S.O.P.l("Inner try end")
+            }
+            catch(NullpointerException n) //Inner catch
+            {
+                S.O.P.l("Inner catch start")
+                S.O.P.l("Inner catch end")
+            }
+            S.O.P.l("outer try end")
+        }
+        catch(ArithmeticException e) //outer catch
+        {
+            S.O.P.l("outer catch start")
+            S.O.P.l("outer catch end")
+        }
+        S.O.P.l("main end")
+    }
+}
+O/P
+main start
+outer try start
+5
+Inner try start
+Inner catch start
+Inner catch end
+outer try end
+main end</div>
+<div class="code">Public class Finally
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main start")
+        try
+        {
+            S.O.P.l("try start")
+            S.O.P.l(10/0);
+            try
+            {
+                S.O.P.l("Inner try")
+                S.O.P.l("10/0")
+            }
+            catch(Arithmetic exception e)
+            {
+                S.O.P.l("Inner catch")
+            }
+            Finally
+            {
+                S.O.P.l("Inner Finally")
+            }
+            S.O.P.l("try end");
+        }
+        catch(ArithmeticException e)
+        {
+            S.O.P.l("outer catch start")
+            S.O.P.l("outer catch end")
+        }
+        Finally
+        {
+            S.O.P.l("outer Finally")
+        }
+        S.O.P.l("main end")
+    }
+}
+O/P
+Main start
+try start
+outer catch start
+outer catch end
+outer Finally
+main end</div>
+<ul><li>The Finally block is never executed when the programmer forcefully terminates the program using system.out.exit(0)</li></ul>
+</section>
+
+<!-- ===== PDF PAGES 14-15 : Exception object propagation ===== -->
+<section class="page">
+<h2>Exception object propagation</h2>
+<ul>
+<li>when an exception occurs in a method body the JVM looks For the handler code in the same method body</li>
+<li>IF the handler code is not Found in the same method body the execution object propagates to caller method searching For the handler</li>
+<li>IF the handler is Found in the caller method the JVM execute the handler code and continues program execution from caller method this process continues until the handler is Found somewhere in the entire stack</li>
+<li>IF the handler is not present in the stack the JVM unwinds the stack and stops execution this known as <span class="r">stack unwinding</span></li>
+<li>after unwinding the stack default exception handler calls the printstackTrace() this method printstackTrace() prints all data releated to exception</li>
+</ul>
+<h3>Definition</h3>
+<p>The moment of exception object from the current method to its caller when exception occurred and not handled is known as <span class="r">exception object propogation</span></p>
+<div class="code">Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main start ")
+        m1();
+        S.O.P.l("main end ").
+    }
+    Public static void m1()
+    {
+        S.O.P.l("m1 start")
+        m2();
+        S.O.P.l("m1 end")
+    }
+    Public static void m2()
+    {
+        S.O.P.l("m2 start")
+        m3()
+        S.O.P.l("m2 end")
+    }
+    Public static void m3()
+    {
+        S.O.P.l("m3 start")
+        S.O.P.l(10/0);   //ArithmeticException
+        S.O.P.l("m3 end")
+    }
+}
+O/P
+main start
+m1 start
+m2 start
+m3 start
+Exception -</div>
+<p class="note">Diagram: the stack holds main, m1(), m2() and m3() frames (m3 on top, "m3 started (10/0)"). The JVM creates an ArithmeticException object (0x1) and searches for a handler in m3, then m2, then m1, then main; with none found, the JVM calls the Default Exception handler, which calls printStackTrace().</p>
+</section>
+
+<!-- ===== PDF PAGES 16-18 : Checked, unchecked, throws ===== -->
+<section class="page">
+<h2>Types of Exception</h2>
+<ul><li>checked Exception</li><li>unchecked Exception</li></ul>
+<h3 class="r">&#9312; Unchecked exception</h3>
+<ul>
+<li>unchecked exception are the exceptions which are not identified by the compiler</li>
+<li>All the subclasses to the RuntimeExceptions class are unchecked exception</li>
+</ul>
+<h3 class="r">&#9313; Checked Exception</h3>
+<ul>
+<li>The exceptions which are identified by the compiler during compilation are checked exceptions</li>
+<li>IF compiler identifies any checked exceptions we get compile time error</li>
+<li>until we write the handler code this CTE will not be gone</li>
+<li>All exception classes except RuntimeException hierarchy comes under checked exception</li>
+<li>they are identified during compile time, but occurs during runtime only</li>
+</ul>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        system.out.println("main start")
+        File F = new File("c:\basic");
+        //this instruction may throw IOException
+        //since it throw IOException which is checked exception
+        //we get CTE
+        //we must and should handle this using try-catch block
+        F.createNewFile()  //CTE
+        S.O.P.l("main end")
+    }
+}</div>
+<p>After writing handler code</p>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        File F = new file("c\basic");
+        try
+        {
+            F.createNewFile();
+        }
+        catch(IOException e)
+        {
+        }
+    }
+}</div>
+<h3 class="r">Note</h3>
+<ul>
+<li>Always Exception occurs during runtime only</li>
+<li>checked Exception are not propogated automatically to the caller method</li>
+<li>only unchecked exception are propogated automatically</li>
+</ul>
+<h2 class="red">Throws</h2>
+<ul>
+<li>Throws is a declaration keyword used in the method declaration or constructor declaration</li>
+<li>It is used to propogate the exception object from called method to caller method</li>
+<li>It specifies that the checked exception may occur in the current method body is not handled it must be handled in the caller method</li>
+</ul>
+<div class="code">Public class Driver
+{
+    Public static void main(string[] args) throws IOException
+    {
+        S.O.P.l("main start")
+        m1()
+        S.O.P.l("main end")
+    }
+    Public static void m1() throws IOException
+    {
+        S.O.P.l("m1 start")
+        m2()
+        S.O.P.l("m1 end")
+    }
+    Public static void m2() throws IOException
+    {
+        S.O.P.l("m2 start")
+        m3()
+        S.O.P.l("m2 end")
+    }
+    Public static void m3() throws IOException
+    {
+        S.O.P.l("m3 start")
+        File f = new File("c:\basic")
+        F.createNewFile();
+        S.O.P.l("m3 end")
+    }
+}</div>
+</section>
+
+<!-- ===== PDF PAGES 19-23 : Custom exception, throw ===== -->
+<section class="page">
+<h2>Custom Exception</h2>
+<ul>
+<li>It is also called user defined exception</li>
+<li>Exception which are created by the programmer is known as user defined exception</li>
+<li>In Java we can create user defined exception objects by using <span class="r">throw</span> keyword</li>
+</ul>
+<h2 class="red">Throw</h2>
+<ul>
+<li>Throw is a keyword which is used to create and rise custom exception object.</li>
+<li>Throw keyword can be used only inside blocks</li>
+<li>By using throw keyword we can throw checked exception, unchecked exception and custom exception</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<p class="code">throw ThrowableType object;</p>
+<p>example</p><p class="code">throw new ArithmeticException</p>
+<h3 class="r">Steps to create custom exception</h3>
+<ul>
+<li>create a class and inherit any class which is throwable type</li>
+<li>create the object of that class and use throw keyword to throw the object</li>
+<li>to display the reason for exception if not handled we can create a parameterized constructor which accepts String message inside the custom exception class and using super() we can call pass this message to throwable class</li>
+<li>using throw keyword we can throw only throwable type objects</li>
+</ul>
+<div class="code">Public class IneligibleToVote extends RuntimeException
+{
+    Public IneligibleToVote(string msg)
+    {
+        super(msg)
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args) throws IneligibleToVote
+    {
+        Scanner sc = new scanner(system.in)
+        S.O.P.l("enter your age ");
+        int age = sc.nextInt()
+        IF(age <= 18)   <span class="flag">verify: 18 is eligible in the chapter 03 voting example</span>
+        {
+            throw new IneligibleToVote("you are not eligible")
+        }
+        else
+        {
+            S.O.P.l("eligible for voting")
+        }
+    }
+}</div>
+<h3 class="r">Imp Point.</h3>
+<p>1) The Exception and throwable classes are partially checked and partially unchecked, even though compiler will consider them as checked exception only</p>
+<p>2) IF we are creating custom exception class by inheriting checked exception or Partially checked exception, the custom exception also will be considered as checked exception by the compiler.</p>
+<p>3) IF we trying to throw the custom exception which is considered as checked exception we have to either handle it or propogate it by using throws keyword. it works same like checked exception</p>
+<div class="code">Public class NotEligible extends RuntimeException
+{
+    //to print the message along with the exception we are creating a constructor, this message will be
+    passed to detailMessage variable inside throwable class through constructor chaining using super()
+    Public NotEligible(string message)
+    {
+        super(message);
+    }
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        S.O.P.l("main start")
+        throw new Noteligible("Not eligible")
+        S.O.P.l("main end")  //CTE [unreachable code]
+        //IF we are writing any code after throwing an exception object using throw keyword we get compile time Error stating that unreachable code
+        //throw keyword should be last executable instruction within that block IF it is not handled
+    }
+}</div>
+<ul>
+<li>IF we are throwing checked exception using throw keyword we get CTE in the line where we are throwing it.</li>
+<li>We must and should handle the checked exception during compile time untill we handle the exception error will not be gone</li>
+</ul>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        throw new IOException();  //CTE
+    }
+}</div>
+<div class="scroll"><table class="tbl">
+<tr><th>unchecked</th><th>checked</th></tr>
+<tr><td>&#9312; Unchecked exception are not identified by the compiler</td><td>&#9312; checked exception are identified by the Compiler</td></tr>
+<tr><td>&#9313; Unchecked exception also occur during run time</td><td>&#9313; checked exception occur during runtime</td></tr>
+<tr><td>&#9314; Compiler does not Focus to handle</td><td>&#9314; Compiler Focus to handle the exception</td></tr>
+<tr><td>&#9315; Handling is optional</td><td>&#9315; Handling must be using try-catch and throws</td></tr>
+<tr><td>&#9316; Belong RuntimeException class</td><td>&#9316; Belong to Exception class (except RuntimeException)</td></tr>
+</table></div>
+<div class="scroll"><table class="tbl">
+<tr><th>throw</th><th>throws</th></tr>
+<tr><td>&#9312; throw is used to explicitly create and throw an exception</td><td>&#9312; throws is used to declare exceptions</td></tr>
+<tr><td>&#9313; throw is used inside a method or Block</td><td>&#9313; throws is used in the method declaration or constructor declaration</td></tr>
+<tr><td>&#9314; Using throw keyword we can throw only one exception at a time</td><td>&#9314; can declare multiple exceptions</td></tr>
+<tr><td>&#9315; Using throw keyword we can throw only throwable type objects</td><td>&nbsp;</td></tr>
+</table></div>
+</section>
+
+</main>
+</body>
+</html>

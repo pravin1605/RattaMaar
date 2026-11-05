@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 11 Wrapper Class</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGE 1 : Wrapper class ===== -->
+<section class="page">
+<h1>Java - 11 Wrapper Class</h1>
+<h2>Wrapper class</h2>
+<ul>
+<li>A wrapper class in Java is a predefined class that converts a primitive data type into an object</li>
+<li>In simple words, wrapper classes wrap (convert) primitive values into objects so that they can be used where objects are required</li>
+<li>In order to represent primitive datatype as an object we use wrapper classes</li>
+<li>For every primitive data type, there is a corresponding wrapper class available in Java</li>
+<li>Java is not 100% object oriented because of Primitive data types, to make Java 100% object oriented we use wrapper</li>
+<li>therefore to represent primitive datatype as object we use wrapper classes</li>
+</ul>
+<div class="scroll"><table class="tbl">
+<tr><th>Primitive type</th><th>Wrapper class</th></tr>
+<tr><td>byte</td><td>Byte</td></tr>
+<tr><td>short</td><td>short <span class="flag">verify: Short</span></td></tr>
+<tr><td>int</td><td>Integer</td></tr>
+<tr><td>long</td><td>Long</td></tr>
+<tr><td>Float</td><td>Float</td></tr>
+<tr><td>double</td><td>Double</td></tr>
+<tr><td>char</td><td>Charater <span class="flag">verify: Character</span></td></tr>
+<tr><td>boolean</td><td>boolean <span class="flag">verify: Boolean</span></td></tr>
+</table></div>
+<h3>properties</h3>
+<p>&#9312; All wrapper classes are Final classes</p>
+<p>&#9313; All wrapper classes are present in Java.lang.</p>
+<p>&#9314; Immutable</p>
+<p>&#9315; useful in collection framework</p>
+<p>&#9316; can Handle Null values</p>
+</section>
+
+<!-- ===== PDF PAGES 2-4 : Boxing, unboxing ===== -->
+<section class="page">
+<h2 class="red">&#9312; Boxing</h2>
+<ul>
+<li>The process of converting primitive type into non-primitive using built-in methods is called as Boxing</li>
+<li>Boxing can be performed by using valueOf()</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<p class="code">Wrapper_class_name.valueOf(Primitive Data/variable)</p>
+<p>ex &#9312; Integer.valueOf(10) &#9313; Character.valueOf('a') &#9314; Boolean.valueOf(true)</p>
+<ul><li>valueOf() is static method which is present in every wrapper class</li></ul>
+<div class="code">Public class Boxing
+{
+    Public static void main(string[] args)
+    {
+        int x = 10
+        Integer i = Integer.valueOf(x)
+        S.O.P.l(i)
+
+        boolean b = true;
+        Boolean b1 = Boolean.valueOf(b)
+        S.O.P.l(b1)
+    }
+}</div>
+<div class="two">
+<table class="tbl auto"><tr><th colspan="2">Integer object 0x1 &nbsp;(i = 0x1)</th></tr><tr><td>val</td><td>10</td></tr><tr><td colspan="2">method</td></tr></table>
+<table class="tbl auto"><tr><th colspan="2">Boolean object 0x1 &nbsp;(b1 = 0x1)</th></tr><tr><td>val</td><td>true</td></tr><tr><td colspan="2">method</td></tr></table>
+</div>
+
+<h2 class="red">&#9313; UnBoxing</h2>
+<ul>
+<li>The process of converting non-primitive [wrapper] into primitive type by using built-in methods is called as unBoxing</li>
+<li>UnBoxing can be performed by using following method</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<p class="code">xxxValue()    (xxx &rarr; primitive data type)</p>
+<p>ex &nbsp; For int &rarr; intValue(); &nbsp; For byte &rarr; byteValue</p>
+<div class="code">Public class unBoxing
+{
+    Public static void main(string[] args)
+    {
+        Integer i = 10;
+        int x = i.intValue();
+        S.O.P.l(x);   //10
+
+        character c = 'a';
+        char c1 = c.charValue();
+        S.O.P.l(c1);  //a
+
+        Boolean b = true;
+        boolean b1 = b.booleanValue();
+        S.O.P.l(b1)   //true
+    }
+}</div>
+<div class="two">
+<table class="tbl auto"><tr><th colspan="2">Integer 0x1 (i)</th></tr><tr><td>Val</td><td>10</td></tr><tr><td colspan="2">intValue()</td></tr></table>
+<table class="tbl auto"><tr><th colspan="2">Character 0x1 (c)</th></tr><tr><td>Val</td><td>'a'</td></tr><tr><td colspan="2">charValue()</td></tr></table>
+<table class="tbl auto"><tr><th colspan="2">Boolean 0x1 (b)</th></tr><tr><td>Val</td><td>true</td></tr><tr><td colspan="2">booleanValue()</td></tr></table>
+</div>
+
+<h2 class="red">&#9314; Auto Boxing</h2>
+<ul>
+<li>The process of converting primitive type into non-Primitive [wrapper class] without using built-in methods is called as Auto Boxing.</li>
+<li>auto Boxing is possible from Java 1.5 version onwards</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<p class="code">Wrapper_class objectName = PrimitiveValue</p>
+<p>Because of autoBoxing, the compiler internally convert it to</p>
+<p class="code">wrapper_class objectName = wrapper_class.valueOf(Primite value)</p>
+<div class="code">Public class AutoBoxing
+{
+    Public static void main(string[] args)
+    {
+        Integer i = 10
+        S.O.P.l(i)
+    }
+}</div>
+<p class="note">Diagram: i = 0x1 &rarr; Integer object 0x1 (val 10, valueOf()).</p>
+
+<h2 class="red">&#9315; Auto UnBoxing</h2>
+<ul>
+<li>The process of converting non-primitive type without using built in methods is known as auto unBoxing</li>
+<li>this is also possible from Java 1.5 version</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<p class="code">PrimitiveType Variable_Name = wrapperObject.</p>
+<p>Internally, the compiler convert it to</p>
+<p class="code">Primitivetype Variable_name = wrapperobject.primitiveValue();</p>
+<div class="code">Public class Auto-unBoxing
+{
+    Public static void main(string[] args)
+    {
+        Integer i = 10
+        int x = i
+        S.O.P.l(x)
+    }
+}</div>
+</section>
+
+<!-- ===== PDF PAGES 5-7 : equals, hashCode, parsing ===== -->
+<section class="page">
+<div class="code">Public class equals-method-01
+{
+    Public static void main(string[] args)
+    {
+        Integer i1 = 400;  // auto Boxing
+        Integer i2 = 400;  // auto Boxing
+        // comparing address
+        S.O.P.l(i1 == i2);        // False
+        // comparing actual value
+        S.O.P.l(i1.equals(i2));   // true
+    }
+}</div>
+<ul>
+<li>When we use == to compare two wrapper class objects it compares the address of the two wrapper class objects</li>
+<li>IF we want to compare based on data we need to make use of equals() method</li>
+<li>equals() method of object class is overridden inside all the wrapper class</li>
+</ul>
+<div class="code">Public class equals-method-02
+{
+    Public static void main(string[] args)
+    {
+        Integer i1 = 120;
+        Integer i2 = 120;
+        S.O.P.l(i1 == i2)  // true
+    }
+}</div>
+<ul><li>When we are creating two wrapper classes object and the value are same with in the range of byte i.e -128 to +127 then duplicates objects will not be created, instead address of existing object will be returned, in the above example i1 and i2 are pointing to same address</li></ul>
+<ul><li>In all the wrapper classes hashCode of object class is overridden in such a way that it returns int value which is generated based on the data instead of original address of the object</li></ul>
+<div class="code">Integer i = 30
+S.O.P.l(i.hashCode());  //30</div>
+
+<h2>Parsing</h2>
+<ul>
+<li>The process of converting string to any wrapper class type, or primitive type is known as parsing</li>
+<li>It is widely used in user input, file handling, API response and data validation</li>
+<li>Without parsing performing arithmetic, logical operation or proper data processing is not possible</li>
+</ul>
+<p><span class="r">syntax</span></p>
+<p class="code">PrimitiveType variable = wrapperclass.parsexxx(string s)</p>
+<p class="note">xxx &rarr; primitive data type</p>
+<div class="code">string s = "123"
+int x = Integer.parseInt(s)
+S.O.P.l(x)
+
+Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        string s = "True"
+        boolean b1 = Boolean.parseBoolean(s)
+        S.O.P.l(b1)  // True
+
+        Boolean b2 = Boolean.parseBoolean(s)
+        S.O.P.l(b2)  // True
+    }
+}</div>
+<h3 class="r">parsexxx()</h3>
+<ul>
+<li>It is a method of wrapper class, it converts the string data into int, double or Float</li>
+<li>But will work only, IF string holds data properly i.e Numbers otherwise we will get NumberformatException</li>
+</ul>
+<div class="code">string s = "123abc"
+int x = Integer.parseInt(s)  //CTE   <span class="flag">verify: this fails at run time, not compile time</span>
+O/P
+Exception in thread 'main' java.lang.NumberFormatException</div>
+<h3>Note</h3>
+<ul>
+<li>We Don't have any parsechar() method in character class because string is group of character and char means it can have only one character.</li>
+<li>Group of character can not be converted into one single character</li>
+<li>Instead we make use of string class charAt(int i) method to convert string into a char</li>
+</ul>
+</section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 13 Array of Objects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-4 : Array of objects ===== -->
+<section class="page">
+<h1>Java - 13 Array of Objects</h1>
+<h2>Array of Objects</h2>
+<ul><li>When we are creating int[] we can store integer values in each index</li></ul>
+<div class="code">int[] arr = {10, 20, 30};</div>
+<p><span class="bits"><i>10</i><i>20</i><i>30</i></span> <span class="note">arr = 0x1, index 0 to 2 (int data)</span></p>
+<ul><li>when we are creating an array of string we can store address of string object in each index</li></ul>
+<div class="code">string[] sarr = new string[3]
+sop(sarr[1]);  //abA</div>
+<p class="note">Diagram: sarr = 0x0; index 0 = 0x1 &rarr; "abc", index 1 = 0x2 &rarr; "abA", index 2 = 0x3 &rarr; "ghi" (string type objects).</p>
+<ul><li>similarly when we create an array of student[] we can store the address of student objects inside each index</li></ul>
+<div class="code">class student
+{
+}
+student[] sarr = new student[3]
+S.O.P.l(sarr[1])  //0x2</div>
+<p class="note">Diagram: sarr = 0x0 holding 0x1, 0x2, 0x3, each pointing to its own student object.</p>
+<ul><li>When we have an array of object[] we can store any type of object address through upcasting</li></ul>
+<div class="code">class laptop { }     class student { }     class employee { }
+object[] arr = new object[3]</div>
+<p class="note">Diagram: arr = 0x0 holding 0x1 &rarr; laptop, 0x2 &rarr; student, 0x3 &rarr; employee.</p>
+<ul>
+<li>When we have a method with Formal argument int[] we can pass the address of int[] when we are calling it.</li>
+</ul>
+<div class="two"><div class="code">void m1(int[] arr)
+{
+}</div><div class="code">calling
+int[] arr = {1,2,3};
+m1(arr);</div></div>
+<ul><li>when we have a method which is having a Formal argument of student[], we can pass the address of student[] when we are calling it</li></ul>
+<div class="two"><div class="code">Void m1(student[] arr)
+{
+}</div><div class="code">Calling
+student[] arr = new student[3]
+m1(arr);</div></div>
+<ul><li>When we have a method with Formal argument object[] we can pass address of any type of array through upcasting</li></ul>
+<div class="two"><div class="code">Void m1(object[] arr)
+{
+}</div><div class="code">student[] arr;
+Laptop[] Larr;
+emp[] earr;
+m1(sarr)  m1(Larr)  m1(earr)</div></div>
+<h3 class="r">Note</h3>
+<p>We have a sort(object[] arr) method which have Formal argument as object[] array, so we can call this method by passing array address of any type</p>
+<div class="code">Public class student
+{
+    int id
+    string name
+    int height
+    Public student(int id, string name, int height)
+    {
+        this.id = id
+        this.name = name
+        this.height = height
+    }
+    //tostring() method is overridden to print data
+    @Override
+    Public string tostring()
+    {
+        return " student [id=" +id+ ", name=" +name+ ", height=" +height+ "]";
+    }
+}
+Public class studentDriver
+{
+    Public static void main(string[] args)
+    {
+        //creating an array which can store address of 5 student objects
+        Student[] sarr = new student[5];
+        student s1 = new student(101, "pravin", 150);
+        student s2 = new student(110, "Anirudh", 145);
+        student s3 = new student(104, "onkar", 160);
+        student s4 = new student(109, "Ketan", 155);
+        student s5 = new student(111, "sanika", 135);
+        sarr[0] = s1
+        sarr[1] = s2
+        sarr[2] = s3
+        sarr[3] = s4
+        sarr[5] = s5   <span class="flag">verify: index 5 is out of range for size 5</span>
+        S.O.P.l("=== before sorting ===")
+        For(int i = 0; i < sarr.length; i++)
+        {
+            //tostring method automatically called
+            S.O.P.l(sarr[i])
+        }
+        //sorting student array
+        //this works only if student class implements comparable
+        Arrays.sort(sarr);
+        S.O.P.l("=== after sorting ===")
+        For(int i = 0; i < sarr.length; i++)
+        {
+            S.O.P.l(sarr[i])
+        }
+    }
+}
+O/P
+=== before sorting ===
+student[id=101, name=pravin, height=150]
+student[id=110, name=Anirudh, height=145]
+student[id=104, name=onkar, height=160]
+student[id=109, name=ketan, height=155]
+student[id=111, name=sanika, height=135]
+Exception in thread "main" java.lang.ClassCastException: class sorting.Student cannot be cast to class java.lang.comparable</div>
+<p>This code will give Runtime error like <span class="r">classcastException</span><br>Because comparable is not implemented in student class<br>To sort objects using Arrays <b>Arrays.sort(sarr);</b> the class must implement comparable.</p>
+</section>
+
+<!-- ===== PDF PAGES 5-8 : Comparable ===== -->
+<section class="page">
+<h2>Comparable Interface</h2>
+<ul>
+<li>comparable interface is used to sort the group of elements in Java</li>
+<li>It is present in Java.lang package</li>
+<li>It is functional interface</li>
+<li>an interface having only one abstract method is known as functional interface</li>
+<li>By default, sort method arrange elements in ascending order only, we call that as Natural order</li>
+<li>In Java single value data can be automatically sorted in Natural order</li>
+<li>In Java we have multi value data, like objects</li>
+<li>since an object can contain multiple fields, Java needs to know which field to be compared for sorting to avoid confusion</li>
+<li>in user-defined classes, we should specify the field to compare by using <span class="r">compareTo()</span> which is present in <span class="r">comparable</span> interface</li>
+</ul>
+<h3 class="r">Steps to use compareTo()</h3>
+<p>step-1 &nbsp; user defined class should implements comparable interface</p>
+<p>step-2 &nbsp; override compareTo() abstract method and provide sorting logic on particular field in any order</p>
+<h3># For ascending order</h3>
+<ul>
+<li>IF current object property is greter than passing object property, return positive value (+1)</li>
+<li>IF current object property is less than passing object property, return negative value (-1)</li>
+<li>If both objects are equal, return 0</li>
+</ul>
+<h3># For descending order</h3>
+<ul>
+<li>IF current object property is greater than passing object property, return negative value (-1)</li>
+<li>IF current object property is less than passing object property, return positive value (+1)</li>
+<li>IF both objects are equal, return 0</li>
+</ul>
+<div class="code">Public class student implements comparable
+{
+    int id
+    string name
+    int height
+    Public student(int id, string name, int height)
+    {
+        this.id = id
+        this.name = name
+        this.height = height;
+    }
+    Public string tostring()
+    {
+        return "student [id=" +id+ ", name=" +name+ ", height=" +height+ " ]";
+    }
+    //compareTo() method used for sorting object
+    Public int compareTo(object o)
+    {
+        //converting object type into student type (Downcasting)
+        student s = (student) o;
+        //comparing height of current object with another object.
+        IF(this.height > s.height)
+        {
+            return 1  //current object greater
+        }
+        IF(this.height < s.height)
+        {
+            return -1  //current object smaller
+        }
+        return 0  //IF both heights are equal
+    }
+}
+Public class studentDriver
+{
+    Public static void main(string[] args)
+    {
+        student[] sarr = new student[5]
+        sarr[0] = new student(101, "pravin", 150)
+        sarr[1] = new student(110, "Anirudh", 145)
+        sarr[2] = new student(104, "onkar", 160)
+        sarr[3] = new student(109, "ketan", 155)
+        sarr[4] = new student(111, "sanika", 135)
+        S.O.P.l("=== before sorting ===")
+        For(int i = 0; i < sarr.length; i++)
+        {
+            S.O.P.l(sarr[i])
+        }
+        Arrays.sort(sarr);  //sorting student objects on height
+        S.O.P.l("=== After sorting ===")
+        For(int i = 0; i < sarr.length; i++)
+        {
+            S.O.P.l(sarr[i])
+        }
+    }
+}
+O/P
+=== Before sorting ===
+student[id=101, name=pravin, height=150]
+student[id=110, name=anirudh, height=145]
+student[id=104, name=onkar, height=160]
+student[id=109, name=ketan, height=155]
+student[id=111, name=sanika, height=135]
+
+=== After sorting ===
+student(id=111, name=sanika, height=<span class="flag">value not written</span>
+student(id=110, name=anirudh, height=<span class="flag">value not written</span>
+student(id=101, name=pravin, height=<span class="flag">value not written</span>
+student(id=109, name=ketan, height=155
+student(id=104, name=onkar, height=160</div>
+<p class="note">Diagram: sarr = 0x0 holds 0x1 to 0x5; each student object carries the Comparable interface.</p>
+<p>When we call Arrays.sort(sarr) by giving the student array address, sort() internally calls the compareTo() on all the students object present inside the array and sorts the objects based on the implementation provided inside the compareTo method</p>
+<h3 class="r">Note.</h3>
+<ul><li>string class and all the wrapper classes are already comparable type and inside these classes compareTo() is already overridden</li></ul>
+</section>
+
+<!-- ===== PDF PAGES 9-14 : Comparator ===== -->
+<section class="page">
+<ul>
+<li>Using comparable interface we can define only one sorting logic inside the class</li>
+<li>We can not change sorting logic dynamically</li>
+<li>which means when we want more than one sorting order we can not make use of comparable interface</li>
+<li>Then we will be using comparator interface</li>
+</ul>
+<h2>Comparator Interface</h2>
+<ul>
+<li>comparator interface is used to sort the group of elements in Java.</li>
+<li>It is present in Java.util package</li>
+<li>It is used to sort the group of elements in any order without changing the blueprint</li>
+<li>we can sort elements based on different fields</li>
+<li>compare(object o1, object o2) method is responsible to sort the elements in comparator interface</li>
+</ul>
+<h3 class="r">Steps to use compare(object o1, object o2)</h3>
+<p>step-1 &nbsp; create a separate class for Field based on which we need to sort</p>
+<p>step-2 &nbsp; that class should implements comparator interface and override the compar(obj o1, obj o2) and provide sorting logic on particular field in any order .</p>
+<h3>For ascending order</h3>
+<ul>
+<li>IF 1st object property is greater than 2nd object property, return positive value (+1)</li>
+<li>IF 1st object property is less than 2nd passing object property return negative value (-1)</li>
+<li>If both objects are equal return zero</li>
+</ul>
+<h3>For descending order</h3>
+<ul>
+<li>IF 1st object property is greater than 2nd object property, return negative value (-1)</li>
+<li>IF 1st object property is less than 2nd object Property, return positive value (+1)</li>
+<li>IF both objects are equal, return zero</li>
+</ul>
+<div class="code">class student implements comparable
+{
+    int id
+    string name
+    int height
+    int age
+    Public student(int id, string name, int height, int age)
+    {
+        this.id = id
+        this.name = name
+        this.height = height
+        this.age = age
+    }
+    Public string tostring()
+    {
+        return "student [id=" +id+ ", name=" +name+ ", height = " + height + " age=" +age+ " ]";
+    }
+    Public static void display(student[] srr)
+    {
+        For(int i = 0; i < srr.length; i++)
+        {
+            S.O.P.l(srr[i]);
+        }
+    }
+    //@Override
+    Public int compareTo(object o)
+    {
+        student s2 = (student) o;
+        IF(this.height > s2.height)
+            return 1;
+        IF(this.height < s2.height)
+            return -1
+        return 0
+    }
+}
+
+Public class sortBasedOnId implements comparator
+{
+    Public int compare(object o1, object o2)
+    {
+        student s1 = (student) o1;
+        student s2 = (student) o2;
+        IF(s1.id > s2.id)
+            return 1
+        IF(s1.id < s2.id)
+            return -1
+        return 0
+    }
+}
+//IMP
+Public class sortBasedOnName implements comparator
+{
+    Public int compare(object o1, object o2)
+    {
+        student s1 = (student) o1
+        student s2 = (student) o2
+        return s1.name.compareTo(s2.name);
+    }
+}
+Public class sortBasedOnAge implements comparator
+{
+    Public int compare(object o1, object o2)
+    {
+        student s1 = (student) o1
+        student s2 = (student) o2
+        return s1.age - s2.age
+    }
+}
+
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        Scanner sc = new scanner(system.in)
+        //creating array of student object
+        student[] srr = new student[5]
+        srr[0] = new student(101, "hulk", 200, 40)
+        srr[1] = new student(111, "Ironman", 160, 30)
+        srr[2] = new student(107, "captain", 140, 90)
+        srr[3] = new student(103, "thor", 185, 100)   <span class="flag">verify ages</span>
+        srr[4] = new student(102, "black widow", 150, 40)
+        //user menu
+        S.O.P.l("press 1 to sort Based on Id")
+        S.O.P.l("press 2   name")
+        S.O.P.l("      3   height")
+        S.O.P.l("      4   age")
+        //taking user input
+        int ch = sc.nextInt();
+        switch(ch)
+        {
+            case 1: Arrays.sort(srr, new sortBasedOnId()); break;
+            case 2: Arrays.sort(srr, new sortBasedOnname()); break;
+            case 3: Arrays.sort(srr); break;   //comparable (by height)
+            case 4: Arrays.sort(srr, new sortBasedonage()); break;
+            default: S.O.P.l("Invalid choise");
+        }
+        S.O.P.l(srr)   <span class="flag">line cut off at the page edge</span>
+    }
+}</div>
+<h3 class="r">Note</h3>
+<ul>
+<li>In comparator interface we have 2 abstract method one is compare(object o1, object o2) and other one is Boolean equals(object o)</li>
+<li>But when we are inheriting comparator interface we need not provide implementation to the equals method.</li>
+<li>since it has the same declaration as the equals method present in object class, And object class is the parent of all the classes and one class will first extends and then implements as we have seen in multiple inheritance</li>
+<li>so we need not provide implementation to the equals method of comparator interface</li>
+<li>By default object class equals method which is inherited First will act as implementation to the comparator interface equals method</li>
+<li>Arrays.sort() method is overloaded in such a way that it accepts two Formal arguments, one argument is object[] and second argument is comparator.</li>
+<li>so when we want to call this sort method we need to pass 2 actual values, one is address of the array and other one is comparator type object.</li>
+<li>this sort method will internally use the compare(object, object) present in comparator type object and sorts the array elements.</li>
+</ul>
+<div class="scroll"><table class="tbl">
+<tr><th>Comparable</th><th>Comparator</th></tr>
+<tr><td>&#9312; present in Java.lang</td><td>&#9312; present in Java.util</td></tr>
+<tr><td>&#9313; sorting logic written inside the class</td><td>&#9313; sorting logic written outside the class</td></tr>
+<tr><td>&#9314; only one sorting logic is Possible</td><td>&#9314; Multiple sorting logic is possible</td></tr>
+<tr><td>&#9315; cannot change sorting logic dynamically</td><td>&#9315; sorting logic can be changed dynamically</td></tr>
+<tr><td>&#9316; uses compareTo() method</td><td>&#9316; uses compare() method</td></tr>
+<tr><td>&#9317; Affect the original class</td><td>&#9317; Does not affect the original class</td></tr>
+<tr><td>&#9318; Using comparable, one object compare itself with other object</td><td>&#9318; Using comparator, the third object (comparator) will compare other two objects</td></tr>
+<tr><td>&#9319; used when object have one default value</td><td>&#9319; used when objects need to be sorted in different ways</td></tr>
+</table></div>
+</section>
+
+</main>
+</body>
+</html>
