@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SQL - Statements</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <main class="jn">
+
+    <!-- GENERAL VERIFY: in the handwriting, underscores in identifiers (Table_name, column_name, cust_1, new_column_name) look like hyphens; they are written here with underscores because SQL identifiers cannot contain hyphens. Pages 1-3 and 5-6 of the PDF are scanned rotated 90 degrees. -->
+
+    <!-- ===== Source PDF page 1: DDL, Create ===== -->
+    <section class="page">
+
+      <h1>SQL Statements</h1>
+      <!-- The source has no chapter title; this one follows the file name sql_03_statements. -->
+
+      <h2>DDL</h2>
+      <ul>
+        <li>DDL is used to construct an object in the <del>database</del> and deals with the <del>structure</del> of the object
+          <!-- VERIFY: the words "database" and "structure" are struck through in the source; the exact intended sentence is unclear. -->
+        </li>
+        <li>It has 5 statement
+          <ol>
+            <li>create</li>
+            <li>Rename</li>
+            <li>Alter</li>
+            <li>Drop</li>
+            <li>Truncate</li>
+          </ol>
+        </li>
+      </ul>
+
+      <h3 class="r">① Create</h3>
+      <ul>
+        <li>It is used to Built / construct An object</li>
+        <li>object / entity can be a table or View (virtual tab)</li>
+      </ul>
+
+      <h4 class="r">How to create</h4>
+      <ol>
+        <li>Name of the table</li>
+        <li>Table Name should be different</li>
+        <li>Number of column</li>
+        <li>Names of the column</li>
+        <li>Assign datatype for the column</li>
+        <li>Assign constraints [Not mandatory]</li>
+      </ol>
+
+      <p>Table_name : customer<br>Number of columns : 4</p>
+
+      <div class="scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Col-name</th>
+              <th>CID</th>
+              <th>CName</th>
+              <th>CNO</th>
+              <th>ADDRESS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Datatype</td><td>Number</td><td>Varchar</td><td>Number</td><td>Varchar</td></tr>
+            <tr><td>Null / Not Null</td><td>Not Null</td><td>Not Null</td><td>Not Null</td><td>Null</td></tr>
+            <tr><td>unique</td><td>unique</td><td></td><td>unique</td><td></td></tr>
+            <tr><td>check</td><td>check</td><td></td><td>check</td><td></td></tr>
+            <tr><td>Primary / Foreign</td><td>Primary</td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- VERIFY: in the source the left-hand label column is Col-name, Datatype, Null / Not Null, unique, check, Primary / Foreign; the grid also has a few empty extra rows/columns that are not reproduced. -->
+
+      <div class="code">
+Create Table Table_Name
+(
+    column_Name1 datatype constraint_type,
+    column_Name2 datatype constraint_type,
+
+    column_Name n datatype constraint_type
+);
+      </div>
+      <!-- VERIFY: there is a blank gap between the column_Name2 and column_Name n lines in the source. -->
+
+      <div class="code">
+Create table customer
+(
+    CID Number(2) primary key
+    CName varchar(15) Not NULL
+    CNO Number(10) unique Not Null check(length(CNO)=10)
+    sal Number(6,2) Not Null check(sal&gt;0)
+);
+      </div>
+      <!-- VERIFY: no commas appear between the column lines in the source. The CNO check is cut off at the page edge ("check(length(CNO=10"); read as check(length(CNO)=10). -->
+
+    </section>
+
+    <!-- ===== Source PDF pages 2-3: Rename, Alter, Truncate, Drop ===== -->
+    <section class="page">
+
+      <h3 class="r">② Rename</h3>
+      <p>It is used to change the name of the object</p>
+      <div class="code">
+Rename Table_name To New_name
+
+Rename customer To cust_1;
+      </div>
+
+      <h3 class="r">③ Alter</h3>
+      <p>It is used to modify the <del>structure</del> of the table</p>
+
+      <h4>★ To ADD column</h4>
+      <div class="code">
+Alter Table Table_name
+ADD column_name Datatype constraint_type
+
+Alter Table customer
+ADD ADDRESS (15)
+      </div>
+      <!-- VERIFY: the example reads "ADD ADDRESS (15)" with no datatype written. -->
+
+      <h4>★ To Drop column</h4>
+      <div class="code">
+Alter Table Table_name
+Drop column column_name
+
+Alter Table cust_1
+Drop column MailID;
+      </div>
+
+      <h4>★ To Rename a column</h4>
+      <div class="code">
+Alter Table Table_name
+Rename column column_name to new_column_name
+
+Alter table customer
+Rename column CNO to PHNo
+      </div>
+
+      <h4>★ To modify the Datatype</h4>
+      <div class="code">
+Alter Table Table_name
+Modify column_name New_Datatype
+
+Alter Table customer
+Modify ADDRESS varchar(12);
+      </div>
+
+      <h4>★ To modify Not Null constraints</h4>
+      <div class="code">
+Alter Table table_name
+Modify column_name existing datatype [NULL/Not NULL];
+
+Alter Table customer
+Modify ADDRESS Varchar(12) Not NULL
+      </div>
+
+      <h3 class="r">④ Truncate</h3>
+      <p>It is used to remove All the Record from the table Permantly</p>
+      <div class="code">
+TRUNCATE Table table_name
+      </div>
+
+      <h3 class="r">⑤ Drop</h3>
+      <p>It is used to remove the table from the Database</p>
+      <div class="code">
+Drop table table_name
+
+Drop Table customer
+      </div>
+      <ul>
+        <li>This command removes the table from the database But it is not completely removed from the database, it stores the address of that table and store in bin folder</li>
+      </ul>
+
+      <h4>★ To recover the table <span class="r">(Use Flashback)</span></h4>
+      <div class="code">
+Flashback Table table_name
+To Before Drop;
+      </div>
+
+      <h4>★ To Delete completely from BIN (Folder) <span class="r">(Use PURGE)</span></h4>
+      <div class="code">
+PURGE Table table_name
+      </div>
+
+      <div class="diagram">
+        <svg viewBox="0 0 540 200" width="100%" role="img" aria-label="Drop flow: cust_table in Database goes by DROP to BIN$123Abc in the BIN Folder, then by PURGE to Trash where it is GONE Recover. An arrow labelled Use Flashback connects the BIN Folder back to the Database.">
+          <defs>
+            <marker id="ah2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 z" fill="currentColor"/>
+            </marker>
+          </defs>
+          <text x="10" y="32" font-size="14" fill="currentColor">Database</text>
+          <rect x="10" y="40" width="130" height="60" fill="none" stroke="currentColor" stroke-width="2"/>
+          <text x="75" y="76" font-size="14" text-anchor="middle" fill="currentColor">cust_table</text>
+
+          <line x1="140" y1="70" x2="205" y2="70" stroke="currentColor" stroke-width="2" marker-end="url(#ah2)"/>
+          <text x="172" y="62" font-size="12" text-anchor="middle" fill="currentColor">DROP</text>
+
+          <text x="205" y="32" font-size="14" fill="currentColor">BIN Folder</text>
+          <rect x="205" y="40" width="130" height="60" fill="none" stroke="currentColor" stroke-width="2"/>
+          <text x="270" y="76" font-size="14" text-anchor="middle" fill="currentColor">BIN$123Abc</text>
+
+          <line x1="335" y1="70" x2="400" y2="70" stroke="currentColor" stroke-width="2" marker-end="url(#ah2)"/>
+          <text x="367" y="62" font-size="12" text-anchor="middle" fill="currentColor">PURGE</text>
+
+          <text x="400" y="32" font-size="14" fill="currentColor">Trash</text>
+          <rect x="400" y="40" width="130" height="60" fill="none" stroke="currentColor" stroke-width="2"/>
+          <text x="465" y="66" font-size="14" text-anchor="middle" fill="currentColor">GONE</text>
+          <text x="465" y="86" font-size="14" text-anchor="middle" fill="currentColor">Recover</text>
+
+          <path d="M270,100 L270,150 L75,150 L75,104" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#ah2)"/>
+          <text x="172" y="172" font-size="14" text-anchor="middle" fill="currentColor">Use Flashback</text>
+        </svg>
+      </div>
+      <!-- VERIFY: the second line in the Trash box reads "Recover" (the box is labelled "GONE Recover" / "GONE, Recover"); the direction of the Use Flashback arrowhead is hard to read in the rotated scan and is shown pointing back to the Database. -->
+
+    </section>
+
+    <!-- ===== Source PDF page 4: DML ===== -->
+    <section class="page">
+
+      <h2>DML</h2>
+      <p>It is used to manipulate the object by performing insertion, updation and deletion</p>
+
+      <h3 class="r">① Insert</h3>
+      <p>It is used to insert / create record in the table</p>
+      <div class="code">
+Insert INto table_Name Values (V1,V2,V3 ---);
+      </div>
+
+      <h3 class="r">② Update</h3>
+      <p>It is used to modify an existing value</p>
+      <div class="code">
+Update Table_name
+set col_name = value, col_name = value ---
+[WHERE stmt];
+      </div>
+
+      <h3 class="r">③ Delete</h3>
+      <p>It is used to remove a particular record From the table</p>
+      <div class="code">
+Delete From table_name
+[WHERE stmt];
+      </div>
+
+      <div class="scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Truncate</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Belong to DDL</td><td>Belong to DML</td></tr>
+            <tr><td>Remove all the records from the table permantly</td><td>Removes a particular record From the table</td></tr>
+            <tr><td>Auto commit.</td><td>Not auto commit</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ===== Source PDF pages 5-6: TCL and DCL ===== -->
+    <section class="page">
+
+      <h2>TCL</h2>
+      <p>It is used to control the transaction done on the database, the dml operations performed on database are known as transaction such as Insertion, Updating and Deletion</p>
+      <p>We have 3 statement</p>
+      <ol>
+        <li>commit</li>
+        <li>RollBack</li>
+        <li>savepoint</li>
+      </ol>
+
+      <h3 class="r">① Commit</h3>
+      <p>This <del>statement</del> statement is used to save the transaction into the Database</p>
+      <div class="code">
+commit;
+      </div>
+
+      <h3 class="r">② RollBack</h3>
+      <ul>
+        <li>This statement is used to obtain only the saved data from the Database</li>
+        <li>It will bring you to the point where you have committed For the last time</li>
+      </ul>
+      <div class="code">
+ROLLBACK;
+      </div>
+
+      <h3 class="r">③ savepoint</h3>
+      <ul>
+        <li><del>This statement is used to control the flow of data between the users</del></li>
+        <li>This statement is used to mark the position or restoration points (nothing rejected to database)</li>
+      </ul>
+      <div class="code">
+savepoint savepoint_Name;
+      </div>
+      <!-- VERIFY: "(nothing rejected to database)" is hard to read in the rotated scan. A faint show-through of a table on the same scan page is not reproduced. -->
+
+      <h2>DCL</h2>
+      <p>This statement is used to control the flow of data between the users</p>
+
+      <h3 class="r">① GRANT</h3>
+      <p>This <del>statement</del> statement is used to <del>control the flow</del> to give permission to a user</p>
+      <div class="code">
+GRANT SQL_statement
+ON table_Name
+TO User_name;
+      </div>
+
+      <h3 class="r">② Revoke</h3>
+      <p>This <del>statement</del> statement is used to take Back the permission from user</p>
+      <div class="code">
+REVOKE SQL_statement
+ON table_Name
+FROM User_name;
+      </div>
+
+      <div class="diagram">
+        <p><span class="r">User 1 - scott</span> &nbsp;|&nbsp; <span class="r">User 2 - HR</span> (a vertical line separates the two users in the source)</p>
+
+        <h4>First case</h4>
+        <div class="scroll">
+          <table class="tbl">
+            <caption>emp (User 1 - scott)</caption>
+            <thead><tr><th>ENO</th><th>cname</th></tr></thead>
+            <tbody>
+              <tr><td>A1</td><td>P</td></tr>
+              <tr><td>B2</td><td>q</td></tr>
+              <tr><td>C3</td><td>R</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>User 2 - HR runs: <code>select * From scott.emp</code> ↓ ✗ (the arrow stops at the line, marked X)</p>
+
+        <h4>Second case</h4>
+        <p class="r">GRANT select on emp to HR (permission grant)</p>
+        <div class="scroll">
+          <table class="tbl">
+            <caption>emp (User 1 - scott)</caption>
+            <thead><tr><th>ENO</th><th>cname</th></tr></thead>
+            <tbody>
+              <tr><td>A1</td><td>P</td></tr>
+              <tr><td>B2</td><td>q</td></tr>
+              <tr><td>C3</td><td>R</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>↑ arrow crosses the line to User 2 - HR, who runs: <code>select * From scott.emp</code></p>
+
+        <h4>Third case</h4>
+        <p class="r">Revoke select on emp (permission taken)</p>
+        <div class="scroll">
+          <table class="tbl">
+            <caption>emp (User 1 - scott)</caption>
+            <thead><tr><th>ENO</th><th>cname</th></tr></thead>
+            <tbody>
+              <tr><td>A1</td><td>P</td></tr>
+              <tr><td>B2</td><td>q</td></tr>
+              <tr><td>C3</td><td>R</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>User 2 - HR runs: <code>select * From scott.emp</code> ↓ (the arrow stops at the line)</p>
+
+        <!-- VERIFY: this diagram is rotated in the scan. Reading it as three left-to-right cases (before grant, GRANT, Revoke) split by a vertical line between User 1 - scott and User 2 - HR: Case 1 has an X on HR's arrow; Case 2 has a thick arrow from the GRANT text up to HR's box; Case 3 has HR's arrow stopping at the line. The three headings "First/Second/Third case" are added only to separate the cases; they are not in the source. The first emp table's first row reads "A 4" and was read as A1; the "(permission taken)" text in the third case is hard to read. -->
+      </div>
+
+    </section>
+
+    <!-- ===== Source PDF page 7: types of SQL statement ===== -->
+    <section class="page">
+
+      <h2>What are the different types of sql statement</h2>
+
+      <div class="scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Full Form</th>
+              <th>What it Does</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>DDL</td><td>Data Definition lang</td><td>Defines and changes structure</td><td>create, Alter Drop</td></tr>
+            <tr><td>DML</td><td>Data manipulation lang</td><td>Work with actual data</td><td>Insert, update Delete.</td></tr>
+            <tr><td>DCL</td><td>Data control lang</td><td>Manages access rights</td><td>Grant, Revoke</td></tr>
+            <tr><td>TCL</td><td>Transaction control Lang</td><td>Manages database transaction</td><td>commit, Rollback savepoint</td></tr>
+            <tr><td>DQL</td><td>Data query lang</td><td>Used for querying data</td><td>SELECT</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>① DQL</h3>
+      <p>DQL is the process retrieving Data from Database ,</p>
+      <!-- VERIFY: the scan is cut off at the bottom; the DQL text continues on a page that was not supplied. Source spelling: "retreving". -->
+
+    </section>
+
+  </main>
+
+</body>
+</html>

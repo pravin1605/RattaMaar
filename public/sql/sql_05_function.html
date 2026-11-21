@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SQL - Function</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <main class="jn">
+
+    <!-- GENERAL VERIFY: underscores in names (Months_Between, Last_Day, TO_CHAR, Format_models) look like hyphens in the handwriting and are written with underscores. -->
+
+    <!-- ===== Source PDF pages 1-2: Function, Single Row / Multi Row, components, notes ===== -->
+    <section class="page">
+
+      <h1>Function</h1>
+      <!-- The first letter of the source heading is cut off at the page edge ("unction"). -->
+
+      <div class="definition">
+        Function are Block of code or list of instruction which are used to perform specific task
+      </div>
+
+      <div class="diagram">
+        <svg viewBox="0 0 560 270" width="100%" role="img" aria-label="Function splits into IN-Built Function and User-Defined. IN-Built Function splits into Single-Row and MultiRow. Single-Row: 1 I/P gives 1 O/P, 2 I/P gives 2 O/P, 3 I/P gives 3 O/P, 4 I/P gives 4 O/P. MultiRow: 1 I/P, 2 I/P, 3 I/P and 4 I/P together give 1 O/P.">
+          <defs>
+            <marker id="ah5" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 z" fill="currentColor"/>
+            </marker>
+          </defs>
+          <!-- tree -->
+          <text x="260" y="16" font-size="15" text-anchor="middle" fill="currentColor">Function</text>
+          <line x1="260" y1="22" x2="260" y2="40" stroke="currentColor" stroke-width="2"/>
+          <line x1="100" y1="40" x2="420" y2="40" stroke="currentColor" stroke-width="2"/>
+          <line x1="100" y1="40" x2="100" y2="56" stroke="currentColor" stroke-width="2" marker-end="url(#ah5)"/>
+          <line x1="420" y1="40" x2="420" y2="56" stroke="currentColor" stroke-width="2" marker-end="url(#ah5)"/>
+          <text x="100" y="72" font-size="15" text-anchor="middle" fill="currentColor">IN-Built Function</text>
+          <text x="420" y="72" font-size="15" text-anchor="middle" fill="currentColor">User-Defined</text>
+          <line x1="100" y1="80" x2="100" y2="100" stroke="currentColor" stroke-width="2"/>
+          <line x1="70" y1="100" x2="250" y2="100" stroke="currentColor" stroke-width="2"/>
+          <line x1="70" y1="100" x2="70" y2="116" stroke="currentColor" stroke-width="2" marker-end="url(#ah5)"/>
+          <line x1="250" y1="100" x2="250" y2="116" stroke="currentColor" stroke-width="2" marker-end="url(#ah5)"/>
+          <text x="70" y="132" font-size="15" text-anchor="middle" fill="currentColor">Single-Row</text>
+          <text x="250" y="132" font-size="15" text-anchor="middle" fill="currentColor">MultiRow</text>
+          <!-- single row: n I/P -> n O/P -->
+          <text x="10" y="169" font-size="13" fill="currentColor">1 I/P</text>
+          <line x1="55" y1="165" x2="165" y2="165" stroke="currentColor" stroke-width="2" marker-end="url(#ah5)"/>
+          <text x="172" y="169" font-size="13" fill="currentColor">1 O/P</text>
+          <text x="10" y="199" font-size="13" fill="currentColor">2 I/P</text>
+          <line x1="55" y1="195" x2="165" y2="195" stroke="currentColor" stroke-width="2" marker-end="url(#ah5)"/>
+          <text x="172" y="199" font-size="13" fill="currentColor">2 O/P</text>
+          <text x="10" y="229" font-size="13" fill="currentColor">3 I/P</text>
+          <line x1="55" y1="225" x2="165" y2="225" stroke="currentColor" stroke-width="2" marker-end="url(#ah5)"/>
+          <text x="172" y="229" font-size="13" fill="currentColor">3 O/P</text>
+          <text x="10" y="259" font-size="13" fill="currentColor">4 I/P</text>
+          <line x1="55" y1="255" x2="165" y2="255" stroke="currentColor" stroke-width="2" marker-end="url(#ah5)"/>
+          <text x="172" y="259" font-size="13" fill="currentColor">4 O/P</text>
+          <!-- multi row: 4 I/P -> 1 O/P -->
+          <text x="250" y="169" font-size="13" fill="currentColor">1 I/P</text>
+          <line x1="295" y1="165" x2="380" y2="210" stroke="currentColor" stroke-width="2"/>
+          <text x="250" y="199" font-size="13" fill="currentColor">2 I/P</text>
+          <line x1="295" y1="195" x2="380" y2="210" stroke="currentColor" stroke-width="2"/>
+          <text x="250" y="229" font-size="13" fill="currentColor">3 I/P</text>
+          <line x1="295" y1="225" x2="380" y2="210" stroke="currentColor" stroke-width="2"/>
+          <text x="250" y="259" font-size="13" fill="currentColor">4 I/P</text>
+          <line x1="295" y1="255" x2="380" y2="210" stroke="currentColor" stroke-width="2"/>
+          <line x1="380" y1="210" x2="470" y2="210" stroke="currentColor" stroke-width="2" marker-end="url(#ah5)"/>
+          <text x="478" y="214" font-size="13" fill="currentColor">1 O/P</text>
+        </svg>
+        <!-- VERIFY: in the source the single-row and multi-row input/output lines are drawn inside boxes (rectangle borders); the box borders are not reproduced. -->
+      </div>
+
+      <h3 class="r">① Single Row Function</h3>
+      <ul>
+        <li>It executes Row by Row</li>
+        <li>SRF take an input process and execute and then takes the next input</li>
+        <li>IF you pass n number of input It will give n number of outputs</li>
+      </ul>
+
+      <h3 class="r">② Multi Row Function</h3>
+      <ul>
+        <li>It execute in group</li>
+        <li>MRF take the all inputs at one shot then executes and provides an single output</li>
+      </ul>
+      <p>N number of Input → return 1 output</p>
+
+      <h3 class="r">Components of Function</h3>
+      <ol>
+        <li>Function name</li>
+        <li>Number of argument</li>
+        <li>Return type</li>
+      </ol>
+
+      <h3 class="r">Note</h3>
+      <ol>
+        <li>Along with a multi Row Function any other column in the select clause Not supported</li>
+        <li>we cannot use multi Row Function in where clause</li>
+        <li>multi Row Function ignore the null values</li>
+        <li>MRF can accept only one argument column_name or expression</li>
+        <li><span class="r">COUNT</span> is only MRF which can accept <span class="hl">*</span> as argument</li>
+      </ol>
+
+      <p>① WAQTD Number of emp Getting salary less than 2000 in DeptNo 10</p>
+      <div class="code">
+SELECT count(*)
+FROM emp
+where sal &lt; 2000 AND DeptNo =10
+      </div>
+
+      <p>② WAQTD total sal Needed to emp hired in Feb</p>
+      <div class="code">
+SELECT sum(sal)
+FROM emp
+WHERE hiredate like '%Feb%';
+      </div>
+
+      <p>③ WAQTD Number of emp getting comm In Dept 30</p>
+      <div class="code">
+SELECT count(*)
+FROM emp
+WHERE comm IS Not Null AND DeptNo=30
+      </div>
+
+      <p>④ WAQTD Number of employee Having 'A' in their name and working In Dept 20 30</p>
+      <div class="code">
+select count(*)
+FROM emp
+WHERE ename like '%A%'
+      AND
+      DeptNo In (20,30);
+      </div>
+
+    </section>
+
+    <!-- ===== Source PDF pages 3-5: Single Row Function (string functions) ===== -->
+    <section class="page">
+
+      <h2>Single Row Function</h2>
+
+      <div class="scroll">
+        <table class="tbl">
+          <tbody>
+            <tr><td>① Length()</td><td>⑥ LOWER()</td><td>⑪ TRUNC()</td></tr>
+            <tr><td>② CONCAT()</td><td>⑦ SUBSTR()</td><td>⑫ ROUND()</td></tr>
+            <tr><td>③ UPPER()</td><td>⑧ INSTR()</td><td>⑬ months_Between()</td></tr>
+            <tr><td>④ INITCAP()</td><td>⑨ Replace()</td><td>⑭ TO_CHAR()</td></tr>
+            <tr><td>⑤ Reverse</td><td>⑩ MOD()</td><td>⑮ NVL()</td></tr>
+            <tr><td></td><td></td><td>⑯ Last_Day()</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Source note: the numbers on the detailed headings that follow differ from this list (there LOWER is 4, INITCAP 5, REVERSE 6, SUBSTR 7, Replace 8, INSTR 9); both are reproduced as written. -->
+
+      <h3 class="r">① Length()</h3>
+      <ul>
+        <li>It is used to count the number of character present In the given string</li>
+      </ul>
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+Length('string')
+      </div>
+      <p><span class="r">Example</span></p>
+      <div class="code">
+select Length(ename)
+From emp
+Where ename ='smith';
+      </div>
+
+      <p>WAQTD Names of emp having exactly Four character without using like operator</p>
+      <div class="code">
+select ename
+from emp
+Where Length(ename) = 4;
+      </div>
+
+      <h3 class="r">② CONCAT()</h3>
+      <ul>
+        <li>It is used to JOIN the given two string</li>
+      </ul>
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+CONCAT('string', 'string')
+      </div>
+      <p><span class="r">Example</span></p>
+      <div class="code">
+select concat('MR', ename)
+From emp
+      </div>
+
+      <h3 class="r">③ UPPER()</h3>
+      <ul>
+        <li>It is used to convert given string to upper case</li>
+      </ul>
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+UPPER('string')
+      </div>
+      <p><span class="r">Example</span></p>
+      <div class="code">
+select Ename, UPPER(ename)
+From emp
+      </div>
+
+      <h3 class="r">④ LOWER()</h3>
+      <ul>
+        <li>It is used to convert given string to lower case</li>
+      </ul>
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+Lower('string')
+      </div>
+      <p><span class="r">example</span></p>
+      <div class="code">
+select ename, lower(ename)
+From emp
+      </div>
+
+      <h3 class="r">⑤ INITCAP()</h3>
+      <ul>
+        <li>It is used to convert given string to initial capital letter</li>
+        <!-- VERIFY: the last word is cut off at the page edge ("Ict"); read as "letter". -->
+      </ul>
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+INITCAP('string')
+
+select ename, InitCAP(ename)
+From emp
+      </div>
+
+      <h3 class="r">⑥ REVERSE()</h3>
+      <ul>
+        <li>It is used to reverse string</li>
+      </ul>
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+Reverse('string')
+
+select ename, Reverse(ename)
+From emp
+      </div>
+
+      <h3 class="r">⑦ SUBSTR()</h3>
+      <ul>
+        <li>It is used to extract a part of string From the orginal string</li>
+      </ul>
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+SUBSTR('original string', position [length])
+      </div>
+      <ul>
+        <li>Length is not not mandatory IF length is not <del>method</del> mentioned then consider the complete string</li>
+      </ul>
+
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <tbody>
+              <tr><td>-9</td><td>-8</td><td>-7</td><td>-6</td><td>-5</td><td>-4</td><td>-3</td><td>-2</td><td>-1</td></tr>
+              <tr><td>B</td><td>a</td><td>n</td><td>g</td><td>a</td><td>L</td><td>O</td><td>R</td><td>E</td></tr>
+              <tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>1,4 → Bang<br>2,5 → ANGAL<br>-3 → ORE<br>5,9 → ALORE<br>6,4 → LORE</p>
+      </div>
+
+      <p>① WAQTD extract First 3 char of ename</p>
+      <div class="code">
+select SUBSTR(ENAME, 1, 3)
+From emp
+      </div>
+
+      <p>② WAQTD extract last 3 char of emp</p>
+      <div class="code">
+select SUBSTR(ENAME, -3)
+From emp
+      </div>
+      <p>(-3 is labelled: position)</p>
+
+      <p>③ WAQTD extract First half of emp name</p>
+      <div class="code">
+select SUBSTR(EName, 1, Length(ename)/2)
+From emp
+      </div>
+
+      <p>④ WAQTD extract second half of emp name</p>
+      <div class="code">
+select SUBSTR(ename, Length(ename)/2+1)
+From emp
+      </div>
+
+      <p>⑤ WAQTD Name of the emp start with A without using like operator</p>
+      <div class="code">
+select ename
+From emp
+WHERE SUBSTR(ename,1,1) IN ('A');
+      </div>
+
+      <h3 class="r">⑧ Replace()</h3>
+      <ul>
+        <li>It is used to replace a string with another string in orginal string</li>
+      </ul>
+      <div class="code">
+Replace('original string', 'string' [new_string])
+
+Replace('BANANA', 'A', 'C') → BCNCNC
+      </div>
+
+      <p>① WAQTD number of 'A' present in malayalam</p>
+      <div class="code">
+select Length('malayalam')
+Length(Replace('Malayalam', 'A'))
+From DUAL
+      </div>
+      <!-- VERIFY: no operator is visible between the two Length() lines in the source (a minus sign would be expected); reproduced as written. -->
+      <p>IF the third argument is not mentioned the default value is not null</p>
+      <!-- VERIFY: written "is not null" in the source. -->
+
+      <h3 class="r">⑨ INSTR()</h3>
+      <ul>
+        <li>It is used to obtain the position in which the string is present in the orginal string.</li>
+        <li>It is used to a string in their if present it return the position else it return 0</li>
+      </ul>
+      <div class="code">
+INSTR('original_string', 'string', position [occurence])
+      </div>
+      <p>IF occurence is not mentioned then the default of occurence is 1</p>
+
+      <p>ⓐ WAQTD Name having char A without using like operation</p>
+      <div class="code">
+select ename
+From emp
+where INSTR('ename', 'A', 1, 1) &gt; 0
+      </div>
+
+      <p>ⓑ WAQTD Name of emp having char A at least twise</p>
+      <div class="code">
+select ename
+From emp
+where INSTR('ename', 'A', 1, 2) &gt; 1
+      </div>
+      <!-- VERIFY: the comparison value after > is hard to read (looks like 1). -->
+
+      <p>ⓒ WAQTD Name of emp having char exactly twise in their name</p>
+      <div class="code">
+select ename
+from emp
+where INSTR(ename, 'A', 1, 2) &gt; 0 AND
+      INSTR(ename, 'A', 1, 3)
+      </div>
+      <!-- VERIFY: the second INSTR has no comparison written in the source; reproduced as written. -->
+
+    </section>
+
+    <!-- ===== Source PDF pages 6-8: MOD, ROUND, TRUNC, Date commands, TO_CHAR ===== -->
+    <section class="page">
+
+      <h3 class="r">MOD</h3>
+      <ul>
+        <li>It is used to obtain modulus / remainder of given number</li>
+      </ul>
+      <div class="code">
+MOD(m, n)
+      </div>
+      <p>(written beside it: n)m)</p>
+
+      <p>WAQTD ename of the emp, who earn sal in multiplies of 3</p>
+      <div class="code">
+select ename
+From emp
+where mod(sal, 3) = 0;
+      </div>
+
+      <p>WAQTD details of emp who have ODD EID</p>
+      <div class="code">
+select *
+From emp
+Where MOD(EID, 2) = 1
+      </div>
+
+      <h3 class="r">ROUND()</h3>
+      <ul>
+        <li>It is used to Round off the given number based on scale value</li>
+      </ul>
+      <div class="code">
+ROUND(Number [scale])
+      </div>
+      <ul>
+        <li>default value of scale is zero(0)</li>
+      </ul>
+
+      <h3 class="r">TRUNC()</h3>
+      <ul>
+        <li>It is similar to ROUND() but it alway round off the given number to lower value</li>
+      </ul>
+      <div class="code">
+TRUNC(Number [scale])
+      </div>
+
+      <h2>Dates commands</h2>
+      <ol>
+        <li>sysDate
+          <p>It is used to obtain todays date</p>
+        </li>
+        <li>current_Date
+          <p>It is used to obtain today's date</p>
+        </li>
+        <li>sysTimestamp
+          <p>It is used to obtain date, time and time zone</p>
+        </li>
+      </ol>
+
+      <h3 class="r">Months_Between()</h3>
+      <ul>
+        <li>It is used to obtain the number of month's present between given two dates</li>
+      </ul>
+      <div class="code">
+Months_Between(Date1, Date2)
+      </div>
+      <div class="code">
+select Months_Between(sysDate, '17-Jan-2025)
+select Months_Between(sysDate, Hiredate)
+      </div>
+      <!-- VERIFY: the closing quote after 17-Jan-2025 is not written in the first example. -->
+
+      <h3 class="r">Last_Day()</h3>
+      <ul>
+        <li>It is used to obtain the last day in the particular of given date</li>
+      </ul>
+      <div class="code">
+Last_Day(DATE)
+      </div>
+      <p>Last Day In the month</p>
+      <div class="code">
+select Last_Day(Hiredate)
+From emp;
+      </div>
+
+      <h3 class="r">TO_CHAR</h3>
+      <ul>
+        <li>It is used to convert the given date into <del>string</del> string format based on the model given</li>
+      </ul>
+      <div class="code">
+TO_CHAR(Date, 'Format_models')
+      </div>
+      <!-- VERIFY: the separator after Date is handwritten like a semicolon; read as a comma. -->
+
+      <h4>Format models</h4>
+      <div class="scroll">
+        <table class="tbl">
+          <thead>
+            <tr><th>Format model</th><th>Result shown</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>YEAR</td><td>Twenty Twenty</td></tr>
+            <tr><td>Yyyy</td><td>2020</td></tr>
+            <tr><td>yy</td><td>20</td></tr>
+            <tr><td>Month</td><td>July</td></tr>
+            <tr><td>Mon</td><td>Jul</td></tr>
+            <tr><td>MM</td><td>07</td></tr>
+            <tr><td>Day</td><td>WEDNESDAY</td></tr>
+            <tr><td>Dy</td><td>WED</td></tr>
+            <tr><td>DD</td><td>08</td></tr>
+            <tr><td>D</td><td>4 (day of the week)</td></tr>
+            <tr><td>HH24</td><td>17 hours</td></tr>
+            <tr><td>HH12</td><td>5 hours</td></tr>
+            <tr><td>SS</td><td>13 second</td></tr>
+            <tr><td>'HH12:MI:SS'</td><td>4:22:33</td></tr>
+            <tr><td>'DD-MM-yy'</td><td>17-05-20</td></tr>
+            <tr><td>'MM-DD-yyyy'</td><td>5-17-2020</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>① WAQTD of the emp who was Hired on a saturday</p>
+      <div class="code">
+select *
+From emp
+WHERE TO_CHAR(Hiredate, 'Day') = 'saturday';
+      </div>
+
+      <p>② WAQTD Details of an emp Hired on monday At 10 Am</p>
+      <div class="code">
+select *
+From emp
+WHERE to_CHAR(Hiredate, 'D') = 2 AND
+      to_CHAR(Hiredate, 'HH24') = 10;
+      </div>
+
+    </section>
+
+    <!-- ===== Source PDF pages 9-10: ORDER BY, NVL ===== -->
+    <section class="page">
+
+      <h2>ORDER BY clause</h2>
+      <ul>
+        <li>It is used to arrange the records either in Ascending or Deceding order</li>
+        <li>ORDER BY clause execute Row by Row</li>
+        <li>ORDER BY clause is the only clause which is going to execute after select clause</li>
+        <li>Arrange the record in accending order by default</li>
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+SELECT Group_By_expression / group Function
+FROM table_name
+[WHERE &lt;Filter condition&gt;]
+[Group By column_name/expression]
+[Having &lt;group Filter condition&gt;]
+ORDER BY col_name/expression/col_number [ASC/DESC]
+      </div>
+      <!-- VERIFY: the last keyword is handwritten like "ASCS/DESC"; read as ASC/DESC. -->
+
+      <h3 class="r">ORDER of execution</h3>
+      <ol>
+        <li>FROM</li>
+        <li>WHERE</li>
+        <li>Group BY</li>
+        <li>Having</li>
+        <li>SELECT</li>
+        <li>ORDER BY</li>
+      </ol>
+
+      <h2>NVL() <span class="r">[Null value logic]</span></h2>
+      <!-- Source spelling in the heading: "NUL()". -->
+      <ul>
+        <li>It is used to obtain or eliminate the side effect of using null in arthmatic operation</li>
+      </ul>
+      <div class="code">
+NVL(Argument1, Argument2)
+      </div>
+      <p>Argument1 - Here we can write any column expression which can result in Null</p>
+      <p>Argument2 - Numeric value which will be substituted</p>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption>emp</caption>
+              <thead><tr><th>ename</th><th>sal</th><th>comm</th></tr></thead>
+              <tbody>
+                <tr><td>A</td><td>1000</td><td>100</td></tr>
+                <tr><td>B</td><td>2000</td><td>Null</td></tr>
+                <tr><td>C</td><td>3000</td><td>300</td></tr>
+                <tr><td>D</td><td>4000</td><td>Null</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll">
+            <table class="tbl">
+              <caption>Without NVL()</caption>
+              <thead><tr><th>sal+comm</th></tr></thead>
+              <tbody>
+                <tr><td>1100</td></tr>
+                <tr><td>Null</td></tr>
+                <tr><td>3300</td></tr>
+                <tr><td>Null</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll">
+            <table class="tbl">
+              <caption>With NVL()</caption>
+              <thead><tr><th>sal+comm</th></tr></thead>
+              <tbody>
+                <tr><td>1100</td></tr>
+                <tr><td>2000</td></tr>
+                <tr><td>3300</td></tr>
+                <tr><td>4000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="code">
+select ename, sal, comm, sal + NVL(comm, 0)
+From emp
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>

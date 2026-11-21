@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SQL - Window Function</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <main class="jn">
+
+    <!-- GENERAL VERIFY: underscores in names (col_name, Row_Number, Dense_Rank, table_name) look like hyphens in the handwriting and are written with underscores. -->
+
+    <!-- ===== Source PDF page 1: Window Function, ROW_Number() ===== -->
+    <section class="page">
+
+      <h1>Window Function</h1>
+
+      <ul>
+        <li>These Functions are used to calculate the operation Across set of groups without grouping</li>
+        <li>ANY Function which uses over keyword IS known as window Function</li>
+      </ul>
+
+      <div class="scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Row_Num</th>
+              <th>Rank</th>
+              <th>Dense_Rank</th>
+              <th>LEAD()</th>
+              <th>Lag()</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1000</td><td>1</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>2000</td><td>2</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>3000</td><td>3</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>4000</td><td>4</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>5000</td><td>5</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>6000</td><td>6</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7000</td><td>7</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>8000</td><td>8</td><td></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Source: the first column (1000 to 8000) has no heading; only the Row_Num column is filled in, the Rank, Dense_Rank, LEAD() and Lag() columns are empty. -->
+
+      <h3 class="r">① ROW_Number()</h3>
+      <ul>
+        <li>This IS a window Function which is used to Assigne serial numbers to the Rows present In the result table</li>
+        <li>we can assigne the serial number BY Arranging the records either IN accending or Deccending order BY Using order BY clause</li>
+        <li>We can also use partition By clause to Divide the result table with respective A specific column</li>
+      </ul>
+
+      <div class="code">
+select col_name, ROW_Number() over([partition BY col_name] order BY col_name[Asc/DESC]
+from table_name
+      </div>
+      <!-- VERIFY: the closing bracket of over( is not written and the right edge of the first line is cut off at the page edge. -->
+
+      <div class="code">
+select sal, ROW_number() over(order BY sal)
+From emp;
+      </div>
+
+      <div class="code">
+select sal, ROW_number() over(partition BY DeptNo
+                              order BY sal)
+From emp
+      </div>
+      <!-- VERIFY: the last line of the page ("From emp") is cut off at the bottom edge of the scan. -->
+
+    </section>
+
+    <!-- ===== Source PDF page 2: Rank(), Dense_Rank() ===== -->
+    <section class="page">
+
+      <h3 class="r">② Rank()</h3>
+      <ul>
+        <li>This is a window Function which is used to Assigne to ranks based on the values. It will always skip a rank whenever Rank are repeated</li>
+        <li>we can assigne the serial number BY arranging the records either IN Asc or Decs by using order BY clause</li>
+        <li>we can also use partition BY clause to Divide the result table with respective A specific column</li>
+      </ul>
+
+      <div class="code">
+Select col_name, Rank() over([partition BY col_name]
+                             order By col_name [Asc/DEcs])
+From table_name
+      </div>
+
+      <div class="code">
+select DeptNo, sal, Rank() over(partition BY DeptNo
+                                order By sal)
+From emp;
+      </div>
+
+      <h3 class="r">③ Dense_Rank():</h3>
+      <ul>
+        <li>This is a window Function which is used to assigne to rank Based on values, It will not skip the ranks whenever ranks are repeated</li>
+        <li>we can assigne the serial number By arranging the records either in ASC or Decs using order BY clause</li>
+        <li>we can also use partition By clause to Divide the result table with respective A specific column</li>
+      </ul>
+
+      <div class="code">
+select col_name, Dense_Rank() over([partition By col_name]
+                                   order By col_name [Asc/DEsc])
+From table_name
+      </div>
+
+      <div class="code">
+select DeptNo, sal, Dense_Rank(partition By DeptNo
+                               order By sal)
+From emp;
+      </div>
+      <!-- VERIFY: this example is written without the over keyword in the source; reproduced as written. -->
+
+    </section>
+
+    <!-- ===== Source PDF page 3: LEAD(), Lag() ===== -->
+    <section class="page">
+
+      <h3 class="r">LEAD (col_name)</h3>
+      <ul>
+        <li>This is a window Function which is used to obtain the next value present In the Row Based on the given column</li>
+        <li>we can assign the serial number BY arranging the record either in Asc or Desc order By using order By clause</li>
+        <li>We can also use partition By clause to Divide the result table with respective A specific column</li>
+      </ul>
+
+      <div class="code">
+select col_name, LEAD(col_name) over([partition By col_name
+                                      order BY col_name [Asc/DESC])
+From table_name;
+      </div>
+      <!-- VERIFY: the bracket after "partition By col_name" is not closed in the source; the first line is cut off at the right edge. -->
+
+      <div class="code">
+select DeptNo, sal, lead(sal) over ([partition By deptNo
+                                     order By sal)
+From <del>table</del> emp
+      </div>
+      <!-- Source: the word "table" is struck through before emp in the From line. -->
+
+      <h3 class="r">Lag (col_name)</h3>
+      <ul>
+        <li>This is a window Function which is used to obtain the previous value present in the Row Based on the given col_name</li>
+        <li>We can assign the serial number By arranging the record either in Asc or Desc order By using order By clause</li>
+        <li>We can also use partition BY clause to Divide the result table with respective A specific column</li>
+      </ul>
+
+      <div class="code">
+select col_name, lag(col_name) over([partition BY col_name]
+                                    order By col_name [Asc/DESC])
+      </div>
+
+      <div class="code">
+select DeptNo, sal, lag(sal) over (partition BY DeptNo
+                                   order By sal)
+From table_name;
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>

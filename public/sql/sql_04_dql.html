@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SQL - DQL</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <main class="jn">
+
+    <!-- GENERAL VERIFY: (1) Underscores in identifiers look like hyphens in the handwriting (col_name, table_Name, Annual_sal); they are written with underscores. (2) The handwriting uses "x" or a cross for multiplication (SAL x 12); inside SQL code it is written as *. (3) "WAQTD" / "WAQDT" / "WAQDT" abbreviations are kept exactly as written. (4) Red colouring of AND / OR / NOT inside queries in the source is not reproduced. -->
+
+    <!-- ===== Source PDF pages 1-2 ===== -->
+    <section class="page">
+
+      <h1>DQL</h1>
+      <!-- The source has no chapter title; this one follows the file name sql_04_dql. -->
+
+      <h2>What are the different types of sql statement</h2>
+      <!-- This table repeats the last page of sql_03_statements; the first-column letters are cut off at the left edge of this scan (")DL", ")ML", ")CL", "ICL", "DQL"). -->
+      <div class="scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Full Form</th>
+              <th>What it Does</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>DDL</td><td>Data Definition lang</td><td>Defines and changes structure</td><td>create, Alter Drop</td></tr>
+            <tr><td>DML</td><td>Data manipulation lang</td><td>Work with actual data</td><td>Insert, update Delete.</td></tr>
+            <tr><td>DCL</td><td>Data control lang</td><td>Manages access rights</td><td>Grant, Revoke</td></tr>
+            <tr><td>TCL</td><td>Transaction control Lang</td><td>Manages database transaction</td><td>commit, Rollback savepoint</td></tr>
+            <tr><td>DQL</td><td>Data query lang</td><td>Used for querying data</td><td>SELECT</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>① DQL</h2>
+      <div class="definition">
+        DQL is the process retrieving Data from Database ,
+      </div>
+      <!-- Source spelling: "retreving" (used throughout this chapter). -->
+
+      <h3 class="r">sub-statement</h3>
+
+      <h4>① SElect</h4>
+      <p>The process of retrieving data from table and display it</p>
+
+      <h4>② selection</h4>
+      <p>The process of retrieving Data from multiple table by selecting both rows and columns</p>
+
+      <h4>③ Joins</h4>
+      <p>The process of retrieving Data From multiple tables simultaneously</p>
+
+      <h4>④ Projection</h4>
+      <p>The process of retrieving Data From table by selecting only columns</p>
+      <p>whatever values or Data present under the column will be select by Default</p>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+SELECT * / COL_Name[Distinct] / Expression [ALIAS]
+From Table_Name
+      </div>
+
+      <div class="scroll">
+        <table class="tbl">
+          <caption>student</caption>
+          <thead>
+            <tr><th>SID</th><th>SName</th><th>Branch</th><th>Per</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>A</td><td>CS</td><td>98</td></tr>
+            <tr><td>2</td><td>B</td><td>CSDS</td><td>99</td></tr>
+            <tr><td>3</td><td>C</td><td>AIML</td><td>35</td></tr>
+            <tr><td>4</td><td>D</td><td>IT</td><td>75</td></tr>
+            <tr><td>5</td><td>A</td><td>CS</td><td>97</td></tr>
+            <tr><td>6</td><td>B</td><td>CSDS</td><td></td></tr>
+            <!-- VERIFY: row 6 is cut off at the bottom of the scan; Branch is read as CSDS (only the top of the letters is visible) and the Per value is not readable. -->
+          </tbody>
+        </table>
+      </div>
+
+      <p>Display student Name</p>
+      <div class="code">
+SELECT SName
+From student;
+      </div>
+
+      <h3 class="r">Notes (order of Execution)</h3>
+      <ul>
+        <li>From clause starts the execution</li>
+        <li>For from clause we can pass table_name as an argument (Input)</li>
+        <li>The Job of From clause is to go to the database search for the table and put the table under execution</li>
+        <li>select clause executes after the execution of from clause</li>
+        <li>The Job of select clause is to go the table under execution and display mentioned columns.</li>
+      </ul>
+
+      <h3 class="r">question</h3>
+
+      <p>① Write a query to display All the Details of student</p>
+      <div class="code">
+SELECT *
+From student;
+      </div>
+
+      <p>② WAQTD Names of all the student and percentage</p>
+      <div class="code">
+SELECT ename, perc
+FROM student;
+      </div>
+
+      <p>③ WAQTD Name and Branch of students</p>
+      <div class="code">
+SELECT ename, Branch
+From student;
+      </div>
+
+      <p>④ WAQTD Name, percentage, Branch of student</p>
+      <div class="code">
+SELECT ename, perc, Branch
+FROM student;
+      </div>
+
+      <p>⑤ WAQTD Name, SID, Branch and percentage</p>
+      <div class="code">
+SELECT ename, SID, Branch, perc
+From student
+      </div>
+      <!-- Source note: these queries use the column names ename and perc although the student table above has SName and Per; reproduced as written. -->
+
+    </section>
+
+    <!-- ===== Source PDF pages 3-4: Distinct, Expression, Alias ===== -->
+    <section class="page">
+
+      <h2>Distinct</h2>
+      <ul>
+        <li>It is Used to remove Duplicate values or repeated Values From result table</li>
+        <li>Distinct clause must be used as First argument in the select clause</li>
+        <li>we can pass multiple argument to the Distinct clause</li>
+      </ul>
+
+      <h3 class="r">question</h3>
+      <p>① WAQTD remove Duplicate student name from table</p>
+      <div class="code">
+SELECT Distinct ename
+FROM student;
+      </div>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P of FROM</caption>
+              <thead>
+                <tr><th>SID</th><th>SName</th><th>Branch</th><th>PER</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>A</td><td>CS</td><td>85</td></tr>
+                <tr><td>2</td><td>B</td><td>IT</td><td>80</td></tr>
+                <tr><td>3</td><td>C</td><td>ME</td><td>60</td></tr>
+                <tr><td>4</td><td>D</td><td>EC</td><td>70</td></tr>
+                <tr><td>5</td><td>A</td><td>cs</td><td>85</td></tr>
+                <tr><td>6</td><td>B</td><td>IT</td><td>80</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span>→</span>
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P of select</caption>
+              <thead><tr><th>SName</th></tr></thead>
+              <tbody>
+                <tr><td>A</td></tr>
+                <tr><td>B</td></tr>
+                <tr><td>C</td></tr>
+                <tr><td>D</td></tr>
+                <tr><td>A</td></tr>
+                <tr><td>B</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span>→</span>
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P of Distinct</caption>
+              <thead><tr><th>SName</th></tr></thead>
+              <tbody>
+                <tr><td>A</td></tr>
+                <tr><td>B</td></tr>
+                <tr><td>C</td></tr>
+                <tr><td>D</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p>② WAQTD Duplicate PER</p>
+      <div class="code">
+SELECT Distinct PER
+From student;
+      </div>
+
+      <p>③ WAQTD to remove Duplicate value Branch per and name</p>
+      <div class="code">
+SELECT Distinct Branch, Per, ename
+From student;
+      </div>
+
+      <h2>Expression</h2>
+      <ul>
+        <li>Any statement which gives result as know as expression</li>
+        <li>It is combination of operand and operator</li>
+        <li>operator is symbol which is used to perform a specific task</li>
+        <li>operand are the values where operation perform</li>
+      </ul>
+
+      <h4>Two types</h4>
+      <ol>
+        <li>column name</li>
+        <li>Direct values (literals)
+          <ul>
+            <li>i) char</li>
+            <li>ii) Date</li>
+            <li>iii) Number</li>
+          </ul>
+          <p>(char, Date and Number are marked together with a bracket as: case sensitive)</p>
+        </li>
+      </ol>
+
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <tbody>
+              <tr><td>SAL</td><td>×</td><td>12</td></tr>
+              <tr><td>operand</td><td>operator</td><td>operand</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Source: SAL x 12 with arrows labelled operator (to the x), operand (to 12) and operand (to SAL). -->
+      </div>
+
+      <h2>ALIAS</h2>
+      <ul>
+        <li>It is alternative name which given to expression in result table</li>
+        <li>we can pass Alias with or without using as keyword</li>
+        <li>Alias name is a single string which is separated by '_' or enclose with in " _ " double quotes.</li>
+      </ul>
+
+      <h3 class="r">question</h3>
+
+      <p>① WAQTD Name of the emp along with their annual salary</p>
+      <div class="code">
+SELECT ename, SAL*12 as Annual_sal
+FROM emp
+      </div>
+      <p>(SAL*12 is labelled <span class="r">Expression</span>; Annual_sal is labelled <span class="r">Alias Name</span>)</p>
+
+      <p>② WAQTD Ename and Job for all the emp with their Half term salary</p>
+      <div class="code">
+SELECT ename, SAL*6 as HalfTerm_sal
+FROM emp
+      </div>
+
+      <p>③ WAQTD All the Details of the emp along with an annual Bonus 2000</p>
+      <div class="code">
+SELECT emp.*, SAL*12 + 2000 as annual Bonus
+FROM emp
+      </div>
+
+      <p>④ WAQTD Name salary and salary with a hike of 10%</p>
+      <div class="code">
+SELECT ename, sal, sal + sal * 10/100
+From emp
+      </div>
+
+      <p>⑤ WAQTD Name and salary and Deduction of 25%</p>
+      <div class="code">
+SELECT ename, sal, sal - sal * 25/100
+From emp
+      </div>
+
+      <p>⑥ WAQTD Name and salary with monthly hike of 50</p>
+      <div class="code">
+SELECT ename, SAL, sal+50
+From emp
+      </div>
+      <!-- VERIFY: question numbers in the source read 1, 2, 3, 4, 5, 6 but some circles (2 and 5) look like 3; treated as sequential. Question 2 asks for Ename and Job but its query selects ename and SAL*6 only; reproduced as written. -->
+
+    </section>
+
+    <!-- ===== Source PDF pages 5-6: Selection, Where, Operators ===== -->
+    <section class="page">
+
+      <h2>SELECTION</h2>
+      <p>the process of retrieving Data From table by selecting both rows and columns</p>
+
+      <h2>Where</h2>
+      <ul>
+        <li>It used to Filter the records</li>
+        <li>Where clause executes row by row</li>
+        <li>In where clause we can pass multiple argument with the help of logical operator</li>
+        <li>It written output in boolean values</li>
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+select * / col_name [Distinct] / expression [Alias]
+From table_Name
+Where Row Filter condition;
+      </div>
+
+      <div class="scroll">
+        <table class="tbl">
+          <thead>
+            <tr><th>ENO</th><th>EName</th><th>SAL</th><th>Deptno.</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>ALLEN</td><td>1000</td><td>10</td></tr>
+            <tr><td>2</td><td>BLAKE</td><td>2000</td><td>20</td></tr>
+            <tr><td>3</td><td>JAMES</td><td>3000</td><td>30</td></tr>
+            <tr><td>4</td><td>SCOTT</td><td>4000</td><td>20</td></tr>
+            <tr><td>5</td><td>ADAMS</td><td>5000</td><td>10</td></tr>
+            <tr><td>6</td><td>Martin</td><td>3500</td><td>30</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- VERIFY: row 1 name is handwritten like "ALIEN" (read as ALLEN, as in the later Emp-table) and its Deptno looks like "16" (read as 10). -->
+
+      <h3 class="r">question</h3>
+      <p>① WAQTD employee working in department 20</p>
+      <div class="code">
+SELECT EName
+From Emp
+Where Deptno =20;
+      </div>
+
+      <div class="diagram">
+        <p class="r">working</p>
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P of where</caption>
+              <thead><tr><th>ENO</th><th>EName</th><th>SAL</th><th>Deptno</th></tr></thead>
+              <tbody>
+                <tr><td>2</td><td>Blake</td><td>2000</td><td>20</td></tr>
+                <tr><td>4</td><td>Scott</td><td>4000</td><td>20</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span>→</span>
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P of select</caption>
+              <thead><tr><th>EName</th></tr></thead>
+              <tbody>
+                <tr><td>Blake</td></tr>
+                <tr><td>Scott</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p>② WAQTD to display Name and Hiredate of emp Hiredate of emp 9 Jun 81</p>
+      <!-- VERIFY: the source line repeats "Hiredate of emp" (text runs over two lines); reproduced as written. -->
+      <div class="code">
+SELECT EName, Hiredate
+From emp
+Where Hiredate = '09-Jun-81';
+      </div>
+
+      <h2>Operator in SQL</h2>
+
+      <p>① Arithmetic operator → (+, -, *, /);</p>
+
+      <p>② concatenation operator → (||)</p>
+      <ul>
+        <li>It is used to join two string</li>
+      </ul>
+      <div class="code">
+SELECT 'MR' || ENAME
+From emp;
+      </div>
+
+      <p>③ comparision operator → (=, != or &lt;&gt;)</p>
+      <p>④ Relational operator → (&lt;, &gt;, &gt;=, &lt;=)</p>
+      <p>⑤ special operator → In, NotIn, Between, IS, ISNot, like, Not like</p>
+      <p>⑥ Logical operator → (AND, OR, Not)</p>
+      <!-- VERIFY: the source numbers special operator and Logical operator both as 5 (the second looks like 5/6); read as 5 and 6. -->
+
+      <div class="definition">
+        AND → This operator written true, If the all the condition is satisfied
+      </div>
+      <div class="definition">
+        OR → This operator written true If one OF the condition is satisfied
+      </div>
+
+      <h3 class="r">question:-</h3>
+
+      <p>① WAQDT Name and salary of emp who are earning more than 1500 less than 3000</p>
+      <div class="code">
+SELECT ename, sal
+FROM emp
+WHERE sal &gt; 1500 and sal &lt; 3000;
+      </div>
+
+      <p>② WAQDT Details of emp working as manager in DEPTNO 10 or Dept No = 20</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE job='manager' AND (DEPTNO=10 OR
+                          DEPTNO=20)
+      </div>
+
+      <p>③ WAQDT Name, job, DeptNO of emp working as clerk or manager in Dept 10</p>
+      <div class="code">
+SELECT ename, job, DeptNO
+FROM emp
+WHERE Dept=10 AND (job = 'clerk'
+                   OR
+                   job = manager)
+      </div>
+      <!-- Source note: "Dept=10" and the unquoted manager are reproduced as written. -->
+
+    </section>
+
+    <!-- ===== Source PDF pages 7-8: Emp-table, Assignment 01, Assignment 02 (start) ===== -->
+    <section class="page">
+
+      <div class="scroll">
+        <table class="tbl">
+          <caption>Emp-table</caption>
+          <thead>
+            <tr>
+              <th>EMP NO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>DeptNO</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>7369</td><td>smith</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7499</td><td>ALLEN</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7521</td><td>WARD</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7566</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7654</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7698</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7782</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7788</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7839</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7844</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7876</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7900</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7902</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>7934</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- VERIFY: the first digit of every EMP NO is cut off at the left edge of the scan (visible: 369, 499, 521, 566, 654, 698, 782, 788, 839, 844, 876, 900, 902, 934); a leading 7 is added. Only the first three ENAME values are written in the source; all other cells are empty. The table has an extra empty last row not reproduced. -->
+
+      <h2>Assignment - 01 <span class="r">(21-12-25)</span></h2>
+
+      <p>① Write a query to Display all the Details from emp table</p>
+      <div class="code">
+SELECT *
+From emp
+      </div>
+      <!-- Source spelling: "Faom emp". -->
+
+      <p>② WAQTD Names of all the employees</p>
+      <div class="code">
+SELECT ename
+FROM emp;
+      </div>
+
+      <p>③ WAQTD Name and salary Given to all the employees</p>
+      <div class="code">
+SELECT ename, sal
+FROM emp;
+      </div>
+
+      <p>④ WAQTD Name and commission Given to all the employee</p>
+      <div class="code">
+SELECT ename, COMM
+FROM emp;
+      </div>
+
+      <p>⑤ WAQTD employee ID and department Number of all the employee In emp table</p>
+      <div class="code">
+SELECT ename, deptno
+FROM emp;
+      </div>
+
+      <p>⑥ WAQTD EName and Hiredate of all the employee</p>
+      <div class="code">
+SELECT ename, hiredate
+From emp;
+      </div>
+
+      <p>⑦ WAQTD Name and Designation of all the employees</p>
+      <div class="code">
+SELECT ename, Job
+FROM emp;
+      </div>
+
+      <p>⑧ WAQTD DNames Present in Department table</p>
+      <div class="code">
+SELECT dname
+From dept
+      </div>
+
+      <p>⑨ WAQTD Name, JOB and salary Given to all the employees</p>
+      <div class="code">
+SELECT ename, job, sal
+From emp;
+      </div>
+
+      <p>⑩ WAQTD DName and location present in Dep table</p>
+      <div class="code">
+SELECT dname, loc
+From dept;
+      </div>
+
+      <h2>Assignment - 02 (Where clause) <span class="r">(21-12-25)</span></h2>
+
+      <p>① WAQTD Name and salary of the emp if commission is 1400</p>
+      <div class="code">
+SELECT ename, sal
+From emp
+WHERE comm =1400;
+      </div>
+
+      <p>② WAQTD Details of the employee having commision more than salary</p>
+      <div class="code">
+SELECT *
+From emp
+WHERE comm &gt; sal ;
+      </div>
+
+      <p>③ WAQTD DeptNo and EMPNo of the emp working as clerk</p>
+      <div class="code">
+SELECT DEPTNO, EMPNO
+From emp
+WHERE job = 'CLERK';
+      </div>
+
+      <p>⑤ WAQTD Details of the emp working as analyst</p>
+      <div class="code">
+SELECT *
+From emp
+WHERE job = 'analyst';
+      </div>
+
+      <p>⑥ WAQTD Details of the emp earning more than 2000 per month</p>
+      <div class="code">
+SELECT *
+From emp
+WHERE sal &gt; 2000;
+      </div>
+
+      <p>⑦ WAQTD salary of the employee working as president</p>
+      <div class="code">
+SELECT sal FROM emp
+WHERE Job = 'PRESIDENT';
+      </div>
+      <!-- VERIFY: the numbering in this assignment reads 1, 2, 3, 5, 6, 7 (no 4 is written); reproduced as written. -->
+
+    </section>
+
+    <!-- ===== Source PDF pages 9-11: Assignment 02 (end) and Assignment 03 ===== -->
+    <section class="page">
+
+      <!-- VERIFY: PDF page 9 starts at question 19 of Assignment 02; questions 8 to 18 are not present in the supplied pages. -->
+
+      <p>⑲ WAQTD Details of the emp Hired after Repub<!-- cut -->...</p>
+      <!-- VERIFY: the end of this question line is cut off at the top of the scan. -->
+      <div class="code">
+SELECT *
+From emp
+WHERE hiredate &gt; '10-Jan-2023';
+      </div>
+      <!-- VERIFY: the source shows a doubled quote after '10-Jan-2023'. -->
+
+      <p>⑳ WAQTD Name of emp Hired on Valentine day 2023</p>
+      <!-- Source spelling: "Valentein". -->
+      <div class="code">
+SELECT ename
+From emp
+WHERE hiredate = '14-Feb-2023';
+      </div>
+
+      <h2>Assignment - 03 (logical operator) <span class="r">(21-12-25)</span></h2>
+
+      <p>① WAQTD Details of the emp Along with annual salary If they are working in Dept 30 as salesman and their annual salary Has to be greater than 14000</p>
+      <div class="code">
+SELECT emp.*, sal*12 as annual_sal
+FROM emp
+WHERE job='salesman' AND deptNo = 30 AND
+      sal*12 &gt; 14000
+      </div>
+
+      <p>② WAQTD all details of emp working in dept 30 as analyst</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE Job ='analyst' AND deptNo =30;
+      </div>
+
+      <p>③ WAQTD Names of the employee whos salary Is less than 1100 AND their Designation Is clerk</p>
+      <div class="code">
+SELECT ename
+FROM emp
+WHERE sal&lt;1100 AND job = 'clerk' ;
+      </div>
+
+      <p>④ WAQTD Name, sal, Annual sal and DeptNo If employee working in DeptNo 20, and earning more than 1100 and Annual salary exceeds 12000</p>
+      <div class="code">
+SELECT ename, sal, sal*12, deptNo
+FROM emp
+WHERE deptNo =20 AND sal &gt;1100 AND sal*12 &gt; 12000;
+      </div>
+
+      <p>⑤ WAQTD empno and names of the employee working as manager in dept 20</p>
+      <div class="code">
+SELECT ename, empno
+From emp
+WHERE Job ='manager' AND deptNo = 20;
+      </div>
+
+      <p>⑧ WAQTD details of the employee working in dept 20 or 30</p>
+      <!-- VERIFY: the end of this question line is cut off; "20 or 30" is read from the query. Questions 6 and 7 of Assignment 03 are not present in the supplied pages. -->
+      <div class="code">
+SELECT *
+FROM emp
+WHERE deptNo = 20 OR deptNo =30;
+      </div>
+
+      <p>⑨ WAQTD detail of the employee working as analyst in dept 10</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE job = 'analyst' AND deptNo =10;
+      </div>
+
+      <p>⑩ WAQTD details of the emp working as president with salary of rupees 4000</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE job ='president' AND sal =4000;
+      </div>
+
+      <p>⑪ WAQTD name and job of the employee excluding the emp working as clerk in dept 10</p>
+      <div class="code">
+SELECT ename, Job
+FROM emp
+WHERE NOT (job = 'clerk' AND deptNo = 10);
+      </div>
+
+      <p>⑫ WAQTD Name, job of the emp except the employee working in dept 10 or 20</p>
+      <div class="code">
+SELECT ename, Job
+FROM emp
+WHERE NOT ( DeptNO = 10 OR DeptNO = 20);
+      </div>
+
+      <p>⑬ WAQTD Names, DeptNo, and job of emp working as clerk in Dept 10 or 20</p>
+      <div class="code">
+SELECT ename, DeptNo, job
+FROM emp
+WHERE job = 'clerk' AND ( DeptNo = 10 OR DeptNo = 20)
+      </div>
+
+      <p>⑭ WAQTD details of employee working as clerk or manager in dept = 10</p>
+      <div class="code">
+SELECT *
+From emp
+WHERE deptNo = 10 AND
+      (Job = 'clerk' OR Job = 'manager');
+      </div>
+
+      <p>⑮ WAQTD Name of emp working in Dept 10, 20, 30, 40</p>
+      <div class="code">
+SELECT ename
+FROM emp
+WHERE DeptNO =10 OR DeptNO =20 OR DeptNO = 30
+      </div>
+      <!-- Source note: the query has no condition for dept 40 and no semicolon; reproduced as written. -->
+
+      <p>⑯ WAQTD Details of emp with empNo 7902, 7839</p>
+      <!-- VERIFY: the question line reads like "7902, 7834"; the query reads 7839. -->
+      <div class="code">
+SELECT *
+FROM emp
+WHERE empNo = 7902 OR empNo = 7839
+      </div>
+
+      <p>⑰ WAQTD Details of emp working as manager or salesman or clerk</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE job = 'manager' OR job = 'salesman'
+      OR job = 'clerk' ;
+      </div>
+
+      <p>⑱ WAQTD All the Details of the emp except For the employee working as manager or clerk in Dept 20</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE Not ( deptNo = 20
+            AND (job = 'manager' OR job = 'clerk')
+          );
+      </div>
+
+      <p>⑲ WAQTD names of employee hired after 81 and before 87</p>
+      <div class="code">
+SELECT ename
+FROM emp
+WHERE hiredate &gt; '24-DES-81' AND hiredate &lt; '24-DEC-81'
+      </div>
+      <!-- VERIFY: the first date is written "24-DES-81" and the second date's year looks like 81 (possibly 87, since the question says before 87); reproduced as read. -->
+
+      <p>⑳ WAQTD details of employee earning more than 1250 but less than 3000 .</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE sal &gt; 1200 AND sal &lt; 3000;
+      </div>
+      <!-- Source note: the question says 1250 while the query says 1200; reproduced as written. -->
+
+      <p>㉑ WAQTD name of emp hired after 81 into dept 10 or 30</p>
+      <div class="code">
+SELECT ename
+FROM emp
+WHERE hiredate &gt; '24-DEC-81'
+      AND (DeptNO = 10 OR DeptNO = 30);
+      </div>
+
+    </section>
+
+    <!-- ===== Source PDF pages 12-15: IN, NOT IN, BETWEEN, NOT BETWEEN, IS, IS NOT, LIKE, NOT LIKE ===== -->
+    <section class="page">
+
+      <h2>IN operator</h2>
+      <ul>
+        <li>IN operator is a multivalue operator which can accept multiple value present at RHS</li>
+        <li>IN operator return value or output if any one of the condition is satisfied at RHS</li>
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+Select column_name
+FROM table_name
+WHERE column_name/expression IN (V1,V2 ... Vn);
+      </div>
+
+      <ul>
+        <li>IN is helpful when we want to Filter data based on a set of values</li>
+        <li>It can be used with number/text and even subqueries</li>
+        <li>It makes the query more readable and maintaible than using many OR condition</li>
+      </ul>
+
+      <h3 class="r">question</h3>
+      <p>① WAQTD Details of emp working in dept 10, 20, 30</p>
+      <div class="code">
+select *
+FROM emp
+WHERE DeptNO IN (10,20,30)
+      </div>
+
+      <p>② WAQTD Details of emp working as manager or salesman</p>
+      <div class="code">
+select *
+FROM emp
+WHERE Job IN ('manager','salesman')
+      </div>
+
+      <h2>NOT IN OPERATOR</h2>
+      <ul>
+        <li>It is similar to IN operator instead of accepting the value it reject the value</li>
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+select *
+FROM table_name
+WHERE column_name/expression NOT IN(V1,V2, ... Vn)
+      </div>
+
+      <h3 class="r">question</h3>
+      <p>① WAQTD Details of emp working as manager excluding department 10, 20</p>
+      <div class="code">
+select *
+FROM emp
+WHERE job = 'manger' AND
+      DeptNO NOT IN (10,20)
+      </div>
+      <!-- Source spelling: 'manger'. -->
+
+      <h2>BETWEEN</h2>
+      <ul>
+        <li>BETWEEN operator is used whenever we have range of values</li>
+        <li>We cannot interchange the ranges</li>
+        <li>Between includes the ranges</li>
+        <li>It's most often used with number and table</li>
+        <!-- VERIFY: the last word is handwritten like "tabk"; read as "table". -->
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+column_name/expression BETWEEN 'lower_range'    (&gt;=)
+AND
+'higher_range'                                   (&lt;=)
+      </div>
+      <!-- Source: the symbols (>=) and (<=) are written beside lower_range and higher_range; the ">=" / "<=" reading is from the handwriting (≥ / ≤). -->
+
+      <h3 class="r">question</h3>
+      <p>① WAQTD Details of emp earning sal which ranges of 1000 to 3000</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE sal BETWEEN 1000 AND 3000;
+      </div>
+
+      <p>② WAQTD name and sal of emp earning sal between 1000 to 3000</p>
+      <div class="code">
+SELECT ename, sal
+FROM emp
+WHERE sal BETWEEN 1001 AND 2999;
+      </div>
+
+      <p>③ WAQTD Details of emp who are hired between 80 to 85</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE Hiredate BETWEEN '01-Jan-81' AND '31-DEC24'
+      </div>
+      <!-- VERIFY: the question reads "80 to 8S" (read as 85); the dates in the query are written '01-Jan-81 'AND'31-DEC24' with an unclear year/hyphen on the second date. -->
+
+      <h2>NOT BETWEEN</h2>
+      <ul>
+        <li>It is similar between operator instead of selecting the values it rejects value</li>
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+column_name/expression NOT BETWEEN 'lower_range' AND
+                                   'higher_range'
+      </div>
+
+      <h3 class="r">question</h3>
+      <p>① WAQTD Name, sal of emp If the emp is Not earning sal in the range of 1000 to 3000</p>
+      <div class="code">
+select ename, sal
+FROM emp
+WHERE sal NOT Between 1000 AND 3000;
+      </div>
+
+      <p>② WAQTD Name and hiredate of emp IF the emp are not hired between 80 to 85.</p>
+      <!-- The source gives no query for this question. -->
+
+      <h2>IS</h2>
+      <ul>
+        <li>IS operator used to compare Null values</li>
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+column_name/expression IS Null
+      </div>
+
+      <p>① Write a query to Display Details of emp who does not get commission</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE COMM IS NULL;
+      </div>
+
+      <p>② WAQTD Name and comm of emp who is Not getting sal</p>
+      <div class="code">
+SELECT ename, comm
+FROM emp
+WHERE sal IS NULL;
+      </div>
+
+      <h2>IS NOT</h2>
+      <ul>
+        <li>It is used to compare the values with Not Null</li>
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+column_name/expression IS Not NULL
+      </div>
+
+      <p>① WAQTD Details of emp who get comm</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE COMM IS Not Null;
+      </div>
+
+      <p>② WAQTD Details of emp IF the emp does not earn comm and sal</p>
+      <div class="code">
+SELECT *
+FROM emp
+WHERE comm IS Not NULL AND sal IS Not Null;
+      </div>
+      <!-- VERIFY: in the source the word "sal" is inserted into the question line with a caret, and "Not" is inserted with a caret between IS and NULL in the first condition; both insertions are applied here. -->
+
+      <h2>LIKE</h2>
+      <ul>
+        <li>It is used For pattern matching</li>
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+column_name/expression like 'pattern_to_match'
+      </div>
+
+      <ul>
+        <li>To acheive pattern matching we use special character
+          <ol>
+            <li>'%' → percentile</li>
+            <li>'_' → underscore</li>
+          </ol>
+        </li>
+      </ul>
+
+      <h3>① %</h3>
+      <ul>
+        <li>It is special character which can accept any number number of char, any numbers of times and No character.</li>
+      </ul>
+
+      <div class="scroll">
+        <table class="tbl">
+          <thead>
+            <tr><th>STARTING</th><th>ENDING</th><th>starting and ending</th><th>ANYWHERE</th><th>many times</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A%</td><td>%A</td><td>A%A</td><td>%A%</td><td>%L%L%L%</td></tr>
+            <tr><td>B%</td><td>%B</td><td>A%B</td><td>%B%</td><td>%C%C%C%</td></tr>
+            <tr><td>C%</td><td>%C</td><td>B%C</td><td>%C%</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>② '_'</h3>
+      <ul>
+        <li>It is special character which can accept exactly one character but any character number</li>
+      </ul>
+      <p>'_' → single character<br>'__' → Two character.<br>'____' → Four character</p>
+
+      <h2>NOT LIKE</h2>
+      <ul>
+        <li>Is an sql operator used to select record that do not match a specified pattern</li>
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+column_name/expression Not like 'pattern_Not_to_match'
+      </div>
+
+      <p>① List all the emp name except For emp who name has 'A' as the third character</p>
+      <div class="code">
+select ename
+FROM emp
+WHERE ename like '__A%' ;
+      </div>
+
+      <p>② WAQTD Details of the emp working as clerk In Dept 10 or 30 excluding emp having char 'A' In their name</p>
+      <div class="code">
+select *
+FROM emp
+WHERE Job = 'clerk' AND DeptNO IN(10,30)
+      ename Not like '%A%';
+      </div>
+      <!-- VERIFY: the question line is cut off after "10 or 3" and the IN list is cut off after "(10,3"; both are read as 30. The condition joining the IN list to the ename condition is not written in the source (the first query line ends at the IN list, the next line starts with ename). The pattern is handwritten "a/A%'" and read as '%A%'. -->
+
+    </section>
+
+  </main>
+
+</body>
+</html>

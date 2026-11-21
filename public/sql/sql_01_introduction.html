@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SQL - Introduction to SQL</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <main class="jn">
+
+    <!-- ===== Source PDF page 1 ===== -->
+    <section class="page">
+
+      <h1>Introduction to SQL</h1>
+
+      <h2>What is SQL</h2>
+      <!-- VERIFY: source heading reads "What is sql and why is used"; the words "and why is used" are struck through in the handwriting. -->
+
+      <p>SQL stands for Structured Query Lang. It is used to communicate with relational database with SQL I can:</p>
+      <ol>
+        <li>Create table and database</li>
+        <li>Insert New data</li>
+        <li>Update existing data</li>
+        <li>Delete unwanted data</li>
+        <li>Fetch data using queries</li>
+      </ol>
+
+      <h2>Data</h2>
+      <div class="definition">
+        Data is a <ruby>raw<rt class="r">unchanged</rt></ruby> <ruby>fact<rt class="r">true</rt></ruby> which describes attribute of an entity
+      </div>
+      <!-- Source: red annotations "unchanged" and "true" are written above "raw fact" with arrows. -->
+
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <caption>Bike</caption>
+            <thead>
+              <tr>
+                <th>Properties / Attribute</th>
+                <th>Data / Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Name</td><td>RX100</td></tr>
+              <tr><td>color</td><td>Black</td></tr>
+              <tr><td>price</td><td>25000</td></tr>
+              <tr><td>cc</td><td>898</td></tr>
+              <!-- VERIFY: the cc value is handwritten as "898" (no colon after "cc" in the source). -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h2>Database</h2>
+      <div class="definition">
+        Database is place or medium which is used to store the data in a systematic and organised manner
+      </div>
+      <ul>
+        <li>In Database we perform important operation universally referred as CRUD operation</li>
+      </ul>
+
+      <div class="diagram">
+        <svg viewBox="0 0 460 230" width="100%" role="img" aria-label="CRUD diagram: Data goes into a database cylinder described as systematic and organised. CREATE points into the cylinder, Retrieve points out, UPDATE points in, Delete points out.">
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 z" fill="currentColor"/>
+            </marker>
+          </defs>
+          <!-- cylinder -->
+          <ellipse cx="250" cy="45" rx="60" ry="14" fill="none" stroke="currentColor" stroke-width="2"/>
+          <line x1="190" y1="45" x2="190" y2="200" stroke="currentColor" stroke-width="2"/>
+          <line x1="310" y1="45" x2="310" y2="200" stroke="currentColor" stroke-width="2"/>
+          <path d="M190,200 A60,14 0 0 0 310,200" fill="none" stroke="currentColor" stroke-width="2"/>
+          <!-- Data arrow into the top -->
+          <line x1="250" y1="6" x2="250" y2="28" stroke="currentColor" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <text x="262" y="20" font-size="14" fill="currentColor">Data</text>
+          <!-- CRUD arrows -->
+          <text x="8" y="85" font-size="15" fill="currentColor">CREATE</text>
+          <line x1="95" y1="80" x2="185" y2="80" stroke="currentColor" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <text x="8" y="120" font-size="15" fill="currentColor">Retrieve</text>
+          <line x1="185" y1="115" x2="95" y2="115" stroke="currentColor" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <text x="8" y="155" font-size="15" fill="currentColor">UPDATE</text>
+          <line x1="95" y1="150" x2="185" y2="150" stroke="currentColor" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <text x="8" y="190" font-size="15" fill="currentColor">Delete</text>
+          <line x1="185" y1="185" x2="95" y2="185" stroke="currentColor" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <!-- right label -->
+          <text x="325" y="105" font-size="16" fill="currentColor">systematic</text>
+          <text x="325" y="128" font-size="16" fill="currentColor">and</text>
+          <text x="325" y="151" font-size="16" fill="currentColor">organised</text>
+        </svg>
+      </div>
+
+      <h2>DBMS</h2>
+      <div class="definition">
+        DBMS is a software which is used to maintain and manage the database
+      </div>
+      <ul>
+        <li>Security and authorization are the two important things by the DBMS</li>
+        <li>In DBMS we will store the data in form of files</li>
+        <!-- VERIFY: in the source the word "store" is overwritten/struck and rewritten in this line. -->
+        <li>To communicate with DBMS the query lang is used.</li>
+      </ul>
+
+    </section>
+
+    <!-- ===== Source PDF pages 2-3 (up to Cells) ===== -->
+    <section class="page">
+
+      <h2>Types of DBMS</h2>
+      <ol>
+        <li>Hierarchical</li>
+        <!-- Source spelling: "Heirarchical" -->
+        <li>Network</li>
+        <li>RDBMS</li>
+        <li>Object oriented DBMS</li>
+      </ol>
+
+      <h2>RDBMS</h2>
+      <div class="definition">
+        RDBMS is a type of DBMS software which is used to store the data in the form of tables
+      </div>
+      <ul>
+        <li>We use Structured Query Lang (SQL) to communicate with RDBMS</li>
+      </ul>
+
+      <h2>Relational Model</h2>
+      <ul>
+        <li>It is designed and developed by E.F. Codd</li>
+        <li>In relational model, we store the data in the form of tables</li>
+        <li>Any DBMS, if they follow relational model they become RDBMS</li>
+      </ul>
+
+      <div class="diagram">
+        <div class="flow">
+          <span>DBMS</span>
+          <span>→</span>
+          <span class="r">Relational model</span>
+          <span>→</span>
+          <span>RDBMS</span>
+        </div>
+        <p class="r">↓ E.F. Codd</p>
+        <!-- Source: the "E.F.codd" label hangs below the arrow that leads to RDBMS (arrow pointing down). -->
+      </div>
+
+      <h2>Table</h2>
+      <ul>
+        <li>A table is a collection of rows and columns in a database
+          <ul>
+            <li>Each row is one record</li>
+            <li>Each column is a field</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>Cells</h2>
+      <ul>
+        <li>The intersection of rows and columns is known as cells</li>
+        <li>The smallest unit of the table is known as cell</li>
+      </ul>
+
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th></th>
+                <th>column / attribute / field</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th rowspan="3">Rows OR Record or tuples</th>
+                <td>cell</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===== Source PDF pages 3-4 (Rules of E.F. Codd) ===== -->
+    <section class="page">
+
+      <h2>Rules of E.F. CODD</h2>
+
+      <h3 class="r">① First Rule</h3>
+      <div class="definition">
+        Data entered into cell must be single value
+      </div>
+
+      <div class="flow">
+        <div class="scroll">
+          <table class="tbl">
+            <thead>
+              <tr><th>ID</th><th>SName</th><th>PH.NO</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>A</td><td>101</td></tr>
+              <tr><td>2</td><td>B</td><td>201</td></tr>
+              <tr><td>3</td><td>C</td><td>314</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <span>→</span>
+        <div class="scroll">
+          <table class="tbl">
+            <thead>
+              <tr><th>ID</th><th>SName</th><th>PH.No1</th><th>PH.No2</th></tr>
+              <!-- VERIFY: the last header is handwritten "PH.NU"; read as "PH.No2" (second phone number column). -->
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>A</td><td>101</td><td>505</td></tr>
+              <tr><td>2</td><td>B</td><td>201</td><td>Null</td></tr>
+              <tr><td>3</td><td>C</td><td>314</td><td>605</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="note">
+        Note : If we store multiple values in the cell data will lost, If we perform any operation
+      </div>
+
+      <h3 class="r">② Second Rule</h3>
+      <ul>
+        <li>According to E.F. Codd we can store the Data in multiple tables, If required we can establish a connection between two table with the help of key attribute</li>
+      </ul>
+
+      <h3 class="r">③ Third Rule</h3>
+      <ul>
+        <li>Details about data is known as metadata or the lowest form of data is known as metadata</li>
+        <li>This meta details will be stored in meta table automatically</li>
+        <li>In RDBMS we will store the data in form of tables including Meta data</li>
+      </ul>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption>Data</caption>
+              <tbody>
+                <tr><td>SID</td><td>01</td></tr>
+                <tr><td>SName</td><td>P</td></tr>
+                <tr><td>AGE</td><td>21</td></tr>
+                <tr><td>PHNO</td><td>1234</td></tr>
+                <tr><td>PER</td><td>65</td></tr>
+                <tr><td>photo</td><td>[image icon]</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span>→ metadata →</span>
+          <div class="scroll">
+            <table class="tbl">
+              <caption>Data</caption>
+              <tbody>
+                <tr><td>PName</td><td>mypic</td></tr>
+                <tr><td>Size</td><td>2KB</td></tr>
+                <tr><td>Format</td><td>JPG</td></tr>
+                <tr><td>LOC</td><td>Mum</td></tr>
+                <tr><td>Resolution</td><td>400x600</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- VERIFY: in the source, an arrow runs from the "photo" field to a small picture box, which points to the PName/Size/Format/LOC/Resolution bracket; a second curved arrow labelled "metadata" runs from "photo" to the same bracket. The right-hand bracket label is cut off at the page edge ("Dat…"), read as "Data". -->
+      </div>
+
+      <h3 class="r">④ Fourth Rule</h3>
+      <ul>
+        <li>Data entered in a table must be validated by assigning data type and constraint</li>
+      </ul>
+      <div class="important">
+        Note – Data types are mandatory whereas constraint are optional.
+      </div>
+
+    </section>
+
+    <!-- ===== Source PDF pages 5-7 (Data types) ===== -->
+    <section class="page">
+
+      <h2>Data types</h2>
+      <ul>
+        <li>Data types are used to specify or determine what's type of data we have to store in particular memory location</li>
+      </ul>
+
+      <h3>① CHAR</h3>
+      <ul>
+        <li>It is used to store the characters such as 'A-Z', 'a-z', '0-9', special character #,$ , Alphanumeric char '(MH-43-BCS-4311)'.
+          <!-- VERIFY: handwritten as "(MH,43 - Bcs - 4311)"; separators read as hyphens. -->
+        </li>
+        <li>Whenever we are using character datatype that must be enclosed within ' ' &nbsp;&nbsp; 'pravin' &nbsp; 'vashi'</li>
+      </ul>
+
+      <p><span class="r">Syntax</span></p>
+      <div class="code">
+CHAR(Size) → 2000
+      </div>
+
+      <p>Whenever we are using CHAR Datatype we have to mention size for it</p>
+      <ul>
+        <li>Size is used to determine the number of character we can store</li>
+        <li>The maximum character we can store is upto 2000 CHAR</li>
+        <li>CHAR datatype is an fixed length memory allocation</li>
+      </ul>
+
+      <div class="code">
+CHAR(10)
+      </div>
+      <!-- VERIFY: "CHAR(10" in the source has no visible closing bracket. -->
+
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <tbody>
+              <tr>
+                <td>P</td><td>r</td><td>a</td><td>V</td><td>i</td><td>N</td><td></td><td></td><td></td><td></td>
+              </tr>
+              <tr>
+                <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td>
+              </tr>
+              <tr>
+                <td colspan="6">used memory</td>
+                <td colspan="4">waste memory</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="note">
+        Note:- We have to use character Datatype only for the fixed length character
+      </div>
+
+      <h3>VARCHAR</h3>
+      <!-- Source marks VARCHAR with a star; it follows CHAR (①) and precedes Date (③), so it is the second data type. -->
+      <ul>
+        <li>VARCHAR is same like CHAR</li>
+        <li>Just the difference is there is no wastage of memory happen we can reuse the unused memory here</li>
+        <li>No wastage of memory</li>
+      </ul>
+      <p>Emailid, Name, Address</p>
+
+      <h3>③ Date</h3>
+      <p>It is used to store data in oracle format.</p>
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+'DD-MM-YYYY'
+OR
+'DD-MM-YY'
+      </div>
+
+      <h3>④ Number</h3>
+      <p>Number datatype used to the numeric values</p>
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+NUMBER(Precision,[scale])
+      </div>
+
+      <h4 class="r">Precision</h4>
+      <p>It is used to determine number of digits required to store Integer value</p>
+      <p>The range of Precision is <span class="r">1 to 38</span></p>
+      <!-- VERIFY: the first digit of the range is written like "a"; read as 1 (Precision 1 to 38). -->
+
+      <h4 class="r">Scale</h4>
+      <p>Scale is used to determine the number of digits required to store decimal values with in the precision</p>
+      <p>The range of scale is <span class="r">-84 to 127</span></p>
+      <!-- VERIFY: handwriting looks like "-184 to 127"; read as -84 (a stray stroke before the 8). -->
+      <p>default value of scale is <span class="r">zero(0)</span></p>
+
+      <div class="code">
+Number(3) → 999
+      </div>
+
+      <div class="scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>P&gt;S / P&lt;S</th>
+              <th>Datatype</th>
+              <th>Digits</th>
+              <th>Position numbers written under the digits</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>P&gt;S</td><td>Number(5,3)</td><td>99.999</td><td>5 4 . 3 2 1</td></tr>
+            <tr><td>P&gt;S</td><td>Number(7,4)</td><td>999.9999</td><td>7 6 5 . 4 3 2 1</td></tr>
+            <tr><td>P&gt;S</td><td>Number(6,3)</td><td>999.999</td><td>6 5 4 . 3 2 1</td></tr>
+            <tr><td>P&lt;S</td><td>Number(2,5)</td><td>999.99</td><td>5 4 3 . 2 1</td></tr>
+            <tr><td>P&lt;S</td><td>Number(4,7)</td><td>999.9999</td><td>7 6 5 . 4 3 2 1</td></tr>
+            <tr><td>P&lt;S</td><td>Number(4,9)</td><td>00000.9999</td><td>9 8 7 6 5 . 4 3 2 1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- VERIFY: group labels are handwritten "PYS" (read P>S) and "P<S". In the P<S group, Number(2,5) and Number(4,7) appear to be written with 9s in the leading positions, while Number(4,9) uses 0s; reproduced as written. Digit positions are numbered from the right in the source. -->
+
+      <h3>⑤ Large object</h3>
+      <p>It is used to store huge amount of data</p>
+
+      <h4>① Character Large Data</h4>
+      <p>It is used to store character such as upto <span class="r">4GB</span> size</p>
+      <!-- VERIFY: "4GB" is overwritten in red in the source. -->
+
+      <h4>② Binary Large data</h4>
+      <p>It is used to store binary values such as Images, Videos and MP3 upto <span class="r">4GB</span> size</p>
+      <!-- Source spelling: "Vedios" -->
+
+    </section>
+
+  </main>
+
+</body>
+</html>

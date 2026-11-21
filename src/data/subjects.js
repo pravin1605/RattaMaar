@@ -101,6 +101,77 @@ const subjects = [
 
   },
 
+  {
+    id: "Sql",
+    name: "SQL",
+    description: "Structured Query Language concepts and programming notes",
+    icon: "🗄️",
+    color: "blue",
+    notes: [
+      {
+        id: "sql-01",
+        title: "Introduction to SQL",
+        file: "/sql/sql_01_introduction.html",
+      },
+      {
+        id: "sql-02",
+        title: "Constraints ",
+        file: "/sql/sql_02_constrint.html",
+      },
+      {
+        id: "sql-03",
+        title: "Statements ",
+        file: "/sql/sql_03_statement.html",
+      },
+      {
+        id: "sql-04",
+        title: "Data Query Language (DQL) ",
+        file: "/sql/sql_04_dql.html",
+      },
+      {
+        id: "sql-05",
+        title: "Functions ",
+        file: "/sql/sql_05_function.html",
+      },
+      {
+        id: "sql-06",
+        title: "Group by and Having clause ",
+        file: "/sql/sql_06_group_having.html",
+      },
+      
+      {
+        id: "sql-07",
+        title: "subquery ",
+        file: "/sql/sql_07_subquery.html",  
+      },
+
+      {
+        id: "sql-08",
+        title: "Joins ",
+        file: "/sql/sql_08_join.html",
+      },
+
+      {
+        id: "sql-09",
+        title: "Windows Functions ",
+        file: "/sql/sql_09_window function.html",
+      },
+
+      {
+        id: "sql-10",
+        title: "Functional Dependency ",
+        file: "/sql/sql_10_functional_dependency.html",
+      },
+
+      {
+        id: "sql-11",
+        title: "Extra notes ",
+        file: "/sql/sql_11_extra thoery.html",
+      },
+
+    ]
+  },
+
 
   {
     id: "hibernate",

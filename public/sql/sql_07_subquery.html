@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SQL - SubQuery</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <main class="jn">
+
+    <!-- ===== Source PDF page 1: SubQuery, working principal, Case I ===== -->
+    <section class="page">
+
+      <h1>SubQuery</h1>
+
+      <div class="definition">
+        A Query written inside the another query is known as subquery
+      </div>
+
+      <div class="diagram">
+        <svg viewBox="0 0 460 180" width="100%" role="img" aria-label="Outer query gives the Result. The outer query is dependent on the sub-query (arrow from outer query to sub-query). The O/P of the sub-query goes up as I/P to the outer query.">
+          <defs>
+            <marker id="ah7" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 z" fill="currentColor"/>
+            </marker>
+          </defs>
+          <text x="8" y="28" font-size="14" fill="currentColor">Result</text>
+          <line x1="55" y1="30" x2="158" y2="30" stroke="currentColor" stroke-width="2"/>
+          <ellipse cx="230" cy="30" rx="72" ry="18" fill="none" stroke="currentColor" stroke-width="2"/>
+          <text x="230" y="35" font-size="14" text-anchor="middle" fill="currentColor">outer query</text>
+          <ellipse cx="300" cy="150" rx="72" ry="18" fill="none" stroke="currentColor" stroke-width="2"/>
+          <text x="300" y="155" font-size="14" text-anchor="middle" fill="currentColor">sub-query</text>
+          <line x1="285" y1="46" x2="318" y2="130" stroke="currentColor" stroke-width="2" marker-end="url(#ah7)"/>
+          <text x="330" y="80" font-size="13" fill="currentColor">Dependen</text>
+          <text x="350" y="98" font-size="13" fill="currentColor">on</text>
+          <path d="M228,150 L175,150 L175,52" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#ah7)"/>
+          <text x="183" y="95" font-size="13" fill="currentColor">I/P</text>
+          <text x="140" y="135" font-size="13" fill="currentColor">O/P</text>
+        </svg>
+        <!-- VERIFY: the arrow labels are hand-drawn; "Dependen on" is written as "Depenðen on" (read as Dependent on). The I/P label sits beside the upward arrow into the outer query and the O/P label beside the line leaving the sub-query. -->
+      </div>
+
+      <h3 class="r">Working Principal of sub query</h3>
+      <ol>
+        <li>Let's considered two query (outer and Inner)</li>
+        <li>Inner query executes First and generate an output, the output of innerquery will backed as outer query</li>
+        <!-- VERIFY: "backed" is hard to read (looks like "bcked"/"beked"). -->
+        <li>outer query executes and generate the result</li>
+        <li>we can state that outer query is dependent on innerquery</li>
+      </ol>
+
+      <h3 class="r">Case ①</h3>
+      <p>Whenever we have indirect or unknown condition we should use subquery</p>
+
+      <p>① WAQTD to display the name of emp who sal is greater than James</p>
+      <div class="code">
+select ename
+From emp
+Where sal &gt; ( select sal
+              From emp
+              Where ename = 'James');
+      </div>
+
+      <p>② WAQTD Details of emp earning sal more than smith less than king</p>
+      <div class="code">
+Select *
+From emp
+Where sal &gt; ( select sal
+              From emp
+              Where ename = 'smith')
+AND
+sal &lt; ( select sal
+         From emp
+         Where ename = 'King');
+      </div>
+
+    </section>
+
+    <!-- ===== Source PDF page 2: Case II ===== -->
+    <section class="page">
+
+      <h3 class="r">Case II</h3>
+      <p>The data to be selected and the condition to be executed are present in different table then we use subquery</p>
+
+      <p>① WAQTD the Department name of emp name Allen</p>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <thead><tr><th>ENO</th><th>Ename</th><th>sal</th><th>DeptNo</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Allen</td><td>1000</td><td>10</td></tr>
+                <tr><td>2</td><td>Blacke</td><td>2000</td><td>20</td></tr>
+                <tr><td>3</td><td>James</td><td>3000</td><td>30</td></tr>
+                <tr><td>4</td><td>scott</td><td>4000</td><td>40</td></tr>
+                <tr><td>5</td><td>miller</td><td>5000</td><td>50</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span>→</span>
+          <div class="scroll">
+            <table class="tbl">
+              <thead><tr><th>DeptNO</th><th>DName</th><th>Loc</th></tr></thead>
+              <tbody>
+                <tr><td>10</td><td>D1</td><td>L1</td></tr>
+                <tr><td>20</td><td>D2</td><td>L2</td></tr>
+                <tr><td>30</td><td>D3</td><td>L3</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Source: an arrow runs from the DeptNo column of the emp table (row 1) to the Dept table. -->
+      </div>
+
+      <div class="code">
+select DName
+From Dept
+Where DeptNO = ( select DeptNO
+                 From emp
+                 Where ename = 'Allen')
+      </div>
+      <!-- VERIFY: the last line is cut off at the page edge ("Where cnam ='Allen'"); read as ename = 'Allen'. -->
+
+      <p>② WAQTD Details of the emp Along with Annual sal IF emp are working in New York.</p>
+      <div class="code">
+select emp.*, sal*12
+FROM emp
+where DeptNO = (select DeptNO
+                from Dept
+                where LOC = 'New York');
+      </div>
+
+      <p>③ WAQTD Details of emp working as manager in Department accounting</p>
+      <div class="code">
+select *
+From emp
+Where Job = 'manager' AND DeptNO = (select DeptNO
+                                    From Dept
+                                    where
+                                    Dname = 'Accounting');
+      </div>
+      <!-- VERIFY: the right edge of the scan is cut off: it shows "(select Dept" and "Dname=Accour"; the rest (DeptNO ... 'Accounting') is completed from the question text. -->
+
+      <p>④ WAQTD DName and Loc Along with DeptNO of emp who's name ends with R.</p>
+      <!-- The source gives no query for this question. -->
+
+    </section>
+
+    <!-- ===== Source PDF page 3: Types of SubQuery ===== -->
+    <section class="page">
+
+      <h2>Types of SubQuery</h2>
+
+      <h3 class="r">① Single Row subquery</h3>
+      <p>IF the subquery written exactly one record or Value we called it as Single Row subquery</p>
+      <p>IF it written only one value then we can use normal operators or special operator to compare the value.</p>
+
+      <div class="code">
+select DName
+From Dept
+Where DeptNO = or IN (select DeptNO
+                      From emp
+                      Where ename = 'James');
+      </div>
+      <p class="r">both be valid</p>
+      <ol>
+        <li>If subquery gives a single value then use (=)</li>
+        <li>If it multiple value then use special</li>
+      </ol>
+      <!-- VERIFY: the second note is cut off at the right edge ("If it multiple value then use special ..."). -->
+
+      <h3 class="r">② MultiRow subquery</h3>
+      <p>IF the subquery written more than one value or record we called as multiRow subquery</p>
+      <p>IF it written more than one value we cannot use normal operator we have to use special operator to compare the value</p>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <thead><tr><th>ENO</th><th>ename</th><th>sal</th><th>DNO</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>A</td><td>1000</td><td>10</td></tr>
+                <tr><td>2</td><td>B</td><td>2000</td><td>20</td></tr>
+                <tr><td>3</td><td>C</td><td>3000</td><td>30</td></tr>
+                <tr><td>4</td><td>D</td><td>4000</td><td>40</td></tr>
+                <tr><td>5</td><td>E</td><td>5000</td><td>50</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll">
+            <table class="tbl">
+              <thead><tr><th>DNO</th><th>DName</th><th>Loc</th></tr></thead>
+              <tbody>
+                <tr><td>10</td><td>D1</td><td>L1</td></tr>
+                <tr><td>20</td><td>D2</td><td>L2</td></tr>
+                <tr><td>30</td><td>D3</td><td>L3</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- VERIFY: in the source the DNO values 20 and 30 overlap in the Dept table; read as 10, 20, 30. -->
+      </div>
+
+      <div class="code">
+select DName
+From Dept
+Where DeptNO IN (select DeptNO
+                 From emp
+                 Where ename like '%s')
+      </div>
+      <!-- VERIFY: the like pattern is handwritten "'o/os'"; read as '%s'. -->
+
+    </section>
+
+    <!-- ===== Source PDF page 4: ALL and ANY operators ===== -->
+    <section class="page">
+
+      <h2>ALL Operator</h2>
+      <ul>
+        <li>It is sub query operator used to along with relational operator to compair the present at the RHS</li>
+        <li>All operator returns true <span class="hl">if all values at the RHS</span> <span class="r">(Inner query result)</span> <span class="hl">is satisfied</span> condition</li>
+      </ul>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <thead><tr><th>ENO</th><th>ename</th><th>sal</th><th>Dept</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>A</td><td>3000</td><td>10</td></tr>
+                <tr><td>2</td><td>B</td><td>3500</td><td>20</td></tr>
+                <tr><td>3</td><td>C</td><td>2500</td><td>30</td></tr>
+                <tr><td>4</td><td>D</td><td>4500</td><td>10</td></tr>
+                <tr><td>5</td><td>E</td><td>5000</td><td>20</td></tr>
+                <tr><td>6</td><td>F</td><td>4000</td><td>30</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <p>1st Row &nbsp; 3000 &gt; All (3000, 4500, 4000)</p>
+            <p>2nd ROW &nbsp; 3500 &gt; All (3000, 4500, 4000)</p>
+            <p>3rd ROW &nbsp; 2500 &gt; All (3000, 4500, 4000)</p>
+            <p>6th ROW &nbsp; 4000 &gt; All (3000, 4500, 400)</p>
+          </div>
+        </div>
+        <p>output = (E)</p>
+        <!-- VERIFY: the Dept of row 6 is hard to read (looks like 30 or 70); rows 4 and 5 have no handwritten comparison line between the 3rd and 6th ROW lines (only dots). The last comparison list ends "400)" (cut). -->
+      </div>
+
+      <div class="code">
+select ename
+From emp
+Where sal &gt;ALL (select sal
+                From emp
+                Where DeptNO = 10);
+      </div>
+
+      <p class="r">Atleast or minimum</p>
+      <!-- VERIFY: this note has an arrow pointing down towards the ANY heading; placed here between ALL and ANY. -->
+
+      <h2>ANY Operator</h2>
+      <ul>
+        <li>It is subquery operator which is used along with relational operator to compare the value present at the RHS</li>
+        <li>ANY operator written true if any one of the value is gets satisfied at RHS</li>
+      </ul>
+
+    </section>
+
+    <!-- ===== Source PDF pages 5-6: Nested subquery and questions ===== -->
+    <section class="page">
+
+      <h2>Nested subquery <span class="r">→ max(&lt;) | min(&gt;)</span></h2>
+      <ul>
+        <li>A subquery written inside another a subquery is known as nested subquery</li>
+        <li>the innermost subquery execute first</li>
+        <li>we can nest about ess subquery</li>
+        <!-- VERIFY: this line is hard to read (looks like "we can nest about ess subquery"). -->
+      </ul>
+
+      <div class="scroll">
+        <table class="tbl">
+          <thead><tr><th>sal</th></tr></thead>
+          <tbody>
+            <tr><td>1500</td></tr>
+            <tr><td>1000</td></tr>
+            <tr><td>2000</td></tr>
+            <tr><td>2500</td></tr>
+            <tr><td>3000</td></tr>
+            <tr><td>3500</td></tr>
+            <tr><td>4000</td></tr>
+            <tr><td>5000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code">
+select ename from emp
+Where sal = (select max(sal) from emp
+Where sal &lt; (select max(sal)
+Where sal &lt;
+(select max(sal)
+From emp
+where sal &lt;
+(select max(sal)
+from emp))));
+      </div>
+      <p>3000 &nbsp; 3500 &nbsp; 4000 &nbsp; 5000 (written beside the successive max(sal) lines, from the first to the innermost)</p>
+      <!-- VERIFY: the exact line breaks of the nested query are reconstructed from the staggered handwriting; the four values 3000, 3500, 4000 and 5000 are written beside successive lines with connecting lines. -->
+
+      <p>① WAQTD Name of the emp earning sal more than manager</p>
+      <div class="code">
+select ename
+From emp
+where sal &gt;ALL (select sal
+                From emp
+                where job ='manager');
+      </div>
+
+      <p>② WAQTD Name and sal For all the emp IF they earning less than atleast a manager</p>
+      <div class="code">
+select ename, sal
+From emp
+where sal &lt;ANY (select sal
+                From emp
+                Where Job = 'manager');
+      </div>
+
+      <p>③ WAQTD Details of the emp earning Least annual salary</p>
+      <div class="code">
+select *
+From emp
+where sal*12 IN ( select min(sal*12)
+                  From emp);
+      </div>
+
+      <p>④ WAQTD Names of the emp Hired after all the manager and earning sal more than clerk</p>
+      <div class="code">
+select ename
+From emp
+Where Hiredate &gt;All (select Hiredate from emp
+                      where job= 'manager')
+
+AND
+sal &gt; All (select sal From emp
+           where job = 'clerk');
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>

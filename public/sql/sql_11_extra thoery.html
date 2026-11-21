@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SQL - Extra Questions</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<main class="jn">
+
+<section class="page">
+<h1>Extra Questions</h1>
+<ul>
+  <li>Example: If two people are booking the <strong>last seat in a train,</strong> isolation ensures that only one booking succeeds.</li>
+</ul>
+
+<h3>4. Durability</h3>
+<ul>
+  <li>Once a transaction is <strong>committed</strong>, the changes are permanent, even if the system crashes immediately after.</li>
+  <li>Example: If money is transferred and the transaction is committed, even a power failure cannot undo it.</li>
+</ul>
+
+<h3>☑ Summary Table</h3>
+<div class="scroll"><table class="tbl">
+<thead><tr><th>Property</th><th>Meaning</th><th>Real-Life Example</th></tr></thead>
+<tbody>
+<tr><td>Atomicity</td><td>All or nothing</td><td>Bank transfer completes fully or not at all</td></tr>
+<tr><td>Consistency</td><td>Valid state maintained</td><td>No invalid data like negative salary</td></tr>
+<tr><td>Isolation</td><td>Transactions don't interfere</td><td>Two users booking tickets simultaneously</td></tr>
+<tr><td>Durability</td><td>Changes are permanent after commit</td><td>Transferred money remains even after crash</td></tr>
+</tbody></table></div>
+
+<h2>Q. How can you improve SQL query performance?? //(How would you optimize a slow SQL query?) <span class="r">IMP</span></h2>
+
+<h3>1. Use Proper Indexes</h3>
+<ul>
+  <li>Indexes make data retrieval faster (like a book's index).</li>
+  <li>Example: If you frequently search by employee_id, put an index on that column.</li>
+</ul>
+<div class="warning">▲ But don't create too many indexes, they slow down inserts/updates.</div>
+
+<h3>2. Avoid SELECT *</h3>
+<ul><li>Instead of fetching all columns, only select what you need.</li></ul>
+<div class="code">
+✗ SELECT * FROM employees;
+✅ SELECT name, salary FROM employees;
+</div>
+
+<h3>3. Use Joins Wisely</h3>
+<ul>
+  <li>Prefer INNER JOIN over OUTER JOIN if you don't need all data.</li>
+  <li>Ensure join columns are indexed.</li>
+</ul>
+
+<h3>4. Filter Early (WHERE instead of HAVING)</h3>
+<ul>
+  <li>Use WHERE to filter rows before grouping/aggregating.</li>
+  <li>Example:</li>
+</ul>
+<div class="code">
+✗ SELECT dept, COUNT(*) FROM employees GROUP BY dept HAVING salary &gt; 50000;
+✅ SELECT dept, COUNT(*) FROM employees WHERE salary &gt; 50000 GROUP BY dept;
+</div>
+
+<h3>5. Use LIMIT or TOP for Large Tables</h3>
+<ul><li>If you need only a few rows, don't scan the whole table.</li></ul>
+<div class="code">
+✅ SELECT name FROM employees ORDER BY salary DESC LIMIT 5;
+</div>
+</section>
+
+<section class="page">
+<h3>6. Avoid Subqueries if Possible (Use Joins/CTEs)</h3>
+<ul><li>Subqueries can be slow.</li></ul>
+<div class="code">
+✗ SELECT * FROM employees WHERE dept_id IN (SELECT id FROM departments);
+✅ Use JOIN:
+SELECT e.*
+FROM employees e
+JOIN departments d ON e.dept_id = d.id;
+</div>
+
+<h3>7. Analyze Execution Plan</h3>
+<ul>
+  <li>Use EXPLAIN (MySQL/Postgres) or EXPLAIN PLAN (Oracle/SQL Server) to see how SQL runs your query.</li>
+  <li>This shows if indexes are used or full table scans are happening.</li>
+</ul>
+
+<h3>8. Partition Large Tables</h3>
+<ul><li>Split very large tables (millions of rows) into smaller parts for faster access.</li></ul>
+
+<h3>9. Use Proper Data Types</h3>
+<ul>
+  <li>Choose correct column types (INT vs VARCHAR).</li>
+  <li>Example: Storing numbers in VARCHAR slows comparisons.</li>
+</ul>
+
+<h3>10. Cache Frequently Used Queries</h3>
+<ul><li>If the same query runs often, cache results instead of hitting the database every time.</li></ul>
+
+<h3>Simple Example:</h3>
+<p>Suppose this query is slow:</p>
+<div class="code">
+SELECT * FROM employees WHERE department = 'IT' AND salary &gt; 60000;
+</div>
+
+<h3>✅ Optimization Steps:</h3>
+<ol>
+  <li>Add an index on department and salary.</li>
+  <li>Remove SELECT * → SELECT name, salary.</li>
+  <li>Check execution plan.</li>
+</ol>
+
+<h2>Q57. What is the CASE statement in SQL?</h2>
+<p>The <strong>CASE statement</strong> in SQL is like an <strong>IF-ELSE ladder.</strong><br>It lets you check conditions and return different values depending on which condition is true.</p>
+
+<h3>☑ Syntax</h3>
+<div class="code">
+CASE
+WHEN condition1 THEN result1
+WHEN condition2 THEN result2
+...
+ELSE resultN
+END
+</div>
+
+<h3>Real-Life Example: Student Grade</h3>
+<p>Like a teacher giving grades: 90+ marks = A, 75+ = B, otherwise = C.</p>
+<div class="code">
+SELECT name, marks,
+  CASE
+    WHEN marks &gt;= 90 THEN 'A'
+    WHEN marks &gt;= 75 THEN 'B'
+    ELSE 'C'
+  END AS grade
+FROM students;
+</div>
+<ul><li>SQL checks conditions <strong>top to bottom</strong> and stops at the first one that is true.</li></ul>
+</section>
+
+<section class="page">
+<h3 class="r">⑯ If your manager gives you ready Dataset so How will work and How will deploy In real world</h3>
+<ul>
+  <li>If my manager provides a ready dataset I first understand the business requirement, analyse the tables and data quality. Validate the data, develop the required sql/plsql objects, perform testing</li>
+</ul>
+<h4>Simple steps</h4>
+<ol>
+  <li><strong>Understand</strong>: what report/output does the manager want?</li>
+  <li><strong>Analyse</strong>: check tables, columns, nulls, duplicates.</li>
+  <li><strong>Validate</strong>: match counts and totals with the source.</li>
+  <li><strong>Develop</strong>: write SQL / PL-SQL (queries, procedures, views).</li>
+  <li><strong>Test</strong>: in dev/test environment first.</li>
+  <li><strong>Deploy</strong>: move to production after approval, then monitor.</li>
+</ol>
+<p><strong>Real-life example:</strong> Like a chef who gets ingredients from the manager. First checks they are fresh (validate), cooks a sample (test), and only then serves it to customers (deploy).</p>
+
+<h3 class="r">⑰ What are the limitation of Views</h3>
+<p>A <strong>View</strong> is a saved SELECT query. It does not store data itself (a normal view), it only shows data from tables.</p>
+<ul>
+  <li><strong>Performance</strong>: runs the query every time you use it. A complex view on big tables is slow.</li>
+  <li><strong>Limited DML</strong>: INSERT/UPDATE/DELETE often not allowed if the view has JOIN, GROUP BY, DISTINCT, or aggregate functions.</li>
+  <li><strong>No parameters</strong>: a view cannot take input values (a stored procedure or function can).</li>
+  <li><strong>Depends on base tables</strong>: if a table or column is dropped or renamed, the view breaks.</li>
+  <li><strong>ORDER BY</strong> is not allowed in a view in SQL Server (unless TOP is used).</li>
+  <li><strong>Indexes</strong>: cannot normally index a view (only materialized / indexed views can).</li>
+  <li><strong>Nested views</strong> (view on view) are hard to debug and slow.</li>
+</ul>
+<p><strong>Real-life example:</strong> A view is like a <strong>window</strong> into a room. You can see what's inside, but you can't rearrange the furniture through it, and if the room is demolished (table dropped), the window shows nothing.</p>
+
+<h3 class="r">⑱ Explain what is Nolock</h3>
+<ul>
+  <li>Nolock allows you to read data without waiting For locks to be released</li>
+  <li>Faster reading</li>
+  <li>Avoids waiting / blocking</li>
+</ul>
+<div class="code">
+SELECT * FROM orders WITH (NOLOCK);
+</div>
+<div class="warning">▲ Risk: Dirty Read. You may read data that is not yet committed and later rolled back.</div>
+<p><strong>Real-life example:</strong> A shopkeeper is updating the price tag on a product. With NOLOCK you take a quick look and read the old/half-updated price instead of waiting. Fast, but the price may be wrong.</p>
+<ul><li>Use for reports where exact accuracy is not critical. Not for money/banking data.</li></ul>
+
+<h3 class="r">⑲ Types of Locks</h3>
+<h4>① Shared lock (Read lock)</h4>
+<ul>
+  <li>Multiple users can read the data</li>
+  <li>No one can modify the data while the shared lock exists</li>
+</ul>
+<p><strong>Real-life example:</strong> Many people reading the same notice board at once. All can read, but nobody can change the notice while people are reading.</p>
+
+<h4>② Exclusive lock (Write lock)</h4>
+<ul>
+  <li>Applied when a user performs Insert, update or Delete</li>
+  <li>other users cannot modify the same data until commit or rollback</li>
+</ul>
+<p><strong>Real-life example:</strong> One person is in a changing room. Door is locked, and nobody else can enter until they come out.</p>
+
+<div class="scroll"><table class="tbl">
+<thead><tr><th>Lock</th><th>Read</th><th>Write</th></tr></thead>
+<tbody>
+<tr><td>Shared</td><td>Many users can read</td><td>Blocked</td></tr>
+<tr><td>Exclusive</td><td>Blocked</td><td>Only one user</td></tr>
+</tbody></table></div>
+<ul><li>Also know: <strong>Deadlock</strong> = two transactions each waiting for the other's lock, so neither can move (like two cars stuck face to face on a narrow road).</li></ul>
+
+<h3 class="r">⑳ Isolation levels</h3>
+<ul>
+  <li>Isolation level tells the database how much one transaction can see the changes made by another transaction while both are running at the same time</li>
+</ul>
+<div class="scroll"><table class="tbl">
+<thead><tr><th>Level</th><th>Simple meaning</th><th>Dirty Read</th><th>Non-repeatable Read</th><th>Phantom Read</th></tr></thead>
+<tbody>
+<tr><td>Read Uncommitted</td><td>Can see uncommitted data (same as NOLOCK)</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Read Committed</td><td>Sees only committed data (default in most DBs)</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Repeatable Read</td><td>Rows you read won't change during your transaction</td><td>No</td><td>No</td><td>Yes</td></tr>
+<tr><td>Serializable</td><td>Transactions run as if one by one. Safest, slowest</td><td>No</td><td>No</td><td>No</td></tr>
+</tbody></table></div>
+
+<h4>Problems explained with examples</h4>
+<ul>
+  <li><strong>Dirty read</strong>: You read a bank balance that someone just changed but has not committed. They roll back, and the number you saw never existed.</li>
+  <li><strong>Non-repeatable read</strong>: You check a product price = ₹100, check again in the same transaction and it is ₹120 because someone updated it.</li>
+  <li><strong>Phantom read</strong>: You count 10 orders, count again and now there are 11 because someone inserted a new row.</li>
+</ul>
+<p><strong>Real-life example:</strong> Four levels of privacy in an exam hall, from "everyone can peek at your paper" (Read Uncommitted) to "each student sits in a separate room" (Serializable). More privacy = safer but slower.</p>
+<p><strong>Interview tip:</strong> Higher isolation = more safety but less speed. Most systems use Read Committed.</p>
+</section>
+
+</main>
+</body>
+</html>

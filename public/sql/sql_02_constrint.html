@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SQL - Constraint</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <main class="jn">
+
+    <!-- ===== Source PDF page 1 ===== -->
+    <section class="page">
+
+      <h1>Constraint</h1>
+
+      <ul>
+        <li>A constraint is a rule that we apply on a column or a table to control what kind of data can be stored in that column</li>
+        <li>Constraint helps us maintain the accuracy, consistency and integrity of data in the database</li>
+      </ul>
+
+      <h2>Types of constraints</h2>
+      <ol>
+        <li class="r">Unique</li>
+        <li class="r">Not Null</li>
+        <li class="r">check</li>
+        <li class="r">primary key</li>
+        <li class="r">foreign key</li>
+        <li class="r">Default</li>
+      </ol>
+
+      <div class="scroll">
+        <table class="tbl">
+          <caption>Emp table</caption>
+          <thead>
+            <tr>
+              <th>Primary key<br>EID</th>
+              <th>Not Null<br>ENAME</th>
+              <th>check + Not Null<br>sal</th>
+              <th>Not + Null + unique<br>PHNO</th>
+              <th>can be Null<br>DOJ</th>
+            </tr>
+            <!-- VERIFY: the last column header is handwritten "DOT"/"DOJ"; read as DOJ (values are dates). -->
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>sakshi</td><td>50,00</td><td>1234567890</td><td>20-DEC-25</td></tr>
+            <tr><td>2</td><td>Vinayak</td><td>25,000</td><td>1235678908</td><td>20-NOV-25</td></tr>
+            <tr><td>3</td><td>Mansi</td><td>251000</td><td>2314567890</td><td>16-DEC-25</td></tr>
+            <tr><td>4</td><td>Pravin</td><td>30000</td><td>7189453210</td><td></td></tr>
+            <!-- VERIFY: salary values reproduced as written (sakshi "50,00", Mansi "251000" with a possible comma after 25). Row 3's date sits between rows 3 and 4 in the source and is read as belonging to row 3; row 4 DOJ is blank. -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Source numbering below differs from the "Types of constraints" list above (there primary key is 4, foreign key 5, Default 6); reproduced as written. -->
+
+      <h3 class="r">① UNIQUE</h3>
+      <div class="definition">
+        It is constraint which is used to avoid Duplicate or a Repeated value
+      </div>
+
+      <h3 class="r">② Not Null</h3>
+      <div class="definition">
+        It is constraint which is used to avoid Null values
+      </div>
+
+      <h3 class="r">③ check</h3>
+      <div class="definition">
+        check is a constraint which is used for extra validation with a condition, If a condition is satisfied then the value is accepted.
+      </div>
+
+      <h3 class="r">④ Default</h3>
+      <div class="definition">
+        sets a default value if No value is provided.
+      </div>
+
+      <h3 class="r">⑤ primary key</h3>
+      <div class="definition">
+        is a constraint which is used to identified a record uniquely from table
+      </div>
+
+      <h4>characteristics</h4>
+      <ol>
+        <li>PK cannot accept duplicate value</li>
+        <li>PK cannot accept Null values</li>
+        <li>PK is a combination of unique and Not Null</li>
+        <li>We can have only one PK in table</li>
+        <!-- VERIFY: the last line is cut off at the bottom edge of the scan; read as "We can have only one PK in table". -->
+      </ol>
+
+    </section>
+
+    <!-- ===== Source PDF page 2 ===== -->
+    <section class="page">
+
+      <h3 class="r">⑥ Foreign key</h3>
+      <!-- Source spelling: "Foregin key" -->
+      <ul>
+        <li>is a constraint which is used to established connection between two tables.</li>
+        <li>A Foreign key is a column in one table that is used to connect to the primary key of another table</li>
+      </ul>
+
+      <h4>characteristic</h4>
+      <ol>
+        <li>FK can accept duplicate values</li>
+        <li>FK can accept Null values</li>
+        <li>FK it is not combination of unique and Not Null</li>
+        <li>We can have multiple FK in a table</li>
+        <li>Attribute become a FK then must be PK in it's own table</li>
+        <li>FK is also known as <span class="hl">Referential Integrity constraint</span>.</li>
+      </ol>
+
+      <div class="diagram">
+
+        <div class="scroll">
+          <table class="tbl">
+            <caption>Emp_table</caption>
+            <thead>
+              <tr><th>ENO</th><th>EName</th><th>SAL</th><th>DNO</th><th>CID</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>sachin</td><td>1000</td><td>10</td><td>11</td></tr>
+              <tr><td>2</td><td>Virat</td><td>1800</td><td>20</td><td>12</td></tr>
+              <tr><td>3</td><td>Rohit</td><td>4500</td><td>30</td><td>Null</td></tr>
+              <tr><td>4</td><td>Rahul</td><td>1000</td><td>Null</td><td>13</td></tr>
+              <tr><td>5</td><td>Dhoni</td><td>7000</td><td>20</td><td>11</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="r">↓ connection between emp and Department</p>
+
+        <div class="scroll">
+          <table class="tbl">
+            <caption>Department_table</caption>
+            <thead>
+              <tr><th>DNo</th><th>DName</th><th>Loc</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>10</td><td>D1</td><td>L1</td></tr>
+              <tr><td>20</td><td>D2</td><td>L2</td></tr>
+              <tr><td>30</td><td>D3</td><td>L3</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="r">↓ connection between emp_table and customer</p>
+
+        <div class="scroll">
+          <table class="tbl">
+            <caption>customer_table</caption>
+            <thead>
+              <tr><th>CID</th><th>CName</th><th>CPHNO</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>11</td><td>x</td><td>121</td></tr>
+              <tr><td>12</td><td>y</td><td>221</td></tr>
+              <tr><td>13</td><td>z</td><td>321</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- VERIFY: in the source, Emp_table sits on the left with a curved arrow labelled "connection betn emp and Department" pointing to Department_table (top right) and a second arrow labelled "connection betn emp_table and customer" pointing to customer_table (bottom right). The arrows do not touch specific columns; they are shown here as stacked labelled arrows (DNO to DNo, CID to CID implied by the data but not drawn). The customer CPHNO header is handwritten "CPHND" and read as CPHNO. -->
+
+      </div>
+
+      <div class="important">
+        What is difference between primary key and foreign key.
+      </div>
+      <!-- Source: this is written as a starred question with no answer on the page. -->
+
+    </section>
+
+  </main>
+
+</body>
+</html>

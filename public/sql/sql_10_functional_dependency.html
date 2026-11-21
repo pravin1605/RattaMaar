@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SQL - Functional Dependency and Normalization</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <main class="jn">
+
+    <!-- ===== Page 1: Basics, Keys, Functional Dependency, Total FD ===== -->
+    <section class="page">
+
+      <h1>Functional Dependency</h1>
+
+      <div class="definition">
+        A Functional Dependency (FD) exists when the value of one attribute uniquely determines the value of another attribute in a table.
+      </div>
+      <p>In simple words: if you know column A and that is enough to find column B, then B is functionally dependent on A.</p>
+
+      <p>Notation &nbsp; A → B<br>Read as &nbsp; A determines B</p>
+      <p><b>Left side (A)</b> is called the <b>Determinant</b>. <b>Right side (B)</b> is called the <b>Dependent</b>.</p>
+
+      <h3 class="r">Quick revision: words you must know</h3>
+      <ul>
+        <li><b>Attribute</b> = a column (Name, Dept)</li>
+        <li><b>Tuple</b> = a row (one student's full record)</li>
+        <li><b>Super Key</b> = any column set that identifies a row uniquely (RollNo, or RollNo+Name)</li>
+        <li><b>Candidate Key</b> = the smallest super key (nothing can be removed from it)</li>
+        <li><b>Primary Key</b> = the candidate key we choose as the main one</li>
+        <li><b>Composite Key</b> = a key made of 2 or more columns, e.g. (RollNo, Subject)</li>
+        <li><b>Prime attribute</b> = a column that is part of some candidate key</li>
+        <li><b>Non-prime attribute</b> = a column that is NOT part of any candidate key</li>
+      </ul>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <thead><tr><th>RollNO</th><th>Name</th><th>Dept</th></tr></thead>
+              <tbody>
+                <tr><td>101</td><td>Pravin</td><td>CSE</td></tr>
+                <tr><td>102</td><td>Kotan</td><td>IT</td></tr>
+                <tr><td>103</td><td>Sakshi</td><td>Extc</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <p>Here</p>
+            <p>RollNO → Name<br>RollNO → Dept</p>
+            <p>Because for a given RollNO, the Name and Dept are always fixed.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="r">Real life examples (easy to remember)</h3>
+      <ul>
+        <li><b>Aadhaar number → Person name, DOB</b> : one Aadhaar number belongs to only one person.</li>
+        <li><b>PIN code → City</b> : PIN 400001 always means Mumbai.</li>
+        <li><b>Vehicle number → Owner</b> : one plate number, one registered owner.</li>
+        <li><b>Name → Phone</b> is NOT an FD, because two people can have the same name with different phones.</li>
+      </ul>
+      <p><b>Trick to test an FD:</b> find two rows with the same A value. If their B values are different, then A → B is false.</p>
+
+      <h3 class="r">Trivial and Non-trivial FD</h3>
+      <ul>
+        <li><b>Trivial FD</b> : B is already part of A. Example: (RollNo, Name) → Name. It is always true, so we ignore it.</li>
+        <li><b>Non-trivial FD</b> : B is not part of A. Example: RollNo → Name. These are the ones we study.</li>
+      </ul>
+
+      <h3 class="r">Types of Functional dependency</h3>
+      <ol>
+        <li>Total Functional dependency</li>
+        <li>Partial Functional dependency</li>
+        <li>Transitive Functional dependency</li>
+      </ol>
+
+      <h3 class="r">① Total Functional dependency</h3>
+      <ul>
+        <li>If one attribute (or key) in a relation determines all the other attributes, it is known as TFD.</li>
+        <li>If all the attributes are dependent on a single attribute, it is also known as TFD.</li>
+        <li>Also, if the key has many columns, the dependent attribute needs the <b>whole key</b>, not just a part. Example: (RollNo, Subject) → Marks.</li>
+      </ul>
+
+      <div class="code">
+EMP( EID, EName, SAL, DOB)
+
+EID → EName
+EID → SAL
+EID → DOB
+EID → (EName, SAL, DOB)
+      </div>
+      <p>Here EID is the key, so it determines everything. This is the healthy situation we want in every table.</p>
+
+    </section>
+
+    <!-- ===== Page 2: Partial Dependency, Transitive Dependency ===== -->
+    <section class="page">
+
+      <h3 class="r">② Partial Dependency</h3>
+      <div class="definition">
+        A Partial Dependency occurs when a non-key attribute depends on only part of a composite primary key, instead of the whole key.
+      </div>
+      <p>This problem appears only when the primary key has more than one column. (If the key is a single column, partial dependency is not possible.)</p>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption>student_marks</caption>
+              <thead><tr><th>RollNO</th><th>sub</th><th>Name</th><th>Marks</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Math</td><td>Pravin</td><td>85</td></tr>
+                <tr><td>1</td><td>Sci</td><td>Pravin</td><td>78</td></tr>
+                <tr><td>3</td><td>His</td><td>Onkar</td><td>88</td></tr>
+                <tr><td>4</td><td>Math</td><td>Kotan</td><td>90</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <p>primary key (RollNo, subject)</p>
+            <p>Functional Dependencies</p>
+            <p>• (RollNO, subject) → Marks<br>• RollNo → StudentName</p>
+          </div>
+        </div>
+        <!-- VERIFY: the RollNo of the second row is handwritten like "4" with a stroke through it; read as 1 because the name Pravin repeats. -->
+      </div>
+
+      <ul>
+        <li>StudentName depends only on RollNO</li>
+        <li>It does not depend on subject</li>
+        <li>But RollNO is only a part of the composite key</li>
+      </ul>
+      <p>So &nbsp; RollNO → StudentName<br>This is called partial dependency.</p>
+      <p><b>Problem:</b> Pravin's name is stored again for every subject. Wasted space, and risk of typing "Pravin" in one row and "Pravn" in another.</p>
+
+      <h3 class="r">Real life example of Partial Dependency</h3>
+      <p>Online shopping table <b>OrderItem(OrderID, ProductID, ProductName, Qty)</b> with key (OrderID, ProductID).</p>
+      <ul>
+        <li>(OrderID, ProductID) → Qty &nbsp; ✔ needs the whole key</li>
+        <li>ProductID → ProductName &nbsp; ✘ needs only part of the key (partial)</li>
+      </ul>
+      <p>If 1000 orders contain "Wireless Mouse", the name is repeated 1000 times.</p>
+
+      <h3 class="r">③ Transitive Dependency</h3>
+      <div class="definition">
+        A Transitive Dependency occurs when a non-key attribute depends on another non-key attribute, which in turn depends on the primary key.
+      </div>
+      <p>In simple words, the dependency goes through another column (like a middle man).</p>
+
+      <h4>Representation</h4>
+      <p>A → B &nbsp;&nbsp;&nbsp; B → C</p>
+      <p>So, A → C &nbsp; this is called transitive dependency</p>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption>student</caption>
+              <thead><tr><th>RollNo</th><th>DeptID</th><th>DeptName</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>D10</td><td>CSE</td></tr>
+                <tr><td>2</td><td>D20</td><td>IT</td></tr>
+                <tr><td>3</td><td>D30</td><td>Extc</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <p>primary key : RollNO</p>
+            <p>Functional Dependencies</p>
+            <p>• RollNo → DeptID<br>• DeptID → DeptName</p>
+            <p>Because of these two, we get<br>• RollNo → DeptName</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="r">Real life example of Transitive Dependency</h3>
+      <p><b>Employee(EmpID, Pincode, City)</b>: EmpID → Pincode and Pincode → City, so EmpID → City goes through Pincode. The city name "Mumbai" gets repeated for every employee with that pincode.</p>
+
+      <h3 class="r">Partial vs Transitive (easy difference)</h3>
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <thead><tr><th>Point</th><th>Partial</th><th>Transitive</th></tr></thead>
+            <tbody>
+              <tr><td>Who depends?</td><td>Non-key on PART of key</td><td>Non-key on another non-key</td></tr>
+              <tr><td>Key type needed</td><td>Composite key only</td><td>Any key</td></tr>
+              <tr><td>Pattern</td><td>Part of key → X</td><td>Key → B → C</td></tr>
+              <tr><td>Removed in</td><td>2NF</td><td>3NF</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===== Page 3: Normalization ===== -->
+    <section class="page">
+
+      <h2>Normalization</h2>
+      <ul>
+        <li>It is the process of reducing a large table in order to remove redundancy and anomalies by identifying their functional dependencies.</li>
+        <li>The process of decomposing (breaking) a large table into smaller tables is known as Normalization.</li>
+        <li>Reducing a table to its Normal Form is known as Normalization.</li>
+      </ul>
+
+      <div class="diagram">
+        <svg viewBox="0 0 460 190" width="100%" role="img" aria-label="A large table T is split into three smaller tables T1, T2 and T3.">
+          <rect x="110" y="8" width="240" height="40" fill="none" stroke="currentColor" stroke-width="2"/>
+          <text x="230" y="34" font-size="16" text-anchor="middle" fill="currentColor">T</text>
+          <line x1="150" y1="48" x2="65" y2="128" stroke="currentColor" stroke-width="2"/>
+          <line x1="230" y1="48" x2="230" y2="138" stroke="currentColor" stroke-width="2"/>
+          <line x1="310" y1="48" x2="395" y2="138" stroke="currentColor" stroke-width="2"/>
+          <rect x="15" y="128" width="100" height="34" fill="none" stroke="currentColor" stroke-width="2"/>
+          <text x="65" y="151" font-size="15" text-anchor="middle" fill="currentColor">T1</text>
+          <rect x="180" y="138" width="100" height="34" fill="none" stroke="currentColor" stroke-width="2"/>
+          <text x="230" y="161" font-size="15" text-anchor="middle" fill="currentColor">T2</text>
+          <rect x="345" y="138" width="100" height="34" fill="none" stroke="currentColor" stroke-width="2"/>
+          <text x="395" y="161" font-size="15" text-anchor="middle" fill="currentColor">T3</text>
+        </svg>
+      </div>
+
+      <h3 class="r">Why do we need Normalization?</h3>
+      <p>A badly designed table has <b>redundancy</b> (same data stored again and again). Redundancy causes <b>anomalies</b> (bugs in data). Example food-order table:</p>
+
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <caption>orders (bad design)</caption>
+            <thead><tr><th>OrderID</th><th>Customer</th><th>City</th><th>Item</th><th>Price</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Ravi</td><td>Mumbai</td><td>Pizza</td><td>250</td></tr>
+              <tr><td>2</td><td>Ravi</td><td>Mumbai</td><td>Burger</td><td>120</td></tr>
+              <tr><td>3</td><td>Sneha</td><td>Pune</td><td>Pizza</td><td>250</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h4>Three anomalies</h4>
+      <ol>
+        <li><b>Insertion anomaly</b> : you cannot add a new customer (say Amit) until he places an order, because OrderID would be empty.</li>
+        <li><b>Update anomaly</b> : Ravi shifts to Delhi. You must change City in every row. If you miss one row, the data becomes inconsistent (Mumbai and Delhi both).</li>
+        <li><b>Deletion anomaly</b> : if you delete Order 3, you also lose all information about Sneha and that she lives in Pune.</li>
+      </ol>
+      <p><b>Fix:</b> keep Customer data in one table, Order data in another. That is Normalization.</p>
+
+      <h3 class="r">What is Normal form</h3>
+      <ul>
+        <li>A table without redundancy and anomalies is said to be in Normal Form.</li>
+      </ul>
+
+      <h3 class="r">Levels of Normal Form</h3>
+      <ol>
+        <li>First Normal Form (1NF)</li>
+        <li>Second Normal form (2NF)</li>
+        <li>Third Normal form (3NF)</li>
+        <li>Boyce-Codd Normal Form (BCNF)</li>
+      </ol>
+      <p>Each level includes the previous one. A table in 3NF is already in 2NF and 1NF.</p>
+
+      <div class="important">
+        If any table / entity is reduced to 3NF, then the table is said to be Normalized.
+      </div>
+
+    </section>
+
+    <!-- ===== Page 4: 1NF ===== -->
+    <section class="page">
+
+      <h2>First Normal Form (1NF)</h2>
+      <div class="definition">
+        A table is in 1NF if every cell holds only ONE value (atomic value), there are no repeating groups, and each row is unique.
+      </div>
+
+      <h3 class="r">Rules of 1NF</h3>
+      <ul>
+        <li>Each cell has a single value (no lists like "Math, Sci").</li>
+        <li>No repeating columns (Phone1, Phone2, Phone3).</li>
+        <li>Each column has the same type of data.</li>
+        <li>Each row is unique (a primary key exists).</li>
+      </ul>
+
+      <h3 class="r">Example (before 1NF)</h3>
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <caption>student (NOT in 1NF)</caption>
+            <thead><tr><th>RollNo</th><th>Name</th><th>Phone</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Pravin</td><td>98200xxxxx, 98765xxxxx</td></tr>
+              <tr><td>2</td><td>Kotan</td><td>99300xxxxx</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p><b>Problem:</b> Pravin has two phones in one cell. How will you search or update just one number?</p>
+
+      <h3 class="r">After 1NF</h3>
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <caption>student (1NF)</caption>
+            <thead><tr><th>RollNo</th><th>Name</th><th>Phone</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Pravin</td><td>98200xxxxx</td></tr>
+              <tr><td>1</td><td>Pravin</td><td>98765xxxxx</td></tr>
+              <tr><td>2</td><td>Kotan</td><td>99300xxxxx</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p>Now the key becomes (RollNo, Phone). Name is repeated, which will be fixed in 2NF.</p>
+
+      <h3 class="r">Real life example</h3>
+      <p>Online order table with column <b>Items = "Pen, Book, Bag"</b>. Not 1NF. Make one row per item: (OrderID, Item).</p>
+
+    </section>
+
+    <!-- ===== Page 5: 2NF ===== -->
+    <section class="page">
+
+      <h2>Second Normal Form (2NF)</h2>
+      <div class="definition">
+        A table is in 2NF if it is in 1NF and has NO partial dependency (every non-key attribute depends on the whole primary key).
+      </div>
+      <ul>
+        <li>2NF only matters when the primary key is composite.</li>
+        <li>If the primary key is a single column and the table is in 1NF, it is automatically in 2NF.</li>
+      </ul>
+
+      <h3 class="r">Steps to convert into 2NF</h3>
+      <ol>
+        <li>Find the primary key (composite).</li>
+        <li>Find attributes that depend on only a part of the key.</li>
+        <li>Move them to a new table together with that part of the key.</li>
+        <li>Keep the rest in the old table.</li>
+      </ol>
+
+      <h3 class="r">Example</h3>
+      <p><b>student_marks(RollNo, Sub, Name, Marks)</b>, key (RollNo, Sub). Here RollNo → Name is partial. Split it:</p>
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption>student</caption>
+              <thead><tr><th>RollNo (PK)</th><th>Name</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Pravin</td></tr>
+                <tr><td>3</td><td>Onkar</td></tr>
+                <tr><td>4</td><td>Kotan</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll">
+            <table class="tbl">
+              <caption>marks</caption>
+              <thead><tr><th>RollNo (FK)</th><th>Sub</th><th>Marks</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Math</td><td>85</td></tr>
+                <tr><td>1</td><td>Sci</td><td>78</td></tr>
+                <tr><td>3</td><td>His</td><td>88</td></tr>
+                <tr><td>4</td><td>Math</td><td>90</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <p>Now Pravin's name is stored only once. In marks table, Marks depends on the full key (RollNo, Sub). ✔</p>
+
+      <h3 class="r">Real life example</h3>
+      <p><b>OrderItem(OrderID, ProductID, ProductName, Qty)</b> becomes:</p>
+      <ul>
+        <li>Product(<u>ProductID</u>, ProductName)</li>
+        <li>OrderItem(<u>OrderID, ProductID</u>, Qty)</li>
+      </ul>
+      <p>Now a product name can be changed in one place only.</p>
+
+    </section>
+
+    <!-- ===== Page 6: 3NF ===== -->
+    <section class="page">
+
+      <h2>Third Normal Form (3NF)</h2>
+      <div class="definition">
+        A table is in 3NF if it is in 2NF and has NO transitive dependency (no non-key attribute depends on another non-key attribute).
+      </div>
+      <p>Easy line to remember: <b>"Every non-key attribute must depend on the key, the whole key, and nothing but the key."</b></p>
+
+      <h3 class="r">Steps to convert into 3NF</h3>
+      <ol>
+        <li>Find chains like A → B → C where A is the key.</li>
+        <li>Make a new table with B and C (B becomes its primary key).</li>
+        <li>In the old table keep A and B (B stays as foreign key), remove C.</li>
+      </ol>
+
+      <h3 class="r">Example</h3>
+      <p><b>student(RollNo, DeptID, DeptName)</b> has RollNo → DeptID → DeptName. Split it:</p>
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption>student</caption>
+              <thead><tr><th>RollNo (PK)</th><th>DeptID (FK)</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>D10</td></tr>
+                <tr><td>2</td><td>D20</td></tr>
+                <tr><td>3</td><td>D30</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll">
+            <table class="tbl">
+              <caption>department</caption>
+              <thead><tr><th>DeptID (PK)</th><th>DeptName</th></tr></thead>
+              <tbody>
+                <tr><td>D10</td><td>CSE</td></tr>
+                <tr><td>D20</td><td>IT</td></tr>
+                <tr><td>D30</td><td>Extc</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <p>If the department name changes from "Extc" to "EXTC Engg", you update only one row.</p>
+
+      <h3 class="r">Real life example</h3>
+      <p><b>Employee(EmpID, Pincode, City)</b> becomes Employee(<u>EmpID</u>, Pincode) and PinMaster(<u>Pincode</u>, City).</p>
+
+      <h3 class="r">The same thing in SQL</h3>
+      <div class="code">
+CREATE TABLE department (
+  DeptID   VARCHAR(5) PRIMARY KEY,
+  DeptName VARCHAR(30)
+);
+
+CREATE TABLE student (
+  RollNo INT PRIMARY KEY,
+  DeptID VARCHAR(5),
+  FOREIGN KEY (DeptID) REFERENCES department(DeptID)
+);
+
+-- get DeptName back using JOIN
+SELECT s.RollNo, d.DeptName
+FROM student s JOIN department d ON s.DeptID = d.DeptID;
+      </div>
+
+    </section>
+
+    <!-- ===== Page 7: BCNF, summary ===== -->
+    <section class="page">
+
+      <h2>Boyce-Codd Normal Form (BCNF)</h2>
+      <div class="definition">
+        A table is in BCNF if for every non-trivial FD  X → Y, X is a Super Key.
+      </div>
+      <p>BCNF is a slightly stronger version of 3NF. It fixes the rare case where a non-key column determines a part of a key.</p>
+
+      <h3 class="r">Example</h3>
+      <p><b>class(Student, Subject, Teacher)</b>. Rules: each teacher teaches only one subject; a student has one teacher per subject.</p>
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <thead><tr><th>Student</th><th>Subject</th><th>Teacher</th></tr></thead>
+            <tbody>
+              <tr><td>Ravi</td><td>DBMS</td><td>Mehta</td></tr>
+              <tr><td>Sneha</td><td>DBMS</td><td>Mehta</td></tr>
+              <tr><td>Ravi</td><td>OS</td><td>Joshi</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <ul>
+        <li>Keys: (Student, Subject) and (Student, Teacher)</li>
+        <li>FDs: (Student, Subject) → Teacher, and <b>Teacher → Subject</b></li>
+        <li>Teacher is not a super key, so Teacher → Subject breaks BCNF.</li>
+      </ul>
+      <p><b>Fix:</b> split into teacher_subject(<u>Teacher</u>, Subject) and student_teacher(<u>Student, Teacher</u>).</p>
+
+      <h3 class="r">All Normal Forms in one table</h3>
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <thead><tr><th>Form</th><th>Condition</th><th>Removes</th></tr></thead>
+            <tbody>
+              <tr><td>1NF</td><td>Atomic values, no repeating groups</td><td>Multi-valued cells</td></tr>
+              <tr><td>2NF</td><td>1NF + no partial dependency</td><td>Part-of-key dependency</td></tr>
+              <tr><td>3NF</td><td>2NF + no transitive dependency</td><td>Non-key → non-key</td></tr>
+              <tr><td>BCNF</td><td>Every determinant is a super key</td><td>Remaining FD problems</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3 class="r">Good decomposition rules</h3>
+      <ul>
+        <li><b>Lossless join</b> : after splitting, a JOIN must give back exactly the original data (no missing rows, no fake rows).</li>
+        <li><b>Dependency preserving</b> : all original FDs should still be checkable in the new tables.</li>
+        <li>Use a common column (PK-FK) to connect the split tables.</li>
+      </ul>
+
+      <h3 class="r">Advantages and Disadvantages</h3>
+      <ul>
+        <li><b>Advantages</b> : less redundancy, no anomalies, less storage, easy updates, better data consistency.</li>
+        <li><b>Disadvantage</b> : more tables means more JOINs, so some read queries become slower.</li>
+        <li>That is why big reporting systems sometimes do <b>Denormalization</b> (joining tables on purpose for speed).</li>
+      </ul>
+
+      <div class="important">
+        Exam tip: 1NF → atomic cells. 2NF → remove partial. 3NF → remove transitive. BCNF → every determinant must be a super key.
+      </div>
+
+    </section>
+
+    <!-- ===== Page 8: Extra theory - rules and attribute closure ===== -->
+    <section class="page">
+
+      <h2>Extra Theory: Rules to Work with FDs</h2>
+
+      <h3 class="r">Armstrong's Axioms (basic rules)</h3>
+      <ol>
+        <li><b>Reflexivity</b> : if B is part of A, then A → B. Example: (RollNo, Name) → Name.</li>
+        <li><b>Augmentation</b> : if A → B, then AC → BC. Example: RollNo → Name, so (RollNo, Sub) → (Name, Sub).</li>
+        <li><b>Transitivity</b> : if A → B and B → C, then A → C. Example: RollNo → DeptID and DeptID → DeptName, so RollNo → DeptName.</li>
+      </ol>
+      <p>Extra rules made from these three:</p>
+      <ul>
+        <li><b>Union</b> : A → B and A → C gives A → BC.</li>
+        <li><b>Decomposition</b> : A → BC gives A → B and A → C.</li>
+      </ul>
+
+      <h3 class="r">Attribute Closure (A⁺)</h3>
+      <div class="definition">
+        The closure of A (written A⁺) is the set of ALL attributes that can be found starting from A using the given FDs.
+      </div>
+      <p>Use: if A⁺ contains every column of the table, then A is a Super Key. If no smaller part of A works, A is a Candidate Key.</p>
+
+      <h4>Steps</h4>
+      <ol>
+        <li>Start with result = A.</li>
+        <li>Look for an FD whose left side is already inside the result. Add its right side.</li>
+        <li>Repeat until nothing new is added.</li>
+      </ol>
+
+      <h4>Example</h4>
+      <p>Table <b>student(RollNo, Name, DeptID, DeptName)</b> with FDs: RollNo → Name, RollNo → DeptID, DeptID → DeptName</p>
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <caption>finding the closure of RollNo</caption>
+            <thead><tr><th>Step</th><th>FD used</th><th>Result so far</th></tr></thead>
+            <tbody>
+              <tr><td>Start</td><td>-</td><td>{RollNo}</td></tr>
+              <tr><td>1</td><td>RollNo → Name</td><td>{RollNo, Name}</td></tr>
+              <tr><td>2</td><td>RollNo → DeptID</td><td>{RollNo, Name, DeptID}</td></tr>
+              <tr><td>3</td><td>DeptID → DeptName</td><td>{RollNo, Name, DeptID, DeptName}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p>RollNo⁺ has all 4 columns, so RollNo is the candidate key. But DeptID⁺ = {DeptID, DeptName} only, so DeptID is not a key. This is exactly why DeptID → DeptName is a problem (transitive).</p>
+
+      <h3 class="r">How to find the highest Normal Form of a table</h3>
+      <ol>
+        <li>Find all candidate keys using closure.</li>
+        <li>Any multi-valued cells? If yes, it is not even 1NF.</li>
+        <li>Any non-prime column depending on part of a candidate key? If yes, it is only 1NF.</li>
+        <li>Any non-prime column depending on another non-prime column? If yes, it is only 2NF.</li>
+        <li>Any FD X → Y where X is not a super key? If yes, it is only 3NF. If no, it is BCNF.</li>
+      </ol>
+
+    </section>
+
+    <!-- ===== Page 9: Worked example - 0NF to 1NF ===== -->
+    <section class="page">
+
+      <h2>Full Example: College Database (Before and After)</h2>
+      <p>We take ONE messy table and normalize it step by step, so you can see the data change at every level. Data is a college storing student, department and marks.</p>
+
+      <h3 class="r">Step 0 : Un-normalized table (UNF / 0NF)</h3>
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <caption>college_data</caption>
+            <thead><tr><th>RollNo</th><th>Name</th><th>DeptID</th><th>DeptName</th><th>Subjects (Sub = Marks)</th></tr></thead>
+            <tbody>
+              <tr><td>101</td><td>Pravin</td><td>D10</td><td>CSE</td><td>DBMS = 85, OS = 78</td></tr>
+              <tr><td>102</td><td>Kotan</td><td>D20</td><td>IT</td><td>DBMS = 90</td></tr>
+              <tr><td>103</td><td>Sakshi</td><td>D30</td><td>Extc</td><td>Maths = 88, OS = 70</td></tr>
+              <tr><td>104</td><td>Onkar</td><td>D10</td><td>CSE</td><td>Maths = 92</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p><b>Problems:</b> the Subjects column has many values in one cell. You cannot write a simple query like "average marks of OS" or "who scored above 80 in DBMS".</p>
+
+      <h3 class="r">Step 1 : Convert to 1NF</h3>
+      <p>Rule applied: one value per cell. Give every (student, subject) pair its own row. Primary key becomes <b>(RollNo, Sub)</b>.</p>
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <caption>college_data (1NF) &nbsp; PK = (RollNo, Sub)</caption>
+            <thead><tr><th>RollNo</th><th>Sub</th><th>Name</th><th>DeptID</th><th>DeptName</th><th>Marks</th></tr></thead>
+            <tbody>
+              <tr><td>101</td><td>DBMS</td><td>Pravin</td><td>D10</td><td>CSE</td><td>85</td></tr>
+              <tr><td>101</td><td>OS</td><td>Pravin</td><td>D10</td><td>CSE</td><td>78</td></tr>
+              <tr><td>102</td><td>DBMS</td><td>Kotan</td><td>D20</td><td>IT</td><td>90</td></tr>
+              <tr><td>103</td><td>Maths</td><td>Sakshi</td><td>D30</td><td>Extc</td><td>88</td></tr>
+              <tr><td>103</td><td>OS</td><td>Sakshi</td><td>D30</td><td>Extc</td><td>70</td></tr>
+              <tr><td>104</td><td>Maths</td><td>Onkar</td><td>D10</td><td>CSE</td><td>92</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h4>Anomalies still present in this 1NF table</h4>
+      <ul>
+        <li><b>Redundancy</b> : "Pravin, D10, CSE" is stored twice; "D10, CSE" is stored 3 times.</li>
+        <li><b>Insert anomaly</b> : to add a new department D40 (Mech) with no students yet, we need a RollNo and Sub, which do not exist.</li>
+        <li><b>Update anomaly</b> : if CSE is renamed to "Computer Engg", we must edit 3 rows. Miss one and the data conflicts.</li>
+        <li><b>Delete anomaly</b> : if Kotan's DBMS row is deleted, the fact that D20 = IT is lost forever.</li>
+      </ul>
+
+      <h4>Extra theory: 1NF</h4>
+      <ul>
+        <li>1NF is violated by 3 things: <b>multi-valued cells</b> (many subjects in one cell), <b>repeating columns</b> (Sub1, Sub2, Sub3) and <b>composite cells</b> like Address = "Andheri, Mumbai, 400053" (split it into Area, City, Pincode).</li>
+        <li>"Atomic" means the smallest piece you will ever search or update separately.</li>
+        <li>1NF is the base rule of the relational model. In SQL, every table should be at least 1NF.</li>
+        <li>1NF fixes the <i>structure</i>, but it does not remove redundancy. That is the job of 2NF and 3NF.</li>
+      </ul>
+
+    </section>
+
+    <!-- ===== Page 10: Worked example - 2NF and 3NF ===== -->
+    <section class="page">
+
+      <h3 class="r">Step 2 : Convert to 2NF</h3>
+      <p>Find the FDs of the 1NF table (key = RollNo, Sub):</p>
+      <ul>
+        <li>(RollNo, Sub) → Marks &nbsp; ✔ full key</li>
+        <li>RollNo → Name, DeptID, DeptName &nbsp; ✘ partial (only RollNo, not Sub)</li>
+      </ul>
+      <p>Move the partially dependent columns with RollNo into a new table.</p>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption>student (2NF) &nbsp; PK = RollNo</caption>
+              <thead><tr><th>RollNo</th><th>Name</th><th>DeptID</th><th>DeptName</th></tr></thead>
+              <tbody>
+                <tr><td>101</td><td>Pravin</td><td>D10</td><td>CSE</td></tr>
+                <tr><td>102</td><td>Kotan</td><td>D20</td><td>IT</td></tr>
+                <tr><td>103</td><td>Sakshi</td><td>D30</td><td>Extc</td></tr>
+                <tr><td>104</td><td>Onkar</td><td>D10</td><td>CSE</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll">
+            <table class="tbl">
+              <caption>marks (2NF) &nbsp; PK = (RollNo, Sub)</caption>
+              <thead><tr><th>RollNo</th><th>Sub</th><th>Marks</th></tr></thead>
+              <tbody>
+                <tr><td>101</td><td>DBMS</td><td>85</td></tr>
+                <tr><td>101</td><td>OS</td><td>78</td></tr>
+                <tr><td>102</td><td>DBMS</td><td>90</td></tr>
+                <tr><td>103</td><td>Maths</td><td>88</td></tr>
+                <tr><td>103</td><td>OS</td><td>70</td></tr>
+                <tr><td>104</td><td>Maths</td><td>92</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <p><b>Improved:</b> student name is now stored once per student (before: once per subject). <b>Still a problem:</b> "D10, CSE" appears twice in student. That is the transitive dependency.</p>
+
+      <h4>Extra theory: 2NF</h4>
+      <ul>
+        <li>Formal idea: no non-prime attribute should depend on a proper subset of a candidate key.</li>
+        <li>If every candidate key is a single column, the table is automatically in 2NF.</li>
+        <li>The split must be <b>lossless</b>: RollNo is kept in both tables, so a JOIN on RollNo rebuilds the 1NF table exactly.</li>
+      </ul>
+
+      <h3 class="r">Step 3 : Convert to 3NF</h3>
+      <p>In student: RollNo → DeptID and DeptID → DeptName (transitive). Move DeptID and DeptName to their own table.</p>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption>student (3NF) &nbsp; PK = RollNo</caption>
+              <thead><tr><th>RollNo</th><th>Name</th><th>DeptID (FK)</th></tr></thead>
+              <tbody>
+                <tr><td>101</td><td>Pravin</td><td>D10</td></tr>
+                <tr><td>102</td><td>Kotan</td><td>D20</td></tr>
+                <tr><td>103</td><td>Sakshi</td><td>D30</td></tr>
+                <tr><td>104</td><td>Onkar</td><td>D10</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll">
+            <table class="tbl">
+              <caption>department (3NF) &nbsp; PK = DeptID</caption>
+              <thead><tr><th>DeptID</th><th>DeptName</th></tr></thead>
+              <tbody>
+                <tr><td>D10</td><td>CSE</td></tr>
+                <tr><td>D20</td><td>IT</td></tr>
+                <tr><td>D30</td><td>Extc</td></tr>
+                <tr><td>D40</td><td>Mech</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <p>marks table stays the same as in 2NF (RollNo is a foreign key to student).</p>
+
+      <h4>Anomalies now solved</h4>
+      <ul>
+        <li><b>Insert</b> : D40 = Mech was added with no student. ✔</li>
+        <li><b>Update</b> : rename CSE in ONE row only. ✔</li>
+        <li><b>Delete</b> : deleting Kotan's marks keeps D20 = IT safe. ✔</li>
+      </ul>
+
+      <h4>Extra theory: 3NF</h4>
+      <ul>
+        <li>Formal rule: for every FD X → A, either X is a super key, or A is a prime attribute (part of a candidate key).</li>
+        <li>3NF is the normal form most real projects stop at, because it removes most redundancy and keeps all FDs checkable.</li>
+        <li>3NF vs BCNF: they differ only when a table has overlapping candidate keys, like the Student-Subject-Teacher example. Otherwise 3NF = BCNF.</li>
+      </ul>
+
+      <h3 class="r">Getting the old data back with JOIN</h3>
+      <div class="code">
+SELECT s.RollNo, s.Name, d.DeptName, m.Sub, m.Marks
+FROM student s
+JOIN department d ON s.DeptID = d.DeptID
+JOIN marks m      ON s.RollNo = m.RollNo;
+      </div>
+      <p>This gives the same 6 rows as the 1NF table, so no information was lost.</p>
+
+      <h3 class="r">Before vs After (summary)</h3>
+      <div class="diagram">
+        <div class="scroll">
+          <table class="tbl">
+            <thead><tr><th>Stage</th><th>Tables</th><th>What was fixed</th></tr></thead>
+            <tbody>
+              <tr><td>0NF</td><td>college_data</td><td>-</td></tr>
+              <tr><td>1NF</td><td>college_data</td><td>Many values in one cell</td></tr>
+              <tr><td>2NF</td><td>student, marks</td><td>Name repeated per subject (partial)</td></tr>
+              <tr><td>3NF</td><td>student, department, marks</td><td>Dept name repeated per student (transitive)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="important">
+        Remember the order: 1NF = fix the cells, 2NF = fix part-of-key problems, 3NF = fix non-key to non-key problems. Always check with a JOIN that no data is lost.
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SQL - Group By and Having</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <main class="jn">
+
+    <!-- ===== Source PDF page 1: Group By clause ===== -->
+    <section class="page">
+
+      <h1>Group By and Having</h1>
+      <!-- The source has no chapter title; this one follows the file name sql_06_group_and_having. -->
+
+      <h2>Group By clause</h2>
+      <ul>
+        <li>It is used to create the group</li>
+        <li>It execute <span class="r">Row by Row</span></li>
+        <li>We can use group By clause without using WHERE</li>
+        <li>IF We use where claused then must be used before Group By</li>
+        <li>We can use group by with respective single column and multiple column</li>
+        <li>After the execution of group by clause we get group</li>
+        <li>Any clause with execute after group by clause should execute group by group</li>
+        <li>The column_name and expression written in group By clause can be written in select clause</li>
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+Select group_by_expression / group Function
+FROM table
+[WHERE &lt;row filter condition&gt;]
+Group by column_name / expression;
+      </div>
+
+      <p>① WAQTD Number of emp working in each department</p>
+      <div class="code">
+SELECT Count(*), DeptNO
+FROM emp
+Group BY DeptNO;
+      </div>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P of FROM Clause</caption>
+              <thead><tr><th>ENo</th><th>ENAme</th><th>sal</th><th>DeptNo</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>A</td><td>100</td><td>10</td></tr>
+                <tr><td>2</td><td>B</td><td>200</td><td>20</td></tr>
+                <tr><td>3</td><td>C</td><td>300</td><td>30</td></tr>
+                <tr><td>4</td><td>D</td><td>400</td><td>10</td></tr>
+                <tr><td>5</td><td>E</td><td>500</td><td>20</td></tr>
+                <tr><td>6</td><td>F</td><td>600</td><td>30</td></tr>
+                <tr><td>7</td><td>G</td><td>700</td><td>10</td></tr>
+                <tr><td>8</td><td>H</td><td>800</td><td>20</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span>⇢</span>
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P of Group By clause</caption>
+              <tbody>
+                <tr><th colspan="4">10</th></tr>
+                <tr><td>1</td><td>A</td><td>100</td><td>10</td></tr>
+                <tr><td>4</td><td>D</td><td>400</td><td>10</td></tr>
+                <tr><td>7</td><td>G</td><td>700</td><td>10</td></tr>
+                <tr><th colspan="4">20</th></tr>
+                <tr><td>2</td><td>B</td><td>200</td><td>20</td></tr>
+                <tr><td>5</td><td>F</td><td>500</td><td>20</td></tr>
+                <tr><td>8</td><td>H</td><td>800</td><td>20</td></tr>
+                <tr><th colspan="4">30</th></tr>
+                <tr><td>3</td><td>C</td><td>300</td><td>30</td></tr>
+                <tr><td>6</td><td>F</td><td>600</td><td>30</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span>⇢</span>
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P of select Clause</caption>
+              <thead><tr><th>Count</th><th>Dept</th></tr></thead>
+              <tbody>
+                <tr><td>3</td><td>10</td></tr>
+                <tr><td>3</td><td>20</td></tr>
+                <tr><td>2</td><td>30</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- VERIFY: in the source, dashed arrows run from the FROM table rows into the three groups (10, 20, 30) and from each group to the matching row of the select output. In the group 20 box, row 5 is written "5 F 500 20" while the FROM table has "5 E 500 20"; reproduced as written. -->
+      </div>
+
+    </section>
+
+    <!-- ===== Source PDF page 2: HAVING Clause ===== -->
+    <section class="page">
+
+      <h2>HAVING Clause</h2>
+      <ul>
+        <li>It is used to Filter the group</li>
+        <li>It execute <span class="r">Group by Group</span></li>
+        <li>Having clause must be used after Group by clause</li>
+        <li>In having we are passing Group Filter condition</li>
+      </ul>
+
+      <p><span class="r">syntax</span></p>
+      <div class="code">
+Select group_by_expression / group Function
+FROM table_name
+[WHERE column_name condition]
+Group By column_name / expression
+Having &lt;Group Filter condition
+      </div>
+      <!-- VERIFY: the closing > after "condition" is not written in the source. -->
+
+      <h3 class="r">ORDER of Execution</h3>
+      <ol>
+        <li>FROM</li>
+        <li>WHERE → Row by Row</li>
+        <li>Group BY → Row by Row</li>
+        <li>Having → Group by Group</li>
+        <li>select → Group by Group</li>
+      </ol>
+
+      <p>① WAQTD Number of emp in each department IF there are at least 3 emp working in each department who salary Not equal to 6000</p>
+      <div class="code">
+select count(*), DeptNO FROM emp
+WHERE sal != 6000
+Group BY DeptNO
+Having count(*) &gt;= 3;
+      </div>
+
+      <div class="diagram">
+        <div class="flow">
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P OF FROM</caption>
+              <thead><tr><th>ENo</th><th>Name</th><th>sal</th><th>Dept</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>A</td><td>1000</td><td>10</td><td>T</td></tr>
+                <tr><td>2</td><td>B</td><td>2000</td><td>20</td><td>T</td></tr>
+                <tr><td>3</td><td>C</td><td>3000</td><td>30</td><td>T</td></tr>
+                <tr><td>4</td><td>D</td><td>4000</td><td>40</td><td>T</td></tr>
+                <tr><td>5</td><td>E</td><td>5000</td><td>20</td><td>T</td></tr>
+                <tr><td>6</td><td>F</td><td>6000</td><td>30</td><td>F</td></tr>
+                <tr><td>7</td><td>G</td><td>7000</td><td>10</td><td>T</td></tr>
+                <tr><td>8</td><td>H</td><td>8000</td><td>20</td><td>T</td></tr>
+                <tr><td>9</td><td>I</td><td>9000</td><td>30</td><td>T</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span>→</span>
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P OF WHERE</caption>
+              <thead><tr><th>ENo</th><th>Name</th><th>sal</th><th>Dept</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>A</td><td>1000</td><td>10</td></tr>
+                <tr><td>2</td><td>B</td><td>2000</td><td>20</td></tr>
+                <tr><td>3</td><td>C</td><td>3000</td><td>30</td></tr>
+                <tr><td>4</td><td>D</td><td>4000</td><td>10</td></tr>
+                <tr><td>5</td><td>E</td><td>5000</td><td>20</td></tr>
+                <tr><td>7</td><td>G</td><td>7000</td><td>10</td></tr>
+                <tr><td>8</td><td>H</td><td>8000</td><td>20</td></tr>
+                <tr><td>9</td><td>I</td><td>9000</td><td>30</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span>⇢</span>
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P of Group</caption>
+              <tbody>
+                <tr><th colspan="4">10</th></tr>
+                <tr><td>1</td><td>A</td><td>1000</td><td>10</td></tr>
+                <tr><td>4</td><td>D</td><td>4000</td><td>10</td></tr>
+                <tr><td>7</td><td>G</td><td>7000</td><td>10</td></tr>
+                <tr><th colspan="4">20</th></tr>
+                <tr><td>2</td><td>B</td><td>2000</td><td>20</td></tr>
+                <tr><td>5</td><td>E</td><td>5000</td><td>20</td></tr>
+                <tr><td>8</td><td>H</td><td>8000</td><td>20</td></tr>
+                <tr><th colspan="4">30</th></tr>
+                <tr><td>3</td><td>C</td><td>3000</td><td>30</td></tr>
+                <tr><td>9</td><td>I</td><td>9000</td><td>30</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span>⇢</span>
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P Having</caption>
+              <tbody>
+                <tr><th colspan="4">10</th></tr>
+                <tr><td>1</td><td>A</td><td>1000</td><td>10</td></tr>
+                <tr><td>4</td><td>D</td><td>4000</td><td>10</td></tr>
+                <tr><td>7</td><td>G</td><td>7000</td><td>10</td></tr>
+                <tr><th colspan="4">20</th></tr>
+                <tr><td>2</td><td>B</td><td>2000</td><td>20</td></tr>
+                <tr><td>5</td><td>E</td><td>5000</td><td>20</td></tr>
+                <tr><td>8</td><td>H</td><td>8000</td><td>20</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span>→</span>
+          <div class="scroll">
+            <table class="tbl">
+              <caption class="r">O/P of select .</caption>
+              <thead><tr><th>Count(*)</th><th>DeptNo</th></tr></thead>
+              <tbody>
+                <tr><td>3</td><td>10</td></tr>
+                <tr><td>3</td><td>20</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- VERIFY: the stages run FROM, WHERE, Group, Having, select, joined by arrows (the Group stage is drawn with dashed arrows). In the source, row 4 of the FROM output has Dept 40 (looks like "40") while the WHERE output shows 10 for the same row; reproduced as written. The last row of the Group output is hard to read ("9 F 4000 30" like); read as 9 I 9000 30 to match the WHERE output. -->
+      </div>
+
+    </section>
+
+    <!-- ===== Source PDF pages 3-4: Assignments 03 and 04 (start) ===== -->
+    <section class="page">
+
+      <h2>Assignment 03 Group by <span class="r">(28-12-2025)</span></h2>
+
+      <p>① WAQTD employees in each department except manager</p>
+      <div class="code">
+select count(*), deptNo
+FROM emp
+WHERE job != 'Manager'
+Group by deptno;
+      </div>
+
+      <p>② WAQTD Total salary Needed to pay All the empl In each job</p>
+      <div class="code">
+SELECT sum(sal), job
+FROM emp
+Group by job
+      </div>
+
+      <p>③ WAQTD Number of emp working as manager in each dept</p>
+      <div class="code">
+select count(*), deptno
+FROM emp
+WHERE job = 'manager'
+Group by deptno;
+      </div>
+
+      <p>④ WAQTD AVG salary Needed to pay All the emp In each Department excluding the emp of department 20</p>
+      <div class="code">
+select deptNO, AVG(sal)
+FROM emp
+WHERE deptno &lt;&gt; 20
+Group by deptNO;
+      </div>
+      <p>(beside &lt;&gt; is written: also we use (!=))</p>
+
+      <p>⑤ WAQTD Number of emp AND AVG salary Needed to pay the emp who sal is greater than 2000 in each DeptNO</p>
+      <div class="code">
+SELECT count(*), AVG(sal), deptNO
+FROM emp
+WHERE sal &gt; 2000
+Group by deptno;
+      </div>
+
+      <p>⑥ WAQTD <del>Maximum</del> Number of emp with their maximum sal In each job</p>
+      <!-- The source gives no query for this question. -->
+
+      <h2>Assignment 04 Having <span class="r">(28-12-2025)</span></h2>
+
+      <p>① WAQTD DNO and total sal Needed to pay All emp In each Dept IF there are atleast 4 emp In each Dept</p>
+      <div class="code">
+SELECT count(*), sum(sal), deptNO
+FROM emp
+Group BY deptNO
+Having count(*) &gt;= 4;
+      </div>
+
+      <p>② WAQTD Number of emp earning sal more than 1200 In each JOB and the total sal Needed to pay emp of each job must excess 3000</p>
+      <div class="code">
+SELECT count(*), sum(sal), Job
+FROM emp
+WHERE sal &gt; 1200
+Group by job
+Having sum(sal) &gt; 3800;
+      </div>
+      <!-- Source note: the question says 3000 but the query reads 3800; reproduced as written. -->
+
+      <p>③ WAQTD DeptNO and number of emp working only if there are 2 emp working in each Dept as analyst.</p>
+      <div class="code">
+SELECT count(*), DeptNO
+FROM emp
+WHERE job = 'analyst'
+Group by DeptNO
+Having count(*) = 2;
+      </div>
+      <!-- VERIFY: the comparison in the Having line is hard to read; read as = 2. -->
+
+      <p>④ WAQTD the salaries which are Repeated in emp table.</p>
+      <div class="code">
+SELECT count(*), sal
+FROM emp
+Group by sal
+Having count(*) &gt; 1;
+      </div>
+
+      <p>⑤ WAQTD AVG sal of each Dept, IF AVG sal is less than 3000</p>
+      <div class="code">
+SELECT AVG(sal), DeptNO
+FROM emp
+Group by DeptNO
+Having AVG(sal) &lt; 3000
+      </div>
+
+      <p>⑥ WAQTD The Hiredate which are Duplicate in emp table</p>
+      <div class="code">
+SELECT count(*), Hiredate
+FROM emp
+Group by Hiredate
+Having count(*) &gt; 1
+      </div>
+
+    </section>
+
+    <!-- ===== Source PDF pages 5-6: Assignment 04 (continued) ===== -->
+    <section class="page">
+
+      <p>⑦ WAQTD DeptNO IF there are atleast 3 emp In each Dept WHOSE Name Has char 'J' OR 'W'</p>
+      <div class="code">
+SELECT count(*), DeptNo
+FROM emp
+WHERE ename like '%J%' OR ename like '%W%'
+Group by DeptNo
+Having Count(*) &gt;= 3;
+      </div>
+
+      <p>⑧ WAQTD MIN AND Max sal of each job IF MIN sal IS More than 1000 and max sal Is less than 5000</p>
+      <div class="code">
+SELECT MIN(sal), Max(sal), job
+FROM emp
+Group by job
+Having MIN(sal) &gt; 1000 AND Max(sal) &lt; 5000;
+      </div>
+
+      <p>⑨ WAQTD Number of emp Hired on the same Day Into The same department.</p>
+      <div class="code">
+SELECT deptno, hiredate, count(*)
+FROM emp
+Group by deptno, hiredate
+Having count(*) &gt; 1;
+      </div>
+
+      <p>⑩ WAQTD Number of emp Getting the same sal In same department</p>
+      <div class="code">
+SELECT deptno, sal, count(*)
+FROM emp
+Group by deptno, sal
+HAVING count(*) &gt; 1;
+      </div>
+
+      <p>⑪ WAQTD Number of emp Having the same name IN the same department</p>
+      <div class="code">
+SELECT DeptNo, ename, count(*)
+FROM emp
+Group BY DeptNo, ename
+Having count(*) &gt; 1;
+      </div>
+
+      <p>⑫ WAQTD Number of emp Getting the same sal In same department Having the same name</p>
+      <div class="code">
+SELECT deptNO, ename, sal, count(*)
+FROM emp
+Group BY deptNo, ename, sal
+Having Count(*) &gt; 1
+      </div>
+
+      <p>⑬ WAQTD Number of emp Getting the same sal In the same department AND Hired on same day</p>
+      <div class="code">
+SELECT deptNO, sal, hiredate count(*)
+FROM emp
+Group BY deptno, sal, hiredate
+Having count(*) &gt; 1;
+      </div>
+      <!-- Source note: no comma is written between hiredate and count(*) in the SELECT line. -->
+
+      <p>⑭ WAQTD Display Job and total sal of each job, IF the total sal of each job is greater than 3000.</p>
+      <div class="code">
+SELECT Job, sum(sal)
+FROM emp
+Group By Job
+Having sum(sal) &gt; 3000;
+      </div>
+
+      <p>⑮ WAQTD Display Job and total sal of the emp working In the Job IF the emp earning more than 1500 and AVG sal Job should be more than 1500</p>
+      <div class="code">
+SELECT job, sum(sal)
+FROM emp
+WHERE sal &gt; 1500
+Group by Job
+Having AVG(sal) &gt; 1500;
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
