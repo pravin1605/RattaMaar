@@ -74,6 +74,26 @@ const subjects = [
         id: "java-13",
         title:"Array Objects",
         file:"/java/java_13_array object.html",
+      },
+      {
+        id: "java-14",
+        title:"Array Class",
+        file:"/java/java_14_array class.html",
+      },
+      {
+        id: "java-15",
+        title:"Collections",
+        file:"/java/java_15_collection.html",
+      },
+      {
+        id: "java-16",
+        title:"List Interface",
+        file:"/java/java_16_list_interface.html",
+      },
+      {
+        id: "java-17",
+        title:"Cursor",
+        file:"/java/java_17_cursor.html",
       }
       
        

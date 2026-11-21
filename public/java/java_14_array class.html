@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 14 Arrays Class</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-4 ===== -->
+<section class="page">
+<h1>Java - 14 Arrays Class</h1>
+<h2>Arrays Class</h2>
+<ul>
+<li>The Arrays class is a utility class, present in the Java.util package.</li>
+<li>It provides static methods to perform common operations on arrays such as sorting, searching comparing, filling, and converting arrays into strings</li>
+<li>since all methods are static, we do not create an object of the Arrays class</li>
+</ul>
+<h2>Commonly used Methods</h2>
+<h3 class="r">&#9312; tostring() Method</h3>
+<ul>
+<li>The tostring() method of the Java.util.Arrays is used to convert an array into a readable string format</li>
+<li>Normally, IF we print an array directly, Java prints the reference address instead of elements</li>
+</ul>
+<p class="code">Arrays.tostring(arrayName)</p>
+<div class="code">int[] arr = {10, 20, 30, 40, 50}
+S.O.P.l(arr)  // Print address
+// converting array into string format
+S.O.P.l(Arrays.tostring(arr));
+O/P
+[10, 20, 30, 40, 50]</div>
+<h3 class="r">&#9313; binarySearch() Method</h3>
+<ul>
+<li>The binarySearch() method of Java.util.Arrays is used to search an element in an array</li>
+<li>The array must be sorted before performing binary search</li>
+<li>IF the element is Found &rarr; returns index</li>
+<li>IF the element is not found &rarr; return negative value</li>
+</ul>
+<p><span class="r">syntax</span></p><p class="code">Arrays.binarySearch(array_name, key);</p>
+<div class="code">Public class binary-search-method
+{
+    Public static void main(string[] args)
+    {
+        //Creating an unsorted array
+        int[] arr = {10, 30, 50, 20, 40, 60}
+        //searching element before sorting
+        S.O.P.l(Arrays.binarySearch(arr, 50));   //-3
+        Arrays.sort(arr);   //sorting array
+        //searching element after sorting
+        S.O.P.l(Arrays.binarySearch(arr, 50));   //3
+    }
+}
+O/P
+-3
+3</div>
+<p>Explanation &nbsp; Before sorting &rarr; incorrect result &nbsp;|&nbsp; After sorting &rarr; correct index</p>
+<h3 class="r">&#9314; sort() Method</h3>
+<ul>
+<li>The sort() method of Java.util.Arrays is used to arrange array elements in ascending order</li>
+<li>It automatically sorts numbers from smallest to largest</li>
+</ul>
+<p><span class="r">syntax</span></p><p class="code">Arrays.sort(arrayName);</p>
+<div class="code">Public class sort-method
+{
+    Public static void main(string[] args)
+    {
+        int[] arr = {90, 70, 80, 60, 50, 30, 40, 10, 20}
+        //printing array before sorting
+        S.O.P.l("Before sorting")
+        S.O.P.l(Arrays.tostring(arr));
+        //sorting array
+        Arrays.sort(arr)
+        //printing array after sorting
+        S.O.P.l("After sorting")
+        S.O.P.l(Arrays.tostring(arr))
+    }
+}
+O/P
+Before sorting
+[90, 70, 80, 60, 50, 30, 40, 10, 20]
+After sorting
+[10, 20, 30, 40, 50, 60, 70, 80, 90]</div>
+<h3 class="r">&#9315; equals() Method</h3>
+<ul>
+<li>The equals() method of Java.util.Arrays is used to compare two arrays.</li>
+<li>IF both array have - same elemets - same order - same size</li>
+</ul>
+<p>then the result will be true, otherwise False</p>
+<div class="code">int[] arr-1 = {1, 2, 3, 4, 5, 6, 7};
+int[] arr-2 = {1, 2, 3, 4, 5, 6, 7, 8};
+S.O.P.l(Arrays.equals(arr-1, arr-2));
+O/P
+False</div>
+<p>Both arrays have different sizes, so result is false</p>
+<h3 class="r">&#9316; fill() Method</h3>
+<ul>
+<li>the fill method of Java.util.Arrays is used to assign the same value to all elements of an array</li>
+<li>It is useful when we want to initialise or resset an array with a specific value</li>
+</ul>
+<p><span class="r">Syntax</span></p><p class="code">Arrays.Fill(array-name, value)</p>
+<div class="code">Public class Fill-method
+{
+    Public static void main(string[] args)
+    {
+        int[] arr = new int[5];  //creating an array of size 6   <span class="flag">comment says 6, code says 5</span>
+        Arrays.Fill(arr, 6);     //Filling all elements with value 6
+        S.O.P.l(Arrays.tostring(arr));  //printing array
+        S.O.P.l("= = = = = = =")
+        Fill-method[] obj-1 = new Fill-method[4]
+        Fill-method[] obj-2 = new Fill-method[4]
+        Fill-method obj = new Fill-method()
+        Arrays.Fill(obj-1, obj)
+        S.O.P.l(Arrays.tostring(obj));  <span class="flag">verify: obj-1 vs obj</span>
+    }
+}
+O/P
+[6, 6, 6, 6, 6]
+= = = = = =
+[   ]</div>
+</section>
+
+<!-- ===== PDF PAGES 4-10 ===== -->
+<section class="page">
+<h3 class="r">&#9317; copyOf[] Method</h3>
+<ul>
+<li>The copyOf() method is used to create a new array by copying elements from an existing array</li>
+<li>IF the new array size is larger, extra elements are Filled with default values (0 For int, null For string)</li>
+</ul>
+<p><span class="r">Syntax</span></p><p class="code">Arrays.copyOf(original Array, newlength);</p>
+<div class="code">Public class copyOf-method
+{
+    Public static void main(string[] args)
+    {
+        int[] arr-1 = {1, 2, 3, 4, 5}  //original array
+        S.O.P.l(Arrays.tostring(arr-1));
+        //copying array with new length 10
+        int[] arr-2 = Arrays.copyOf(arr-1, 10)
+        //printing copied array
+        S.O.P.l(Arrays.tostring(arr-2));
+    }
+}
+O/P
+[1, 2, 3, 4, 5]
+[1, 2, 3, 4, 5, 0, 0, 0, 0, 0]
+   (new array size 10; extra elements with 0)</div>
+<h3 class="r">&#9318; copyOfRange() Method</h3>
+<ul>
+<li>The copyOfRange() method is used to copy a specific range of elements from an array</li>
+<li>start index = inclusive; End index = exclusive</li>
+</ul>
+<p><span class="r">Syntax</span></p><p class="code">Arrays.copyOfRange(array, fromindex, toindex);</p>
+<div class="code">int[] arr = {10, 20, 30, 40, 50, 60, 70, 80, 90}   //index 0 to 8
+//copying elements from index 0 to 5 (size-1)
+int[] print = Arrays.copyOfRange(arr, 0, 5)
+S.O.P.l(Arrays.tostring(print));
+O/P
+[10, 20, 30, 40, 50]</div>
+<h3 class="r">&#9319; deepEquals() Method</h3>
+<ul>
+<li>the deepEquals() method is used to compare multidimensional arrays (2D or 3D array)</li>
+<li>It checks - elements - structure - size</li>
+</ul>
+<p>IF everything is the same &rarr; true, otherwise &rarr; False</p>
+<p><span class="r">syntax</span></p><p class="code">Arrays.deepEquals(array 1, array 2)</p>
+<div class="code">int[][] arr-1 = {{10, 20, 30}, {40, 50, 60}};
+int[][] arr-2 = {{10, 20, 30}, {40, 50, 60}};  //creating 2D arrays
+//comparing both arrays
+S.O.P.l(Arrays.deepEquals(arr-1, arr-2));
+O/P
+True</div>
+<h3 class="r">&#9320; deepTostring() Method</h3>
+<ul><li>The deepTostring() method is used to print multi-dimensional arrays (2D, 3D arrays) in readable format</li></ul>
+<div class="code">int[][] arr-1 = {{10, 20, 30}, {40, 50, 60}}
+S.O.P.l(Arrays.tostring(arr-1))      //gives reference address
+//printing 2D
+S.O.P.l(Arrays.deepTostring(arr-1));
+
+int[][] arr-2 = {{10, 20, 30}, {40, 50, 60}, {70, 80, 90}}
+S.O.P.l(Arrays.tostring(arr-2))      //gives reference address
+S.O.P.l(Arrays.deepTostring(arr-2));
+O/P
+[[I@1sdb9742, [I@6d06d69c]     <span class="flag">verify hash codes</span>
+[[10, 20, 30], [40, 50, 60]]
+
+[[address], [address], [address]]
+[[10, 20, 30], [40, 50, 60], [70, 80, 90]]</div>
+<h3 class="r">&#9321; parallelSort() Method</h3>
+<ul><li>the parallelSort() method is used to sort arrays using multiple threads</li><li>It is Faster than sort() For large arrays</li></ul>
+<p><span class="r">syntax</span></p><p class="code">Arrays.parallelSort(array-name)</p>
+<div class="code">Public class parallelsort
+{
+    Public static void main(string[] args)
+    {
+        int[] arr = {9, 4, 7, 2, 5, 1}
+        //sorting arrays using multiple threads
+        Arrays.parallelSort(arr)
+        S.O.P.l(Arrays.tostring(arr));
+    }
+}
+O/P
+[1, 2, 4, 5, 7, 9]</div>
+<h3 class="r">&#9322; Compare() Method</h3>
+<ul>
+<li>The compare() method is used to compare two array lexicographically (element by element)</li>
+<li>comparison happens from left to right until a different element is Found</li>
+</ul>
+<p><b>Return values</b><br>0 &rarr; Arrays are equal<br>1 &rarr; First array is greater (positive value)<br>-1 &rarr; First array is smaller (negative value)</p>
+<ul><li>this method works only for 1D arrays, not for multidimensional arrays (2D 3D)</li></ul>
+<p><span class="r">syntax</span></p><p class="code">Arrays.Compare(array-1, array-2);</p>
+<div class="code">Public class compare-method
+{
+    Public static void main(string[] args)
+    {   //creating two arrays
+        int[] arr-1 = {2, 3, 4, 5, 6, 7}
+        int[] arr-2 = {3, 4, 5, 6, 7}
+        S.O.P.l(Arrays.compare(arr-1, arr-2));
+    }
+}
+O/P
+-1
+First element comparison: arr-1[0] = 2, arr-2[0] = 3; 2 &lt; 3, result is negative</div>
+<h3 class="r">&#9323; Mismatch() Method</h3>
+<ul>
+<li>the mismatch() method is used to find the First index where two arrays differ</li>
+<li>IF arrays are identical &rarr; return -1</li>
+</ul>
+<p><span class="r">syntax</span></p><p class="code">Arrays.mismatch(array-1, array-2);</p>
+<div class="code">Public class mismatch-method
+{
+    Public static void main(string[] args)
+    {
+        int[] arr-1 = {1, 2, 3, 4, 5, 6, 7}
+        int[] arr-2 = {1, 2, 3, 4, 5, 6}
+        //Finding First mismatch index
+        S.O.P.l(Arrays.mismatch(arr-1, arr-2));  //6
+    }
+}
+O/P
+6</div>
+<ul><li>For 2-D arrays It checks reference of inner arrays</li></ul>
+<h3 class="r">&#9324; setAll() Method</h3>
+<ul>
+<li>the setAll() method is used to assign values to all elements of an array using a function</li>
+<li>It applies the given formula or lambda expression to each index</li>
+</ul>
+<p><span class="r">syntax</span></p><p class="code">Arrays.setAll(array, Function)</p>
+<div class="code">Public class setAll-method
+{
+    Public static void main(string[] args)
+    {
+        int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9}
+        //setting a new values
+        Arrays.setAll(arr, i -> i*2);
+        //printing modified array
+        S.O.P.l(Arrays.tostring(arr));
+    }
+}
+O/P
+[0, 2, 4, 6, 8, 10, 12, 14, 16]
+   (index values are multiplied by 2.)</div>
+<h3 class="r">&#9325; ParallelPrefix() Method</h3>
+<ul>
+<li>the parallelPrefix() method performs cumulative operations on array elements</li>
+<li>It applies the operation sequentially using previous results</li>
+</ul>
+<p><span class="r">syntax</span></p><p class="code">Arrays.parallelPrefix(array, operation);</p>
+<div class="code">Public class parallel-Prefix
+{
+    Public static void main(string[] args)
+    {
+        int[] arr = {1, 2, 3, 4}
+        Arrays.parallelPrefix(arr, (x, y) -> x+y);
+        S.O.P.l(Array.tostring(arr));  //printing array
+        S.O.P.l(arr)  //printing array reference
+    }
+}
+O/P
+[1, 3, 6, 10]
+[I@5c91993    <span class="flag">verify hash code</span></div>
+<h3 class="r">&#9326; stream() method</h3>
+<ul>
+<li>The stream() method of Java.util.Arrays is used to convert an array into a stream object.</li>
+<li>A stream is a sequence of elements that allow us to perform operation like Filtering, counting, Finding max/min, calculating average, etc</li>
+<li>It is part of Java.util.stream, introduced in Java 8</li>
+<li>Streams make data processing easier, Faster and more readable</li>
+</ul>
+<div class="code">Public class stream-method
+{
+    Public static void main(string[] args)
+    {
+        int[] arr = {1, 2, 3, 4, 5}
+        int sum = Arrays.stream(arr).sum();
+        S.O.P.l(sum)
+        long count = Arrays.stream(arr).count();
+        S.O.P.l(count)
+        S.O.P.l(Arrays.stream(arr).max());
+        S.O.P.l(Arrays.stream(arr).min());
+        S.O.P.l(Arrays.stream(arr).average());
+    }
+}
+O/P
+15
+5
+optionalInt[5]
+optionalInt[1]
+optionalDouble[3.0]</div>
+<p>&#8627; they are used to avoid null values in stream operation.</p>
+</section>
+
+</main>
+</body>
+</html>

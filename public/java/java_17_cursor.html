@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 17 Cursor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-2 : Enhanced for-each loop ===== -->
+<section class="page">
+<h1>Java - 17 Cursor</h1>
+<h2>Enhanced For-Each Loop</h2>
+<ul><li>Java introduced the enhanced For loop (for-each) to make iteration simpler and cleaner</li></ul>
+<p><span class="r">syntax</span></p>
+<div class="code">For(dataType variable : array | collection)
+{
+    //use variable
+}</div>
+<div class="code">Public class DemoForeachInt
+{
+    Public static void main(string[] args)
+    {
+        int[] arr = {20, 30, 40, 50}
+        For(int x : arr)
+        {
+            S.O.P.l(x)
+        }
+    }
+}
+O/P
+20
+30
+40
+50</div>
+<p>In the above example, For the First iteration inside variable x, First element inside array will be store</p>
+<div class="scroll"><table class="tbl" style="width:auto">
+<tr><th>Iteration</th><th>value of x</th></tr>
+<tr><td>1st</td><td>20</td></tr><tr><td>2nd</td><td>30</td></tr><tr><td>3rd</td><td>40</td></tr><tr><td>4th</td><td>50</td></tr>
+</table></div>
+<p>Number of iteration depends on number of elements inside the array or collection</p>
+<p>the data type of that variable should be same as the value stored inside the array or collection</p>
+<div class="code">Public class DemoForEach
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist()
+        al.add(10)
+        al.add(20)
+        al.add(30)
+        al.add(40)
+        al.add(50)
+        For(object o : al)
+        {
+            S.O.P.l(o)
+        }
+    }
+}
+O/P
+10
+20
+30
+40
+50</div>
+<p>In the above example the variable type is object in Foreach loop because arraylist internally creates array of object<br>and whatever data we enter will be upcasted into object type</p>
+</section>
+
+<!-- ===== PDF PAGES 3-7 : Cursors ===== -->
+<section class="page">
+<h2>Cursors</h2>
+<ul>
+<li>this is the special characteristics given For collection concepts</li>
+<li>using cursors we can retrieve the objects in Collection one by one</li>
+<li>they are of 2 types &#9312; Iterator &nbsp; &#9313; ListIterator</li>
+</ul>
+<h2 class="red">Iterator</h2>
+<ul>
+<li>Iterator is an interface which is used to traverse the list in forward direction</li>
+<li>Basically it provides the priviledge to access the objects without using index</li>
+</ul>
+<div class="two">
+<div class="code">interface Iterator
+{
+    Public boolean hasNext();
+    public object next();
+    public void remove();
+}</div>
+<div class="code">interface Iterable
+{
+    Iterator iterator()
+}
+
+class unknown implements Iterator
+{
+}</div>
+</div>
+<span class="flag">the arrows in the scan connect Iterable's iterator() to the Iterator interface and the unknown class</span>
+<h3 class="r">Methods of Iterator interface</h3>
+<p>&#9312; <b>public object next()</b><br>&#8627; This method moves the cursor into next element in the collection and return reference of that element<br>&#8627; IF the collection doesn't have next element, it throws NoSuchElementException</p>
+<p>&#9313; <b>public boolean hasNext()</b><br>&#8627; This method returns true if collection has next element otherwise it, returns False</p>
+<p>&#9314; <b>public object remove()</b> <span class="flag">written "object" (circled) in the method list, "void" in the interface above</span><br>&#8627; The method removes the elements from the collection where cursor is pointed</p>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist()
+        al.add(10)
+        al.add(20)
+        al.add(30)
+        al.add(40)
+        al.add(50)
+
+        Iterator i = al.iterator();
+        while(i.hasNext())
+        {
+            S.O.P.l(i.next())
+        }
+    }
+}
+O/P
+10
+20
+30
+40
+50</div>
+<p>In the above example when we call al.iterator(), this method internally creates and object of Iterator type and return the address.<br>that object will be internally having a cursor initally pointing to just before the First element inside the collection</p>
+<ul>
+<li>When we call i.next(), next method will return the next element and moves the cursor one step Forward</li>
+<li>if we keep calling next() it keeps moving cursor one step Forward<br>Like this we are calling the next() multiple times once the cursor reaches the last element and still if we call next method we get NoSuch Element Exception</li>
+</ul>
+<h3 class="r">Note</h3>
+<ul>
+<li>Using iterator we can go in only Forward direction</li>
+<li>we can use it only once, which means it is exhaustive</li>
+</ul>
+<h2 class="red">2. ListIterator</h2>
+<ul><li>ListIterator is an interface which provides the Facility to traverse the list in Forward as well as backward direction</li></ul>
+<div class="two">
+<div class="code">interface List
+{
+    ListIterator listIterator();
+}</div>
+<div class="code">interface ListIterator
+{
+    Public boolean hasNext()
+    Public object next()
+    Public void remove()
+    Public boolean hasPrevious()
+    Public object previous()
+    Public void add(object o)
+}</div>
+</div>
+<div class="code">class unknown implements ListIterator
+{
+}</div>
+<p>&#9312; <b>hasPrevious()</b><br>&#8627; Returns true, if object is available in the previous index</p>
+<p>&#9313; <b>previous()</b><br>&#8627; move the cursor to next object in previous direction and return that object</p>
+<div class="code">Public class DemoListIterator
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist();
+        al.add(10)
+        al.add(20)
+        al.add(30)
+        al.add(40)
+        al.add(50)
+
+        //traverse in Forward direction
+        ListIterator li = al.listIterator()
+        while(li.hasnext())
+        {
+            S.O.P.l(li.next());
+        }
+
+        //Reverse order
+        while(li.hasprevious)   <span class="flag">written without ()</span>
+        {
+            S.O.P.l(li.previous());
+        }
+
+        //another approach
+        ListIterator li-1 = al.listIterator(al.size())
+        while(li-1.has previous)   <span class="flag">written without ()</span>
+        {
+            S.O.P.l(li-1.previous())
+        }
+    }
+}
+10  20  30  40  50
+50  40  30  20  10</div>
+<ul>
+<li>when we want to traverse in reverse direction we need to call the ListIterator(int index) method which is accepting an index.</li>
+<li>when we call this method internally it create and object of ListIterator type and a cursor will be pointing to the index which are passing when we call the method</li>
+<li>so when we are calling we need to pass the last index, In order to traverse in reverse direction</li>
+</ul>
+</section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 16 List Interface</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-2 : List interface and methods ===== -->
+<section class="page">
+<h1>Java - 16 List Interface</h1>
+<h2>List</h2>
+<ul>
+<li>List is an interface in the Java collection Framework used to store ordered collections of elements.</li>
+<li>It allows access to elements using index-based positioning</li>
+<li>It is a child interface of the collection interface</li>
+<li>Declared in the Java.util package</li>
+<li>Introduced in Java 1.2 version</li>
+<li>Implementation classes of list &#9312; ArrayList &#9313; LinkedList &#9314; Vector &#9315; Stack</li>
+</ul>
+<h3>characteristics</h3>
+<ul>
+<li>list is an indexed collection - every element is associated with an index starting from 0.</li>
+<li>It automatically assigns indexes when elements are added</li>
+<li>list allows duplicate elements</li>
+<li>list allows null values (multiple, depending on the implementation)</li>
+<li>list maintains insertion order</li>
+<li>We can perform operation based on index like get(index), set(index, element), remove(index)</li>
+</ul>
+<h3>Methods of list interface</h3>
+<p class="r">To ADD elements</p>
+<p>&#9312; <b>void add(int index, object element)</b><br>&#8627; Insert an element at a specific index position<br>&#8627; Existing elements are shifted to the right.</p>
+<p>&#9313; <b>boolean addAll(int index, collection c)</b><br>&#8627; Insert all elements of another collection starting from the given index.</p>
+<p class="r">To remove elements</p>
+<p>&#9314; <b>object remove(int index)</b><br>&#8627; Remove the element at the specified index<br>&#8627; Returns the removed element</p>
+<p>&#9315; <b>object set(int index, object element)</b><br>&#8627; Replace the element at a given index with new element<br>&#8627; Returns the old element</p>
+<p class="r">To Access elements</p>
+<p>&#9316; <b>object get(int index)</b><br>&#8627; Returns the element present at the specified index</p>
+<p>&#9317; <b>int indexOf(object element)</b><br>&#8627; Return the index of the first occurence of the given element<br>&#8627; IF the element is not found, it return -1</p>
+<p>&#9318; <b>ListIterator listIterator()</b><br>&#8627; Returns a ListIterator to traverse the list Forward and backward</p>
+<p>&#9319; <b>ListIterator listIterator(int index)</b><br>&#8627; Returns a ListIterator starting from a specific index</p>
+<p class="r">Other Methods</p>
+<p>&#9320; <b>public int lastIndexOf(object element)</b><br>&#8627; Returns the index of the last occurence of the element</p>
+<p>&#9321; <b>List subList(int startIndex, int endIndex)</b><br>&#8627; Returns a portion (sub list) of the list From startIndex to endIndex-1<br>IF list = [A, B, C, D, E] &rarr; subList(1, 4) &rarr; [B, C, D]</p>
+</section>
+
+<!-- ===== PDF PAGES 3-5 : Examples ===== -->
+<section class="page">
+<h3 class="r">Example - 01 &nbsp; void add(int index, object element)</h3>
+<div class="code">Public class Demo-01
+{
+    Public static void main(string[] args)
+    {
+        ArrayList al = new ArrayList();
+        al.add(10)
+        al.add(20)
+        al.add(30)
+        al.add(40)
+        S.O.P.l(al)
+        al.add(2, 25);  //List method
+        S.O.P.l(al)
+    }
+}
+O/P
+[10, 20, 30, 40]
+[10, 20, 25, 30, 40]</div>
+<h3 class="r">Example - 02 &nbsp; boolean addAll(int index, collection c)</h3>
+<div class="code">Public class Demo-02
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al-1 = new ArrayList()
+        al-1.add(10)
+        al-1.add(20)
+        al-3.add(30)   <span class="flag">written al-3</span>
+        S.O.P.l("before Al-1 = " + al-1)
+        Arraylist al-2 = new ArrayList()
+        al-2.add(50)
+        al-2.add(60)
+        al-2.add(70)
+        S.O.P.l("al-2 = " + al-2)
+        al-1.addAll(1, al-2)
+        S.O.P.l("After Al-1 = " + al-1)
+    }
+}
+O/P
+before al-1 = [10, 20, 30, 40]
+al-2 = [50, 60, 70]
+after al-1 = [10, 50, 60, 70, 20, 30, 40]   <span class="flag">verify: al-1 is shown with 40 in the output but not in the code</span></div>
+<h3 class="r">Example - 03 &nbsp; get(int index)</h3>
+<div class="code">Public class Demo-03
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new ArrayList()
+        al.add(10)   0
+        al.add(20)   1
+        al.add(30)   2
+        al.add(40)   3
+        al.add(50)   4
+        S.O.P.l(al)
+        S.O.P.l(al.get(3))        //40
+        Integer i = (Integer) al.get(3)   //autoboxing
+        S.O.P.l(i)                //40
+        S.O.P.l(al.get(8))        //IndexOutOfBoundsException
+    }
+}
+O/P
+[10, 20, 30, 40, 50]
+40
+40</div>
+<h3 class="r">Example - 04 &nbsp; indexOf</h3>
+<div class="code">Public class DemoIndexof
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new ArrayList()
+        al.add(10)
+        al.add(20)
+        al.add(30)
+        al.add(40)
+        al.add(50)
+        S.O.P.l(al.indexOf(40))    //3
+        S.O.P.l(al.indexOf(300))   //-1
+    }
+}</div>
+<h3 class="r">Example - 05</h3>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new ArrayList()
+        al.add(10)
+        al.add(20)
+        al.add(30)
+        al.add(40)
+        al.add(50)
+        //printing original list
+        S.O.P.l("Original list = " + al)
+        1. remove(int index) method
+        S.O.P.l("Removed element =" + al.remove(2))
+        //List after removal
+        S.O.P.l("List after remove() =" + al);
+        2. set(int index, object element) method
+        S.O.P.l("Replaced element =" + al.set(2, 35));
+        //List after replacement
+        S.O.P.l("List after set() = " + al);
+        3. Adding null element
+        //ArrayList allows null values
+        al.add(null);
+        //List after adding null
+        S.O.P.l("List after adding null =" + al)
+    }
+}
+O/P
+original list = [10, 20, 30, 40, 50]
+Removed element = 30
+List after remove = [10, 20, 40, 50]
+Replaced element = 40
+List after set() = [10, 20, 35, 50]
+List after adding null = [10, 20, 35, 50, null]</div>
+</section>
+
+<!-- ===== PDF PAGES 6-8 : ArrayList program and explanation ===== -->
+<section class="page">
+<h2 class="red">Arraylist program</h2>
+<div class="code">Public class Demo
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist()
+ 0      al.add(10)
+ 1      al.add("abc")
+ 2      al.add(true)
+ 3      al.add('c')
+ 4      al.add(20)
+ 5      al.add(30)
+ 6      al.add(40)
+ 7      al.add(50)
+ 8      al.add(60)
+ 9      al.add(70)   //Here capacity is full
+ 10     al.add(80)   //Adding extra element
+        S.O.P.l(al);
+    }
+}
+O/P
+[10, abc, true, c, 20, 30, 40, 50, 60, 70, 80]</div>
+<p class="note">Diagram: al = 0x1 holds the internal object[] address. The first array 0x2 has default capacity = 10 (slots 0 to 9, each pointing to a wrapper object: 10, "abc", true, 'c', 20, 30, 40, 50, 60, 70). When the 11th element (80) is added, a new array 0x3 with new capacity 15 is created, the old elements are copied to the same indexes, 80 goes at index 10, and 0x3 replaces 0x2 inside the ArrayList object.</p>
+<h2 class="red">Explanation of the above Arraylist program</h2>
+<p>When we create an Arraylist object using <b>Arraylist al = new Arraylist();</b><br>No internal array is created immediately</p>
+<h3>&#9312; Internal array creation</h3>
+<ul>
+<li>The internal array (object[]) is created only when the First element is added</li>
+<li>By default, the initial capacity of this internal array is 10</li>
+<li>The reference (address) of this object[] array is stored inside the Arraylist object.</li>
+</ul>
+<h3>&#9313; Why different data types can be stored</h3>
+<ul>
+<li>The internal array is of type object[]</li>
+<li>since object is the parent class of all non-primitive classes, any object can be stored using upcasting</li>
+<li>primitive values like int, boolean and char are automatically converted into their corresponding wrapper objects (Integer, Boolean, character) using autoboxing</li>
+<li>That is why the same Arraylist can store: Integer, String, Boolean, character</li>
+</ul>
+<h3>&#9314; Capacity vs size</h3>
+<ul><li>capacity &rarr; length of the internal array</li><li>size &rarr; number of elements actually stored</li></ul>
+<h3>&#9315; How Arraylist grows dynamically</h3>
+<ul>
+<li>when the internal array become Full (after 10 element)</li>
+<li>and we try to add the 11th element
+ <ul>
+ <li>A new array with larger capacity is created</li>
+ <li>the new capacity is calculated as <b>old capacity + (old capacity / 2)</b> &rarr; 10 + 5 = 15</li>
+ <li>All existing element are copied into the new array at the same index</li>
+ <li>The new element is added at the next available index</li>
+ <li>the reference to the old array is replaced with the reference to the new array</li>
+ <li>the old array becomes eligible For garbage collection</li>
+ </ul></li>
+</ul>
+<h3>&#9316; Important conclusion</h3>
+<ul>
+<li>Even though the internal structure is an array, Arraylist can store any number of elements because it dynamically resize itself</li>
+<li>This resizing happens automatically and is hidden from the programmer</li>
+</ul>
+<h3 class="r">&#9733; Accessing List Elements Using For Loop</h3>
+<ul>
+<li>In Java collections, elements stored inside a list can be accessed using their index position</li>
+<li>Since a list maintains insertion order, each element has an index starting from 0</li>
+</ul>
+<div class="code">Public class DemoForLoop
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist();
+        al.add(10)
+        al.add(20)
+        al.add(30)
+        al.add(40)
+        al.add(50)
+        //Accessing elements using For Loop
+        For(int i = 0; i < al.size(); i++)
+        {
+            S.O.P.l(al.get(i));
+        }
+    }
+}
+O/P
+10
+20
+30
+40
+50</div>
+</section>
+
+</main>
+</body>
+</html>
