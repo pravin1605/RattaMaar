@@ -20,7 +20,7 @@ const subjects = [
       },
       {
         id: "java-03",
-        title: "Statements",
+        title: "Control Flow statements",
         file: "/java/java_03_statements.html",
       },
       {
