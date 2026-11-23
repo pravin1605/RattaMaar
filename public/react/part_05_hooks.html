@@ -4,333 +4,12 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>React.js – Chapter 5 Notes</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg: #ffffff;
-    --text: #111111;
-    --muted: #555555;
-    --border: #e0e0e0;
-
-    --blue:      #1a6bff;
-    --blue-bg:   #e8f0ff;
-    --green:     #0a8a3c;
-    --green-bg:  #e4f5ec;
-    --orange:    #d95f00;
-    --orange-bg: #fff0e4;
-    --purple:    #6b2fbd;
-    --purple-bg: #f0eaff;
-    --red:       #c4001a;
-    --red-bg:    #fff0f2;
-    --teal:      #006d77;
-    --teal-bg:   #e0f4f5;
-    --pink:      #b5006e;
-    --pink-bg:   #ffe8f5;
-    --yellow:    #a06000;
-    --yellow-bg: #fff8e1;
-  }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.7;
-    padding: 20px;
-    max-width: 960px;
-    margin: 0 auto;
-  }
-
-  /* ── HEADER ── */
-  .page-header {
-    background: linear-gradient(135deg, #6b2fbd 0%, #b5006e 50%, #1a6bff 100%);
-    color: #fff;
-    border-radius: 14px;
-    padding: 36px 40px;
-    margin-bottom: 36px;
-  }
-  .page-header .tag {
-    display: inline-block;
-    background: rgba(255,255,255,0.25);
-    border-radius: 20px;
-    font-size: 12px; font-weight: 600;
-    letter-spacing: .08em; text-transform: uppercase;
-    padding: 4px 14px; margin-bottom: 14px;
-  }
-  .page-header h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; }
-  .page-header p  { font-size: 14px; opacity: .88; }
-
-  /* ── SECTION CARD ── */
-  .section {
-    background: #fff;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 28px;
-    overflow: hidden;
-  }
-  .section-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 16px 24px;
-    border-bottom: 1.5px solid var(--border);
-  }
-  .sec-num {
-    width: 32px; height: 32px; border-radius: 8px;
-    display: grid; place-items: center;
-    font-size: 13px; font-weight: 700;
-    flex-shrink: 0; color: #fff;
-  }
-  .section-header h2 { font-size: 18px; font-weight: 700; color: var(--text); }
-  .section-body { padding: 22px 24px; }
-
-  /* ── DEF BOX ── */
-  .def-box {
-    border-left: 4px solid var(--blue);
-    background: var(--blue-bg);
-    border-radius: 0 8px 8px 0;
-    padding: 14px 18px; margin: 14px 0;
-  }
-  .def-box.green  { border-color: var(--green);  background: var(--green-bg);  }
-  .def-box.purple { border-color: var(--purple); background: var(--purple-bg); }
-  .def-box.teal   { border-color: var(--teal);   background: var(--teal-bg);   }
-  .def-box.orange { border-color: var(--orange); background: var(--orange-bg); }
-  .def-box .def-label {
-    font-size: 11px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: .08em;
-    color: var(--blue); margin-bottom: 4px;
-  }
-  .def-box.green  .def-label { color: var(--green);  }
-  .def-box.purple .def-label { color: var(--purple); }
-  .def-box.teal   .def-label { color: var(--teal);   }
-  .def-box.orange .def-label { color: var(--orange); }
-  .def-box p { font-size: 14.5px; }
-
-  /* ── CODE ── */
-  pre {
-    background: #1a1a2e;
-    color: #e0e0e0;
-    border-radius: 8px;
-    padding: 14px 18px;
-    font-family: 'Fira Code', monospace;
-    font-size: 13px; line-height: 1.6;
-    overflow-x: auto; margin: 10px 0;
-    white-space: pre-wrap; word-break: break-word;
-  }
-  .kw   { color: #c792ea; }
-  .fn   { color: #82aaff; }
-  .str  { color: #c3e88d; }
-  .tag-c{ color: #f07178; }
-  .attr { color: #ffcb6b; }
-  .cmt  { color: #546e7a; }
-  .num  { color: #f78c6c; }
-  .hk   { color: #89ddff; }   /* hook highlight */
-  code {
-    font-family: 'Fira Code', monospace; font-size: 13px;
-    background: #f0f0f0; padding: 1px 6px;
-    border-radius: 4px; color: var(--purple);
-  }
-
-  /* ── COMPARE ── */
-  .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
-  .compare-box { border-radius: 8px; padding: 14px 16px; font-size: 13.5px; }
-  .compare-box .cb-label {
-    font-size: 11px; font-weight: 700;
-    text-transform: uppercase; letter-spacing:.08em; margin-bottom: 6px;
-  }
-  .cb-wrong { background: var(--red-bg);   border-left: 4px solid var(--red);   }
-  .cb-right { background: var(--green-bg); border-left: 4px solid var(--green); }
-  .cb-wrong .cb-label { color: var(--red);   }
-  .cb-right .cb-label { color: var(--green); }
-
-  /* ── FEATURE GRID ── */
-  .feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 14px; margin-top: 14px;
-  }
-  .feature-card { border-radius: 10px; padding: 16px 18px; border: 1.5px solid transparent; }
-  .feature-card .fc-title {
-    font-weight: 700; font-size: 14px; margin-bottom: 6px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .feature-card p  { font-size: 13.5px; color: var(--muted); }
-  .feature-card pre { font-size: 12px; margin: 6px 0 0; }
-  .fc-blue   { background: var(--blue-bg);   border-color: #b8d0ff; }
-  .fc-green  { background: var(--green-bg);  border-color: #9ddbb9; }
-  .fc-orange { background: var(--orange-bg); border-color: #ffc999; }
-  .fc-purple { background: var(--purple-bg); border-color: #c9abf0; }
-  .fc-teal   { background: var(--teal-bg);   border-color: #90d4d8; }
-  .fc-pink   { background: var(--pink-bg);   border-color: #f0a0d4; }
-  .fc-yellow { background: var(--yellow-bg); border-color: #ffd080; }
-  .fc-red    { background: var(--red-bg);    border-color: #f0b0bb; }
-  .fc-blue   .fc-title { color: var(--blue);   }
-  .fc-green  .fc-title { color: var(--green);  }
-  .fc-orange .fc-title { color: var(--orange); }
-  .fc-purple .fc-title { color: var(--purple); }
-  .fc-teal   .fc-title { color: var(--teal);   }
-  .fc-pink   .fc-title { color: var(--pink);   }
-  .fc-yellow .fc-title { color: var(--yellow); }
-  .fc-red    .fc-title { color: var(--red);    }
-
-  /* ── FLOW ── */
-  .flow-col { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin: 14px 0; }
-  .flow-step { border-radius: 8px; padding: 10px 18px; font-size: 13.5px; font-weight: 600; border: 1.5px solid transparent; }
-  .flow-arrow-d { color: #888; font-size: 18px; font-weight: 700; padding-left: 20px; }
-  .flow-h { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0; }
-  .fh-step { background: var(--blue-bg); border: 1.5px solid #b8d0ff; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--blue); }
-  .fh-arrow { color: #888; font-size: 18px; font-weight: 700; }
-
-  /* ── TIP / WARN ── */
-  .tip {
-    display: flex; gap: 10px; align-items: flex-start;
-    background: var(--teal-bg); border-left: 4px solid var(--teal);
-    border-radius: 0 8px 8px 0;
-    padding: 12px 16px; margin: 12px 0;
-    font-size: 14px; color: var(--teal);
-  }
-  .tip .ti { font-size: 18px; flex-shrink: 0; }
-  .warn {
-    display: flex; gap: 10px; align-items: flex-start;
-    background: var(--red-bg); border-left: 4px solid var(--red);
-    border-radius: 0 8px 8px 0;
-    padding: 12px 16px; margin: 12px 0;
-    font-size: 14px; color: var(--red);
-  }
-  .warn .ti { font-size: 18px; flex-shrink: 0; }
-
-  /* ── EXAMPLE WRAP ── */
-  .example-wrap { border: 1.5px solid var(--border); border-radius: 0 8px 8px 8px; overflow: hidden; margin: 12px 0; }
-  .example-wrap pre { border-radius: 0; margin: 0; }
-  .example-header {
-    display: flex; align-items: center; gap: 6px;
-    background: #f5f5f5; border-radius: 8px 8px 0 0;
-    padding: 10px 16px;
-    font-size: 13px; font-weight: 600; color: var(--muted);
-    border: 1.5px solid var(--border); border-bottom: none;
-  }
-  .dot-file { width: 10px; height: 10px; border-radius: 50%; }
-
-  /* ── OUTPUT BOX ── */
-  .output-box {
-    background: var(--green-bg); border: 1.5px solid #9ddbb9;
-    border-radius: 8px; padding: 12px 16px; margin: 10px 0;
-    font-family: 'Fira Code', monospace; font-size: 13px; color: var(--green);
-  }
-  .output-box .out-label {
-    font-size: 11px; font-weight: 700; text-transform: uppercase;
-    letter-spacing:.08em; color: var(--green); margin-bottom: 6px;
-  }
-
-  /* ── TABLE ── */
-  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
-  th {
-    background: var(--purple-bg); color: var(--purple);
-    font-weight: 700; text-align: left;
-    padding: 10px 14px; border: 1px solid #d6c4f4;
-  }
-  td { padding: 9px 14px; border: 1px solid var(--border); }
-  tr:nth-child(even) td { background: #fafafa; }
-
-  /* ── INTERVIEW ── */
-  .interview-box {
-    background: var(--orange-bg); border: 1.5px solid #ffc999;
-    border-radius: 10px; padding: 16px 18px; margin: 14px 0;
-  }
-  .interview-box .ib-label {
-    font-size: 11px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: .08em;
-    color: var(--orange); margin-bottom: 8px;
-  }
-  .interview-box .qa { margin-bottom: 10px; }
-  .interview-box .qa:last-child { margin-bottom: 0; }
-  .interview-box .q { font-weight: 600; font-size: 13.5px; color: var(--text); }
-  .interview-box .a { font-size: 13.5px; color: var(--muted); margin-left: 14px; margin-top: 2px; }
-
-  /* ── SYNTAX BREAKDOWN ── */
-  .syntax-breakdown {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 14px 0;
-  }
-  .sb-card {
-    border-radius: 10px; padding: 14px 16px;
-    border: 1.5px solid transparent;
-    text-align: center;
-  }
-  .sb-card .sbc-code {
-    font-family: 'Fira Code', monospace; font-size: 16px;
-    font-weight: 700; margin-bottom: 6px;
-  }
-  .sb-card .sbc-name {
-    font-size: 11px; font-weight: 700;
-    text-transform: uppercase; letter-spacing:.08em;
-    margin-bottom: 4px;
-  }
-  .sb-card .sbc-desc { font-size: 13px; color: var(--muted); }
-
-  /* ── VALUE TYPE GRID ── */
-  .val-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 12px; margin: 14px 0;
-  }
-  .val-card {
-    border-radius: 10px; padding: 14px 16px;
-    border: 1.5px solid transparent;
-  }
-  .val-card .vc-type {
-    font-size: 11px; font-weight: 700;
-    text-transform: uppercase; letter-spacing:.08em;
-    margin-bottom: 6px;
-  }
-
-  /* ── RULE CARD ── */
-  .rule-card {
-    border-radius: 10px; padding: 16px 18px;
-    margin-bottom: 14px;
-    border: 1.5px solid var(--border);
-    background: #fafafa;
-  }
-  .rule-card .rc-title {
-    font-weight: 700; font-size: 14.5px;
-    margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
-  }
-
-  /* ── QUICK REVISION BOX ── */
-  .revision-box {
-    background: var(--purple-bg); border: 1.5px solid #c9abf0;
-    border-radius: 12px; padding: 20px 24px; margin: 14px 0;
-  }
-  .revision-box .rev-label {
-    font-size: 11px; font-weight: 700;
-    text-transform: uppercase; letter-spacing:.08em;
-    color: var(--purple); margin-bottom: 12px;
-  }
-  .rev-flow { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
-  .rev-step {
-    font-size: 14px; font-weight: 600; color: var(--purple);
-    padding: 6px 14px; background: rgba(107,47,189,0.1);
-    border-radius: 6px; width: fit-content;
-  }
-  .rev-hooks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-  .rev-hook-item {
-    display: flex; align-items: center; gap: 8px;
-    font-family: 'Fira Code', monospace; font-size: 13px;
-    padding: 8px 12px; border-radius: 6px;
-    background: rgba(107,47,189,0.08);
-    color: var(--purple);
-  }
-  .rev-hook-item .rh-fn { font-weight: 700; }
-  .rev-hook-item .rh-arrow { color: var(--pink); }
-
-  h3 { font-size: 16px; font-weight: 700; margin: 18px 0 8px; color: var(--text); }
-  h4 { font-size: 14px; font-weight: 700; margin: 12px 0 6px; color: var(--muted); }
-  p  { margin-bottom: 8px; font-size: 14.5px; }
-  ul, ol { padding-left: 20px; margin-bottom: 10px; }
-  li { font-size: 14.5px; margin-bottom: 4px; }
-
-  @media print { body { padding: 10px; } .section { break-inside: avoid; } }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="r05">
 
 <!-- ═══ HEADER ═══ -->
 <div class="page-header">
@@ -343,7 +22,7 @@
 <!-- ═══ 1. WHAT ARE HOOKS ═══ -->
 <div class="section">
   <div class="section-header">
-    <div class="sec-num" style="background:var(--purple);">1</div>
+    <div class="sec-num u002">1</div>
     <h2>What are Hooks?</h2>
   </div>
   <div class="section-body">
@@ -362,22 +41,22 @@
     <div class="compare-row">
       <div class="compare-box cb-wrong">
         <div class="cb-label">❌ Before Hooks — Class Components Required</div>
-        <pre style="background:#1a1a2e; border-radius:6px; padding:10px; font-size:12.5px; margin:6px 0 0;"><span class="cmt">// Needed for state, lifecycle, context...</span>
+        <pre class="u073"><span class="cmt">// Needed for state, lifecycle, context...</span>
 <span class="kw">class</span> <span class="fn">Counter</span> <span class="kw">extends</span> Component {
   state = {
     count: <span class="num">0</span>
   }
   <span class="cmt">// render(), constructor, bind()...</span>
 }</pre>
-        <p style="font-size:13px; color:var(--red); margin-top:8px;">More boilerplate · Hard to read · Hard to reuse logic</p>
+        <p class="u055">More boilerplate · Hard to read · Hard to reuse logic</p>
       </div>
       <div class="compare-box cb-right">
         <div class="cb-label">✅ After Hooks — Function Component is Enough</div>
-        <pre style="background:#1a1a2e; border-radius:6px; padding:10px; font-size:12.5px; margin:6px 0 0;"><span class="kw">function</span> <span class="fn">Counter</span>() {
+        <pre class="u073"><span class="kw">function</span> <span class="fn">Counter</span>() {
   <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="num">0</span>);
   <span class="cmt">// Done! Clean and simple</span>
 }</pre>
-        <p style="font-size:13px; color:var(--green); margin-top:8px;">Cleaner · Simpler · Reusable · Easy to maintain</p>
+        <p class="u057">Cleaner · Simpler · Reusable · Easy to maintain</p>
       </div>
     </div>
 
@@ -415,24 +94,24 @@
 <!-- ═══ 2. RULES OF HOOKS ═══ -->
 <div class="section">
   <div class="section-header">
-    <div class="sec-num" style="background:var(--red);">2</div>
+    <div class="sec-num u074">2</div>
     <h2>Rules of Hooks</h2>
   </div>
   <div class="section-body">
 
     <!-- Rule 1 -->
     <div class="rule-card">
-      <div class="rc-title" style="color:var(--blue);">📌 Rule 1 — Only Inside Function Components</div>
+      <div class="rc-title u025">📌 Rule 1 — Only Inside Function Components</div>
       <div class="compare-row">
         <div class="compare-box cb-right">
           <div class="cb-label">✅ Correct</div>
-          <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12.5px; margin:4px 0 0;"><span class="kw">function</span> <span class="fn">App</span>() {
+          <pre class="u081"><span class="kw">function</span> <span class="fn">App</span>() {
   <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="num">0</span>);
 }</pre>
         </div>
         <div class="compare-box cb-wrong">
           <div class="cb-label">❌ Wrong — Outside Component</div>
-          <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12.5px; margin:4px 0 0;"><span class="kw">function</span> <span class="fn">demo</span>() {}
+          <pre class="u081"><span class="kw">function</span> <span class="fn">demo</span>() {}
 
 <span class="cmt">// ❌ called outside any component</span>
 <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="num">0</span>);</pre>
@@ -442,70 +121,70 @@
 
     <!-- Rule 2 -->
     <div class="rule-card">
-      <div class="rc-title" style="color:var(--green);">📌 Rule 2 — Hook Names Must Start With "use"</div>
-      <div class="feature-grid" style="margin-top:6px;">
-        <div class="feature-card fc-green" style="padding:10px 14px;">
-          <div style="font-family:'Fira Code',monospace; font-size:13px; color:var(--green); line-height:2;">
-            <span class="hk" style="color:var(--green);">useState</span>()<br/>
-            <span class="hk" style="color:var(--green);">useEffect</span>()<br/>
-            <span class="hk" style="color:var(--green);">useContext</span>()<br/>
-            <span class="hk" style="color:var(--green);">useRef</span>()<br/>
-            <span class="hk" style="color:var(--green);">useMemo</span>()
+      <div class="rc-title u010">📌 Rule 2 — Hook Names Must Start With "use"</div>
+      <div class="feature-grid u075">
+        <div class="feature-card fc-green u082">
+          <div class="u083">
+            <span class="hk u010">useState</span>()<br/>
+            <span class="hk u010">useEffect</span>()<br/>
+            <span class="hk u010">useContext</span>()<br/>
+            <span class="hk u010">useRef</span>()<br/>
+            <span class="hk u010">useMemo</span>()
           </div>
         </div>
-        <div style="display:flex; align-items:center; padding:10px;">
-          <p style="font-size:13.5px; color:var(--muted);">React identifies Hooks by the <code>use</code> prefix. Custom hooks you write must also start with <code>use</code>.</p>
+        <div class="u084">
+          <p class="u079">React identifies Hooks by the <code>use</code> prefix. Custom hooks you write must also start with <code>use</code>.</p>
         </div>
       </div>
     </div>
 
     <!-- Rule 3 -->
     <div class="rule-card">
-      <div class="rc-title" style="color:var(--orange);">📌 Rule 3 — Cannot Use Inside Loops</div>
+      <div class="rc-title u006">📌 Rule 3 — Cannot Use Inside Loops</div>
       <div class="compare-row">
         <div class="compare-box cb-wrong">
           <div class="cb-label">❌ Wrong — Hook Inside Loop</div>
-          <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12.5px; margin:4px 0 0;"><span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
+          <pre class="u081"><span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
   <span class="hk">useState</span>();  <span class="cmt">// ❌ Not allowed</span>
 }</pre>
         </div>
-        <div style="padding:14px;">
-          <p style="font-size:13.5px; color:var(--muted);">Hooks must be called the <strong>same number of times</strong> on every render. Loops break this guarantee.</p>
+        <div class="u085">
+          <p class="u079">Hooks must be called the <strong>same number of times</strong> on every render. Loops break this guarantee.</p>
         </div>
       </div>
     </div>
 
     <!-- Rule 4 -->
     <div class="rule-card">
-      <div class="rc-title" style="color:var(--purple);">📌 Rule 4 — Cannot Use Inside Conditions</div>
+      <div class="rc-title u034">📌 Rule 4 — Cannot Use Inside Conditions</div>
       <div class="compare-row">
         <div class="compare-box cb-wrong">
           <div class="cb-label">❌ Wrong — Hook Inside if Block</div>
-          <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12.5px; margin:4px 0 0;"><span class="kw">if</span> (<span class="kw">true</span>) {
+          <pre class="u081"><span class="kw">if</span> (<span class="kw">true</span>) {
   <span class="hk">useState</span>();  <span class="cmt">// ❌ Not allowed</span>
 }</pre>
         </div>
-        <div style="padding:14px;">
-          <p style="font-size:13.5px; color:var(--muted);">Conditional Hooks cause React to lose track of hook order between renders — always call unconditionally.</p>
+        <div class="u085">
+          <p class="u079">Conditional Hooks cause React to lose track of hook order between renders — always call unconditionally.</p>
         </div>
       </div>
     </div>
 
     <!-- Rule 5 -->
-    <div class="rule-card" style="margin-bottom:0;">
-      <div class="rc-title" style="color:var(--teal);">📌 Rule 5 — Call at Top Level of Component</div>
+    <div class="rule-card u086">
+      <div class="rc-title u087">📌 Rule 5 — Call at Top Level of Component</div>
       <div class="compare-row">
         <div class="compare-box cb-right">
           <div class="cb-label">✅ Correct — Top Level</div>
-          <pre style="background:#1a1a2e; border-radius:6px; padding:8px; font-size:12.5px; margin:4px 0 0;"><span class="kw">function</span> <span class="fn">App</span>() {
+          <pre class="u081"><span class="kw">function</span> <span class="fn">App</span>() {
   <span class="cmt">// ✅ Hooks at top — always called</span>
   <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="num">0</span>);
 
   <span class="kw">return</span> <span class="tag-c">&lt;h1&gt;</span>Hello<span class="tag-c">&lt;/h1&gt;</span>;
 }</pre>
         </div>
-        <div style="padding:14px;">
-          <div class="tip" style="margin:0;">
+        <div class="u085">
+          <div class="tip u026">
             <span class="ti">💡</span>
             <span>Always declare Hooks <strong>before any return statement</strong> and <strong>outside loops/conditions</strong> to ensure consistent hook order every render.</span>
           </div>
@@ -520,7 +199,7 @@
 <!-- ═══ 3. ALL HOOKS TABLE ═══ -->
 <div class="section">
   <div class="section-header">
-    <div class="sec-num" style="background:var(--teal);">3</div>
+    <div class="sec-num u003">3</div>
     <h2>Commonly Used Hooks</h2>
   </div>
   <div class="section-body">
@@ -554,7 +233,7 @@
 <!-- ═══ 4. useState HOOK ═══ -->
 <div class="section">
   <div class="section-header">
-    <div class="sec-num" style="background:var(--blue);">4</div>
+    <div class="sec-num u001">4</div>
     <h2>useState Hook — Deep Dive</h2>
   </div>
   <div class="section-body">
@@ -569,37 +248,37 @@
 
     <h3>Syntax Breakdown</h3>
     <div class="syntax-breakdown">
-      <div class="sb-card" style="background:var(--blue-bg); border-color:#b8d0ff;">
-        <div class="sbc-code" style="color:var(--blue);">count</div>
-        <div class="sbc-name" style="color:var(--blue);">State Variable</div>
+      <div class="sb-card u024">
+        <div class="sbc-code u025">count</div>
+        <div class="sbc-name u025">State Variable</div>
         <div class="sbc-desc">Holds the current state value.<br/><code>count = 0</code> initially</div>
       </div>
-      <div class="sb-card" style="background:var(--green-bg); border-color:#9ddbb9;">
-        <div class="sbc-code" style="color:var(--green);">setCount</div>
-        <div class="sbc-name" style="color:var(--green);">Setter Function</div>
+      <div class="sb-card u027">
+        <div class="sbc-code u010">setCount</div>
+        <div class="sbc-name u010">Setter Function</div>
         <div class="sbc-desc">Function to update the state.<br/><code>setCount(5)</code> sets count to 5</div>
       </div>
-      <div class="sb-card" style="background:var(--purple-bg); border-color:#c9abf0;">
-        <div class="sbc-code" style="color:var(--purple);">useState()</div>
-        <div class="sbc-name" style="color:var(--purple);">Hook Call</div>
+      <div class="sb-card u088">
+        <div class="sbc-code u034">useState()</div>
+        <div class="sbc-name u034">Hook Call</div>
         <div class="sbc-desc">React Hook that creates the state.<br/>Returns <code>[value, setter]</code></div>
       </div>
-      <div class="sb-card" style="background:var(--orange-bg); border-color:#ffc999;">
-        <div class="sbc-code" style="color:var(--orange);">0</div>
-        <div class="sbc-name" style="color:var(--orange);">Initial Value</div>
+      <div class="sb-card u089">
+        <div class="sbc-code u006">0</div>
+        <div class="sbc-name u006">Initial Value</div>
         <div class="sbc-desc">Value assigned when component first loads.<br/><code>useState(0)</code> → starts at 0</div>
       </div>
     </div>
 
     <h3>How useState Solves the UI Update Problem</h3>
     <div class="flow-col">
-      <div class="flow-step" style="background:var(--blue-bg); border-color:#b8d0ff; color:var(--blue);">setCount() called (state changes)</div>
+      <div class="flow-step u058">setCount() called (state changes)</div>
       <div class="flow-arrow-d">↓</div>
-      <div class="flow-step" style="background:var(--purple-bg); border-color:#c9abf0; color:var(--purple);">React detects the change</div>
+      <div class="flow-step u013">React detects the change</div>
       <div class="flow-arrow-d">↓</div>
-      <div class="flow-step" style="background:var(--orange-bg); border-color:#ffc999; color:var(--orange);">Component re-renders</div>
+      <div class="flow-step u008">Component re-renders</div>
       <div class="flow-arrow-d">↓</div>
-      <div class="flow-step" style="background:var(--green-bg); border-color:#9ddbb9; color:var(--green);">UI updates automatically ✅</div>
+      <div class="flow-step u011">UI updates automatically ✅</div>
     </div>
   </div>
 </div>
@@ -608,7 +287,7 @@
 <!-- ═══ 5. PRACTICAL EXAMPLES ═══ -->
 <div class="section">
   <div class="section-header">
-    <div class="sec-num" style="background:var(--green);">5</div>
+    <div class="sec-num u004">5</div>
     <h2>Practical Examples</h2>
   </div>
   <div class="section-body">
@@ -617,9 +296,9 @@
     <h3>Example 1 — Counter Application</h3>
     <div class="example-wrap">
       <div class="example-header">
-        <div class="dot-file" style="background:#ff5f57;"></div>
-        <div class="dot-file" style="background:#febc2e;"></div>
-        <div class="dot-file" style="background:#28c840;"></div>
+        <div class="dot-file u028"></div>
+        <div class="dot-file u029"></div>
+        <div class="dot-file u030"></div>
         &nbsp; Counter.jsx
       </div>
       <pre><span class="kw">import</span> React, { <span class="hk">useState</span> } <span class="kw">from</span> <span class="str">'react'</span>;
@@ -651,9 +330,9 @@
       After 3 clicks → 3
     </div>
 
-    <div style="background:#f8f8f8; border:1.5px solid var(--border); border-radius:10px; padding:14px 18px; margin:12px 0;">
-      <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:10px;">🔍 Line-by-Line Understanding</div>
-      <table style="margin:0;">
+    <div class="u061">
+      <div class="u062">🔍 Line-by-Line Understanding</div>
+      <table class="u026">
         <thead><tr><th>Line</th><th>What it does</th></tr></thead>
         <tbody>
           <tr><td><code>useState(0)</code></td><td>Creates state variable <code>count</code> starting at <strong>0</strong></td></tr>
@@ -668,9 +347,9 @@
     <h3>Example 2 — Toggle Button (Online / Offline)</h3>
     <div class="example-wrap">
       <div class="example-header">
-        <div class="dot-file" style="background:#ff5f57;"></div>
-        <div class="dot-file" style="background:#febc2e;"></div>
-        <div class="dot-file" style="background:#28c840;"></div>
+        <div class="dot-file u028"></div>
+        <div class="dot-file u029"></div>
+        <div class="dot-file u030"></div>
         &nbsp; Toggle.jsx
       </div>
       <pre><span class="kw">import</span> React, { <span class="hk">useState</span> } <span class="kw">from</span> <span class="str">'react'</span>;
@@ -697,11 +376,11 @@
 <span class="kw">export default</span> Toggle;</pre>
     </div>
     <div class="compare-row">
-      <div class="output-box" style="margin:0;">
+      <div class="output-box u026">
         <div class="out-label">▶ Initially (status = false)</div>
         Offline
       </div>
-      <div class="output-box" style="margin:0;">
+      <div class="output-box u026">
         <div class="out-label">▶ After Toggle Click (status = true)</div>
         Online
       </div>
@@ -718,7 +397,7 @@
 <!-- ═══ 6. DATA TYPES IN useState ═══ -->
 <div class="section">
   <div class="section-header">
-    <div class="sec-num" style="background:var(--orange);">6</div>
+    <div class="sec-num u012">6</div>
     <h2>Types of Values Stored in useState</h2>
   </div>
   <div class="section-body">
@@ -727,42 +406,42 @@
 
     <div class="val-grid">
 
-      <div class="val-card" style="background:var(--blue-bg); border-color:#b8d0ff;">
-        <div class="vc-type" style="color:var(--blue);">🔤 String</div>
-        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [name, setName] =
+      <div class="val-card u024">
+        <div class="vc-type u025">🔤 String</div>
+        <pre class="u090"><span class="kw">const</span> [name, setName] =
   <span class="hk">useState</span>(<span class="str">"Pravin"</span>);</pre>
       </div>
 
-      <div class="val-card" style="background:var(--green-bg); border-color:#9ddbb9;">
-        <div class="vc-type" style="color:var(--green);">🔢 Number</div>
-        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [age, setAge] =
+      <div class="val-card u027">
+        <div class="vc-type u010">🔢 Number</div>
+        <pre class="u090"><span class="kw">const</span> [age, setAge] =
   <span class="hk">useState</span>(<span class="num">21</span>);</pre>
       </div>
 
-      <div class="val-card" style="background:var(--purple-bg); border-color:#c9abf0;">
-        <div class="vc-type" style="color:var(--purple);">✅ Boolean</div>
-        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [isLogin, setIsLogin] =
+      <div class="val-card u088">
+        <div class="vc-type u034">✅ Boolean</div>
+        <pre class="u090"><span class="kw">const</span> [isLogin, setIsLogin] =
   <span class="hk">useState</span>(<span class="kw">false</span>);</pre>
       </div>
 
-      <div class="val-card" style="background:var(--orange-bg); border-color:#ffc999;">
-        <div class="vc-type" style="color:var(--orange);">📋 Array</div>
-        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [students, setStudents] =
+      <div class="val-card u089">
+        <div class="vc-type u006">📋 Array</div>
+        <pre class="u090"><span class="kw">const</span> [students, setStudents] =
   <span class="hk">useState</span>([<span class="str">"Ram"</span>, <span class="str">"Sham"</span>]);</pre>
       </div>
 
-      <div class="val-card" style="background:var(--teal-bg); border-color:#90d4d8;">
-        <div class="vc-type" style="color:var(--teal);">📦 Object</div>
-        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [user, setUser] =
+      <div class="val-card u091">
+        <div class="vc-type u087">📦 Object</div>
+        <pre class="u090"><span class="kw">const</span> [user, setUser] =
   <span class="hk">useState</span>({
     name: <span class="str">"Pravin"</span>,
     age: <span class="num">21</span>
   });</pre>
       </div>
 
-      <div class="val-card" style="background:var(--pink-bg); border-color:#f0a0d4;">
-        <div class="vc-type" style="color:var(--pink);">🚫 null / undefined</div>
-        <pre style="margin:0; font-size:12px;"><span class="kw">const</span> [data, setData] =
+      <div class="val-card u092">
+        <div class="vc-type u093">🚫 null / undefined</div>
+        <pre class="u090"><span class="kw">const</span> [data, setData] =
   <span class="hk">useState</span>(<span class="kw">null</span>);
 <span class="cmt">// common for API data</span></pre>
       </div>
@@ -775,7 +454,7 @@
 <!-- ═══ 7. QUICK REVISION + INTERVIEW ═══ -->
 <div class="section">
   <div class="section-header">
-    <div class="sec-num" style="background:var(--pink);">7</div>
+    <div class="sec-num u052">7</div>
     <h2>Quick Revision &amp; Interview Q&amp;A</h2>
   </div>
   <div class="section-body">
@@ -785,14 +464,14 @@
       <div class="rev-label">⚡ Quick Revision — Hooks at a Glance</div>
       <div class="rev-flow">
         <div class="rev-step">Hooks</div>
-        <div style="color:var(--purple); padding-left:14px; font-size:18px;">↓</div>
+        <div class="u094">↓</div>
         <div class="rev-step">Built-in React Functions</div>
-        <div style="color:var(--purple); padding-left:14px; font-size:18px;">↓</div>
+        <div class="u094">↓</div>
         <div class="rev-step">Used Inside Function Components</div>
-        <div style="color:var(--purple); padding-left:14px; font-size:18px;">↓</div>
+        <div class="u094">↓</div>
         <div class="rev-step">Provide Class Component Features</div>
       </div>
-      <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--purple); margin-bottom:8px;">Popular Hooks</div>
+      <div class="u095">Popular Hooks</div>
       <div class="rev-hooks">
         <div class="rev-hook-item"><span class="rh-fn">useState</span> <span class="rh-arrow">→</span> State Management</div>
         <div class="rev-hook-item"><span class="rh-fn">useEffect</span> <span class="rh-arrow">→</span> Side Effects</div>
@@ -837,7 +516,7 @@
 </div>
 
 <!-- Footer -->
-<div style="text-align:center; padding:20px; color:#aaa; font-size:12.5px; margin-top:10px;">
+<div class="u023">
   React.js Chapter 5 · React Hooks &amp; useState · Study Notes
 </div>
 

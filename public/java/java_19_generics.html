@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 19 Generics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-2 : Generic class ===== -->
+<section class="page">
+<h1>Java - 19 Generics</h1>
+<h2>Generics</h2>
+<div class="code">class Demo
+{
+    int x
+}</div>
+<p class="note">Diagram: new Demo (three times) creates three objects 0x1, 0x2, 0x3, each with x = 0 of type int.</p>
+<p>In this above example no matter how many objects we create inside all the objects data type of x will remain int itself</p>
+<div class="code">class Demo &lt;T&gt;
+{
+    T x;
+}</div>
+<div class="scroll"><table class="tbl">
+<tr><th>Object created</th><th>Object</th><th>Type of x</th></tr>
+<tr><td>new Demo()</td><td>0x1 : x = null</td><td>x is object type</td></tr>
+<tr><td>new Demo&lt;string&gt;()</td><td>0x2 : x = null</td><td>x is string type</td></tr>
+<tr><td>new Demo&lt;Integer&gt;()</td><td>0x3 : x = 0</td><td>x is Integer type</td></tr>
+<tr><td>new Demo&lt;student&gt;()</td><td>0x4 : x = null</td><td>x is student type</td></tr>
+</table></div>
+<ul>
+<li>IF we are using generic class we can decide the type of x dynamically For each and every Demo object</li>
+<li>We can specify the type of x using type parameter '&lt;Nonprimitive Datatype&gt;'</li>
+<li>In the class Declaration we have &lt;T&gt;, this T acts as a non primitive Data type, when we are creating the object we can decide what should be the type of T<br>IF we are not specifying any thing T is considered as object type</li>
+</ul>
+<p>T should be only non primitive type, we can not give primitive types</p>
+<p>How to give the type of T during object creation ?</p>
+<p class="code">New Demo &lt; Non primitive Datatype &gt; ();</p>
+<p>We can also specify the same during reference variable creation</p>
+<p class="code">Demo &lt; Non primitive datatype &gt; d ;</p>
+<h3>Note</h3>
+<ul><li>In collection Frame work every component uses generic</li></ul>
+
+<h2 class="red">Generics</h2>
+<ul>
+<li>since collections are not type safe i.e programmer can add types of objects there is no restriction For that so, to overcome this drawback Java has given Generics concept where you can create an object of specific type, if we add any other type of object than specified we will get CTE</li>
+</ul>
+<div class="code">&#9312; Arraylist &lt;Integer&gt; al = new Arraylist &lt;&gt;();
+    al.add("Java");   //CTE
+    al.add(100);
+    al.add('A');      //CTE
+
+&#9313; Arraylist &lt;string&gt; al = new Arraylist&lt;&gt;();
+    al.add("Java");
+    al.add(100);      //CTE
+    al.add('A');      //CTE
+
+&#9314; Arraylist &lt;character&gt; al = new Arraylist &lt;&gt;();
+    al.add("Java");   //CTE
+    al.add(100);      //CTE
+    al.add('A');</div>
+</section>
+
+<!-- ===== PDF PAGES 3-5 : Why generics ===== -->
+<section class="page">
+<p>We can also avoid downcasting everytime when we fetch element from the collection</p>
+<div class="code">Public class Program-01
+{
+    Public static void main(string[] args)
+    {
+        //Without generics
+        Arraylist al = new Arraylist();
+        al.add(new Employee());
+        al.add(new Employee());
+        al.add("hello");
+        //we have to perform downcasting
+        Employee e = (Employee) al.get(0)
+
+        //With Generics
+        Arraylist &lt;Employee&gt; al2 = new Arraylist ();
+        al2.add(new Employee())
+        al2.add("hello");   //CTE
+        Employee e2 = al2.get(0)   //return type will be employee
+        //Need Not downcast
+    }
+}</div>
+<h3 class="r">why generics important Here</h3>
+<ul><li>prevents wrong data insertion</li><li>Avoids manual casting</li><li>Avoids runtime error</li><li>Ensures type safety at compile time</li></ul>
+<div class="code">Public class Program-2
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist();
+        al.add(10)
+        al.add("hello")
+        al.add(true)
+        al.add(20)
+        al.add(30)
+        al.add(40)
+
+        For(object o : al)
+        {
+            Integer i = (Integer) o;
+            S.O.P.l(i);
+        }
+    }
+}
+O/P
+10
+Exception in thread "main" Java.lang.classcastException</div>
+<ul>
+<li>In the above program we are trying to convert variable o From object type to integer type</li>
+<li>In the First iteration we don't get any problem.</li>
+<li>In the second iteration since we have string data</li>
+<li>In the second index we are converting string inside the second index to integer, so we get classcastException</li>
+</ul>
+<h3 class="r">Why Generics IMP Here</h3>
+<ul><li>prevents adding &bull; string &bull; boolean</li><li>Ensures only mention data types</li><li>Avoids runtime exception</li><li>Removes need For casting</li></ul>
+<div class="code">class student
+{
+    int id = 100
+}
+class emp
+{
+}
+class laptop
+{
+}
+Public class Driver
+{
+    Public static void main(string[] args)
+    {
+        Arraylist &lt;student&gt; al = new Arraylist &lt;student&gt;();
+        al.add(new student());
+        al.add(new emp());      //CTE
+        al.add(new Laptop());   //CTE
+        al.add(new student());
+
+        int key = 101;
+        For(student o : al)
+        {
+            IF(o.id = key)   <span class="flag">written with a single =</span>
+            {
+                S.O.P.l("Found ")
+            }
+        }
+    }
+}</div>
+<h3 class="r">Why Generics imp Here</h3>
+<ul>
+<li>prevents adding Wrong objects (Laptop, Emp)</li>
+<li>Ensures only student data</li>
+<li>Allows direct access to attributes (o.id)</li>
+<li>No casting needed</li>
+<li>Improves code readability and safety</li>
+</ul>
+</section>
+
+</main>
+</body>
+</html>

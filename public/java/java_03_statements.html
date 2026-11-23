@@ -8,16 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>
-/* ADDED: styles for the new example / trick / logic boxes (original style.css untouched) */
-.add{border-left:4px solid #1b8a4b;background:#f1faf4;padding:6px 12px;margin:10px 0;border-radius:4px}
-.add h4{margin:4px 0;color:#1b8a4b;font-size:1.05em}
-.add .code{white-space:pre;overflow-x:auto;margin:6px 0}
-.add p{margin:4px 0}
-.add .trick{color:#8a4b00}
-.add .think{color:#14267a}
-.add .warn{color:#b3261e}
-</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -34,12 +24,35 @@
 <p>&#9313; Looping statement</p>
 <p>&#9314; Jumping statement</p>
 
-<div class="add">
-<h4>ADDED: Memory map (easy way to remember)</h4>
+<hr class="sep"><div>
+<h3>ADDED: Memory map (easy way to remember)</h3>
 <p>&#9312; Conditional = <b>"Should I do it?"</b> (if, if-else, else-if, switch) &rarr; decides <b>which</b> code runs</p>
 <p>&#9313; Looping = <b>"How many times?"</b> (while, do-while, for, for-each) &rarr; decides <b>how often</b> code runs</p>
 <p>&#9314; Jumping = <b>"Skip or stop!"</b> (break, continue, return) &rarr; changes the normal path</p>
-<p class="think">&#129504; How to think before writing any program: <b>Input &rarr; Decision / Repeat &rarr; Output</b>. Ask 3 questions: (1) What data do I get? (2) Is there a choice (condition) or a repeat (loop)? (3) What must be printed or returned?</p>
+<p>&#129504; How to think before writing any program: <b>Input &rarr; Decision / Repeat &rarr; Output</b>. Ask 3 questions: (1) What data do I get? (2) Is there a choice (condition) or a repeat (loop)? (3) What must be printed or returned?</p>
+</div>
+
+<hr class="sep"><div>
+<h3>LOGIC BUILDER: 5-step method for ANY program</h3>
+<p><b>1. Understand</b> &ndash; What is given (input)? What is asked (output)?<br>
+<b>2. Examples</b> &ndash; Solve 2-3 sample cases by hand first.<br>
+<b>3. Plain English</b> &ndash; Write the steps in simple words (pseudocode).<br>
+<b>4. Pick the statement</b> &ndash; use the keyword table below.<br>
+<b>5. Dry run</b> &ndash; test a normal value, a boundary value and a wrong value.</p>
+<p>&#129504; Every program is built from only 3 blocks: <b>Sequence</b> (line by line), <b>Selection</b> (if / switch = choose a path), <b>Repetition</b> (loops = go back). Java always runs <b>top to bottom, one line at a time</b>; control statements only decide <b>which line comes next</b>.</p>
+<div class="scroll"><table class="tbl">
+<tr><th>Words in the question</th><th>Use</th></tr>
+<tr><td>"only if / when"</td><td>if</td></tr>
+<tr><td>"either ... or" / two outcomes</td><td>if-else</td></tr>
+<tr><td>range, grade, category</td><td>else-if ladder</td></tr>
+<tr><td>menu, day, option number</td><td>switch</td></tr>
+<tr><td>n times / from ... to</td><td>for</td></tr>
+<tr><td>until / as long as / digits</td><td>while</td></tr>
+<tr><td>at least once / retry / menu again</td><td>do-while</td></tr>
+<tr><td>every element of array</td><td>for-each</td></tr>
+<tr><td>stop early / skip one round</td><td>break / continue</td></tr>
+</table></div>
+<p class="g">&#9889; Translation dictionary: "at least" = <b>&gt;=</b> | "more than" = <b>&gt;</b> | "between 10 and 20" = <b>x &gt;= 10 &amp;&amp; x &lt;= 20</b> | "A or B" = <b>||</b> | "A and B" = <b>&amp;&amp;</b> | "not" = <b>!</b> | "divisible by 5" = <b>x % 5 == 0</b></p>
 </div>
 
 <h2 class="red">&#9312; Conditional statement</h2>
@@ -48,10 +61,10 @@
  <ul><li>&#9312; IF statement</li><li>&#9313; If else statement</li><li>&#9314; else if ladder</li><li>&#9315; switch statement .</li></ul></li>
 </ul>
 
-<div class="add">
-<h4>ADDED: Which one to choose?</h4>
+<hr class="sep"><div>
+<h3>ADDED: Which one to choose?</h3>
 <p>One optional action &rarr; <b>if</b> | Two choices (A or B) &rarr; <b>if-else</b> | Many ranges (marks, age groups) &rarr; <b>else-if ladder</b> | One variable vs fixed values (day, menu choice) &rarr; <b>switch</b></p>
-<p class="trick">&#9889; Trick: <b>Condition must always give true or false</b>. Use <b>==</b> to compare (not =), and <b>&amp;&amp;</b> (AND), <b>||</b> (OR), <b>!</b> (NOT) to join conditions.</p>
+<p class="g">&#9889; Trick: <b>Condition must always give true or false</b>. Use <b>==</b> to compare (not =), and <b>&amp;&amp;</b> (AND), <b>||</b> (OR), <b>!</b> (NOT) to join conditions.</p>
 </div>
 
 <h3>&#9312; IF statement</h3>
@@ -82,22 +95,39 @@
 </svg>
 </div>
 
-<div class="add">
-<h4>ADDED: IF &ndash; Example 1 (voting)</h4>
+<hr class="sep"><div>
+<h3>ADDED: IF &ndash; Example 1 (voting)</h3>
 <div class="code">int age = 20;
 if (age &gt;= 18) {
     System.out.println("You can vote");   // runs only if true
 }
 System.out.println("Thank you");          // ALWAYS runs</div>
-<h4>Example 2 (discount)</h4>
+<h3>Example 2 (discount)</h3>
 <div class="code">int bill = 1500;
 if (bill &gt; 1000) {
     bill = bill - 100;      // Rs.100 off only for big bills
 }
 System.out.println("Pay: " + bill);   // Pay: 1400</div>
-<p class="think">&#129504; Logic: Ask <b>"Is there a step I must do only sometimes?"</b> &rarr; that step goes inside if. Steps that must always happen go outside.</p>
-<p class="trick">&#9889; Trick: If the condition is false the block is simply <b>skipped</b> (nothing else happens). Read it like English: "IF age is 18 or more THEN print".</p>
-<p class="warn">&#9888; Common mistakes: <b>if(x = 5)</b> (wrong, assignment) &rarr; use <b>if(x == 5)</b>. Also <b>if(x &gt; 5);</b> (extra semicolon) ends the if early and the block always runs.</p>
+<p>&#129504; Logic: Ask <b>"Is there a step I must do only sometimes?"</b> &rarr; that step goes inside if. Steps that must always happen go outside.</p>
+<p class="g">&#9889; Trick: If the condition is false the block is simply <b>skipped</b> (nothing else happens). Read it like English: "IF age is 18 or more THEN print".</p>
+<p class="r">&#9888; Common mistakes: <b>if(x = 5)</b> (wrong, assignment) &rarr; use <b>if(x == 5)</b>. Also <b>if(x &gt; 5);</b> (extra semicolon) ends the if early and the block always runs.</p>
+</div>
+
+<hr class="sep"><div>
+<h3>IF &ndash; Flow trace (how Java moves, line by line)</h3>
+<div class="scroll"><table class="tbl">
+<tr><th>Step</th><th>age = 20</th><th>age = 15</th></tr>
+<tr><td>1. S1 runs</td><td>yes</td><td>yes</td></tr>
+<tr><td>2. age &gt;= 18 ?</td><td>TRUE</td><td>FALSE</td></tr>
+<tr><td>3. S2 (inside if)</td><td>runs</td><td>skipped</td></tr>
+<tr><td>4. S3, S4</td><td>run</td><td>run</td></tr>
+</table></div>
+<h3>Build the logic: English &rarr; condition &rarr; code</h3>
+<div class="code">English : "If marks are at least 35, print Pass"
+Condition: marks &gt;= 35
+Code    : if (marks &gt;= 35) { System.out.println("Pass"); }
+Test    : 34 (no output) | 35 (boundary, Pass) | 80 (Pass)</div>
+<p>&#129504; Rule: <b>Always test the boundary value</b> (35 here). Most bugs are &gt; instead of &gt;=.</p>
 </div>
 
 <h3>&#9313; If else statement</h3>
@@ -130,24 +160,46 @@ System.out.println("Pay: " + bill);   // Pay: 1400</div>
 </svg>
 </div>
 
-<div class="add">
-<h4>ADDED: IF-ELSE &ndash; Example 1 (even / odd)</h4>
+<hr class="sep"><div>
+<h3>ADDED: IF-ELSE &ndash; Example 1 (even / odd)</h3>
 <div class="code">int n = 7;
 if (n % 2 == 0) {
     System.out.println("Even");
 } else {
     System.out.println("Odd");     // prints Odd
 }</div>
-<h4>Example 2 (login check)</h4>
+<h3>Example 2 (login check)</h3>
 <div class="code">String pass = "java123";
 if (pass.equals("java123")) {
     System.out.println("Welcome");
 } else {
     System.out.println("Wrong password");
 }</div>
-<p class="think">&#129504; Logic: <b>Exactly one</b> block runs &ndash; never both, never none. Use it when the question is "A or B?".</p>
-<p class="trick">&#9889; Shortcut (ternary): <b>String r = (n % 2 == 0) ? "Even" : "Odd";</b> &nbsp;&rarr; <i>condition ? if-true : if-false</i></p>
-<p class="trick">&#9889; Trick: Compare Strings with <b>.equals()</b>, not <b>==</b>. Remainder <b>% 2 == 0</b> means even; <b>% n == 0</b> means divisible by n.</p>
+<p>&#129504; Logic: <b>Exactly one</b> block runs &ndash; never both, never none. Use it when the question is "A or B?".</p>
+<p class="g">&#9889; Shortcut (ternary): <b>String r = (n % 2 == 0) ? "Even" : "Odd";</b> &nbsp;&rarr; <i>condition ? if-true : if-false</i></p>
+<p class="g">&#9889; Trick: Compare Strings with <b>.equals()</b>, not <b>==</b>. Remainder <b>% 2 == 0</b> means even; <b>% n == 0</b> means divisible by n.</p>
+</div>
+<hr class="sep"><div>
+<h3>IF-ELSE &ndash; Logic building</h3>
+<p>&#129504; <b>else has no condition</b> because it means "NOT the if-condition". Write only the if-condition correctly and else comes free.</p>
+<h3>Combining conditions: && vs nested if</h3>
+<div class="code">// Loan only if age &gt;= 21 AND salary &gt;= 25000
+if (age &gt;= 21 &amp;&amp; salary &gt;= 25000) {
+    System.out.println("Loan approved");
+} else {
+    System.out.println("Not eligible");
+}
+
+// Nested if: same idea, but lets you give a specific reason
+if (age &gt;= 21) {
+    if (salary &gt;= 25000) System.out.println("Loan approved");
+    else                  System.out.println("Salary too low");
+} else {
+    System.out.println("Age too low");
+}</div>
+<p class="g">&#9889; Trick: <b>&amp;&amp;</b> = all must be true (strict). <b>||</b> = any one is enough. Use nested if when each failure needs its own message.</p>
+<h3>Flow trace: n = 7</h3>
+<div class="code">n % 2 == 0 ?  7 % 2 = 1  &rarr; 1 == 0 is FALSE &rarr; else block runs &rarr; "Odd"</div>
 </div>
 </section>
 
@@ -199,8 +251,8 @@ if (pass.equals("java123")) {
 <li>else block is optional.</li>
 </ul>
 
-<div class="add">
-<h4>ADDED: ELSE-IF LADDER &ndash; Example 1 (grade)</h4>
+<hr class="sep"><div>
+<h3>ADDED: ELSE-IF LADDER &ndash; Example 1 (grade)</h3>
 <div class="code">int marks = 82;
 if (marks &gt;= 90) {
     System.out.println("Grade A+");
@@ -211,19 +263,48 @@ if (marks &gt;= 90) {
 } else {
     System.out.println("Fail");
 }</div>
-<h4>Example 2 (positive / negative / zero)</h4>
+<h3>Example 2 (positive / negative / zero)</h3>
 <div class="code">int n = 0;
 if (n &gt; 0)       System.out.println("Positive");
 else if (n &lt; 0)  System.out.println("Negative");
 else             System.out.println("Zero");   // prints Zero</div>
-<h4>Example 3 (largest of three, using &amp;&amp;)</h4>
+<h3>Example 3 (largest of three, using &amp;&amp;)</h3>
 <div class="code">int a = 5, b = 9, c = 3;
 if (a &gt;= b &amp;&amp; a &gt;= c)      System.out.println("a is largest");
 else if (b &gt;= c)           System.out.println("b is largest");   // prints this
 else                       System.out.println("c is largest");</div>
-<p class="think">&#129504; Logic: Java checks <b>top to bottom</b> and the <b>first true</b> wins; the rest are skipped. So write <b>highest range first</b> (90, then 75, then 50). Else is the "none of the above" safety net.</p>
-<p class="trick">&#9889; Trick: Draw a number line, mark the cut-off points, then write the conditions from one end to the other. Each next condition automatically means "below the previous one".</p>
-<p class="warn">&#9888; Mistake: writing <b>marks &gt;= 50</b> first &ndash; then 90 marks also prints "B", because the first true condition wins.</p>
+<p>&#129504; Logic: Java checks <b>top to bottom</b> and the <b>first true</b> wins; the rest are skipped. So write <b>highest range first</b> (90, then 75, then 50). Else is the "none of the above" safety net.</p>
+<p class="g">&#9889; Trick: Draw a number line, mark the cut-off points, then write the conditions from one end to the other. Each next condition automatically means "below the previous one".</p>
+<p class="r">&#9888; Mistake: writing <b>marks &gt;= 50</b> first &ndash; then 90 marks also prints "B", because the first true condition wins.</p>
+</div>
+
+<hr class="sep"><div>
+<h3>ELSE-IF LADDER &ndash; Flow trace (marks = 82)</h3>
+<div class="scroll"><table class="tbl">
+<tr><th>Check</th><th>Result</th><th>Action</th></tr>
+<tr><td>marks &gt;= 90</td><td>false</td><td>go to next</td></tr>
+<tr><td>marks &gt;= 75</td><td>TRUE</td><td>print A, <b>jump out of ladder</b></td></tr>
+<tr><td>marks &gt;= 50</td><td colspan="2">never checked</td></tr>
+</table></div>
+<h3>Ladder vs separate ifs (very important difference)</h3>
+<div class="code">int m = 95;
+// Separate ifs: EVERY condition is checked
+if (m &gt;= 90) System.out.println("A+");
+if (m &gt;= 75) System.out.println("A");    // also prints!
+if (m &gt;= 50) System.out.println("B");    // also prints!
+
+// Ladder: stops after the first true
+if (m &gt;= 90) System.out.println("A+");
+else if (m &gt;= 75) System.out.println("A");
+else if (m &gt;= 50) System.out.println("B");   // only A+ prints</div>
+<h3>Logic example: leap year (mix of &amp;&amp; and ||)</h3>
+<div class="code">// Rule: divisible by 400, OR divisible by 4 but NOT by 100
+if (y % 400 == 0 || (y % 4 == 0 &amp;&amp; y % 100 != 0))
+    System.out.println("Leap year");
+else
+    System.out.println("Not leap year");
+// 2000 &rarr; leap | 1900 &rarr; not leap | 2024 &rarr; leap</div>
+<p>&#129504; Rule: <b>Mutually exclusive choices (only one answer possible) &rarr; ladder. Independent checks (many can be true) &rarr; separate ifs.</b></p>
 </div>
 
 <h3>&#9315; switch statement</h3>
@@ -247,8 +328,8 @@ else                       System.out.println("c is largest");</div>
 }</div>
 <span class="flag">verify: bracket "[ statements }" in the second case as written</span>
 
-<div class="add">
-<h4>ADDED: SWITCH &ndash; Example 1 (day name)</h4>
+<hr class="sep"><div>
+<h3>ADDED: SWITCH &ndash; Example 1 (day name)</h3>
 <div class="code">int day = 3;
 switch (day) {
     case 1: System.out.println("Monday");    break;
@@ -256,7 +337,7 @@ switch (day) {
     case 3: System.out.println("Wednesday"); break;   // prints this
     default: System.out.println("Invalid day");
 }</div>
-<h4>Example 2 (grouping cases &ndash; fall through on purpose)</h4>
+<h3>Example 2 (grouping cases &ndash; fall through on purpose)</h3>
 <div class="code">char ch = 'e';
 switch (ch) {
     case 'a': case 'e': case 'i': case 'o': case 'u':
@@ -265,7 +346,7 @@ switch (ch) {
     default:
         System.out.println("Consonant");
 }</div>
-<h4>Example 3 (calculator menu with String)</h4>
+<h3>Example 3 (calculator menu with String)</h3>
 <div class="code">String op = "+"; int a = 10, b = 5;
 switch (op) {
     case "+": System.out.println(a + b); break;   // 15
@@ -274,10 +355,32 @@ switch (op) {
     case "/": System.out.println(a / b); break;
     default:  System.out.println("Wrong operator");
 }</div>
-<p class="think">&#129504; Logic: Use switch when <b>one variable is compared with fixed values</b> (menu, day, month, grade letter). For ranges like marks &gt;= 50 use else-if.</p>
-<p class="trick">&#9889; Trick: Remember <b>"C-B-D"</b> = <b>C</b>ase, <b>B</b>reak, <b>D</b>efault. Every case needs a break, default goes at the end.</p>
-<p class="trick">&#9889; Shortcut: Case labels must be constants. Switch works with <b>int, char, byte, short, String, enum</b> &ndash; not long, float, double, boolean. Modern Java (14+) also allows <b>case 1, 7 -&gt; System.out.println("Weekend");</b> (no break needed).</p>
-<p class="warn">&#9888; Mistake: forgetting <b>break</b> &rarr; Java "falls through" and also runs the next cases until it finds a break.</p>
+<p>&#129504; Logic: Use switch when <b>one variable is compared with fixed values</b> (menu, day, month, grade letter). For ranges like marks &gt;= 50 use else-if.</p>
+<p class="g">&#9889; Trick: Remember <b>"C-B-D"</b> = <b>C</b>ase, <b>B</b>reak, <b>D</b>efault. Every case needs a break, default goes at the end.</p>
+<p class="g">&#9889; Shortcut: Case labels must be constants. Switch works with <b>int, char, byte, short, String, enum</b> &ndash; not long, float, double, boolean. Modern Java (14+) also allows <b>case 1, 7 -&gt; System.out.println("Weekend");</b> (no break needed).</p>
+<p class="r">&#9888; Mistake: forgetting <b>break</b> &rarr; Java "falls through" and also runs the next cases until it finds a break.</p>
+</div>
+<hr class="sep"><div>
+<h3>SWITCH &ndash; Flow trace and logic</h3>
+<div class="code">int day = 2;
+switch (day) {
+    case 1: System.out.println("Mon");
+    case 2: System.out.println("Tue");   // match found: starts HERE
+    case 3: System.out.println("Wed");   // no break, so continues
+    case 4: System.out.println("Thu"); break;   // break: exit
+}
+// Output: Tue Wed Thu   (fall-through!)</div>
+<p>&#129504; Flow: Java <b>jumps directly to the matching case</b> (no checking of others), then runs <b>downwards until a break</b> or the closing brace. No match &rarr; default.</p>
+<h3>Logic example: ATM menu</h3>
+<div class="code">switch (option) {
+    case 1: System.out.println("Balance: " + bal); break;
+    case 2: bal += amt;  System.out.println("Deposited"); break;
+    case 3: if (amt &lt;= bal) bal -= amt;
+            else System.out.println("Insufficient funds");
+            break;
+    default: System.out.println("Invalid option");
+}</div>
+<p class="g">&#9889; Trick: one <b>case</b> can hold if / loops inside it. A classic switch cannot test ranges (like marks &gt;= 50), so use else-if for ranges.</p>
 </div>
 </section>
 
@@ -291,12 +394,12 @@ switch (op) {
  <ul><li>&#9312; while loop</li><li>&#9313; do while loop</li><li>&#9314; for loop</li><li>&#9315; for each / enhanced For</li></ul></li>
 </ul>
 
-<div class="add">
-<h4>ADDED: Every loop has 3 parts (I-C-U)</h4>
+<hr class="sep"><div>
+<h3>ADDED: Every loop has 3 parts (I-C-U)</h3>
 <p><b>I</b>nitialization (start value) &rarr; <b>C</b>ondition (keep going while true) &rarr; <b>U</b>pdate (move towards the end)</p>
-<p class="trick">&#9889; Trick: If a loop never stops, one of I-C-U is missing or wrong. Usually <b>U</b> (update) is forgotten.</p>
-<p class="think">&#129504; Logic: Find the <b>repeating work</b> first (e.g. "add a number"), then decide <b>start</b>, <b>end</b> and <b>step</b>. Choose: count known &rarr; <b>for</b> | count unknown &rarr; <b>while</b> | must run once at least &rarr; <b>do-while</b> | go through array/collection &rarr; <b>for-each</b>.</p>
-<p class="trick">&#9889; Shortcuts: <b>i++</b> means i = i + 1 &nbsp;|&nbsp; <b>i += 2</b> means i = i + 2 &nbsp;|&nbsp; <b>sum += i</b> means sum = sum + i</p>
+<p class="g">&#9889; Trick: If a loop never stops, one of I-C-U is missing or wrong. Usually <b>U</b> (update) is forgotten.</p>
+<p>&#129504; Logic: Find the <b>repeating work</b> first (e.g. "add a number"), then decide <b>start</b>, <b>end</b> and <b>step</b>. Choose: count known &rarr; <b>for</b> | count unknown &rarr; <b>while</b> | must run once at least &rarr; <b>do-while</b> | go through array/collection &rarr; <b>for-each</b>.</p>
+<p class="g">&#9889; Shortcuts: <b>i++</b> means i = i + 1 &nbsp;|&nbsp; <b>i += 2</b> means i = i + 2 &nbsp;|&nbsp; <b>sum += i</b> means sum = sum + i</p>
 </div>
 
 <h3>&#9312; while loop</h3>
@@ -323,30 +426,54 @@ S3;</div>
 <p>&#9312; The condition is used to control the number of repetition</p>
 <p>&#9313; the statements inside the loop gets executed until the condition becomes False</p>
 
-<div class="add">
-<h4>ADDED: WHILE &ndash; Example 1 (print 1 to 5)</h4>
+<hr class="sep"><div>
+<h3>ADDED: WHILE &ndash; Example 1 (print 1 to 5)</h3>
 <div class="code">int i = 1;                 // I : start
 while (i &lt;= 5) {           // C : condition
     System.out.println(i);
     i++;                   // U : update
 }                          // Output: 1 2 3 4 5</div>
-<h4>Example 2 (sum of digits &ndash; count is unknown, so while)</h4>
+<h3>Example 2 (sum of digits &ndash; count is unknown, so while)</h3>
 <div class="code">int n = 123, sum = 0;
 while (n &gt; 0) {
     sum = sum + n % 10;    // n % 10 gives last digit
     n = n / 10;            // n / 10 removes last digit
 }
 System.out.println(sum);   // 6</div>
-<h4>Example 3 (reverse a number)</h4>
+<h3>Example 3 (reverse a number)</h3>
 <div class="code">int n = 456, rev = 0;
 while (n != 0) {
     rev = rev * 10 + n % 10;
     n = n / 10;
 }
 System.out.println(rev);   // 654</div>
-<p class="trick">&#9889; Trick: <b>% 10</b> = take last digit, <b>/ 10</b> = cut last digit. This pair solves most digit problems (sum, reverse, palindrome, count digits, Armstrong).</p>
-<p class="think">&#129504; Logic: while is <b>entry controlled</b> &ndash; condition is checked <b>first</b>. If it is false at the start, the body runs <b>0 times</b>.</p>
-<p class="warn">&#9888; Mistake: forgetting <b>i++</b> gives an infinite loop. Dry run on paper: write i, condition, output for each round.</p>
+<p class="g">&#9889; Trick: <b>% 10</b> = take last digit, <b>/ 10</b> = cut last digit. This pair solves most digit problems (sum, reverse, palindrome, count digits, Armstrong).</p>
+<p>&#129504; Logic: while is <b>entry controlled</b> &ndash; condition is checked <b>first</b>. If it is false at the start, the body runs <b>0 times</b>.</p>
+<p class="r">&#9888; Mistake: forgetting <b>i++</b> gives an infinite loop. Dry run on paper: write i, condition, output for each round.</p>
+</div>
+
+<hr class="sep"><div>
+<h3>WHILE &ndash; Dry run table (sum of digits, n = 123)</h3>
+<div class="scroll"><table class="tbl">
+<tr><th>Round</th><th>n &gt; 0 ?</th><th>digit = n % 10</th><th>sum</th><th>n after n / 10</th></tr>
+<tr><td>1</td><td>123 yes</td><td>3</td><td>3</td><td>12</td></tr>
+<tr><td>2</td><td>12 yes</td><td>2</td><td>5</td><td>1</td></tr>
+<tr><td>3</td><td>1 yes</td><td>1</td><td>6</td><td>0</td></tr>
+<tr><td>4</td><td>0 no</td><td colspan="3">loop stops, sum = 6</td></tr>
+</table></div>
+<h3>3 loop patterns that solve most problems</h3>
+<div class="code">// 1. COUNTER : count how many
+int count = 0;
+while (n != 0) { count++; n = n / 10; }      // digits in a number
+
+// 2. ACCUMULATOR : add up / multiply up
+int total = 0;
+while (i &lt;= 5) { total += i; i++; }           // starts at 0 for sum
+
+// 3. FLAG : remember "was it found?"
+boolean found = false;
+while (i &lt; 10 &amp;&amp; !found) { if (i * i == 49) found = true; i++; }</div>
+<p>&#129504; Ask before writing: <b>What changes each round?</b> (that is the update) and <b>What makes it stop?</b> (that is the condition). If nothing changes, it never stops.</p>
 </div>
 
 <h3>&#9313; do while loop</h3>
@@ -377,27 +504,43 @@ S3;</div>
 <p>&#9313; In do while statement do block is executed first and then it checks the condition</p>
 <p>&#9314; It is recommended to use do whil in situation where a set of instruction have to be executed once mandatorily and later based on the demand ( <span class="flag">line cut off at page edge</span></p>
 
-<div class="add">
-<h4>ADDED: DO-WHILE &ndash; Example 1 (runs once even if condition is false)</h4>
+<hr class="sep"><div>
+<h3>ADDED: DO-WHILE &ndash; Example 1 (runs once even if condition is false)</h3>
 <div class="code">int i = 10;
 do {
     System.out.println(i);   // prints 10 once
     i++;
 } while (i &lt;= 5);            // false, so loop stops</div>
-<h4>Example 2 (menu repeats until user chooses exit)</h4>
+<h3>Example 2 (menu repeats until user chooses exit)</h3>
 <div class="code">int choice;
 do {
     System.out.println("1.Play  2.Exit");
     choice = sc.nextInt();           // sc is a Scanner (see Dynamic Read)
 } while (choice != 2);</div>
-<h4>Example 3 (ask until valid age)</h4>
+<h3>Example 3 (ask until valid age)</h3>
 <div class="code">int age;
 do {
     System.out.print("Enter age (1-100): ");
     age = sc.nextInt();
 } while (age &lt; 1 || age &gt; 100);   // repeat while input is invalid</div>
-<p class="think">&#129504; Logic: Use when you must <b>do first, then ask</b> &ndash; menus, password retry, input validation.</p>
-<p class="trick">&#9889; Trick: <b>do-while ends with a semicolon ;</b> after the condition. while / for do not. Memory line: <b>"do-while = Do it, Wait, then check"</b> (exit controlled).</p>
+<p>&#129504; Logic: Use when you must <b>do first, then ask</b> &ndash; menus, password retry, input validation.</p>
+<p class="g">&#9889; Trick: <b>do-while ends with a semicolon ;</b> after the condition. while / for do not. Memory line: <b>"do-while = Do it, Wait, then check"</b> (exit controlled).</p>
+</div>
+<hr class="sep"><div>
+<h3>DO-WHILE + SWITCH: the classic menu program</h3>
+<div class="code">int ch;
+do {
+    System.out.println("1.Add  2.Sub  3.Exit");
+    ch = sc.nextInt();
+    switch (ch) {
+        case 1: System.out.println(a + b); break;
+        case 2: System.out.println(a - b); break;
+        case 3: System.out.println("Bye"); break;
+        default: System.out.println("Invalid");
+    }
+} while (ch != 3);</div>
+<p>&#129504; Flow: show menu &rarr; read choice &rarr; switch picks the action &rarr; condition checks "did user choose Exit?" &rarr; repeat or stop. <b>do-while decides repeat, switch decides action.</b></p>
+<p class="g">&#9889; Trick: Declare the variable (<b>ch</b>) <b>before</b> the do block. Variables made inside do { } are not visible in the while( ) condition.</p>
 </div>
 </section>
 
@@ -427,30 +570,64 @@ S3 ;</div>
 </div>
 <p class="note">Order marks &#9312; to &#9316; are written on the code diagram: &#9312; initialization, &#9313; condition, &#9314; statement, &#9315; updation <span class="flag">verify numbers</span></p>
 
-<div class="add">
-<h4>ADDED: FOR &ndash; Example 1 (print 1 to 5)</h4>
+<hr class="sep"><div>
+<h3>ADDED: FOR &ndash; Example 1 (print 1 to 5)</h3>
 <div class="code">for (int i = 1; i &lt;= 5; i++) {
     System.out.println(i);
 }                            // Output: 1 2 3 4 5</div>
-<h4>Example 2 (multiplication table of 5)</h4>
+<h3>Example 2 (multiplication table of 5)</h3>
 <div class="code">for (int i = 1; i &lt;= 10; i++) {
     System.out.println("5 x " + i + " = " + (5 * i));
 }</div>
-<h4>Example 3 (sum of 1 to n, and factorial)</h4>
+<h3>Example 3 (sum of 1 to n, and factorial)</h3>
 <div class="code">int n = 5, sum = 0, fact = 1;
 for (int i = 1; i &lt;= n; i++) {
     sum  += i;      // 15
     fact *= i;      // 120
 }</div>
-<h4>Example 4 (reverse and step)</h4>
+<h3>Example 4 (reverse and step)</h3>
 <div class="code">for (int i = 10; i &gt;= 1; i--)  System.out.print(i + " ");   // 10 9 8 ... 1
 for (int i = 2; i &lt;= 10; i += 2) System.out.print(i + " ");  // 2 4 6 8 10</div>
-<p class="trick">&#9889; Trick (pattern table):<br>
+<p class="g">&#9889; Trick (pattern table):<br>
 &bull; Run <b>n times</b> &rarr; <b>for(int i=0; i&lt;n; i++)</b> &nbsp;|&nbsp; 1 to n &rarr; <b>for(int i=1; i&lt;=n; i++)</b><br>
 &bull; Backward &rarr; <b>i--</b> and <b>i &gt;= </b> &nbsp;|&nbsp; Skip &rarr; <b>i += step</b><br>
 &bull; Sum starts at <b>0</b>, product / factorial starts at <b>1</b></p>
-<p class="think">&#129504; Logic: Ask 3 things: <b>Where do I start? Where do I stop? How much do I move each time?</b> That gives initialization, condition, updation. Execution order is <b>I &rarr; C &rarr; body &rarr; U &rarr; C &rarr; body &rarr; U ...</b> (initialization runs only once).</p>
-<p class="trick">&#9889; Shortcut: variable declared inside <b>for(int i...)</b> exists only inside that loop.</p>
+<p>&#129504; Logic: Ask 3 things: <b>Where do I start? Where do I stop? How much do I move each time?</b> That gives initialization, condition, updation. Execution order is <b>I &rarr; C &rarr; body &rarr; U &rarr; C &rarr; body &rarr; U ...</b> (initialization runs only once).</p>
+<p class="g">&#9889; Shortcut: variable declared inside <b>for(int i...)</b> exists only inside that loop.</p>
+</div>
+
+<hr class="sep"><div>
+<h3>FOR &ndash; Dry run (sum of 1 to 3)</h3>
+<div class="scroll"><table class="tbl">
+<tr><th>Step</th><th>i</th><th>i &lt;= 3 ?</th><th>sum</th></tr>
+<tr><td>Init (once)</td><td>1</td><td>-</td><td>0</td></tr>
+<tr><td>Round 1</td><td>1</td><td>true</td><td>1</td></tr>
+<tr><td>Round 2</td><td>2</td><td>true</td><td>3</td></tr>
+<tr><td>Round 3</td><td>3</td><td>true</td><td>6</td></tr>
+<tr><td>End</td><td>4</td><td>false</td><td>6 (exit)</td></tr>
+</table></div>
+<h3>Loop patterns with for</h3>
+<div class="code">int[] a = {4, 9, 2, 7};
+// MAX : assume first is biggest, then compare
+int max = a[0];
+for (int i = 1; i &lt; a.length; i++)
+    if (a[i] &gt; max) max = a[i];            // 9
+
+// SEARCH : stop as soon as found
+boolean found = false;
+for (int i = 0; i &lt; a.length; i++)
+    if (a[i] == 2) { found = true; break; }
+
+// PRIME : any divisor means not prime
+int n = 17; boolean prime = n &gt; 1;
+for (int i = 2; i &lt;= n / 2; i++)
+    if (n % i == 0) { prime = false; break; }
+
+// FIBONACCI : 0 1 1 2 3 5 ...
+int x = 0, y = 1;
+for (int i = 1; i &lt;= 6; i++) { System.out.print(x + " "); int z = x + y; x = y; y = z; }</div>
+<p class="g">&#9889; Trick: <b>Max / min</b> start from first element, not from 0. <b>Sum</b> starts at 0, <b>product</b> starts at 1. <b>Prime / search</b> use a flag + break.</p>
+<p class="r">&#9888; Array index runs from <b>0 to length-1</b>, so use <b>i &lt; a.length</b> (not &lt;=).</p>
 </div>
 
 <h3>Nested loop</h3>
@@ -462,8 +639,8 @@ for (int i = 2; i &lt;= 10; i += 2) System.out.print(i + " ");  // 2 4 6 8 10</d
     }
 }</div>
 
-<div class="add">
-<h4>ADDED: NESTED LOOP &ndash; Example 1 (star triangle)</h4>
+<hr class="sep"><div>
+<h3>ADDED: NESTED LOOP &ndash; Example 1 (star triangle)</h3>
 <div class="code">for (int i = 1; i &lt;= 4; i++) {          // outer = rows
     for (int j = 1; j &lt;= i; j++) {      // inner = stars in that row
         System.out.print("* ");
@@ -474,15 +651,44 @@ for (int i = 2; i &lt;= 10; i += 2) System.out.print(i + " ");  // 2 4 6 8 10</d
 // * *
 // * * *
 // * * * *</div>
-<h4>Example 2 (tables 1 to 3)</h4>
+<h3>Example 2 (tables 1 to 3)</h3>
 <div class="code">for (int i = 1; i &lt;= 3; i++) {
     for (int j = 1; j &lt;= 5; j++) {
         System.out.print(i * j + "\t");
     }
     System.out.println();
 }</div>
-<p class="think">&#129504; Logic: <b>Outer loop = rows (slow), inner loop = columns (fast)</b>. Like a clock: the minute hand (inner) completes a full round for every single move of the hour hand (outer). Total runs = outer times &times; inner times.</p>
-<p class="trick">&#9889; Trick for patterns: (1) count rows &rarr; outer loop, (2) what changes in each row (stars, spaces, numbers) &rarr; inner loop limit, (3) <b>println()</b> after the inner loop.</p>
+<p>&#129504; Logic: <b>Outer loop = rows (slow), inner loop = columns (fast)</b>. Like a clock: the minute hand (inner) completes a full round for every single move of the hour hand (outer). Total runs = outer times &times; inner times.</p>
+<p class="g">&#9889; Trick for patterns: (1) count rows &rarr; outer loop, (2) what changes in each row (stars, spaces, numbers) &rarr; inner loop limit, (3) <b>println()</b> after the inner loop.</p>
+</div>
+
+<hr class="sep"><div>
+<h3>NESTED LOOP &ndash; Flow trace (3 rows)</h3>
+<div class="scroll"><table class="tbl">
+<tr><th>Outer i</th><th>Inner j runs</th><th>Printed row</th></tr>
+<tr><td>1</td><td>j = 1</td><td>*</td></tr>
+<tr><td>2</td><td>j = 1, 2</td><td>* *</td></tr>
+<tr><td>3</td><td>j = 1, 2, 3</td><td>* * *</td></tr>
+</table></div>
+<p>&#129504; Inner loop <b>restarts from the beginning</b> for every outer round. Total prints = 1 + 2 + 3 = 6.</p>
+<h3>Pattern logic: only the inner limit changes</h3>
+<div class="scroll"><table class="tbl">
+<tr><th>Pattern</th><th>Inner loop</th></tr>
+<tr><td>Square n x n</td><td>j &lt;= n</td></tr>
+<tr><td>Triangle (1, 2, 3 ...)</td><td>j &lt;= i</td></tr>
+<tr><td>Inverted triangle</td><td>j &lt;= n - i + 1</td></tr>
+<tr><td>Pyramid</td><td>first spaces: n - i, then stars: 2 * i - 1</td></tr>
+</table></div>
+<div class="code">// Pyramid (n = 3)
+for (int i = 1; i &lt;= 3; i++) {
+    for (int s = 1; s &lt;= 3 - i; s++) System.out.print(" ");
+    for (int k = 1; k &lt;= 2 * i - 1; k++) System.out.print("*");
+    System.out.println();
+}
+//   *
+//  ***
+// *****</div>
+<p class="g">&#9889; Trick: Write the pattern for rows 1, 2, 3 on paper, count items per row, and find the <b>formula in terms of i</b>. That formula is the inner loop limit.</p>
 </div>
 
 <div class="scroll">
@@ -494,8 +700,8 @@ for (int i = 2; i &lt;= 10; i += 2) System.out.print(i + " ");  // 2 4 6 8 10</d
 </table>
 </div>
 
-<div class="add">
-<h4>ADDED: Quick comparison of all loops</h4>
+<hr class="sep"><div>
+<h3>ADDED: Quick comparison of all loops</h3>
 <div class="scroll">
 <table class="tbl">
 <tr><th>Loop</th><th>Checks condition</th><th>Min runs</th><th>Use when</th></tr>
@@ -505,18 +711,18 @@ for (int i = 2; i &lt;= 10; i += 2) System.out.print(i + " ");  // 2 4 6 8 10</d
 <tr><td>for-each</td><td>Automatic</td><td>0</td><td>Read every element of array/list</td></tr>
 </table>
 </div>
-<p class="trick">&#9889; Memory trick: <b>for / while = "Front door check"</b> (entry controlled), <b>do-while = "Back door check"</b> (exit controlled).</p>
+<p class="g">&#9889; Memory trick: <b>for / while = "Front door check"</b> (entry controlled), <b>do-while = "Back door check"</b> (exit controlled).</p>
 
-<h4>FOR-EACH / enhanced for &ndash; Example</h4>
+<h3>FOR-EACH / enhanced for &ndash; Example</h3>
 <div class="code">int[] marks = {70, 85, 90};
 for (int m : marks) {          // read as: "for each m in marks"
     System.out.println(m);
 }
 String[] names = {"Ravi", "Anu"};
 for (String s : names) System.out.println(s);</div>
-<p class="trick">&#9889; Trick: for-each has <b>no index and no update</b>. It is read-only style traversal. Need the index or want to change values? Use normal <b>for</b>.</p>
+<p class="g">&#9889; Trick: for-each has <b>no index and no update</b>. It is read-only style traversal. Need the index or want to change values? Use normal <b>for</b>.</p>
 
-<h4>JUMPING statements inside loops &ndash; break and continue</h4>
+<h3>JUMPING statements inside loops &ndash; break and continue</h3>
 <div class="code">for (int i = 1; i &lt;= 5; i++) {
     if (i == 3) continue;     // skip only 3 &rarr; 1 2 4 5
     System.out.print(i + " ");
@@ -525,7 +731,7 @@ for (int i = 1; i &lt;= 5; i++) {
     if (i == 3) break;        // stop loop completely &rarr; 1 2
     System.out.print(i + " ");
 }</div>
-<p class="trick">&#9889; Trick: <b>break = "Bye, leave the loop"</b>, <b>continue = "Skip this round, go to next"</b>, <b>return = "Leave the whole method"</b>.</p>
+<p class="g">&#9889; Trick: <b>break = "Bye, leave the loop"</b>, <b>continue = "Skip this round, go to next"</b>, <b>return = "Leave the whole method"</b>.</p>
 </div>
 </section>
 
@@ -560,10 +766,10 @@ for (int i = 1; i &lt;= 5; i++) {
 <li>The scanner class converts this binary form data into Java understandable types (like int, Float, String)</li>
 </ul>
 
-<div class="add">
-<h4>ADDED: Easy picture to remember</h4>
-<p class="think">&#129504; Keyboard &rarr; <b>System.in</b> (pipe) &rarr; <b>Scanner</b> (translator: raw data to int / String / double) &rarr; your <b>variable</b>.</p>
-<p class="trick">&#9889; Memory trick <b>"I-O-R"</b>: <b>I</b>mport the class &rarr; create <b>O</b>bject &rarr; <b>R</b>equest the data.</p>
+<hr class="sep"><div>
+<h3>ADDED: Easy picture to remember</h3>
+<p>&#129504; Keyboard &rarr; <b>System.in</b> (pipe) &rarr; <b>Scanner</b> (translator: raw data to int / String / double) &rarr; your <b>variable</b>.</p>
+<p class="g">&#9889; Memory trick <b>"I-O-R"</b>: <b>I</b>mport the class &rarr; create <b>O</b>bject &rarr; <b>R</b>equest the data.</p>
 </div>
 
 <h3>Steps to read integer data from the end user</h3>
@@ -591,8 +797,8 @@ for (int i = 1; i &lt;= 5; i++) {
 </table>
 </div>
 
-<div class="add">
-<h4>ADDED: Dynamic Read &ndash; Example 1 (add two numbers)</h4>
+<hr class="sep"><div>
+<h3>ADDED: Dynamic Read &ndash; Example 1 (add two numbers)</h3>
 <div class="code">import java.util.Scanner;
 
 public class Add {
@@ -605,30 +811,65 @@ public class Add {
         sc.close();
     }
 }</div>
-<h4>Example 2 (read different types)</h4>
+<h3>Example 2 (read different types)</h3>
 <div class="code">String name  = sc.next();         // Ravi
 int age      = sc.nextInt();      // 21
 double marks = sc.nextDouble();   // 88.5
 boolean pass = sc.nextBoolean();  // true</div>
-<h4>Example 3 (Scanner + conditions: even / odd program)</h4>
+<h3>Example 3 (Scanner + conditions: even / odd program)</h3>
 <div class="code">Scanner sc = new Scanner(System.in);
 System.out.print("Enter a number: ");
 int n = sc.nextInt();
 if (n % 2 == 0) System.out.println("Even");
 else            System.out.println("Odd");</div>
-<h4>Example 4 (Scanner + loop: sum of n numbers)</h4>
+<h3>Example 4 (Scanner + loop: sum of n numbers)</h3>
 <div class="code">System.out.print("How many numbers? ");
 int n = sc.nextInt(), sum = 0;
 for (int i = 1; i &lt;= n; i++) {
     sum += sc.nextInt();
 }
 System.out.println("Total = " + sum);</div>
-<p class="trick">&#9889; Trick: <b>next()</b> = one word, <b>nextLine()</b> = full sentence. Pick the method by data type: <b>next + DataType</b> (nextInt, nextDouble ...). There is no nextChar(); use <b>sc.next().charAt(0)</b>.</p>
-<p class="warn">&#9888; Common trap: after <b>nextInt()</b>, a following <b>nextLine()</b> returns empty text, because the Enter key is left in the input. Fix: add one extra <b>sc.nextLine();</b> to consume it.</p>
+<p class="g">&#9889; Trick: <b>next()</b> = one word, <b>nextLine()</b> = full sentence. Pick the method by data type: <b>next + DataType</b> (nextInt, nextDouble ...). There is no nextChar(); use <b>sc.next().charAt(0)</b>.</p>
+<p class="r">&#9888; Common trap: after <b>nextInt()</b>, a following <b>nextLine()</b> returns empty text, because the Enter key is left in the input. Fix: add one extra <b>sc.nextLine();</b> to consume it.</p>
 <div class="code">int age = sc.nextInt();
 sc.nextLine();                 // clear leftover Enter
 String line = sc.nextLine();   // now reads the full sentence</div>
-<p class="think">&#129504; Logic for any program: <b>1) Read input &rarr; 2) Process (if / loop / calculate) &rarr; 3) Print output.</b> Write these 3 comment lines first, then fill the code under each.</p>
+<p>&#129504; Logic for any program: <b>1) Read input &rarr; 2) Process (if / loop / calculate) &rarr; 3) Print output.</b> Write these 3 comment lines first, then fill the code under each.</p>
+</div>
+<hr class="sep"><div>
+<h3>Dynamic Read &ndash; Flow and logic</h3>
+<p>&#129504; Flow: program runs &rarr; reaches <b>nextInt()</b> &rarr; <b>pauses and waits</b> &rarr; user types and presses Enter &rarr; value goes into the variable &rarr; program continues to the next line. All earlier statements need the input first, so <b>read before you use</b>.</p>
+<h3>Safe input pattern (avoids InputMismatchException)</h3>
+<div class="code">int n;
+while (true) {
+    System.out.print("Enter a number: ");
+    if (sc.hasNextInt()) { n = sc.nextInt(); break; }   // valid
+    System.out.println("Numbers only!");
+    sc.next();                                          // throw away bad input
+}</div>
+<h3>Everything together: read &rarr; decide &rarr; repeat</h3>
+<div class="code">Scanner sc = new Scanner(System.in);
+String again;
+do {
+    System.out.print("Enter marks: ");
+    int m = sc.nextInt();
+    if (m &gt;= 90)      System.out.println("A+");
+    else if (m &gt;= 50) System.out.println("Pass");
+    else              System.out.println("Fail");
+    System.out.print("Continue? (yes/no): ");
+    again = sc.next();
+} while (again.equals("yes"));</div>
+<h3>Practice problems with logic hints</h3>
+<div class="scroll"><table class="tbl">
+<tr><th>Problem</th><th>Statement</th><th>Logic hint</th></tr>
+<tr><td>Palindrome number</td><td>while</td><td>reverse with % 10 and / 10, compare with original</td></tr>
+<tr><td>Factorial</td><td>for</td><td>fact starts at 1, multiply by i</td></tr>
+<tr><td>Armstrong number</td><td>while</td><td>sum of digit cubes, compare with original</td></tr>
+<tr><td>Count vowels</td><td>for + switch</td><td>loop characters, grouped case a e i o u</td></tr>
+<tr><td>Guess the number</td><td>do-while</td><td>repeat until guess == secret</td></tr>
+<tr><td>Simple calculator</td><td>do-while + switch</td><td>menu loop, switch on operator</td></tr>
+<tr><td>Largest of 3</td><td>ladder</td><td>compare with &gt;= using &amp;&amp;</td></tr>
+</table></div>
 </div>
 </section>
 

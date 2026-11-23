@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 18 Custom Objects in Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-2 : Adding custom objects ===== -->
+<section class="page">
+<h1>Java - 18 Custom Objects in Collection</h1>
+<h2>Adding Custom objects into a collection</h2>
+<div class="code">Public class student
+{
+    int id
+    string name
+    Float cgpa
+    int age
+    string branch
+    //constructor
+    Public student(int id, string name, float cgpa, int age, string branch)
+    {
+        super()
+        this.id = id
+        this.name = name
+        this.cgpa = cgpa
+        this.age = age
+        this.branch = branch
+    }
+    @override
+    Public string tostring()
+    {
+        return "student { " +
+               " id = " + id +
+               ", name= '" + name + '\'' +
+               ", cgpa = " + cgpa +
+               ", age = " + age +
+               ", branch = " + branch + "}";
+    }
+    //overriding equals method
+    // so that contains() and remove() method will use this method
+    Public boolean equals(object o)
+    {
+        student s = (student) o;
+        if(!(this.id == s.id)) return False;
+        if(!(this.name.equals(s.name))) return False;
+        if(!(this.age == s.age)) return False;
+        if(!(this.cgpa == s.cgpa)) return False;
+        if(!(this.branch.equals(s.branch))) return False;
+        return true
+    }
+    // display method which will accept array list
+    // to print elements of collection
+    Public static void display(ArrayList al)
+    {
+        For(object o : al)
+        {
+            S.O.P.l(o)
+        }
+    }
+}
+
+public class Demo-Add-01
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist()
+        al.add(new student(101, "pravin", 8.9f, 40, "comp"));
+        al.add(new student(121, "Vedant", 9.9f, 45, "AIML"));
+        al.add(new student(111, "sourabh", 9.9f, 60, "Extc"));
+        al.add(new student(131, "vaishav", 8.9f, 60, "comp"));
+        al.add(new student(141, "mayures", 5.9f, 50, "comp"));
+        student.display(al);
+    }
+}
+O/P
+student { id =101, name = 'pravin', cgpa = 8.9, age = 40, branch = 'comp'
+student { id =121, name = Vedant, cgpa = 9.9f, age = 45, branch = 'AIML'
+student { id =111, name = Sourab, cgpa = 9.9f, age = 60, branch = 'Extc'
+student {   <span class="flag">last two lines are not written out in full</span>
+student {</div>
+</section>
+
+<!-- ===== PDF PAGES 3-4 : Searching ===== -->
+<section class="page">
+<h2>Searching custom object inside a collection</h2>
+<ul>
+<li>when we want to search an element in the collection First we should know For which element we are searching</li>
+<li>The element For which we are searching is considered as key element</li>
+</ul>
+<p class="note">Diagram: key &rarr; (1) object &rarr; contains(object o) [collection], indexOf(object o) [List]; (2) attribute of an object.</p>
+<h3 class="r">Searching based on the object</h3>
+<ul>
+<li>IF the key is object we can make use of the Following two methods
+ <ul><li>contains(object ele) From collection interface</li><li>indexOf(object ele) From List interface</li></ul></li>
+<li>These both methods internally uses equals() method to compare key with the objects present inside the collection</li>
+</ul>
+<h3 class="r">Note</h3>
+<p>IF we are not overriding the equals method inside the custom object then contains() method will check the address instead of data</p>
+<div class="code">Public class Demo-containing
+{
+    Public static void main(string[] args)
+    {
+        student key = new student(111, "sourabh", 9.9f, 60, "Extc")
+        S.O.P.l(al.Contains(key));  //internally uses equals.
+    }
+}
+O/P
+true</div>
+<div class="code">Public class Demo-index-of
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist()
+        student key = new student(131, "vaishav", 8.9f, 60, "comp")
+        S.O.P.l(al.indexOf(key));  //internally uses equals()
+    }
+}
+O/P
+3</div>
+<h3 class="r">Searching if the key is attribute of an object</h3>
+<ul>
+<li>IF the key is attribute of an object we should traverse through all the element and compare the key with all the objects attribute</li>
+<li>IF the key is matching with any of the attribute of an object then the object will be existing inside the collection</li>
+</ul>
+<div class="code">Public class Demo-searchingBasedOnId
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist();
+        int key = 131;
+        student toBeSearched = null;
+        For(object o : al)
+        {
+            student s = (student) o;
+            IF(key == s.id)
+            {
+                toBeSearched = s
+                break;
+            }
+        }
+        S.O.P.l(toBeSearched);
+    }
+}
+O/P
+student {id = 131, name = vaishav, cgpa = 8.9, age = 60, branch = comp}</div>
+</section>
+
+<!-- ===== PDF PAGES 5-10 : Removing ===== -->
+<section class="page">
+<h2>Removing the elements from collection</h2>
+<ul>
+<li>When we want to remove any object from the collection we should know which element we want to remove</li>
+<li>The element which should be removed is consided as key element</li>
+<li>The key element to be removed can be the Following things &#9312; object &#9313; attribute of an object</li>
+</ul>
+<h3 class="r">Removing an element if the key is Object</h3>
+<ul>
+<li>IF the key is object we can directly call remove(object) method from collection interface</li>
+<li>this remove(object) will internally call equals method present in custom object to compare key with all the objects inside collection.</li>
+<li>so IF we want to remove the object from collection we need to override equals method inside the <span class="flag">word missing: "student class"?</span> we need to override equals method in a such a way that it compares custom object the data</li>
+</ul>
+<div class="code">public class Demo-Removing
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist();
+        al.add(new student(101, "motu", 8.9f, 40, "funfuni"))
+        al.add(new student(121, "pathu", 9.9f, 45, "Funfuni"))
+        al.add(new student(111, "Jatka", 9.9f, 50, "funfuni"))
+        al.add(new student(131, "chingam", 6.9f, 60, "Funfuni"))
+        al.add(new student(141, "gasita", 7.0f, 44, "funfuni"))
+        student key = new student(111, "Jatka", 9.9f, 50, "Funfuni")   <span class="flag">verify: branch capital F vs lowercase in the added object</span>
+        S.O.P.l("=== before ===");
+        student.display(al);
+        S.O.P.l(al.remove(key));   //Uses equals method
+        S.O.P.l("=== after ===");
+        student.display(al);
+    }
+}
+O/P
+=== before ===
+student { id = 101, name = 'motu', cgpa = 8.9, age = 40, branch = 'Funfuni'
+student { id = 121
+student { id = 111
+student { id = 131
+student { id = 141
+True
+=== after ===
+student { id = 101,
+student { id = 121,
+student { id = 131,
+student { id = 141,</div>
+<h3 class="r">Removing element if the key is attribute of object</h3>
+<ul>
+<li>IF the key is attribute of an object we need to traverse through the collection and preserve the address if the element is existing and then we need to remove it using remove method</li>
+<li>How to check whether element is existing? when we are traversing through the collection we when we are traversing through all the object's need to compare the key with all the objects need to compare the key with all the preserve attribute if it is Found we have to preserve the address</li>
+</ul>
+<span class="flag">the second bullet is garbled in the scan</span>
+<div class="code">Public class attribute-remove
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist();
+        al.add(new student(110, "pratham", 8.0f, 22, "civil"));
+        al.add(new student(111, "praulin", 8, 22, "comp"));
+        al.add(new student(101, "mayu", 8, 22, "comp"));
+        al.add(new student(112, "onkar", 8, 22, "mech"));
+        al.add(new student(113, "ketan", 8, 20, "aiml"));
+
+        int key = 110;
+        S.O.P.l("=== before ===")
+        student.display(al)
+
+        student toBeRemoved = null;
+        For(object o : al)
+        {
+            student s = (student) o;
+            IF(key == s.id)
+            {
+                toBeRemoved = s
+            }
+        }
+        S.O.P.l(al.remove(toBeRemoved));
+        S.O.P.l("=== after remove ===");
+        student.display(al)
+    }
+}
+O/P
+=== Before remove ===
+student { id = 110, name = 'Pratham', cgpa = 8, age = 22, branch = 'aiml'   <span class="flag">code says civil</span>
+student { id = 111, name = 'Praulin', cgpa = 8, age = 22, branch = 'comp'
+student { id = 101, name = 'mayu',
+student { id = 112, name = 'onkar',
+student { id = 113, name = 'ketan',
+true
+after remove
+student { id = 111, name = 'Praulin', cgpa = 8, age = 22, branch = 'comp'
+student { id = 101
+student { id = 112
+student { id = 113</div>
+<h3 class="r">Note</h3>
+<p>IF we try to call remove() method inside the For each loop, i.e during traversing through all the elements we may get ConcurrentModificationException that's why we are calling remove method outside the For each loop</p>
+<h3 class="r">Removing by using iterator</h3>
+<div class="code">Public class DemoRemovalIterator
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist();
+        al.add(new student(101, "motu", 8.9f, 40, "Funfuni"));
+        al.add(new student(121,
+        al.add(new student(111,
+        al.add(new student(131,
+        al.add(new student(141,
+
+        int key = 141
+        Iterator i = al.iterator()
+        S.O.P.l("=== before ===")
+        student.display(al)
+        while(i.hasNext())
+        {
+            student s = (student) i.next();
+            IF(key == s.id)
+            {
+                i.remove()
+                S.O.P.l("student removed");
+            }
+        }
+        S.O.P.l("=== After ===")
+        student.display(al);
+    }
+}
+O/P
+=== before ===
+student { id = 101, name = motu, cgpa = 8.9, age = 40, branch = funfuni }
+student { id = 121,
+student { id = 111,
+student { id = 131,
+student { id = 141,
+student removed
+=== after
+student { id = 101,
+student { id = 121,
+student { id = 111,
+student { id = 131,</div>
+<h3 class="r">Removing can also be done by using index but it is allowed only For child of list interface.</h3>
+<div class="code">Public class RemovedBasedOnIndex
+{
+    Public static void main(string[] args)
+    {
+        Arraylist al = new Arraylist()
+        al.add(new student(101 ...
+        al.add(new student(121 ...
+        al.add(new student(114 ...   <span class="flag">verify: id 114 or 111</span>
+        al.add(new student(131 ...
+        al.add(new student(141 ...
+
+        S.O.P.l("== Before ==")
+        student.display(al);
+        S.O.P.l(al.remove(0))
+        S.O.P.l("== After ==")
+        student.display(al).
+    }
+}</div>
+<p>In this above example we are calling the list interface method remove(int index)</p>
+</section>
+
+</main>
+</body>
+</html>

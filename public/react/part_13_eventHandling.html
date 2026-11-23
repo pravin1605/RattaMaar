@@ -4,219 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>React Notes – Event Handling, Conditional Rendering & Lists</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: #ffffff;
-      font-family: 'Nunito', sans-serif;
-      color: #1a1a2e;
-      padding: 30px 20px 60px;
-      max-width: 860px;
-      margin: auto;
-      line-height: 1.7;
-    }
-
-    /* ── PAGE HEADER ── */
-    .page-title {
-      text-align: center;
-      padding: 30px 20px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      border-radius: 18px;
-      color: #fff;
-      margin-bottom: 40px;
-      box-shadow: 0 8px 30px rgba(102,126,234,0.35);
-    }
-    .page-title h1 { font-size: 2rem; font-weight: 900; letter-spacing: -0.5px; }
-    .page-title p  { font-size: 1rem; opacity: 0.85; margin-top: 6px; }
-
-    /* ── TOPIC SECTIONS ── */
-    .topic { margin-bottom: 48px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-
-    .topic-header {
-      padding: 18px 28px;
-      color: #fff;
-      font-size: 1.35rem;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .topic-header .num {
-      background: rgba(255,255,255,0.25);
-      border-radius: 50%;
-      width: 38px; height: 38px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; font-weight: 900; flex-shrink: 0;
-    }
-
-    /* per-topic palette */
-    .t1 .topic-header { background: linear-gradient(135deg,#f7971e,#ffd200); }
-    .t2 .topic-header { background: linear-gradient(135deg,#11998e,#38ef7d); }
-    .t3 .topic-header { background: linear-gradient(135deg,#ee0979,#ff6a00); }
-
-    .topic-body { background: #fff; padding: 28px; }
-
-    /* ── CARDS ── */
-    .card {
-      border-radius: 12px;
-      padding: 18px 22px;
-      margin-bottom: 18px;
-    }
-    .card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
-    .card p, .card li { font-size: 0.95rem; color: #1a1a2e; }
-
-    .card-blue   { background: #e8f4fd; border-left: 5px solid #3498db; }
-    .card-yellow { background: #fffde7; border-left: 5px solid #f1c40f; }
-    .card-green  { background: #e8f8f5; border-left: 5px solid #2ecc71; }
-    .card-red    { background: #fdecea; border-left: 5px solid #e74c3c; }
-    .card-purple { background: #f5eef8; border-left: 5px solid #9b59b6; }
-    .card-orange { background: #fef5e7; border-left: 5px solid #f39c12; }
-    .card-teal   { background: #e8f8f5; border-left: 5px solid #1abc9c; }
-    .card-pink   { background: #fce4ec; border-left: 5px solid #e91e63; }
-
-    /* ── DEFINITION BOX ── */
-    .definition {
-      background: #1a1a2e;
-      color: #f0f0f0;
-      border-radius: 12px;
-      padding: 16px 22px;
-      font-size: 0.95rem;
-      margin-bottom: 18px;
-    }
-    .definition span { color: #ffd200; font-weight: 800; }
-
-    /* ── CODE BLOCK ── */
-    pre {
-      background: #1e1e2e;
-      color: #cdd6f4;
-      border-radius: 12px;
-      padding: 18px 20px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.82rem;
-      overflow-x: auto;
-      margin-bottom: 18px;
-      line-height: 1.6;
-    }
-    .kw   { color: #cba6f7; }  /* keywords */
-    .fn   { color: #89b4fa; }  /* functions */
-    .str  { color: #a6e3a1; }  /* strings */
-    .cmt  { color: #6c7086; }  /* comments */
-    .jsx  { color: #fab387; }  /* JSX tags */
-    .var  { color: #f38ba8; }  /* variables */
-
-    /* ── FLOW DIAGRAM ── */
-    .flow {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0;
-      margin: 16px 0 18px;
-    }
-    .flow-box {
-      background: #fff;
-      border: 2px solid;
-      border-radius: 10px;
-      padding: 10px 26px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      text-align: center;
-    }
-    .flow-arrow { font-size: 1.4rem; color: #888; line-height: 1.2; }
-
-    /* ── COMPARISON TABLE ── */
-    .compare {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-    .compare-col {
-      border-radius: 12px;
-      padding: 16px;
-    }
-    .compare-col h4 { font-size: 0.9rem; font-weight: 800; margin-bottom: 8px; }
-    .compare-col p  { font-size: 0.88rem; }
-    .bad  { background: #fdecea; border: 2px solid #e74c3c; }
-    .good { background: #e8f8f5; border: 2px solid #2ecc71; }
-
-    /* ── BADGES ── */
-    .badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
-    .badge {
-      border-radius: 8px;
-      padding: 6px 16px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      font-family: 'Fira Code', monospace;
-      color: #fff;
-    }
-    .bg1 { background: #3498db; }
-    .bg2 { background: #e74c3c; }
-    .bg3 { background: #2ecc71; }
-    .bg4 { background: #9b59b6; }
-    .bg5 { background: #f39c12; }
-    .bg6 { background: #1abc9c; }
-    .bg7 { background: #e91e63; }
-
-    /* ── INTERVIEW Q ── */
-    .interview {
-      background: linear-gradient(135deg,#667eea,#764ba2);
-      color: #fff;
-      border-radius: 12px;
-      padding: 18px 22px;
-      margin-top: 10px;
-    }
-    .interview h3 { font-size: 0.95rem; font-weight: 800; margin-bottom: 6px; opacity: 0.8; }
-    .interview p  { font-size: 0.93rem; }
-
-    /* ── QUICK REVISION ── */
-    .revision-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 10px;
-    }
-    .rev-card {
-      border-radius: 14px;
-      padding: 20px;
-      color: #fff;
-    }
-    .rev-card h4 { font-size: 0.85rem; font-weight: 900; letter-spacing: 1px; opacity: 0.8; margin-bottom: 10px; }
-    .rev-card ul { list-style: none; }
-    .rev-card li { font-family: 'Fira Code', monospace; font-size: 0.88rem; padding: 3px 0; }
-    .rv1 { background: linear-gradient(135deg,#f7971e,#ffd200); }
-    .rv2 { background: linear-gradient(135deg,#11998e,#38ef7d); }
-    .rv3 { background: linear-gradient(135deg,#ee0979,#ff6a00); }
-
-    .next-tip {
-      text-align: center;
-      margin-top: 40px;
-      background: linear-gradient(135deg,#0f0c29,#302b63,#24243e);
-      color: #fff;
-      border-radius: 16px;
-      padding: 24px 20px;
-      font-size: 1rem;
-      font-weight: 700;
-    }
-    .next-tip span { color: #ffd200; }
-
-    h2.section-label {
-      font-size: 1rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #888;
-      margin-bottom: 10px;
-    }
-
-    @media(max-width:560px){
-      .compare { grid-template-columns: 1fr; }
-      .page-title h1 { font-size: 1.4rem; }
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="r13">
 
   <!-- PAGE HEADER -->
   <div class="page-title">
@@ -280,11 +73,11 @@
 }</pre>
 
       <div class="flow">
-        <div class="flow-box" style="border-color:#f7971e;color:#f7971e;">User Clicks Button</div>
+        <div class="flow-box u225">User Clicks Button</div>
         <div class="flow-arrow">↓</div>
-        <div class="flow-box" style="border-color:#3498db;color:#3498db;">showMessage() called</div>
+        <div class="flow-box u226">showMessage() called</div>
         <div class="flow-arrow">↓</div>
-        <div class="flow-box" style="border-color:#2ecc71;color:#2ecc71;">Alert Displayed ✅</div>
+        <div class="flow-box u227">Alert Displayed ✅</div>
       </div>
 
       <h2 class="section-label">Example 2 – Passing Arguments</h2>
@@ -378,16 +171,16 @@
 }</pre>
 
       <div class="flow">
-        <div class="flow-box" style="border-color:#11998e;color:#11998e;">Condition Checked</div>
+        <div class="flow-box u228">Condition Checked</div>
         <div class="flow-arrow">↓</div>
-        <div class="flow-box" style="border-color:#2ecc71;color:#2ecc71;">True → Show Component A</div>
+        <div class="flow-box u227">True → Show Component A</div>
         <div class="flow-arrow">↓</div>
-        <div class="flow-box" style="border-color:#e74c3c;color:#e74c3c;">False → Show Component B</div>
+        <div class="flow-box u229">False → Show Component B</div>
       </div>
 
       <div class="card card-teal">
         <h3>🛒 Real-Life Example</h3>
-        <pre style="margin:0;background:#1e1e2e;border-radius:8px;padding:12px;">{cartItems.length &gt; 0 ? <span class="jsx">&lt;Cart/&gt;</span> : <span class="jsx">&lt;h2&gt;</span>Cart Empty<span class="jsx">&lt;/h2&gt;</span>}</pre>
+        <pre class="u230">{cartItems.length &gt; 0 ? <span class="jsx">&lt;Cart/&gt;</span> : <span class="jsx">&lt;h2&gt;</span>Cart Empty<span class="jsx">&lt;/h2&gt;</span>}</pre>
       </div>
 
       <div class="interview">
@@ -455,18 +248,18 @@
 ))}</pre>
 
       <div class="flow">
-        <div class="flow-box" style="border-color:#ee0979;color:#ee0979;">Array Data</div>
+        <div class="flow-box u231">Array Data</div>
         <div class="flow-arrow">↓</div>
-        <div class="flow-box" style="border-color:#ff6a00;color:#ff6a00;">map() loops through</div>
+        <div class="flow-box u232">map() loops through</div>
         <div class="flow-arrow">↓</div>
-        <div class="flow-box" style="border-color:#9b59b6;color:#9b59b6;">JSX Created with key</div>
+        <div class="flow-box u233">JSX Created with key</div>
         <div class="flow-arrow">↓</div>
-        <div class="flow-box" style="border-color:#2ecc71;color:#2ecc71;">UI Displayed ✅</div>
+        <div class="flow-box u227">UI Displayed ✅</div>
       </div>
 
       <div class="card card-purple">
         <h3>🌍 Real-Life Uses</h3>
-        <div class="badge-row" style="margin-bottom:0">
+        <div class="badge-row u086">
           <span class="badge bg1">Products</span>
           <span class="badge bg2">Employees</span>
           <span class="badge bg3">Students</span>
@@ -486,8 +279,8 @@
 
 
   <!-- ══════════════════════════════════ QUICK REVISION ══════════════════════════════════ -->
-  <div class="topic" style="border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
-    <div class="topic-header" style="background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);">
+  <div class="topic u234">
+    <div class="topic-header u235">
       <div class="num">⚡</div>
       Quick Revision
     </div>
@@ -501,7 +294,7 @@
             <li>onSubmit</li>
           </ul>
           <br/>
-          <p style="font-size:0.82rem;opacity:0.9;">Used for:<br/>Button Click · Form Submit · Input Change</p>
+          <p class="u236">Used for:<br/>Button Click · Form Submit · Input Change</p>
         </div>
         <div class="rev-card rv2">
           <h4>CONDITIONAL RENDERING</h4>
@@ -518,7 +311,7 @@
             <li>key={'{'}id{'}'}</li>
           </ul>
           <br/>
-          <p style="font-size:0.82rem;opacity:0.9;">Used for:<br/>Products · Employees · Orders</p>
+          <p class="u236">Used for:<br/>Products · Employees · Orders</p>
         </div>
       </div>
     </div>
@@ -527,7 +320,7 @@
   <!-- NEXT TOPIC TIP -->
   <div class="next-tip">
     🚀 Next Topic: <span>Forms in React</span><br/>
-    <span style="opacity:0.7;font-size:0.88rem;font-weight:600;">Controlled Components &amp; Uncontrolled Components — must-know for interviews &amp; projects!</span>
+    <span class="u237">Controlled Components &amp; Uncontrolled Components — must-know for interviews &amp; projects!</span>
   </div>
 
 </body>

@@ -48,7 +48,7 @@ const subjects = [
 
        {
         id: "java-08",
-        title:"Inheritance",
+        title:"Interface",
         file: "/java/java_08_interface.html",
        },
        {
@@ -94,6 +94,16 @@ const subjects = [
         id: "java-17",
         title:"Cursor",
         file:"/java/java_17_cursor.html",
+      },
+      {
+        id: "java-18",
+        title:"Custom Objects in Collection",
+        file:"/java/java_18_custom_object.html",
+      },
+      {
+        id: "java-19",
+        title:"Generic Class",
+        file:"/java/java_19_generics.html",
       }
       
        
