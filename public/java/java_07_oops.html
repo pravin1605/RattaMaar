@@ -834,6 +834,21 @@ class child
 </section>
 
 <!-- ===== PDF PAGES 31-35 : Non-primitive type casting ===== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non-Primitive Type Casting</title>
+<style>
+body { font-family: Arial, sans-serif; line-height: 1.5; max-width: 900px; margin: 20px auto; padding: 0 16px; }
+.red { color: #c0392b; }
+.r { color: #c0392b; font-weight: bold; }
+.code { background: #f4f4f4; border-left: 4px solid #c0392b; padding: 10px 14px; font-family: Consolas, monospace; white-space: pre-wrap; overflow-x: auto; }
+hr.sep { margin: 24px 0; }
+</style>
+</head>
+<body>
 <section class="page">
 <h2 class="red">&#9733; Non-Primitive Type Casting</h2>
 <ul>
@@ -848,46 +863,43 @@ class child
 <hr class="sep">
 <h2 class="red">&#9312; UPCASTING</h2>
 <ul><li>The process of converting sub class type reference to super class type reference is called as upcasting</li></ul>
-<div class="code">class parent        class child extends parent
-{                   {
-}                   }
-public class Derived
-{
-    Public static void main(string[] args)
-    {
-        Parent p = new child; //upcasting
+<div class="code">class Parent {
+}
+
+class Child extends Parent {
+}
+
+public class Derived {
+    public static void main(String[] args) {
+        Parent p = new Child(); // upcasting
     }
-}   &larr; create object of child class, give reference variable of Parent class.</div>
+}   &larr; create object of Child class, give reference variable of Parent class.</div>
 <h3>How to achieve upcasting?</h3>
 <p>&#9312; Implicitly can be done automatically by the compiler</p>
-<p class="code">Parent p = new child();</p>
+<p class="code">Parent p = new Child();</p>
 <p>&#9313; explicitly can be done by the programmer using typecast operator</p>
-<p class="code">Parent p = (parent) new child();</p>
+<p class="code">Parent p = (Parent) new Child();</p>
 <h3>Important Note</h3>
 <p>After upcasting we can not use the member of child class with upcasted reference variable</p>
 <h3>Purpose</h3>
-<p>&#9312; Generalisation? &#9313; Runtime polymorphism</p>
-<div class="code">class parent
-{
-    void show()
-    {
-        S.O.P.l("Parent method");
+<p>&#9312; Generalisation &#9313; Runtime polymorphism</p>
+<div class="code">class Parent {
+    void show() {
+        System.out.println("Parent method");
     }
 }
-class child extends Parent
-{
-    void display()
-    {
-        S.O.P.l("child method");
+
+class Child extends Parent {
+    void display() {
+        System.out.println("Child method");
     }
 }
-Public class Driver
-{
-    Public static void main(string[] args)
-    {
-        Parent p = new child(); //upcasting
-        P.show();
-        // P.display(); &rarr; CTE &rarr; Not allowed
+
+public class Driver {
+    public static void main(String[] args) {
+        Parent p = new Child(); // upcasting
+        p.show();
+        // p.display(); &rarr; CTE &rarr; Not allowed
     }
 }</div>
 <h2 class="red">Downcasting</h2>
@@ -896,32 +908,28 @@ Public class Driver
 <li>Downcasting can only be done by explicitly by programmer</li>
 <li>We can perform downcasting explicitly by using typecast operator</li>
 </ul>
-<p>syntax</p><p class="code">(Target type) obj_ref;</p>
+<p>syntax</p><p class="code">(TargetType) obj_ref;</p>
 <h3>Purpose of Downcasting</h3>
 <ul>
 <li>In an upcasted scenario if I want to access member of child, downcasting is necessary</li>
 <li>Without downcasting we cannot access member of child</li>
 </ul>
-<div class="code">Public class parent
-{
-    void show()
-    {
-        S.O.P.l("Parent method");
+<div class="code">class Parent {
+    void show() {
+        System.out.println("Parent method");
     }
 }
-Public class child extends parent
-{
-    void display()
-    {
-        S.O.P.l("child method");
+
+class Child extends Parent {
+    void display() {
+        System.out.println("Child method");
     }
 }
-Public class Driver
-{
-    Public static void main(string[] args)
-    {
-        Parent p = new child(); // upcasting
-        child c = (child) P; // Downcasting
+
+public class Driver {
+    public static void main(String[] args) {
+        Parent p = new Child(); // upcasting
+        Child c = (Child) p;    // Downcasting
         c.display();
     }
 }</div>
@@ -930,21 +938,19 @@ Public class Driver
 <li>It is an exception which might occur while downcasting</li>
 <li>When we try to downcast a reference to a subclass type, but the object doesn't contain instance of that subclass then we get classcast exception</li>
 </ul>
-<div class="code">class parent
-{
+<div class="code">class Parent {
 }
-Public class child extends parent
-{
+
+class Child extends Parent {
 }
-Public class Driver
-{
-    Public static void main(string[] args)
-    {
-        parent p = new parent(); //parent object
-        child c = (child) p; // Runtime error
+
+public class Driver {
+    public static void main(String[] args) {
+        Parent p = new Parent(); // parent object
+        Child c = (Child) p;     // Runtime error: ClassCastException
     }
 }</div>
-<p>why error: object created parent, Trying to convert it into child</p>
+<p>why error: object created Parent, Trying to convert it into Child</p>
 <hr class="sep">
 <h2 class="red">Instance of operator</h2>
 <ul>
@@ -952,25 +958,22 @@ Public class Driver
 <li>IF the object contains instance of the particular class then it return true</li>
 <li>IF the object doesn't contain instance of the particular class then it returns False</li>
 </ul>
-<p><span class="r">syntax</span></p><p class="code">Obj_ref instanceOf classname</p>
+<p><span class="r">syntax</span></p><p class="code">obj_ref instanceof ClassName</p>
 <h3>How to Avoid classCast Exception</h3>
-<ul><li>Use instanceOf</li></ul>
-<div class="code">Public class Driver
-{
-    Public static void main(string[] args)
-    {
-        parent p = new parent();
-        IF( p instanceof child)
-        {
-            child c = (child) p;
-        }
-        else
-        {
-            S.O.P.l("Downcasting Not possible");
+<ul><li>Use instanceof</li></ul>
+<div class="code">public class Driver {
+    public static void main(String[] args) {
+        Parent p = new Parent();
+        if (p instanceof Child) {
+            Child c = (Child) p;
+        } else {
+            System.out.println("Downcasting Not possible");
         }
     }
 }</div>
 </section>
+</body>
+</html>
 
 <!-- ===== PDF PAGES 36-41 : Overriding and shadowing ===== -->
 <section class="page">

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java - 20 Vector and Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="jn">
+
+<!-- ===== PDF PAGES 1-2 : Vector class ===== -->
+<section class="page">
+<h1>Java - 20 Vector and Stack</h1>
+<h2>Vector class</h2>
+<ul>
+<li>It is a child class of list present in Java.util package</li>
+<li>It is a Legacy class (created in 1.0 V)</li>
+<li>collection Framework is introduced in 1.2 V</li>
+<li>Internal implementation : Arrays</li>
+</ul>
+<h3>characteristics</h3>
+<p>&#9312; Initial capacity is 10</p>
+<p>&#9313; New capacity = old capacity * 2</p>
+<p>&#9314; We can store duplicates</p>
+<p>&#9315; Insertion order is preserved</p>
+<p>&#9316; We can store multiple null</p>
+<p>&#9317; zero based indexing</p>
+<p>&#9318; Stores homogeneous and heterogeneous data</p>
+<p>&#9319; vector is thread safe, in vector methods are synchronized</p>
+<h3>constructor</h3>
+<p>&#9312; Vector()<br>&#9313; Vector(collection c)<br>&#9314; Vector(int initial capacity)</p>
+<h3 class="r">Note</h3>
+<ul><li>vector is old Version and Arraylist is the new Version<br>since the vector is thread safe it will take more time to execute multiple tasks (less efficiency)</li></ul>
+<div class="code">Public class DriverVector
+{
+    Public static void main(string[] args)
+    {
+        Vector &lt;Integer&gt; v = new Vector&lt;Integer&gt; ();
+        v.add(10)
+        v.add(20)
+        v.add(30)
+        v.add(40)
+        v.add(50)
+        v.add(60)
+        S.O.P.l(v)
+    }
+}
+O/P
+10, 20, 30, 40, 50   <span class="flag">verify: the code also adds 60</span></div>
+
+<h2>Stack class</h2>
+<ul>
+<li>It is a child class of Vector present in Java.util package</li>
+<li>It is Legacy class (created in 1.0 V (collection Framework is introduced in 1.2 V))</li>
+<li>Internal implementation : Arrays</li>
+</ul>
+<h3>characteristics</h3>
+<p>&#9312; Initial capacity is 10</p>
+<p>&#9313; New Capacity = old capacity * 2</p>
+<p>&#9314; LIFO structure (Last-in-First-out)</p>
+<p>&#9315; Insertion order is preserved</p>
+<p>&#9316; We can store duplicates</p>
+<p>&#9317; We can store multiple null</p>
+<p>&#9318; zero based indexing</p>
+<p>&#9319; stores homogeneous and heterogeneous data</p>
+<p>&#9320; stack is thread safe.<br>&#8627; Extends vector<br>&#8627; In vector methods are synchronized</p>
+<h3>constructors</h3>
+<p class="code">stack() ---&gt; created empty stack with initial capacity 10</p>
+</section>
+
+<!-- ===== PDF PAGES 3-4 : Stack methods ===== -->
+<section class="page">
+<h3>Extra Methods in stack</h3>
+<p>&#9312; <b>E push(E item)</b><br>add the element onto the top of the stack</p>
+<p>&#9313; <b>E pop()</b><br>remove the element at the top of the stack</p>
+<p>&#9314; <b>E peek()</b><br>returns the top element</p>
+<p>&#9315; <b>int search(object o)</b><br>return the position of the element From the top (1 based position)</p>
+<p>&#9316; <b>Boolean empty()</b><br>checks the stack is empty or not</p>
+<h3 class="r">Note</h3>
+<div class="code">stack&lt;Integer&gt; s = new stack&lt;Integer&gt;();
+s.add(100);
+s.push(200)
+S.O.P.l(s)
+[100, 200]</div>
+<ul>
+<li>Here add() and push() will work same</li>
+<li>Even though add() works, it's not recommended to use it with stack</li>
+</ul>
+<p>why ?<br>- add() breaks the LIFO principle of stack<br>- Always use push() to maintain stack discipline<br>- so it is highly recommended to use only stack class method to achieve the behaviour of stack data structure</p>
+<h3>Applications</h3>
+<p>&#9312; Text editor - undo operation <span class="flag">the list ends here at the bottom of the page</span></p>
+<div class="code">Public class DriverStack
+{
+    Public static void main(string[] args)
+    {
+        stack&lt;Integer&gt; s = new stack&lt;Integer&gt;();
+        s.push(10)
+        s.push(20)
+        s.push(30)
+        s.push(40)
+        S.O.P.l(s.peek());
+        S.O.P.l(s.pop());
+        S.O.P.l(s)
+    }
+}
+O/P
+40
+40
+[10, 20, 30]</div>
+</section>
+
+</main>
+</body>
+</html>

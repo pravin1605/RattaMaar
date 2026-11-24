@@ -104,6 +104,11 @@ const subjects = [
         id: "java-19",
         title:"Generic Class",
         file:"/java/java_19_generics.html",
+      },
+      {
+        id: "java-20",
+        title:"Vector Class",
+        file:"/java/java_20_vector.html",
       }
       
        
